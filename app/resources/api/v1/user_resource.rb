@@ -4,18 +4,10 @@ class Api::V1::UserResource < ApplicationResource
     :password, :password_confirmation, :email, :role_id,
     :image, :role_name, :full_name, :address
 
-  has_one :role
-
-  def role_id
-    @model.role_id.to_s
-  end
+  has_many :roles
 
   def custom_links(options)
     { self: nil }
-  end
-
-  def role_name
-    @model.organization.name
   end
 
   def self.find(filters, options = {})

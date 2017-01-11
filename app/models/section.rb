@@ -11,16 +11,6 @@
 #  section_type_id :integer          not null
 #  report_type_id  :integer
 #
-# Indexes
-#
-#  index_sections_on_report_type_id   (report_type_id)
-#  index_sections_on_section_type_id  (section_type_id)
-#
-# Foreign Keys
-#
-#  fk_rails_79ab8015ac  (section_type_id => section_types.id)
-#  fk_rails_8f2fbe50f3  (report_type_id => report_types.id)
-#
 
 class Section < ApplicationRecord
   belongs_to :section_type

@@ -238,11 +238,7 @@ class Api::V1::CsvController < ApplicationController
         errors << data
       end
 
-      if resource.name == "Equipment"
-        resource.where.not(id: created_ids).each do |resource|
-          resource.update_attribute :deleted_at, DateTime.now
-        end
-      end
+    
       result_csv.close
       upload.result_file = fh.open
       upload.save!

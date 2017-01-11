@@ -9,14 +9,6 @@
 #  updated_at      :datetime         not null
 #  admin_path      :text
 #
-# Indexes
-#
-#  index_menu_items_on_menu_section_id  (menu_section_id)
-#
-# Foreign Keys
-#
-#  fk_rails_6ce18aef6c  (menu_section_id => menu_sections.id)
-#
 
 class MenuItem < ApplicationRecord
   belongs_to :menu_section

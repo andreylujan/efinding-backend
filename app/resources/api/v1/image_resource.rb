@@ -17,11 +17,10 @@
 
 class Api::V1::ImageResource < ApplicationResource
   
-  has_one :data_part
   has_one :category
   # has_one :report
 
-  attributes :url, :comment, :report_id, :synced, :uuid
+  attributes :url, :comment, :report_id, :synced
   
   def synced
   	1

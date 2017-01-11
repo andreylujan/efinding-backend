@@ -9,15 +9,6 @@
 #  created_at      :datetime
 #  updated_at      :datetime
 #
-# Indexes
-#
-#  index_roles_on_organization_id           (organization_id)
-#  index_roles_on_organization_id_and_name  (organization_id,name) UNIQUE
-#
-# Foreign Keys
-#
-#  fk_rails_2f99738edd  (organization_id => organizations.id)
-#
 
 class Role < ApplicationRecord
   belongs_to :organization

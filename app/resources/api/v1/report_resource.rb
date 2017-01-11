@@ -4,7 +4,7 @@ class Api::V1::ReportResource < ApplicationResource
     :finished, :assigned_user_id, :pdf, :pdf_uploaded, :marked_location_attributes,
     :start_location_attributes, :finish_location_attributes, :started_at,
     :finished_at, :images_attributes, :report_type_id, :synced, :is_draft,
-    :state_name, :equipment_id, :activity_type_id,
+    :state_name,
     :formatted_finished_at, :formatted_created_at, :formatted_limit_date,
     :end_location_attributes
 
@@ -13,10 +13,7 @@ class Api::V1::ReportResource < ApplicationResource
   has_one :assigned_user
   has_one :creator
   key_type :uuid
-
-  has_one :equipment
-  has_one :activity_type
-
+  
   def started_at
     @model.started_at.strftime("%d/%m/%Y %R") if @model.started_at.present?
   end
@@ -129,19 +126,6 @@ class Api::V1::ReportResource < ApplicationResource
     end
   }
 
-  filter :"equipment", apply: ->(records, value, _options) {
-    if not value.empty?
-      records = records.includes(:equipment)
-    end
-    if value.first.is_a? Hash
-      value.first.each do |key, key_value|
-        if not key_value.blank?
-          records = records.where("equipments.#{key} ILIKE ?", "%#{key_value}%")
-        end
-      end
-    end
-    records
-  }
 
   filter :"marked_location_attributes", apply: ->(records, value, _options) {
     if not value.empty?
@@ -151,20 +135,6 @@ class Api::V1::ReportResource < ApplicationResource
       value.first.each do |key, key_value|
         if not key_value.blank?
           records = records.where("locations.#{key} ILIKE ?", "%#{key_value}%")
-        end
-      end
-    end
-    records
-  }
-
-  filter :"activity_type", apply: ->(records, value, _options) {
-    if not value.empty?
-      records = records.joins(:activity_type)
-    end
-    if value.first.is_a? Hash
-      value.first.each do |key, key_value|
-        if not key_value.blank?
-          records = records.where("activity_types.#{key} ILIKE ?", "%#{key_value}%")
         end
       end
     end
@@ -198,14 +168,6 @@ class Api::V1::ReportResource < ApplicationResource
       records
     end
   }
-
-  def equipment_id
-    @model.equipment_id.to_s if @model.equipment_id
-  end
-
-  def activity_type_id
-    @model.activity_type_id.to_s if @model.activity_type_id
-  end
 
   def creator_id
     @model.creator_id.to_s

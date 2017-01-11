@@ -13,16 +13,6 @@
 #  arrival_lonlat :geometry({:srid= point, 0
 #  exit_lonlat    :geometry({:srid= point, 0
 #
-# Indexes
-#
-#  index_checkins_on_arrival_lonlat  (arrival_lonlat)
-#  index_checkins_on_exit_lonlat     (exit_lonlat)
-#  index_checkins_on_user_id         (user_id)
-#
-# Foreign Keys
-#
-#  fk_rails_4b2b85ec8b  (user_id => users.id)
-#
 
 class Checkin < ApplicationRecord
   belongs_to :user

@@ -14,16 +14,6 @@
 #  last_name          :text
 #  internal_id        :text
 #
-# Indexes
-#
-#  index_invitations_on_email        (email) UNIQUE
-#  index_invitations_on_internal_id  (internal_id) UNIQUE
-#  index_invitations_on_role_id      (role_id)
-#
-# Foreign Keys
-#
-#  fk_rails_883497e553  (role_id => roles.id)
-#
 
 class Invitation < ApplicationRecord
   

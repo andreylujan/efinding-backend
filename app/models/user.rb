@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 # == Schema Information
 #
-# Table name: public.users
+# Table name: users
 #
 #  id                     :integer          not null, primary key
 #  email                  :string           default(""), not null

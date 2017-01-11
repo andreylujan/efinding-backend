@@ -98,7 +98,7 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
 
     add_index "devices", ["user_id"], name: "index_devices_on_user_id", using: :btree
 
-    create_table "images", force: :cascade do |t|
+    create_table "images", id: :uuid, force: :cascade do |t|
       t.text     "url"
       t.datetime "created_at",    null: false
       t.datetime "updated_at",    null: false
@@ -107,14 +107,12 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.integer  "resource_id"
       t.text     "resource_type"
       t.text     "comment"
-      t.text     "uuid"
     end
 
     add_index "images", ["category_id"], name: "index_images_on_category_id", using: :btree
     add_index "images", ["report_id"], name: "index_images_on_report_id", using: :btree
     add_index "images", ["resource_id"], name: "index_images_on_resource_id", using: :btree
     add_index "images", ["resource_type"], name: "index_images_on_resource_type", using: :btree
-    add_index "images", ["uuid"], name: "index_images_on_uuid", unique: true, using: :btree
 
     create_table "invitations", force: :cascade do |t|
       t.integer  "role_id",                            null: false
@@ -232,11 +230,6 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.text     "name",                                  null: false
       t.datetime "created_at",                            null: false
       t.datetime "updated_at",                            null: false
-      t.integer  "default_role_id"
-      t.text     "admin_url"
-      t.integer  "default_report_type_id"
-      t.text     "database"
-      t.boolean  "has_new_button",         default: true, null: false
       t.text     "logo"
       t.text     "csv_separator",          default: "|",  null: false
     end

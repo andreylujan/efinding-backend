@@ -15,10 +15,6 @@
 #  commune    :text
 #  reference  :text
 #
-# Indexes
-#
-#  index_locations_on_lonlat  (lonlat)
-#
 
 class Location < ApplicationRecord
 

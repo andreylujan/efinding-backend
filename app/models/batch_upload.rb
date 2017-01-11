@@ -17,14 +17,6 @@
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #
-# Indexes
-#
-#  index_batch_uploads_on_user_id  (user_id)
-#
-# Foreign Keys
-#
-#  fk_rails_8ca6f773b6  (user_id => users.id)
-#
 
 class BatchUpload < ApplicationRecord
   belongs_to :user

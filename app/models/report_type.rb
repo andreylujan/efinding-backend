@@ -12,14 +12,6 @@
 #  subtitle_field  :text
 #  has_nav_button  :boolean          default(FALSE)
 #
-# Indexes
-#
-#  index_report_types_on_organization_id  (organization_id)
-#
-# Foreign Keys
-#
-#  fk_rails_a0c783f1b4  (organization_id => organizations.id)
-#
 
 class ReportType < ApplicationRecord
   belongs_to :organization

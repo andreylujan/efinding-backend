@@ -19,30 +19,8 @@
 #  finish_location_id :integer
 #  started_at         :datetime
 #  finished_at        :datetime
-#  equipment_id       :integer
-#  activity_type_id   :integer
 #  deleted_at         :datetime
 #  end_location_id    :integer
-#
-# Indexes
-#
-#  index_reports_on_activity_type_id    (activity_type_id)
-#  index_reports_on_assigned_user_id    (assigned_user_id)
-#  index_reports_on_creator_id          (creator_id)
-#  index_reports_on_deleted_at          (deleted_at)
-#  index_reports_on_end_location_id     (end_location_id)
-#  index_reports_on_equipment_id        (equipment_id)
-#  index_reports_on_finish_location_id  (finish_location_id)
-#  index_reports_on_id                  (id)
-#  index_reports_on_marked_location_id  (marked_location_id)
-#  index_reports_on_report_type_id      (report_type_id)
-#  index_reports_on_start_location_id   (start_location_id)
-#
-# Foreign Keys
-#
-#  fk_rails_1d6c77ad78  (activity_type_id => activity_types.id)
-#  fk_rails_d0ffedf8a4  (report_type_id => report_types.id)
-#  fk_rails_d3b166528f  (equipment_id => equipments.id)
 #
 
 class Report < ApplicationRecord
