@@ -32,31 +32,42 @@ gem 'versionist', '~> 1.5'
 gem 'jsonapi-resources', git: 'https://github.com/cerebris/jsonapi-resources', branch: 'master'
 
 gem 'fog', '~> 1.38'
+gem 'fog-aws', '~> 1.1'
 gem 'sidekiq', '~> 4.2', '>= 4.2.7'
 gem 'redis', '~> 3.3', '>= 3.3.2'
 gem 'wicked_pdf', '~> 1.1'
 gem 'wkhtmltopdf-binary', '~> 0.12.3.1'
 gem 'charlock_holmes', '~> 0.7.3'
 
-gem 'activeuuid', '~> 0.6.1'
 gem 'devise', '~> 4.2'
 gem 'doorkeeper', '~> 4.2'
 
 gem 'awesome_print', '~> 1.7'
 gem 'rack-cors', '~> 0.4.0'
 gem 'acts_as_list', '~> 0.8.2'
-
+gem 'paperclip', '~> 5.1'
+gem 'aws-sdk', '~> 2.6', '>= 2.6.44'
+gem 'carrierwave', '~> 1.0'
+gem 'acts_as_xlsx', git: 'https://github.com/straydogstudio/acts_as_xlsx'
+gem 'axlsx', '~> 2.0', '>= 2.0.1'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
- gem 'byebug', '~> 9.0', '>= 9.0.6', platform: :mri
-end
-
-group :development do
+  gem 'byebug', '~> 9.0', '>= 9.0.6', platform: :mri
   gem 'listen', '~> 3.1', '>= 3.1.5'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring', '~> 2.0'
   gem 'spring-watcher-listen', '~> 2.0', '>= 2.0.1'
+end
+
+group :development do
+  gem 'capistrano-rails', '~> 1.2', '>= 1.2.1'
+  gem 'capistrano-rbenv', '~> 2.1'
+  gem 'capistrano-passenger', '~> 0.2.0'
+  gem 'capistrano-sidekiq', git: 'https://github.com/pelluch/capistrano-sidekiq'
+  gem 'rails-erd', '~> 1.5', require: false
+  gem 'annotate', git: 'https://github.com/ctran/annotate_models.git', branch: 'develop'
+  gem 'whenever', '~> 0.9.7', require: false
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
