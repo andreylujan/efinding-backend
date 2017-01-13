@@ -1,20 +1,16 @@
 # -*- encoding : utf-8 -*-
 # == Schema Information
 #
-# Table name: report_types
+# Table name: constructions
 #
 #  id              :integer          not null, primary key
-#  name            :text
 #  organization_id :integer
+#  name            :text             not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  title_field     :text
-#  subtitle_field  :text
 #
 
-class ReportType < ApplicationRecord
+class Construction < ApplicationRecord
   belongs_to :organization
-  has_many :sections
-  has_many :reports
-  has_many :report_columns, -> { order(position: :asc) }
+  has_many :inspections
 end

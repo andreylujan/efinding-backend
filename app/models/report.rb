@@ -21,11 +21,11 @@
 #  finished_at        :datetime
 #  deleted_at         :datetime
 #  end_location_id    :integer
+#  inspection_id      :integer
 #
 
 class Report < ApplicationRecord
 
-  belongs_to :equipment
   before_validation :check_report_type
   # before_validation :generate_id
   acts_as_paranoid
@@ -46,7 +46,8 @@ class Report < ApplicationRecord
   accepts_nested_attributes_for :images, update_only: false
   accepts_nested_attributes_for :start_location
   accepts_nested_attributes_for :finish_location
-
+  belongs_to :inspection
+  
   after_commit :generate_pdf
   after_commit :send_task_job, on: [ :create ]
 

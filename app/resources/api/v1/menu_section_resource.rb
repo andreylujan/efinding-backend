@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Api::V1::MenuSectionResource < ApplicationResource
   attributes :name, :icon, :admin_path
   has_many :menu_items

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Api::V1::BatchUploadResource < ApplicationResource
 	has_one :user
 	attributes :uploaded_resource_type, :uploaded_file_url, :uploaded_file_size, :result_file_url, :result_file_size, :created_at

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170110204214) do
+ActiveRecord::Schema.define(version: 20170113175150) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,6 +63,15 @@ ActiveRecord::Schema.define(version: 20170110204214) do
     t.datetime "updated_at", null: false
     t.index ["region_id", "name"], name: "index_communes_on_region_id_and_name", unique: true, using: :btree
     t.index ["region_id"], name: "index_communes_on_region_id", using: :btree
+  end
+
+  create_table "constructions", force: :cascade do |t|
+    t.integer  "organization_id"
+    t.text     "name",            null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["name", "organization_id"], name: "index_constructions_on_name_and_organization_id", unique: true, using: :btree
+    t.index ["organization_id"], name: "index_constructions_on_organization_id", using: :btree
   end
 
   create_table "data_parts", force: :cascade do |t|
@@ -116,6 +126,13 @@ ActiveRecord::Schema.define(version: 20170110204214) do
     t.index ["report_id"], name: "index_images_on_report_id", using: :btree
     t.index ["resource_id"], name: "index_images_on_resource_id", using: :btree
     t.index ["resource_type"], name: "index_images_on_resource_type", using: :btree
+  end
+
+  create_table "inspections", force: :cascade do |t|
+    t.integer  "construction_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["construction_id"], name: "index_inspections_on_construction_id", using: :btree
   end
 
   create_table "invitations", force: :cascade do |t|
@@ -222,11 +239,11 @@ ActiveRecord::Schema.define(version: 20170110204214) do
   end
 
   create_table "organizations", force: :cascade do |t|
-    t.text     "name",                                  null: false
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.text     "name",                        null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.text     "logo"
-    t.text     "csv_separator",          default: "|",  null: false
+    t.text     "csv_separator", default: "|", null: false
     t.index ["name"], name: "index_organizations_on_name", unique: true, using: :btree
   end
 
@@ -255,11 +272,10 @@ ActiveRecord::Schema.define(version: 20170110204214) do
   create_table "report_types", force: :cascade do |t|
     t.text     "name"
     t.integer  "organization_id"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.text     "title_field"
     t.text     "subtitle_field"
-    t.boolean  "has_nav_button",  default: false
     t.index ["organization_id"], name: "index_report_types_on_organization_id", using: :btree
   end
 
@@ -281,12 +297,14 @@ ActiveRecord::Schema.define(version: 20170110204214) do
     t.datetime "finished_at"
     t.datetime "deleted_at"
     t.integer  "end_location_id"
+    t.integer  "inspection_id"
     t.index ["assigned_user_id"], name: "index_reports_on_assigned_user_id", using: :btree
     t.index ["creator_id"], name: "index_reports_on_creator_id", using: :btree
     t.index ["deleted_at"], name: "index_reports_on_deleted_at", using: :btree
     t.index ["end_location_id"], name: "index_reports_on_end_location_id", using: :btree
     t.index ["finish_location_id"], name: "index_reports_on_finish_location_id", using: :btree
     t.index ["id"], name: "index_reports_on_id", using: :btree
+    t.index ["inspection_id"], name: "index_reports_on_inspection_id", using: :btree
     t.index ["marked_location_id"], name: "index_reports_on_marked_location_id", using: :btree
     t.index ["report_type_id"], name: "index_reports_on_report_type_id", using: :btree
     t.index ["start_location_id"], name: "index_reports_on_start_location_id", using: :btree
@@ -301,13 +319,18 @@ ActiveRecord::Schema.define(version: 20170110204214) do
     t.index ["organization_id"], name: "index_roles_on_organization_id", using: :btree
   end
 
+  create_table "roles_users", id: false, force: :cascade do |t|
+    t.integer "role_id", null: false
+    t.integer "user_id", null: false
+  end
+
   create_table "sections", force: :cascade do |t|
     t.integer  "position"
     t.text     "name"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.integer  "section_type_id", null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
     t.integer  "report_type_id"
+    t.integer  "section_type"
     t.index ["report_type_id"], name: "index_sections_on_report_type_id", using: :btree
   end
 
@@ -343,18 +366,21 @@ ActiveRecord::Schema.define(version: 20170110204214) do
   add_foreign_key "categories", "organizations"
   add_foreign_key "checkins", "users"
   add_foreign_key "communes", "regions"
+  add_foreign_key "constructions", "organizations"
   add_foreign_key "data_parts", "data_parts"
   add_foreign_key "data_parts", "organizations"
   add_foreign_key "data_parts", "sections"
   add_foreign_key "devices", "users"
   add_foreign_key "images", "categories"
   add_foreign_key "images", "reports"
+  add_foreign_key "inspections", "constructions"
   add_foreign_key "invitations", "roles"
   add_foreign_key "menu_items", "menu_sections"
   add_foreign_key "menu_sections", "organizations"
   add_foreign_key "organization_data", "organizations"
   add_foreign_key "report_columns", "report_types"
   add_foreign_key "report_types", "organizations"
+  add_foreign_key "reports", "inspections"
   add_foreign_key "reports", "report_types"
   add_foreign_key "roles", "organizations"
   add_foreign_key "sections", "report_types"
