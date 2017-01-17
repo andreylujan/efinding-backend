@@ -171,6 +171,7 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.datetime "created_at",      null: false
       t.datetime "updated_at",      null: false
       t.text     "admin_path"
+      t.integer  "position"
       t.index ["menu_section_id"], name: "index_menu_items_on_menu_section_id", using: :btree
     end
 
@@ -188,6 +189,7 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.datetime "updated_at",      null: false
       t.text     "icon"
       t.text     "admin_path"
+      t.integer  "position"
       t.index ["organization_id"], name: "index_menu_sections_on_organization_id", using: :btree
     end
 
@@ -388,6 +390,5 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
     add_foreign_key "roles", "organizations"
     add_foreign_key "sections", "report_types"
     add_foreign_key "users", "roles"
-
   end
 end
