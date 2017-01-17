@@ -7,8 +7,6 @@
 #  construction_id :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  creator_id      :integer
-#  resolved_at     :datetime
 #
 
 class Inspection < ApplicationRecord
