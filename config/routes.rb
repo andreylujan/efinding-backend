@@ -2,9 +2,9 @@
 Rails.application.routes.draw do
 
   match '/*path', to: 'application#cors_preflight_check', via: :options
-  # require 'sidekiq/web'
+  require 'sidekiq/web'
 
-  # mount Sidekiq::Web => '/sidekiq'
+  mount Sidekiq::Web => '/sidekiq'
 
   use_doorkeeper do
     skip_controllers :sessions, :authorizations, :applications,
@@ -43,6 +43,14 @@ Rails.application.routes.draw do
         :update
       ]
       
+      jsonapi_resources :companies, only: [ :index ] do
+        jsonapi_resources :constructions, only: [ :index ] do
+        end
+      end
+
+      jsonapi_resources :inspections, only: [ :index, :create, :update ] do
+      end
+
       jsonapi_resources :categories, only: [ :index ] do
       end
 
