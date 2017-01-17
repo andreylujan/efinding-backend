@@ -44,6 +44,7 @@ module Efinding
     end
 
     config.action_mailer.delivery_method = :smtp
+
     config.action_mailer.smtp_settings = {
       :address        => 'smtp.office365.com',
         :port           => '587',
@@ -53,7 +54,6 @@ module Efinding
         :domain         => 'ewin.cl',
         :enable_starttls_auto => true
     }
-
 
   end
 end
