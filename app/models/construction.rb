@@ -3,14 +3,14 @@
 #
 # Table name: constructions
 #
-#  id              :integer          not null, primary key
-#  organization_id :integer
-#  name            :text             not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id         :integer          not null, primary key
+#  name       :text             not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  company_id :integer
 #
 
 class Construction < ApplicationRecord
-  belongs_to :organization
+  belongs_to :company
   has_many :inspections
 end

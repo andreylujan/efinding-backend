@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170113175150) do
+ActiveRecord::Schema.define(version: 20170117145211) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,13 +65,22 @@ ActiveRecord::Schema.define(version: 20170113175150) do
     t.index ["region_id"], name: "index_communes_on_region_id", using: :btree
   end
 
-  create_table "constructions", force: :cascade do |t|
+  create_table "companies", force: :cascade do |t|
+    t.text     "name"
     t.integer  "organization_id"
-    t.text     "name",            null: false
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
-    t.index ["name", "organization_id"], name: "index_constructions_on_name_and_organization_id", unique: true, using: :btree
-    t.index ["organization_id"], name: "index_constructions_on_organization_id", using: :btree
+    t.index ["name", "organization_id"], name: "index_companies_on_name_and_organization_id", unique: true, using: :btree
+    t.index ["organization_id"], name: "index_companies_on_organization_id", using: :btree
+  end
+
+  create_table "constructions", force: :cascade do |t|
+    t.text     "name",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "company_id"
+    t.index ["company_id"], name: "index_constructions_on_company_id", using: :btree
+    t.index ["name", "company_id"], name: "index_constructions_on_name_and_company_id", unique: true, using: :btree
   end
 
   create_table "data_parts", force: :cascade do |t|
@@ -366,7 +375,8 @@ ActiveRecord::Schema.define(version: 20170113175150) do
   add_foreign_key "categories", "organizations"
   add_foreign_key "checkins", "users"
   add_foreign_key "communes", "regions"
-  add_foreign_key "constructions", "organizations"
+  add_foreign_key "companies", "organizations"
+  add_foreign_key "constructions", "companies"
   add_foreign_key "data_parts", "data_parts"
   add_foreign_key "data_parts", "organizations"
   add_foreign_key "data_parts", "sections"

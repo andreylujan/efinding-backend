@@ -20,7 +20,7 @@ class Organization < ApplicationRecord
     has_many :report_columns
     has_many :organization_data, dependent: :destroy
     has_many :menu_sections
-    has_many :constructions
+    has_many :companies
     has_many :reports, through: :report_types
     
     def users
