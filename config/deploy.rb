@@ -13,7 +13,7 @@ set :ssh_options, {
 }
 
 # Default value for :scm is :git
-set :scm, :git
+# set :scm, :git
 
 set :deploy_via, :remote_cache
 
