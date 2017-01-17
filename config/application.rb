@@ -33,7 +33,17 @@ module Efinding
     config.autoload_paths += %W(#{config.root}/app/models/data_parts)
     config.autoload_paths += Dir[Rails.root.join('app', 'models', 'data_parts')]
     config.autoload_paths += Dir[Rails.root.join('lib')]
-    config.autoload_paths += %W(#{config.root}/app/serializers/data_parts)
-    
+
+    config.action_mailer.delivery_method = :smtp    
+    config.action_mailer.smtp_settings = {
+      :address        => 'smtp.office365.com',
+        :port           => '587',
+        :authentication => :login,
+        :user_name      => ENV['EMAIL_USERNAME'],
+        :password       => ENV['EMAIL_PASSWORD'],
+        :domain         => 'ewin.cl',
+        :enable_starttls_auto => true
+    }
+
   end
 end
