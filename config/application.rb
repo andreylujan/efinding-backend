@@ -33,6 +33,7 @@ module Efinding
     config.autoload_paths += %W(#{config.root}/app/models/data_parts)
     config.autoload_paths += Dir[Rails.root.join('app', 'models', 'data_parts')]
     config.autoload_paths += Dir[Rails.root.join('lib')]
-
+    config.autoload_paths += %W(#{config.root}/app/serializers/data_parts)
+    
   end
 end

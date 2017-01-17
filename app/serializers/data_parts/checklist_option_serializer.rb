@@ -1,20 +1,21 @@
 # -*- encoding : utf-8 -*-
 # == Schema Information
 #
-# Table name: menu_sections
+# Table name: categories
 #
 #  id              :integer          not null, primary key
 #  name            :text             not null
-#  organization_id :integer
+#  organization_id :integer          not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  icon            :text
-#  admin_path      :text
-#  position        :integer
 #
 
-class MenuSection < ApplicationRecord
-  belongs_to :organization
+class ChecklistOptionSerializer < DataPartSerializer
+	attributes :detail
 
-  has_many :menu_items
+	def detail
+		if object.detail.present?
+			SubsectionSerializer.new(object.detail).as_json
+		end
+	end
 end
