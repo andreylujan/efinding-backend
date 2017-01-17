@@ -43,7 +43,7 @@ set :bundle_flags, '--deployment --quiet'                # this is default
 set :bundle_env_variables, {}                    # this is default
 
 # Default value for :linked_files is []
-set :linked_files, %w{.env}
+set :linked_files, %w{.env .envrc}
 
 # Default value for linked_dirs is []
 set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
