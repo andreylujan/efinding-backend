@@ -9,10 +9,10 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  admin_path      :text
+#  position        :integer
 #
 
 class MenuItem < ApplicationRecord
   belongs_to :menu_section
-  acts_as_list scope: :menu_section
   has_and_belongs_to_many :roles
 end

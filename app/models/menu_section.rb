@@ -10,10 +10,11 @@
 #  updated_at      :datetime         not null
 #  icon            :text
 #  admin_path      :text
+#  position        :integer
 #
 
 class MenuSection < ApplicationRecord
   belongs_to :organization
-  acts_as_list scope: :organization
-  has_many :menu_items, -> { order(position: :asc) }
+
+  has_many :menu_items
 end
