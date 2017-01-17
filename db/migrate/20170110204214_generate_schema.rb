@@ -19,19 +19,17 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.datetime "result_file_updated_at"
       t.datetime "created_at",                 null: false
       t.datetime "updated_at",                 null: false
+      t.index ["user_id"], name: "index_batch_uploads_on_user_id", using: :btree
     end
-
-    add_index "batch_uploads", ["user_id"], name: "index_batch_uploads_on_user_id", using: :btree
 
     create_table "categories", force: :cascade do |t|
       t.text     "name",            null: false
       t.integer  "organization_id", null: false
       t.datetime "created_at",      null: false
       t.datetime "updated_at",      null: false
+      t.index ["organization_id", "name"], name: "index_categories_on_organization_id_and_name", unique: true, using: :btree
+      t.index ["organization_id"], name: "index_categories_on_organization_id", using: :btree
     end
-
-    add_index "categories", ["organization_id", "name"], name: "index_categories_on_organization_id_and_name", unique: true, using: :btree
-    add_index "categories", ["organization_id"], name: "index_categories_on_organization_id", using: :btree
 
     create_table "checkins", force: :cascade do |t|
       t.integer  "user_id",                                                        null: false
@@ -42,21 +40,37 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.json     "data",                                              default: {}, null: false
       t.geometry "arrival_lonlat", limit: {:srid=>0, :type=>"point"}
       t.geometry "exit_lonlat",    limit: {:srid=>0, :type=>"point"}
+      t.index ["arrival_lonlat"], name: "index_checkins_on_arrival_lonlat", using: :gist
+      t.index ["exit_lonlat"], name: "index_checkins_on_exit_lonlat", using: :gist
+      t.index ["user_id"], name: "index_checkins_on_user_id", using: :btree
     end
-
-    add_index "checkins", ["arrival_lonlat"], name: "index_checkins_on_arrival_lonlat", using: :gist
-    add_index "checkins", ["exit_lonlat"], name: "index_checkins_on_exit_lonlat", using: :gist
-    add_index "checkins", ["user_id"], name: "index_checkins_on_user_id", using: :btree
 
     create_table "communes", force: :cascade do |t|
       t.integer  "region_id"
       t.text     "name",       null: false
       t.datetime "created_at", null: false
       t.datetime "updated_at", null: false
+      t.index ["region_id", "name"], name: "index_communes_on_region_id_and_name", unique: true, using: :btree
+      t.index ["region_id"], name: "index_communes_on_region_id", using: :btree
     end
 
-    add_index "communes", ["region_id", "name"], name: "index_communes_on_region_id_and_name", unique: true, using: :btree
-    add_index "communes", ["region_id"], name: "index_communes_on_region_id", using: :btree
+    create_table "companies", force: :cascade do |t|
+      t.text     "name"
+      t.integer  "organization_id"
+      t.datetime "created_at",      null: false
+      t.datetime "updated_at",      null: false
+      t.index ["name", "organization_id"], name: "index_companies_on_name_and_organization_id", unique: true, using: :btree
+      t.index ["organization_id"], name: "index_companies_on_organization_id", using: :btree
+    end
+
+    create_table "constructions", force: :cascade do |t|
+      t.text     "name",       null: false
+      t.datetime "created_at", null: false
+      t.datetime "updated_at", null: false
+      t.integer  "company_id"
+      t.index ["company_id"], name: "index_constructions_on_company_id", using: :btree
+      t.index ["name", "company_id"], name: "index_constructions_on_name_and_company_id", unique: true, using: :btree
+    end
 
     create_table "data_parts", force: :cascade do |t|
       t.text     "type",                           null: false
@@ -71,12 +85,11 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.integer  "organization_id"
       t.integer  "section_id"
       t.integer  "data_part_id"
+      t.index ["data_part_id"], name: "index_data_parts_on_data_part_id", using: :btree
+      t.index ["detail_id"], name: "index_data_parts_on_detail_id", using: :btree
+      t.index ["organization_id"], name: "index_data_parts_on_organization_id", using: :btree
+      t.index ["section_id"], name: "index_data_parts_on_section_id", using: :btree
     end
-
-    add_index "data_parts", ["data_part_id"], name: "index_data_parts_on_data_part_id", using: :btree
-    add_index "data_parts", ["detail_id"], name: "index_data_parts_on_detail_id", using: :btree
-    add_index "data_parts", ["organization_id"], name: "index_data_parts_on_organization_id", using: :btree
-    add_index "data_parts", ["section_id"], name: "index_data_parts_on_section_id", using: :btree
 
     create_table "devices", force: :cascade do |t|
       t.integer  "user_id"
@@ -95,11 +108,10 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.datetime "created_at",      null: false
       t.datetime "updated_at",      null: false
       t.text     "os_type"
+      t.index ["user_id"], name: "index_devices_on_user_id", using: :btree
     end
 
-    add_index "devices", ["user_id"], name: "index_devices_on_user_id", using: :btree
-
-    create_table "images", id: :uuid, force: :cascade do |t|
+    create_table "images", id: :uuid, default: nil, force: :cascade do |t|
       t.text     "url"
       t.datetime "created_at",    null: false
       t.datetime "updated_at",    null: false
@@ -108,12 +120,21 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.integer  "resource_id"
       t.text     "resource_type"
       t.text     "comment"
+      t.index ["category_id"], name: "index_images_on_category_id", using: :btree
+      t.index ["report_id"], name: "index_images_on_report_id", using: :btree
+      t.index ["resource_id"], name: "index_images_on_resource_id", using: :btree
+      t.index ["resource_type"], name: "index_images_on_resource_type", using: :btree
     end
 
-    add_index "images", ["category_id"], name: "index_images_on_category_id", using: :btree
-    add_index "images", ["report_id"], name: "index_images_on_report_id", using: :btree
-    add_index "images", ["resource_id"], name: "index_images_on_resource_id", using: :btree
-    add_index "images", ["resource_type"], name: "index_images_on_resource_type", using: :btree
+    create_table "inspections", force: :cascade do |t|
+      t.integer  "construction_id"
+      t.datetime "created_at",      null: false
+      t.datetime "updated_at",      null: false
+      t.integer  "creator_id"
+      t.datetime "resolved_at"
+      t.index ["construction_id"], name: "index_inspections_on_construction_id", using: :btree
+      t.index ["creator_id"], name: "index_inspections_on_creator_id", using: :btree
+    end
 
     create_table "invitations", force: :cascade do |t|
       t.integer  "role_id",                            null: false
@@ -125,16 +146,15 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.text     "first_name"
       t.text     "last_name"
       t.text     "internal_id"
+      t.index ["email"], name: "index_invitations_on_email", unique: true, using: :btree
+      t.index ["internal_id"], name: "index_invitations_on_internal_id", unique: true, using: :btree
+      t.index ["role_id"], name: "index_invitations_on_role_id", using: :btree
     end
-
-    add_index "invitations", ["email"], name: "index_invitations_on_email", unique: true, using: :btree
-    add_index "invitations", ["internal_id"], name: "index_invitations_on_internal_id", unique: true, using: :btree
-    add_index "invitations", ["role_id"], name: "index_invitations_on_role_id", using: :btree
 
     create_table "locations", force: :cascade do |t|
       t.geometry "lonlat",     limit: {:srid=>0, :type=>"point"}, null: false
       t.integer  "accuracy"
-      t.integer  "timestamp",  limit: 8
+      t.bigint   "timestamp"
       t.text     "provider"
       t.datetime "created_at",                                    null: false
       t.datetime "updated_at",                                    null: false
@@ -142,9 +162,8 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.text     "region"
       t.text     "commune"
       t.text     "reference"
+      t.index ["lonlat"], name: "index_locations_on_lonlat", using: :gist
     end
-
-    add_index "locations", ["lonlat"], name: "index_locations_on_lonlat", using: :gist
 
     create_table "menu_items", force: :cascade do |t|
       t.integer  "menu_section_id"
@@ -152,17 +171,15 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.datetime "created_at",      null: false
       t.datetime "updated_at",      null: false
       t.text     "admin_path"
+      t.index ["menu_section_id"], name: "index_menu_items_on_menu_section_id", using: :btree
     end
-
-    add_index "menu_items", ["menu_section_id"], name: "index_menu_items_on_menu_section_id", using: :btree
 
     create_table "menu_items_roles", id: false, force: :cascade do |t|
       t.integer "menu_item_id", null: false
       t.integer "role_id",      null: false
+      t.index ["menu_item_id"], name: "index_menu_items_roles_on_menu_item_id", using: :btree
+      t.index ["role_id"], name: "index_menu_items_roles_on_role_id", using: :btree
     end
-
-    add_index "menu_items_roles", ["menu_item_id"], name: "index_menu_items_roles_on_menu_item_id", using: :btree
-    add_index "menu_items_roles", ["role_id"], name: "index_menu_items_roles_on_role_id", using: :btree
 
     create_table "menu_sections", force: :cascade do |t|
       t.text     "name",            null: false
@@ -171,9 +188,8 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.datetime "updated_at",      null: false
       t.text     "icon"
       t.text     "admin_path"
+      t.index ["organization_id"], name: "index_menu_sections_on_organization_id", using: :btree
     end
-
-    add_index "menu_sections", ["organization_id"], name: "index_menu_sections_on_organization_id", using: :btree
 
     create_table "oauth_access_grants", force: :cascade do |t|
       t.integer  "resource_owner_id", null: false
@@ -184,9 +200,8 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.datetime "created_at",        null: false
       t.datetime "revoked_at"
       t.string   "scopes"
+      t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true, using: :btree
     end
-
-    add_index "oauth_access_grants", ["token"], name: "index_oauth_access_grants_on_token", unique: true, using: :btree
 
     create_table "oauth_access_tokens", force: :cascade do |t|
       t.integer  "resource_owner_id"
@@ -197,11 +212,10 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.datetime "revoked_at"
       t.datetime "created_at",        null: false
       t.string   "scopes"
+      t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true, using: :btree
+      t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id", using: :btree
+      t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true, using: :btree
     end
-
-    add_index "oauth_access_tokens", ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true, using: :btree
-    add_index "oauth_access_tokens", ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id", using: :btree
-    add_index "oauth_access_tokens", ["token"], name: "index_oauth_access_tokens_on_token", unique: true, using: :btree
 
     create_table "oauth_applications", force: :cascade do |t|
       t.string   "name",                      null: false
@@ -211,9 +225,8 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.string   "scopes",       default: "", null: false
       t.datetime "created_at"
       t.datetime "updated_at"
+      t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
     end
-
-    add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
     create_table "organization_data", force: :cascade do |t|
       t.integer  "organization_id", null: false
@@ -221,22 +234,19 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.text     "collection_name", null: false
       t.datetime "created_at",      null: false
       t.datetime "updated_at",      null: false
+      t.index ["organization_id", "collection_name"], name: "index_organization_data_on_organization_id_and_collection_name", unique: true, using: :btree
+      t.index ["organization_id", "path_suffix"], name: "index_organization_data_on_organization_id_and_path_suffix", unique: true, using: :btree
+      t.index ["organization_id"], name: "index_organization_data_on_organization_id", using: :btree
     end
-
-    add_index "organization_data", ["organization_id", "collection_name"], name: "index_organization_data_on_organization_id_and_collection_name", unique: true, using: :btree
-    add_index "organization_data", ["organization_id", "path_suffix"], name: "index_organization_data_on_organization_id_and_path_suffix", unique: true, using: :btree
-    add_index "organization_data", ["organization_id"], name: "index_organization_data_on_organization_id", using: :btree
 
     create_table "organizations", force: :cascade do |t|
-      t.text     "name",                                  null: false
-      t.datetime "created_at",                            null: false
-      t.datetime "updated_at",                            null: false
+      t.text     "name",                        null: false
+      t.datetime "created_at",                  null: false
+      t.datetime "updated_at",                  null: false
       t.text     "logo"
-      t.text     "csv_separator",          default: "|",  null: false
+      t.text     "csv_separator", default: "|", null: false
+      t.index ["name"], name: "index_organizations_on_name", unique: true, using: :btree
     end
-
-    add_index "organizations", ["default_role_id"], name: "index_organizations_on_default_role_id", using: :btree
-    add_index "organizations", ["name"], name: "index_organizations_on_name", unique: true, using: :btree
 
     create_table "regions", force: :cascade do |t|
       t.text     "name",          null: false
@@ -244,10 +254,9 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.integer  "number"
       t.datetime "created_at",    null: false
       t.datetime "updated_at",    null: false
+      t.index ["name"], name: "index_regions_on_name", unique: true, using: :btree
+      t.index ["roman_numeral"], name: "index_regions_on_roman_numeral", unique: true, using: :btree
     end
-
-    add_index "regions", ["name"], name: "index_regions_on_name", unique: true, using: :btree
-    add_index "regions", ["roman_numeral"], name: "index_regions_on_roman_numeral", unique: true, using: :btree
 
     create_table "report_columns", force: :cascade do |t|
       t.text     "field_name"
@@ -258,21 +267,18 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.integer  "report_type_id",                null: false
       t.text     "relationship_name"
       t.integer  "data_type",         default: 1
+      t.index ["report_type_id"], name: "index_report_columns_on_report_type_id", using: :btree
     end
-
-    add_index "report_columns", ["report_type_id"], name: "index_report_columns_on_report_type_id", using: :btree
 
     create_table "report_types", force: :cascade do |t|
       t.text     "name"
       t.integer  "organization_id"
-      t.datetime "created_at",                      null: false
-      t.datetime "updated_at",                      null: false
+      t.datetime "created_at",      null: false
+      t.datetime "updated_at",      null: false
       t.text     "title_field"
       t.text     "subtitle_field"
-      t.boolean  "has_nav_button",  default: false
+      t.index ["organization_id"], name: "index_report_types_on_organization_id", using: :btree
     end
-
-    add_index "report_types", ["organization_id"], name: "index_report_types_on_organization_id", using: :btree
 
     create_table "reports", id: :uuid, default: nil, force: :cascade do |t|
       t.integer  "report_type_id",                     null: false
@@ -292,38 +298,42 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.datetime "finished_at"
       t.datetime "deleted_at"
       t.integer  "end_location_id"
+      t.integer  "inspection_id"
+      t.index ["assigned_user_id"], name: "index_reports_on_assigned_user_id", using: :btree
+      t.index ["creator_id"], name: "index_reports_on_creator_id", using: :btree
+      t.index ["deleted_at"], name: "index_reports_on_deleted_at", using: :btree
+      t.index ["end_location_id"], name: "index_reports_on_end_location_id", using: :btree
+      t.index ["finish_location_id"], name: "index_reports_on_finish_location_id", using: :btree
+      t.index ["id"], name: "index_reports_on_id", using: :btree
+      t.index ["inspection_id"], name: "index_reports_on_inspection_id", using: :btree
+      t.index ["marked_location_id"], name: "index_reports_on_marked_location_id", using: :btree
+      t.index ["report_type_id"], name: "index_reports_on_report_type_id", using: :btree
+      t.index ["start_location_id"], name: "index_reports_on_start_location_id", using: :btree
     end
-
-    add_index "reports", ["assigned_user_id"], name: "index_reports_on_assigned_user_id", using: :btree
-    add_index "reports", ["creator_id"], name: "index_reports_on_creator_id", using: :btree
-    add_index "reports", ["deleted_at"], name: "index_reports_on_deleted_at", using: :btree
-    add_index "reports", ["end_location_id"], name: "index_reports_on_end_location_id", using: :btree
-    add_index "reports", ["finish_location_id"], name: "index_reports_on_finish_location_id", using: :btree
-    add_index "reports", ["id"], name: "index_reports_on_id", using: :btree
-    add_index "reports", ["marked_location_id"], name: "index_reports_on_marked_location_id", using: :btree
-    add_index "reports", ["report_type_id"], name: "index_reports_on_report_type_id", using: :btree
-    add_index "reports", ["start_location_id"], name: "index_reports_on_start_location_id", using: :btree
 
     create_table "roles", force: :cascade do |t|
       t.integer  "organization_id", null: false
       t.text     "name",            null: false
       t.datetime "created_at"
       t.datetime "updated_at"
+      t.index ["organization_id", "name"], name: "index_roles_on_organization_id_and_name", unique: true, using: :btree
+      t.index ["organization_id"], name: "index_roles_on_organization_id", using: :btree
     end
 
-    add_index "roles", ["organization_id", "name"], name: "index_roles_on_organization_id_and_name", unique: true, using: :btree
-    add_index "roles", ["organization_id"], name: "index_roles_on_organization_id", using: :btree
+    create_table "roles_users", id: false, force: :cascade do |t|
+      t.integer "role_id", null: false
+      t.integer "user_id", null: false
+    end
 
     create_table "sections", force: :cascade do |t|
       t.integer  "position"
       t.text     "name"
-      t.datetime "created_at",      null: false
-      t.datetime "updated_at",      null: false
-      t.integer  "section_type_id", null: false
+      t.datetime "created_at",     null: false
+      t.datetime "updated_at",     null: false
       t.integer  "report_type_id"
+      t.integer  "section_type"
+      t.index ["report_type_id"], name: "index_sections_on_report_type_id", using: :btree
     end
-
-    add_index "sections", ["report_type_id"], name: "index_sections_on_report_type_id", using: :btree
 
     create_table "users", force: :cascade do |t|
       t.string   "email",                  default: "", null: false
@@ -345,31 +355,35 @@ class GenerateSchema < ActiveRecord::Migration[5.0]
       t.text     "image"
       t.integer  "role_id",                             null: false
       t.datetime "deleted_at"
+      t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
+      t.index ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
+      t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+      t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+      t.index ["role_id"], name: "index_users_on_role_id", using: :btree
+      t.index ["rut"], name: "index_users_on_rut", unique: true, using: :btree
     end
-
-    add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
-    add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
-    add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-    add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-    add_index "users", ["role_id"], name: "index_users_on_role_id", using: :btree
-    add_index "users", ["rut"], name: "index_users_on_rut", unique: true, using: :btree
 
     add_foreign_key "batch_uploads", "users"
     add_foreign_key "categories", "organizations"
     add_foreign_key "checkins", "users"
     add_foreign_key "communes", "regions"
+    add_foreign_key "companies", "organizations"
+    add_foreign_key "constructions", "companies"
     add_foreign_key "data_parts", "data_parts"
     add_foreign_key "data_parts", "organizations"
     add_foreign_key "data_parts", "sections"
     add_foreign_key "devices", "users"
     add_foreign_key "images", "categories"
     add_foreign_key "images", "reports"
+    add_foreign_key "inspections", "constructions"
+    add_foreign_key "inspections", "users", column: "creator_id"
     add_foreign_key "invitations", "roles"
     add_foreign_key "menu_items", "menu_sections"
     add_foreign_key "menu_sections", "organizations"
     add_foreign_key "organization_data", "organizations"
     add_foreign_key "report_columns", "report_types"
     add_foreign_key "report_types", "organizations"
+    add_foreign_key "reports", "inspections"
     add_foreign_key "reports", "report_types"
     add_foreign_key "roles", "organizations"
     add_foreign_key "sections", "report_types"
