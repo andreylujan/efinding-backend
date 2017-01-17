@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170117173914) do
+ActiveRecord::Schema.define(version: 20170117185422) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,7 +140,10 @@ ActiveRecord::Schema.define(version: 20170117173914) do
     t.integer  "construction_id"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.integer  "creator_id"
+    t.datetime "resolved_at"
     t.index ["construction_id"], name: "index_inspections_on_construction_id", using: :btree
+    t.index ["creator_id"], name: "index_inspections_on_creator_id", using: :btree
   end
 
   create_table "invitations", force: :cascade do |t|
@@ -385,6 +388,7 @@ ActiveRecord::Schema.define(version: 20170117173914) do
   add_foreign_key "images", "categories"
   add_foreign_key "images", "reports"
   add_foreign_key "inspections", "constructions"
+  add_foreign_key "inspections", "users", column: "creator_id"
   add_foreign_key "invitations", "roles"
   add_foreign_key "menu_items", "menu_sections"
   add_foreign_key "menu_sections", "organizations"

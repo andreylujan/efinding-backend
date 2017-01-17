@@ -4,7 +4,7 @@ class Api::V1::UserResource < ApplicationResource
     :password, :password_confirmation, :email, :role_id,
     :image, :role_name, :full_name, :address
 
-  has_many :roles
+  has_one :role
 
   def custom_links(options)
     { self: nil }
