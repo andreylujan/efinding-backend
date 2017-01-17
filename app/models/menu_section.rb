@@ -14,6 +14,6 @@
 
 class MenuSection < ApplicationRecord
   belongs_to :organization
-
-  has_many :menu_items
+  acts_as_list scope: :organization
+  has_many :menu_items, -> { order(position: :asc) }
 end
