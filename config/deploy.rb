@@ -13,7 +13,7 @@ set :ssh_options, {
 }
 
 # Default value for :scm is :git
-set :scm, :git
+# set :scm, :git
 
 set :deploy_via, :remote_cache
 
@@ -43,7 +43,7 @@ set :bundle_flags, '--deployment --quiet'                # this is default
 set :bundle_env_variables, {}                    # this is default
 
 # Default value for :linked_files is []
-set :linked_files, %w{.env}
+set :linked_files, %w{.env .envrc}
 
 # Default value for linked_dirs is []
 set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
@@ -64,13 +64,13 @@ set :rbenv_custom_path, '/home/ubuntu/.rbenv/bin/rbenv'
 set :passenger_restart_with_sudo, true
 
 namespace :sidekiq do
-	after :stop, :reenable_stop do
-		on roles(:web) do
-			within release_path do
-				Rake::Task['sidekiq:stop'].reenable
-			end
-		end
-	end
+  after :stop, :reenable_stop do
+    on roles(:web) do
+      within release_path do
+        Rake::Task['sidekiq:stop'].reenable
+      end
+    end
+  end
 end
 
 namespace :deploy do
