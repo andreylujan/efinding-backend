@@ -34,6 +34,15 @@ module Efinding
     config.autoload_paths += Dir[Rails.root.join('app', 'models', 'data_parts')]
     config.autoload_paths += Dir[Rails.root.join('lib')]
 
+    # ActiveModelSerializers.config.adapter = :json_api
+    # ActiveModelSerializers.config.key_transform = :underscore
+    config.middleware.insert_before 0, "Rack::Cors" do
+      allow do
+        origins '*'
+        resource '*', :headers => :any, :methods => [:get, :post, :options, :put, :patch, :delete]
+      end
+    end
+
     config.action_mailer.delivery_method = :smtp
     
     config.action_mailer.smtp_settings = {

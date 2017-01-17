@@ -1,16 +1,15 @@
 # -*- encoding : utf-8 -*-
 # == Schema Information
 #
-# Table name: inspections
+# Table name: categories
 #
 #  id              :integer          not null, primary key
-#  construction_id :integer
+#  name            :text             not null
+#  organization_id :integer          not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #
 
-class Inspection < ApplicationRecord
-  belongs_to :construction
-  has_many :reports
-  belongs_to :creator, class_name: :User, foreign_key: :creator_id
+class ChecklistItemSerializer < DataPartSerializer
+	attributes :option_ids	
 end
