@@ -1,0 +1,6 @@
+#!/bin/bash
+
+pgbackup
+dropdb efinding_development
+createdb efinding_development
+psql -f db/dump.sql -U efinding -d efinding_development

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+IP=50.16.161.152
+# IP=52.201.182.66
+PORT=60
+KEY=echeckit_production.pem
+echo 'Backing up to file...'
+echo "ssh -p $PORT -i $HOME/.ssh/$KEY "ubuntu@$IP" 'pg_dump -d efinding_production > ~/dump.sql'"
+ssh -p $PORT -i $HOME/.ssh/$KEY "ubuntu@$IP" 'pg_dump -d efinding_production > ~/dump.sql'
+echo 'Done. Downloading to current folder...'
+scp -P $PORT  -i $HOME/.ssh/$KEY "ubuntu@$IP:~/dump.sql" db/dump.sql
+echo 'Done. Deleting remote file...'
+ssh -p $PORT  -i $HOME/.ssh/$KEY "ubuntu@$IP" 'rm ~/dump.sql'
+echo 'Done.'
