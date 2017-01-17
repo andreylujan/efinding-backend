@@ -2,7 +2,6 @@
 # == Schema Information
 #
 # Table name: public.users
-# Table name: users
 #
 #  id                     :integer          not null, primary key
 #  email                  :string           default(""), not null
@@ -23,7 +22,6 @@
 #  address                :text
 #  image                  :text
 #  role_id                :integer          not null
-#  deleted_at             :datetime
 #
 
 class UserSerializer < ActiveModel::Serializer

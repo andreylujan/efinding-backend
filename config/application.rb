@@ -33,8 +33,7 @@ module Efinding
     config.autoload_paths += %W(#{config.root}/app/models/data_parts)
     config.autoload_paths += Dir[Rails.root.join('app', 'models', 'data_parts')]
     config.autoload_paths += Dir[Rails.root.join('lib')]
-    config.autoload_paths += %W(#{config.root}/app/serializers/data_parts)
-    
+
     # ActiveModelSerializers.config.adapter = :json_api
     # ActiveModelSerializers.config.key_transform = :underscore
     config.middleware.insert_before 0, "Rack::Cors" do
@@ -56,7 +55,5 @@ module Efinding
         :enable_starttls_auto => true
     }
 
-    
-    
   end
 end
