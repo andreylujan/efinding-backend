@@ -78,6 +78,13 @@ test:
 #   production:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
+
+staging:
+  <<: *default
+  database: efinding_staging
+  username: efinding
+  password: <%= ENV['EFINDING_DATABASE_PASSWORD'] %>
+
 production:
   <<: *default
   database: efinding_production
