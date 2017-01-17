@@ -19,7 +19,7 @@ class Organization < ApplicationRecord
     has_many :data_parts
     has_many :report_columns
     has_many :organization_data, dependent: :destroy
-    has_many :menu_sections, -> { order(position: :asc) }
+    has_many :menu_sections
     has_many :companies
     has_many :reports, through: :report_types
     

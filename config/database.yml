@@ -83,9 +83,3 @@ production:
   database: efinding_production
   username: efinding
   password: <%= ENV['EFINDING_DATABASE_PASSWORD'] %>
-
-staging:
-  <<: *default
-  database: efinding_staging
-  username: efinding
-  password: <%= ENV['EFINDING_DATABASE_PASSWORD'] %>

@@ -65,10 +65,6 @@ class User < ApplicationRecord
     full_name
   end
 
-  def role_name
-    role.name
-  end
-
   def viewable_reports
     Report.where("assigned_user_id = ? or creator_id = ?", self.id, self.id)
   end

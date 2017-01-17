@@ -13,7 +13,7 @@ server '50.16.161.152', port: 60, user: 'ubuntu', roles: [:web, :app, :db]
 set :branch, 'staging'
 
 # Default deploy_to directory is /var/www/my_app
-set :deploy_to, '/srv/http/www/efinding/staging/api'
+set :deploy_to, '/srv/http/www/echeckit/efinding-staging/api'
 
 # role-based syntax
 # ==================
