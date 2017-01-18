@@ -16,5 +16,4 @@ class ReportType < ApplicationRecord
   belongs_to :organization
   has_many :sections
   has_many :reports
-  has_many :report_columns, -> { order(position: :asc) }
 end

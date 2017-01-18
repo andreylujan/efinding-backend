@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 # == Schema Information
 #
-# Table name: report_columns
+# Table name: table_columns
 #
 #  id                :integer          not null, primary key
 #  field_name        :text
@@ -9,13 +9,16 @@
 #  position          :integer
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  report_type_id    :integer          not null
 #  relationship_name :text
 #  data_type         :integer          default("text")
+#  collection_name   :text
+#  collection_source :integer
+#  organization_id   :integer
 #
 
-class ReportColumn < ApplicationRecord
-  belongs_to :report_type
-  acts_as_list scope: :report_type
+class TableColumn < ApplicationRecord
+  belongs_to :organization
+  acts_as_list scope: [ :collection_name, :collection_source ]
   enum data_type: [ :numeric, :text, :date ]
+  enum collection_source: [ :postgres, :mongo ]
 end

@@ -2,7 +2,6 @@
 class Api::V1::ReportTypeResource < ApplicationResource
   attributes :name, :title_field, :subtitle_field
   has_many :sections
-  has_many :report_columns
 
   def custom_links(options)
     { self: nil }

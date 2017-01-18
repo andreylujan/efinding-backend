@@ -24,8 +24,7 @@ Rails.application.routes.draw do
       jsonapi_resources :batch_uploads, only: [ :index ] do
       end
 
-      jsonapi_resources :organizations,
-      only: [ :index, :show ] do
+      jsonapi_resources :organizations, only: [ :index, :show ] do
         jsonapi_related_resources :roles, only: [ :index ]
         jsonapi_related_resources :report_types, only: [ :index ]
       end

@@ -32,6 +32,7 @@ module Efinding
 
     config.autoload_paths += %W(#{config.root}/app/models/data_parts)
     config.autoload_paths += Dir[Rails.root.join('app', 'models', 'data_parts')]
+    config.autoload_paths += Dir[Rails.root.join('app', 'serializers', 'data_parts')]
     config.autoload_paths += Dir[Rails.root.join('lib')]
 
     # ActiveModelSerializers.config.adapter = :json_api

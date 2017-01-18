@@ -1,4 +1,17 @@
 # -*- encoding : utf-8 -*-
+# == Schema Information
+#
+# Table name: sections
+#
+#  id             :integer          not null, primary key
+#  position       :integer
+#  name           :text
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  report_type_id :integer
+#  section_type   :integer
+#
+
 
 class SectionSerializer < ActiveModel::Serializer
 	attributes :id, :position, :name, :subsections, :section_type

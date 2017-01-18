@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170110204214) do
-
+ActiveRecord::Schema.define(version: 20170118140407) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -182,6 +181,7 @@ ActiveRecord::Schema.define(version: 20170110204214) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.text     "admin_path"
+    t.integer  "position"
     t.index ["menu_section_id"], name: "index_menu_items_on_menu_section_id", using: :btree
   end
 
@@ -199,6 +199,7 @@ ActiveRecord::Schema.define(version: 20170110204214) do
     t.datetime "updated_at",      null: false
     t.text     "icon"
     t.text     "admin_path"
+    t.integer  "position"
     t.index ["organization_id"], name: "index_menu_sections_on_organization_id", using: :btree
   end
 
@@ -269,18 +270,6 @@ ActiveRecord::Schema.define(version: 20170110204214) do
     t.index ["roman_numeral"], name: "index_regions_on_roman_numeral", unique: true, using: :btree
   end
 
-  create_table "report_columns", force: :cascade do |t|
-    t.text     "field_name"
-    t.text     "column_name"
-    t.integer  "position"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.integer  "report_type_id",                null: false
-    t.text     "relationship_name"
-    t.integer  "data_type",         default: 1
-    t.index ["report_type_id"], name: "index_report_columns_on_report_type_id", using: :btree
-  end
-
   create_table "report_types", force: :cascade do |t|
     t.text     "name"
     t.integer  "organization_id"
@@ -346,6 +335,20 @@ ActiveRecord::Schema.define(version: 20170110204214) do
     t.index ["report_type_id"], name: "index_sections_on_report_type_id", using: :btree
   end
 
+  create_table "table_columns", force: :cascade do |t|
+    t.text     "field_name"
+    t.text     "column_name"
+    t.integer  "position"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.text     "relationship_name"
+    t.integer  "data_type",         default: 1
+    t.text     "collection_name"
+    t.integer  "collection_source"
+    t.integer  "organization_id"
+    t.index ["organization_id"], name: "index_table_columns_on_organization_id", using: :btree
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -392,11 +395,11 @@ ActiveRecord::Schema.define(version: 20170110204214) do
   add_foreign_key "menu_items", "menu_sections"
   add_foreign_key "menu_sections", "organizations"
   add_foreign_key "organization_data", "organizations"
-  add_foreign_key "report_columns", "report_types"
   add_foreign_key "report_types", "organizations"
   add_foreign_key "reports", "inspections"
   add_foreign_key "reports", "report_types"
   add_foreign_key "roles", "organizations"
   add_foreign_key "sections", "report_types"
+  add_foreign_key "table_columns", "organizations"
   add_foreign_key "users", "roles"
 end

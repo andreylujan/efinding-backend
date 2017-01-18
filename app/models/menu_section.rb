@@ -10,6 +10,7 @@
 #  updated_at      :datetime         not null
 #  icon            :text
 #  admin_path      :text
+#  position        :integer
 #
 
 class MenuSection < ApplicationRecord

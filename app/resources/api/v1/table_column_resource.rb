@@ -13,7 +13,7 @@
 #  updated_at      :datetime         not null
 #
 
-class Api::V1::ReportColumnResource < ApplicationResource
+class Api::V1::TableColumnResource < ApplicationResource
 
 	attributes :field_name, :column_name, :data_type, :position, :relationship_name
 	
