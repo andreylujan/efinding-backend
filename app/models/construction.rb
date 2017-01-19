@@ -13,4 +13,6 @@
 class Construction < ApplicationRecord
   belongs_to :company
   has_many :inspections
+  validates :company, presence: true
+  validates :name, presence: true, uniqueness: { scope: :company }
 end

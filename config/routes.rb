@@ -42,9 +42,16 @@ Rails.application.routes.draw do
         :update
       ]
       
-      jsonapi_resources :companies, only: [ :index ] do
+      jsonapi_resources :companies, only: [ :index, :create, :update, :destroy, :show ] do
         jsonapi_resources :constructions, only: [ :index ] do
         end
+      end
+
+      jsonapi_resources :constructions, only: [ :create, :update, :destroy, :show ] do
+        
+      end
+
+      jsonapi_resources :table_columns, only: [ :index ] do
       end
 
       jsonapi_resources :inspections, only: [ :index, :create, :update ] do

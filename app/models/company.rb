@@ -12,5 +12,7 @@
 
 class Company < ApplicationRecord
   belongs_to :organization
+  validates :organization, presence: true
+  validates :name, presence: true, uniqueness: { scope: :organization }
   has_many :constructions
 end
