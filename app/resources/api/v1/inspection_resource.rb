@@ -3,7 +3,7 @@ class Api::V1::InspectionResource < JSONAPI::Resource
   has_one :creator
   has_one :construction
   
-  attributes :created_at, :resolved_at
+  attributes :created_at, :resolved_at, :construction_id
 
   filter :creator, apply: ->(records, value, _options) {
     if not value.empty?
