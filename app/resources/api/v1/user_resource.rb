@@ -1,5 +1,5 @@
 # -*- encoding : utf-8 -*-
-class Api::V1::UserResource < JSONAPI::Resource
+class Api::V1::UserResource < ApplicationResource
   attributes :rut, :first_name, :last_name, :phone_number,
     :password, :password_confirmation, :email, :role_id,
     :image, :role_name, :full_name, :address
