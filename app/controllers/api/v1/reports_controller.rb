@@ -5,7 +5,9 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
   before_action :doorkeeper_authorize!
 
   def context
-    super.merge({ all: params[:all], zip: @zip })
+    super.merge({
+      inspection_id: params[:inspection_id]
+    })
   end
 
   def xlsx

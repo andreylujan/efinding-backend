@@ -214,14 +214,11 @@ class Api::V1::ReportResource < ApplicationResource
 
   def self.records(options = {})
     context = options[:context]
-    user = context[:current_user]
-
-    if not context[:zip] and (user.role.name != "admin" or !context[:all])
-      user.viewable_reports.order("created_at DESC")
+    current_user = context[:current_user]
+    if context[:inspection_id]
+      Inspection.find(context[:inspection_id]).reports
     else
-      Report.joins(:report_type)
-      .where(report_types: { organization_id: user.organization_id })
-      .order("reports.created_at DESC")
+      Inspection.where("0 = 1")
     end
   end
 
