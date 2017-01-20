@@ -6,12 +6,14 @@ class Api::V1::ReportResource < ApplicationResource
     :finished_at, :images_attributes, :report_type_id, :synced, :is_draft,
     :state_name,
     :formatted_finished_at, :formatted_created_at, :formatted_limit_date,
-    :end_location_attributes
+    :end_location_attributes,
+    :inspection_id
 
   has_one :report_type
   has_many :images
   has_one :assigned_user
   has_one :creator
+  has_one :inspection
   key_type :uuid
   
   def started_at
