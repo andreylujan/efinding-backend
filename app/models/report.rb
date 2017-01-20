@@ -131,9 +131,6 @@ class Report < ApplicationRecord
     self.assigned_user = User.find_by_email!(val)
   end
 
-  def serial_number=(val)
-    self.equipment = Equipment.find_by_serial_number!(val)
-  end
 
   def check_report_type
     if self.report_type.nil? and self.creator.present?
@@ -155,15 +152,6 @@ class Report < ApplicationRecord
     end
     if self.finished.nil?
       self.finished = false
-    end
-    if self.equipment.present?
-      if self.dynamic_attributes.nil?
-        self.dynamic_attributes = {}
-      end
-      self.dynamic_attributes["class"] = self.equipment.equipment_class
-      self.dynamic_attributes["serial_number"] = self.equipment.serial_number
-      self.dynamic_attributes["3"] = { text: self.equipment.equipment_class }
-      self.dynamic_attributes["5"] = { text: self.equipment.serial_number }
     end
     true
   end
