@@ -29,7 +29,7 @@ gem 'dotenv-rails', '~> 2.1', '>= 2.1.1'
 gem 'activerecord-postgis-adapter', '~> 4.0', '>= 4.0.2'
 gem 'paranoia', '~> 2.2'
 gem 'versionist', '~> 1.5'
-gem 'jsonapi-resources', git: 'https://github.com/cerebris/jsonapi-resources', branch: 'master'
+gem 'jsonapi-resources', '~> 0.9.0.beta3'
 
 gem 'fog', '~> 1.38'
 gem 'fog-aws', '~> 1.1'

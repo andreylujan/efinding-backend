@@ -55,6 +55,8 @@ Rails.application.routes.draw do
       end
 
       jsonapi_resources :inspections, only: [ :index, :create, :update ] do
+        jsonapi_resources :reports, only: [ :index ] do
+        end
       end
 
       jsonapi_resources :categories, only: [ :index ] do

@@ -34,7 +34,9 @@ class Api::V1::JsonApiController < ApplicationController
   end
 
   def context
-    {current_user: current_user}
+    {
+      current_user: current_user
+    }
   end  
   
 end
