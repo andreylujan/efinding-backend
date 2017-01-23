@@ -29,6 +29,11 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
      :filename => 'reports.xlsx')
   end
 
+  def create
+    params.permit!
+    super
+  end
+
   def zip
     params["action"] = "index"
     params["all"] = true
