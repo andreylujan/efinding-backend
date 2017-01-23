@@ -43,7 +43,7 @@ class Report < ApplicationRecord
   belongs_to :end_location, class_name: :Location
   accepts_nested_attributes_for :marked_location
   accepts_nested_attributes_for :end_location
-  accepts_nested_attributes_for :images, update_only: false
+  # accepts_nested_attributes_for :images, update_only: false
   accepts_nested_attributes_for :start_location
   accepts_nested_attributes_for :finish_location
   belongs_to :inspection
@@ -67,6 +67,12 @@ class Report < ApplicationRecord
     :execution_time,
     :pdf_url
   ]
+
+  def images_attributes=(val)
+    val.each do |attrs|
+      self.images << Image.new(attrs)
+    end
+  end
 
   def creator_email
     creator.email
