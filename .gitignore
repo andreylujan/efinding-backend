@@ -18,3 +18,4 @@
 .byebug_history
 .idea
 dump.sql
+.DS_Store

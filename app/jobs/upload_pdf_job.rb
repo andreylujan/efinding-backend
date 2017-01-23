@@ -11,7 +11,7 @@ class UploadPdfJob < ApplicationJob
     html = nil
     begin
       html = (ac.render_to_string('templates/' + report.creator.organization_id.to_s + '/report.html.erb',
-                                  locals: { :@report => report })).force_encoding("UTF-8")
+                                  locals: { report: report })).force_encoding("UTF-8")
       pdf = WickedPdf.new.pdf_from_string(html, zoom: 0.8)
       file = Tempfile.new('pdf', encoding: 'ascii-8bit')
     rescue ActionView::MissingTemplate => e

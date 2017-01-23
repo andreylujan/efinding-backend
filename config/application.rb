@@ -35,6 +35,8 @@ module Efinding
     config.autoload_paths += Dir[Rails.root.join('app', 'serializers', 'data_parts')]
     config.autoload_paths += Dir[Rails.root.join('lib')]
 
+    config.active_job.queue_adapter = :sidekiq
+    
     # ActiveModelSerializers.config.adapter = :json_api
     # ActiveModelSerializers.config.key_transform = :underscore
     config.middleware.insert_before 0, "Rack::Cors" do
