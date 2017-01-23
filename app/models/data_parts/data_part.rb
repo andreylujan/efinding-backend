@@ -24,7 +24,5 @@ class DataPart < ApplicationRecord
   acts_as_list scope: :section
   belongs_to :data_part
   has_many :data_parts
-  validates_presence_of :organization
-
   
 end

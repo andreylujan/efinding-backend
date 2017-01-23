@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170120201210) do
+ActiveRecord::Schema.define(version: 20170123141534) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,21 +83,19 @@ ActiveRecord::Schema.define(version: 20170120201210) do
   end
 
   create_table "data_parts", force: :cascade do |t|
-    t.text     "type",                           null: false
-    t.text     "name",                           null: false
+    t.text     "type",                        null: false
+    t.text     "name",                        null: false
     t.text     "icon"
-    t.boolean  "required",        default: true, null: false
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.json     "config",          default: {},   null: false
-    t.integer  "position",        default: 0,    null: false
+    t.boolean  "required",     default: true, null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.json     "config",       default: {},   null: false
+    t.integer  "position",     default: 0,    null: false
     t.integer  "detail_id"
-    t.integer  "organization_id"
     t.integer  "section_id"
     t.integer  "data_part_id"
     t.index ["data_part_id"], name: "index_data_parts_on_data_part_id", using: :btree
     t.index ["detail_id"], name: "index_data_parts_on_detail_id", using: :btree
-    t.index ["organization_id"], name: "index_data_parts_on_organization_id", using: :btree
     t.index ["section_id"], name: "index_data_parts_on_section_id", using: :btree
   end
 
@@ -385,7 +383,6 @@ ActiveRecord::Schema.define(version: 20170120201210) do
   add_foreign_key "companies", "organizations"
   add_foreign_key "constructions", "companies"
   add_foreign_key "data_parts", "data_parts"
-  add_foreign_key "data_parts", "organizations"
   add_foreign_key "data_parts", "sections"
   add_foreign_key "devices", "users"
   add_foreign_key "images", "categories"

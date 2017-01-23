@@ -21,7 +21,8 @@ class Api::V1::DataPartResource < ApplicationResource
 
 	def self.records(options = {})
     	context = options[:context]
-    	context[:current_user].organization.data_parts
+    	DataPart.joins(section: { report_type: :organization}).where(organizations: { id: context[:current_user].organization.id })
+    	
   	end
 
 	def custom_links(options)
