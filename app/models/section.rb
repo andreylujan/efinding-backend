@@ -18,5 +18,5 @@ class Section < ApplicationRecord
   has_many :data_parts, -> { order(position: :asc) }
   has_many :checklist_options, class_name: :ChecklistOption, foreign_key: :detail_id
   delegate :organization, to: :report_type, allow_nil: false
-  enum section_type: [ :map, :gallery, :data_parts ]
+  enum section_type: [ :location, :gallery, :data_parts ]
 end
