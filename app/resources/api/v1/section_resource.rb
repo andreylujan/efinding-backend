@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::SectionResource < ApplicationResource
 
-  attributes :name, :position, :config
+  attributes :name, :position, :config, :section_type
   has_many :data_parts, always_include_linkage_data: false
   
   
