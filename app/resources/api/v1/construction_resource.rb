@@ -1,5 +1,5 @@
 class Api::V1::ConstructionResource < ApplicationResource
-	attributes :name
+	attributes :name, :company_id
 	has_one :company
 
 	def self.records(options = {})
