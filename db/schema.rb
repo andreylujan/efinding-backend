@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170123141534) do
+ActiveRecord::Schema.define(version: 20170123171330) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -180,6 +180,8 @@ ActiveRecord::Schema.define(version: 20170123141534) do
     t.datetime "updated_at",      null: false
     t.text     "admin_path"
     t.integer  "position"
+    t.text     "collection_name"
+    t.text     "url_include"
     t.index ["menu_section_id"], name: "index_menu_items_on_menu_section_id", using: :btree
   end
 

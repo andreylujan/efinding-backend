@@ -10,6 +10,7 @@
 #  updated_at     :datetime         not null
 #  report_type_id :integer
 #  section_type   :integer
+#  config         :json             not null
 #
 
 class Section < ApplicationRecord

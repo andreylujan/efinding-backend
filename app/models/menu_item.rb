@@ -9,6 +9,9 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  admin_path      :text
+#  position        :integer
+#  collection_name :text
+#  url_include     :text
 #
 
 class MenuItem < ApplicationRecord
