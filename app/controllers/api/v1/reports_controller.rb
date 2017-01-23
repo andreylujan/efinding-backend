@@ -29,6 +29,10 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
      :filename => 'reports.xlsx')
   end
 
+  def show
+    super
+  end
+
   def create
     params.permit!
     super

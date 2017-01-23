@@ -218,7 +218,7 @@ class Api::V1::ReportResource < ApplicationResource
     if context[:inspection_id]
       Inspection.find(context[:inspection_id]).reports
     else
-      Inspection.where("0 = 1")
+      Report.joins(creator: { role: :organization }).where(organizations: { id: current_user.organization.id })
     end
   end
 
