@@ -47,6 +47,7 @@ class User < ApplicationRecord
   after_create :send_confirmation_email
   has_many :checkins
   has_many :batch_uploads
+  has_and_belongs_to_many :inspections
 
   def send_confirmation_email
     UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email').confirmation_email(self)
