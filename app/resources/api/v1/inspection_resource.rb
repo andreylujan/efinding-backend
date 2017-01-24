@@ -3,6 +3,7 @@ class Api::V1::InspectionResource < JSONAPI::Resource
   has_one :creator
   has_one :construction
   has_many :users
+  has_one :initial_signer
     
   attributes :created_at, :resolved_at, :construction_id
 
