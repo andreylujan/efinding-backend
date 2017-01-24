@@ -26,6 +26,10 @@ class Inspection < ApplicationRecord
   validates :state, presence: true
   has_and_belongs_to_many :users
 
+  def num_reports
+    reports.count
+  end
+
   state_machine :state, initial: :reports_pending do
 
     event :send_for_revision do
