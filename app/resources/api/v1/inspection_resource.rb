@@ -4,8 +4,8 @@ class Api::V1::InspectionResource < JSONAPI::Resource
   has_one :construction
   has_many :users
   has_one :initial_signer
-    
-  attributes :created_at, :resolved_at, :construction_id
+
+  attributes :created_at, :resolved_at, :construction_id, :state
 
   filter :creator, apply: ->(records, value, _options) {
     if not value.empty?
@@ -36,5 +36,9 @@ class Api::V1::InspectionResource < JSONAPI::Resource
       records
     end
   }
+
+  before_save do
+    @model.creator_id = context[:current_user].id if @model.new_record?
+  end
 
 end
