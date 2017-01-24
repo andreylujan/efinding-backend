@@ -327,7 +327,7 @@
 		<div class="formHeader" style="float: right;">
 			<h3>FOTOS</h3>
 			<div class="picsField">
-				<img src="2.png" style="width: 400px; height: 250px">
+				<img src="<%= report.images.first.url.gsub('https', 'http') %>" style="width: 400px; height: 250px">
 			</div>
 		</div>
 	</div>
@@ -344,7 +344,7 @@
 		<div class="formHeader" style="float: right;">
 			<h3>FOTOS</h3>
 			<div class="picsField">
-				<img src="2.png" style="width: 400px; height: 250px">
+				<img src="<%= report.images.first.url.gsub('https', 'http') %>" style="width: 400px; height: 250px">
 			</div>
 		</div>
 	</div>
