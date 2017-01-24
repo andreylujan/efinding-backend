@@ -16,9 +16,6 @@ class Api::V1::ReportResource < ApplicationResource
   has_one :inspection
   key_type :uuid
   
-  def started_at
-    @model.started_at.strftime("%d/%m/%Y %R") if @model.started_at.present?
-  end
 
   filters :pdf_uploaded,
     :report_type_id, :state_name, :creator_id
