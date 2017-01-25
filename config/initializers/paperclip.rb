@@ -8,5 +8,5 @@ Paperclip::Attachment.default_options[:fog_credentials] = {
 }
 
 Paperclip::Attachment.default_options[:fog_directory] = "eretail"
-Paperclip::Attachment.default_options[:fog_host] = "https://dhg7r6mxe01qf.cloudfront.net"
+Paperclip::Attachment.default_options[:fog_host] = "https://ddejhenv4m3e3.cloudfront.net"
 Paperclip::Attachment.default_options[:fog_public] = true
