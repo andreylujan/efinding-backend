@@ -7,7 +7,8 @@ class Api::V1::ReportResource < ApplicationResource
     :state_name,
     :formatted_finished_at, :formatted_created_at, :formatted_limit_date,
     :end_location_attributes,
-    :inspection_id
+    :inspection_id,
+    :html
 
   has_one :report_type
   has_many :images
@@ -196,6 +197,10 @@ class Api::V1::ReportResource < ApplicationResource
 
   def pdf
     @model.pdf.url
+  end
+
+  def html
+    @model.html.url
   end
 
   before_save do

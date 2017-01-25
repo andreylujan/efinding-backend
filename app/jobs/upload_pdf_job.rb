@@ -14,6 +14,7 @@ class UploadPdfJob < ApplicationJob
                                   locals: { report: report })).force_encoding("UTF-8")
       pdf = WickedPdf.new.pdf_from_string(html, zoom: 0.8)
       file = Tempfile.new('pdf', encoding: 'ascii-8bit')
+      html_file = Tempfile.new('html', encoding: 'UTF-8')
     rescue ActionView::MissingTemplate => e
       return
     end
@@ -23,6 +24,9 @@ class UploadPdfJob < ApplicationJob
 
       report.pdf = file
       report.pdf_uploaded = true
+      html_file.write(html)
+      report.save!
+      report.html = html_file
       report.save!
     ensure
       file.close
