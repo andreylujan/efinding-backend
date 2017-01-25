@@ -320,9 +320,7 @@
 			<h3>GEOLOCALIZACIÓN</h3>
 			<div class="label wpi-180">Hallazgo</div>
 			<br>
-			<div class="formHeader">
-				<img src="http://maps.googleapis.com/maps/api/staticmap?&maptype=roadmap&zoom=15&size=500x230&markers=size:mid%7Ccolor:blue%7C<%= report.marked_location.lonlat.y %>,<%= report.marked_location.lonlat.x %>" style="width: 100%;" />
-			</div>
+			<img id="firstMap" src="http://maps.googleapis.com/maps/api/staticmap?&maptype=roadmap&zoom=15&size=500x230&markers=size:mid%7Ccolor:blue%7C<%= report.marked_location.lonlat.y %>,<%= report.marked_location.lonlat.x %>" style="width: 100%;" />
 		</div>
 		<div class="formHeader" style="float: right;">
 			<h3>FOTOS</h3>
@@ -337,9 +335,7 @@
 			<h3>GEOLOCALIZACIÓN</h3>
 			<div class="label wpi-180">Resolución hallazgo:</div>
 			<br>
-			<div class="formHeader">
-				<img src="http://maps.googleapis.com/maps/api/staticmap?&maptype=roadmap&zoom=15&size=500x230&markers=size:mid%7Ccolor:blue%7C<%= report.marked_location.lonlat.y %>,<%= report.marked_location.lonlat.x %>" style="width: 100%;" />
-			</div>
+			<img id="secondMap" src="http://maps.googleapis.com/maps/api/staticmap?&maptype=roadmap&zoom=15&size=500x230&markers=size:mid%7Ccolor:blue%7C<%= report.marked_location.lonlat.y %>,<%= report.marked_location.lonlat.x %>" style="width: 100%;" />
 		</div>
 		<div class="formHeader" style="float: right;">
 			<h3>FOTOS</h3>
@@ -348,26 +344,27 @@
 			</div>
 		</div>
 	</div>
+	<br>
 	<div class="formHeaders">
 		<div class="formHeader">
 			<div class="field ">
-				<div class="label wpi-80">Dirección:</div>
+				<div class="label wpi-170">Dirección:</div>
 				<div class="value wpi-170"><%= report.marked_location.address %></div>
 			</div>
 			<div class="field ">
-				<div class="label wpi-80">Región:</div>
+				<div class="label wpi-170">Región:</div>
 				<div class="value wpi-170"><%= report.marked_location.region %></div>
 			</div>
 			<div class="field ">
-				<div class="label wpi-80">Comuna:</div>
+				<div class="label wpi-170">Comuna:</div>
 				<div class="value wpi-170"><%= report.marked_location.commune %></div>
 			</div>
 			<div class="field">
-				<div class="label wpi-80">Referencia:</div>
+				<div class="label wpi-170">Referencia:</div>
 				<div class="value wpi-170"><%= report.marked_location.reference %></div>
 			</div>
 			<div class="field">
-				<div class="label wpi-80">Recomendaciones:</div>
+				<div class="label wpi-170">Recomendaciones:</div>
 				<div class="value wpi-170"><%= report.marked_location.reference %></div>
 			</div>
 		</div>
