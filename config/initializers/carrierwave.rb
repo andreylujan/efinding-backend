@@ -10,7 +10,7 @@ CarrierWave.configure do |config|
   }
   config.fog_directory  = 'eretail'                     # required
   config.fog_public     = true                                   # optional, defaults to true
-  config.asset_host = 'https://d21zid65ggdxzg.cloudfront.net'
+  config.asset_host = 'https://ddejhenv4m3e3.cloudfront.net'
   config.fog_attributes = {'Cache-Control'=>'max-age=315576000'}  # optional, defaults to {}
 end
 
