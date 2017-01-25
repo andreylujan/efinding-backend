@@ -8,7 +8,7 @@ CarrierWave.configure do |config|
    #  :host                   => 's2go.s3-sa-east-1.amazonaws.com'            # optional, defaults to nil
     # :endpoint               => 'https://s3.example.com:8080' # optional, defaults to nil
   }
-  config.fog_directory  = 'eretail'                     # required
+  config.fog_directory  = 'efinding'                     # required
   config.fog_public     = true                                   # optional, defaults to true
   config.asset_host = 'https://ddejhenv4m3e3.cloudfront.net'
   config.fog_attributes = {'Cache-Control'=>'max-age=315576000'}  # optional, defaults to {}

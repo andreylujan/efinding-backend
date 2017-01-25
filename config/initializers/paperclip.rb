@@ -7,6 +7,6 @@ Paperclip::Attachment.default_options[:fog_credentials] = {
     :region                 => 'sa-east-1'                  # optional, defaults to 'us-east-1'}
 }
 
-Paperclip::Attachment.default_options[:fog_directory] = "eretail"
+Paperclip::Attachment.default_options[:fog_directory] = "efinding"
 Paperclip::Attachment.default_options[:fog_host] = "https://ddejhenv4m3e3.cloudfront.net"
 Paperclip::Attachment.default_options[:fog_public] = true
