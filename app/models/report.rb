@@ -48,6 +48,7 @@ class Report < ApplicationRecord
   accepts_nested_attributes_for :start_location
   accepts_nested_attributes_for :finish_location
   belongs_to :inspection
+  acts_as_list scope: :inspection
   
   after_commit :generate_pdf
   after_commit :send_task_job, on: [ :create ]

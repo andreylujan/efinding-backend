@@ -236,8 +236,8 @@
 		<!-- <img src="http://d21zid65ggdxzg.cloudfront.net/echeckit-logo.png" alt="logo_belltech" class="logo"> -->
 		<img src="http://ddejhenv4m3e3.cloudfront.net/logos/moller.png" alt="logo_moller" class="logo">
 		<hr>
-		<h3 class="inspeccion">INSPECCIÓN: <%= report.dynamic_attributes.dig('1', 'text') %></h3>
-		<h3>HALLAZGO <%= report.id.to_s %> </h3>
+		<h3 class="inspeccion">INSPECCIÓN: <%= report.inspection.construction.name %></h3>
+		<h3>HALLAZGO <%= report.position.to_s %> </h3>
 		<div class="formHeaders">
 			<div class="formHeader" style="float: left">
 				<div class="field ">

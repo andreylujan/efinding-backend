@@ -18,7 +18,7 @@ class Inspection < ApplicationRecord
   acts_as_paranoid
 
   belongs_to :construction
-  has_many :reports, dependent: :destroy
+  has_many :reports, -> { order(position: :asc) }, dependent: :destroy
   belongs_to :creator, class_name: :User, foreign_key: :creator_id
   belongs_to :initial_signer, class_name: :User, foreign_key: :signer_id
   validates :construction, presence: true
