@@ -396,7 +396,7 @@
 							<%= report.creator.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
 						</td>
 						<td>
-							<% if report.inspection.state == "first_signature_done" %>
+							<% if report.inspection.state != "reports_pending" and report.inspection.state != "first_signature_pending" %>
 								<%= report.inspection.initial_signer.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
 							<% end %>
 						</td>
