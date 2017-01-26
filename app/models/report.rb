@@ -64,6 +64,7 @@ class Report < ApplicationRecord
 
   validate :limit_date_cannot_be_in_the_past, on: :create
   before_save :default_values
+  after_commit :check_inspection_state, on: [ :update ]
 
   acts_as_xlsx columns: [
     :id,
@@ -78,6 +79,10 @@ class Report < ApplicationRecord
     :execution_time,
     :pdf_url
   ]
+
+  def check_inspection_state
+
+  end
 
   def images_attributes=(val)
     val.each do |attrs|

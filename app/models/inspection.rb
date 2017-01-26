@@ -28,6 +28,12 @@ class Inspection < ApplicationRecord
   validates :state, presence: true
   has_and_belongs_to_many :users
 
+  def check_state
+    if state == "first_signature_done" and reports.where.not(state: "unchecked").count == 0
+      resolve_reports!
+    end
+  end
+
   def num_reports
     reports.count
   end
