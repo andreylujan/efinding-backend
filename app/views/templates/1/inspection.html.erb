@@ -400,7 +400,7 @@
 							</td>
 							<td>
 								<% if report.inspection.state == "first_signature_done" %>
-									<%= report.initial_signer.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
+									<%= report.inspection.initial_signer.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
 								<% end %>
 							</td>
 							<td>
@@ -411,7 +411,7 @@
 							</td>
 							<td>
 								<% if report.inspection.state == "finished" %>
-									<%= report.final_signer.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
+									<%= report.inspection.final_signer.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
 								<% end %>
 							</td>
 						</tr>
