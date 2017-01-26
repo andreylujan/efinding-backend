@@ -215,7 +215,7 @@ class Api::V1::ReportResource < ApplicationResource
 
   before_save do
     if @model.state_changed?
-      if @model.state_change[1] == "resolved"
+      if @model.state_change[1] == "resolved" || @model.state_change[1] == "pending"
         @model.resolver = context[:current_user]
       end
       @model.pdf_uploaded = false
