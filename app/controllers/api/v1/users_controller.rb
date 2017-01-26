@@ -61,7 +61,8 @@ class Api::V1::UsersController < Api::V1::JsonApiController
     email = params.require(:email)
     @user = User.find_by_reset_password_token_and_email(token, email)
     if @user
-      render json: @user
+      render json: JSONAPI::ResourceSerializer.new(Api::V1::UserResource)
+      .serialize_to_hash(Api::V1::UserResource.new(@user, nil))
     else
       render json: unauthorized_error, status: :unauthorized
     end
