@@ -184,18 +184,14 @@ class Report < ApplicationRecord
   end
 
   def initial_location_attributes
-    if initial_location.present?
-      {
-        location_attributes(initial_location)
-      }
+    if initial_location.present?      
+      location_attributes(initial_location)      
     end
   end
 
   def final_location_attributes
-    if final_location.present?
-      {
-        location_attributes(final_location)
-      }
+    if final_location.present?      
+      location_attributes(final_location)      
     end
   end
 
