@@ -27,7 +27,10 @@ class Api::V1::ReportResource < ApplicationResource
 
   key_type :uuid
   
-
+  def inspection_id
+    @model.inspection_id.to_s
+  end
+  
   filters :pdf_uploaded,
     :report_type_id, :state_name, :creator_id
  
