@@ -29,6 +29,7 @@ class Report < ApplicationRecord
   before_validation :check_report_type
   # before_validation :generate_id
   acts_as_paranoid
+  attr_accessor :ignore_pdf
   belongs_to :report_type
   belongs_to :creator, class_name: :User, foreign_key: :creator_id
   belongs_to :assigned_user, class_name: :User, foreign_key: :assigned_user_id
@@ -38,6 +39,9 @@ class Report < ApplicationRecord
 
   mount_uploader :pdf, PdfUploader
   mount_uploader :html, HtmlUploader
+  mount_uploader :initial_location_image, ImageUploader
+  mount_uploader :final_location_image, ImageUploader
+
   has_many :images, dependent: :destroy
   before_save :cache_data
 
@@ -202,7 +206,7 @@ class Report < ApplicationRecord
   end
 
   def generate_pdf
-    if self.finished? and not self.pdf_uploaded?
+    if not @ignore_pdf and self.finished? and not self.pdf_uploaded?
       regenerate_pdf
     end
   end
