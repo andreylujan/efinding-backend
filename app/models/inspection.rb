@@ -35,6 +35,13 @@ class Inspection < ApplicationRecord
     end
   end
 
+  def regenerate_all_pdfs
+    regenerate_pdf(true)
+    reports.each do |report|
+      report.regenerate_pdf(true)
+    end
+  end
+
   def regenerate_pdf(force_random = false)
     if force_random
       update_columns pdf: nil, pdf_uploaded: false
