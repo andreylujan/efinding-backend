@@ -20,7 +20,7 @@ class Api::V1::ImageResource < ApplicationResource
   has_one :category
   # has_one :report
 
-  attributes :url, :comment, :report_id, :synced
+  attributes :url, :comment, :report_id, :synced, :is_initial
   
   def synced
   	1

@@ -12,6 +12,7 @@
 #  resource_id   :integer
 #  resource_type :text
 #  comment       :text
+#  is_initial    :boolean          default(TRUE), not null
 #
 
 class Image < ApplicationRecord

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170126000208) do
+ActiveRecord::Schema.define(version: 20170126165520) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,13 +121,14 @@ ActiveRecord::Schema.define(version: 20170126000208) do
 
   create_table "images", id: :uuid, default: nil, force: :cascade do |t|
     t.text     "url"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.integer  "category_id"
     t.uuid     "report_id"
     t.integer  "resource_id"
     t.text     "resource_type"
     t.text     "comment"
+    t.boolean  "is_initial",    default: true, null: false
     t.index ["category_id"], name: "index_images_on_category_id", using: :btree
     t.index ["report_id"], name: "index_images_on_report_id", using: :btree
     t.index ["resource_id"], name: "index_images_on_resource_id", using: :btree
