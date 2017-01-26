@@ -1,4 +1,4 @@
-class Api::V1::InspectionResource < JSONAPI::Resource
+class Api::V1::InspectionResource < ApplicationResource
 
   has_one :creator
   has_one :construction
@@ -6,8 +6,10 @@ class Api::V1::InspectionResource < JSONAPI::Resource
   has_one :initial_signer
   has_one :final_signer
 
-  attributes :created_at, :resolved_at, :construction_id, :state, :num_reports,
+  attributes :created_at, :resolved_at, :state, :num_reports,
     :pdf, :pdf_uploaded
+
+  add_foreign_keys :construction_id
 
   def pdf
     @model.pdf.url

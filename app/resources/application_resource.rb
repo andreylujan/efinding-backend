@@ -4,6 +4,16 @@ class ApplicationResource < JSONAPI::Resource
     {self: nil}
   end
 
+  def self.add_foreign_keys(*keys)
+    keys.each do |key|
+      define_method key do
+        val = @model.send(key)
+        val.to_s unless val.nil?
+      end
+      @_attributes[key] = {}
+    end
+  end
+
   def self.apply_filters(records, filters, options = {})
     required_includes = []
 

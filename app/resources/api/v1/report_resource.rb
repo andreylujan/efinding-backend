@@ -1,22 +1,25 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::ReportResource < ApplicationResource
-  attributes :dynamic_attributes, :creator_id, :created_at, :limit_date,
-    :finished, :assigned_user_id, :pdf, :pdf_uploaded, 
+
+  
+
+  attributes :dynamic_attributes, :created_at, :limit_date,
+    :finished, :pdf, :pdf_uploaded, 
     :initial_location_attributes,
     :final_location_attributes,
     :started_at,
     :finished_at, 
-    :images_attributes,
-     :report_type_id, :synced, :is_draft,
+    :images_attributes, :synced, :is_draft,
     :state_name,
     :formatted_finished_at, 
     :formatted_created_at, 
     :formatted_limit_date,
-    :inspection_id,
     :html,
     :state,
     :resolved_at,
     :resolution_comment
+
+  add_foreign_keys :inspection_id, :creator_id, :assigned_user_id, :report_type_id
 
   has_one :report_type
   has_many :images
@@ -27,9 +30,6 @@ class Api::V1::ReportResource < ApplicationResource
 
   key_type :uuid
   
-  def inspection_id
-    @model.inspection_id.to_s
-  end
   
   filters :pdf_uploaded,
     :report_type_id, :state_name, :creator_id
@@ -181,20 +181,6 @@ class Api::V1::ReportResource < ApplicationResource
       records
     end
   }
-
-  def creator_id
-    @model.creator_id.to_s
-  end
-
-  def assigned_user_id
-    if @model.assigned_user_id
-      @model.assigned_user_id.to_s
-    end
-  end
-
-  def report_type_id
-    @model.report_type_id.to_s
-  end
 
   def custom_links(options)
     {self: nil}

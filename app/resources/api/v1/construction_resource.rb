@@ -1,10 +1,8 @@
 class Api::V1::ConstructionResource < ApplicationResource
 	attributes :name, :company_id
 	has_one :company
-
-    def company_id
-        @model.company_id.to_s
-    end
+    add_foreign_keys :company_id
+    
 
 	def self.records(options = {})
     context = options[:context]

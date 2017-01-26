@@ -1,8 +1,10 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::UserResource < ApplicationResource
   attributes :rut, :first_name, :last_name, :phone_number,
-    :password, :password_confirmation, :email, :role_id,
+    :password, :password_confirmation, :email,
     :image, :role_name, :full_name, :address
+
+  add_foreign_keys :role_id
 
   has_one :role
 

@@ -1,7 +1,9 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::DataPartResource < ApplicationResource
-	attributes :name, :icon, :required, :config, :section_id,
-		:data_part_id, :data_part_type, :position
+	attributes :name, :icon, :required, :config, 
+		:data_part_type, :position
+
+	add_foreign_keys :data_part_id, :section_id
 
 	def data_part_type
 		@model.type
