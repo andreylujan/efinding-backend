@@ -3,25 +3,25 @@
 #
 # Table name: reports
 #
-#  id                 :uuid             not null, primary key
-#  report_type_id     :integer          not null
-#  dynamic_attributes :json             not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  creator_id         :integer          not null
-#  limit_date         :datetime
-#  finished           :boolean
-#  assigned_user_id   :integer
-#  pdf                :text
-#  pdf_uploaded       :boolean          default(FALSE), not null
-#  start_location_id  :integer
-#  marked_location_id :integer
-#  finish_location_id :integer
-#  started_at         :datetime
-#  finished_at        :datetime
-#  deleted_at         :datetime
-#  end_location_id    :integer
-#  inspection_id      :integer
+#  id                  :uuid             not null, primary key
+#  report_type_id      :integer          not null
+#  dynamic_attributes  :json             not null
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  creator_id          :integer          not null
+#  limit_date          :datetime
+#  finished            :boolean
+#  assigned_user_id    :integer
+#  pdf                 :text
+#  pdf_uploaded        :boolean          default(FALSE), not null
+#  started_at          :datetime
+#  finished_at         :datetime
+#  deleted_at          :datetime
+#  inspection_id       :integer
+#  html                :text
+#  position            :integer
+#  initial_location_id :integer
+#  final_location_id   :integer
 #
 
 class Report < ApplicationRecord
@@ -36,17 +36,18 @@ class Report < ApplicationRecord
   mount_uploader :html, HtmlUploader
   has_many :images, dependent: :destroy
   before_save :cache_data
+
   validates :report_type_id, presence: true
   validates :report_type, presence: true
-  belongs_to :marked_location, class_name: :Location
-  belongs_to :start_location, class_name: :Location
-  belongs_to :finish_location, class_name: :Location
-  belongs_to :end_location, class_name: :Location
-  accepts_nested_attributes_for :marked_location
-  accepts_nested_attributes_for :end_location
-  # accepts_nested_attributes_for :images, update_only: false
-  accepts_nested_attributes_for :start_location
-  accepts_nested_attributes_for :finish_location
+
+  belongs_to :initial_location, class_name: :Location
+  belongs_to :final_location, class_name: :Location
+
+  accepts_nested_attributes_for :initial_location
+  accepts_nested_attributes_for :final_location
+  
+  validates :initial_location, presence: true
+  
   belongs_to :inspection
   acts_as_list scope: :inspection
   
@@ -171,19 +172,32 @@ class Report < ApplicationRecord
     end
   end
   
-  def marked_location_attributes
-    if marked_location.present?
+  def location_attributes(location)
+    {
+      longitude: location.lonlat.x,
+      latitude: location.lonlat.y,
+      address: location.address,
+      commune: location.commune,
+      region: location.region,
+      reference: location.reference
+    }
+  end
+
+  def initial_location_attributes
+    if initial_location.present?
       {
-        longitude: marked_location.lonlat.x,
-        latitude: marked_location.lonlat.y,
-        address: marked_location.address,
-        commune: marked_location.commune,
-        region: marked_location.region,
-        reference: marked_location.reference
+        location_attributes(initial_location)
       }
     end
   end
 
+  def final_location_attributes
+    if final_location.present?
+      {
+        location_attributes(final_location)
+      }
+    end
+  end
 
   def generate_pdf
     if self.finished? and not self.pdf_uploaded?

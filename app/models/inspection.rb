@@ -11,6 +11,8 @@
 #  resolved_at     :datetime
 #  signer_id       :integer
 #  signed_at       :datetime
+#  state           :text
+#  deleted_at      :datetime
 #
 
 class Inspection < ApplicationRecord

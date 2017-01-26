@@ -6,14 +6,14 @@ class UploadPdfJob < ApplicationJob
 
   def perform(report_id)
     report = Report.find(report_id)
-    report.marked_location = Location.find(report.marked_location_id)
+    report.initial_location = Location.find(report.initial_location)
     ac = ActionController::Base.new()
     # html = ac.render_to_string('templates/report.html.erb',
     # html = ac.render_to_string('templates/report2.html.erb',
     html = nil
 
     location_image = open("http://maps.googleapis.com/maps/api/staticmap?&maptype=roadmap&zoom=15&size=500x230&markers=size:" + 
-      "mid%7Ccolor:blue%7C#{report.marked_location.lonlat.y},#{report.marked_location.lonlat.x}&key=AIzaSyCfbgt7XmdEbRPTXaiNq5bOvFWDVpmBx3A")
+      "mid%7Ccolor:blue%7C#{report.initial_location.lonlat.y},#{report.initial_location.lonlat.x}&key=AIzaSyCfbgt7XmdEbRPTXaiNq5bOvFWDVpmBx3A")
     s3 = Aws::S3::Resource.new
     location_key = "locations/#{SecureRandom.uuid}.jpg"
     bucket = s3.bucket("#{ENV['AMAZON_BUCKET']}")

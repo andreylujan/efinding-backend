@@ -109,7 +109,7 @@ ap Organization.find(1).menu_sections
 Para configurar las columnas y el orden en que aparecen en el admin, se usa ReportColumn. 
 
 ```ruby
-column = ReportColumn.create! column_name: "Comuna", field_name: "marked_location_attributes.commune", report_type: report_type, data_type: :text
+column = ReportColumn.create! column_name: "Comuna", field_name: "initial_location_attributes.commune", report_type: report_type, data_type: :text
 ```
 
 column_name determina el texto visible al usuario, field_name determina el lugar desde el que se extrae el dato (esto puede ser un campo de la columna o algo más complejo, estudiar ejemplos existentes)

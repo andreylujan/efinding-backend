@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170125210054) do
+ActiveRecord::Schema.define(version: 20170126000208) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -293,36 +293,30 @@ ActiveRecord::Schema.define(version: 20170125210054) do
   end
 
   create_table "reports", id: :uuid, default: nil, force: :cascade do |t|
-    t.integer  "report_type_id",                     null: false
-    t.json     "dynamic_attributes", default: {},    null: false
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-    t.integer  "creator_id",                         null: false
+    t.integer  "report_type_id",                      null: false
+    t.json     "dynamic_attributes",  default: {},    null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.integer  "creator_id",                          null: false
     t.datetime "limit_date"
     t.boolean  "finished"
     t.integer  "assigned_user_id"
     t.text     "pdf"
-    t.boolean  "pdf_uploaded",       default: false, null: false
-    t.integer  "start_location_id"
-    t.integer  "marked_location_id"
-    t.integer  "finish_location_id"
+    t.boolean  "pdf_uploaded",        default: false, null: false
     t.datetime "started_at"
     t.datetime "finished_at"
     t.datetime "deleted_at"
-    t.integer  "end_location_id"
     t.integer  "inspection_id"
     t.text     "html"
     t.integer  "position"
+    t.integer  "initial_location_id"
+    t.integer  "final_location_id"
     t.index ["assigned_user_id"], name: "index_reports_on_assigned_user_id", using: :btree
     t.index ["creator_id"], name: "index_reports_on_creator_id", using: :btree
     t.index ["deleted_at"], name: "index_reports_on_deleted_at", using: :btree
-    t.index ["end_location_id"], name: "index_reports_on_end_location_id", using: :btree
-    t.index ["finish_location_id"], name: "index_reports_on_finish_location_id", using: :btree
     t.index ["id"], name: "index_reports_on_id", using: :btree
     t.index ["inspection_id"], name: "index_reports_on_inspection_id", using: :btree
-    t.index ["marked_location_id"], name: "index_reports_on_marked_location_id", using: :btree
     t.index ["report_type_id"], name: "index_reports_on_report_type_id", using: :btree
-    t.index ["start_location_id"], name: "index_reports_on_start_location_id", using: :btree
   end
 
   create_table "roles", force: :cascade do |t|
@@ -412,6 +406,8 @@ ActiveRecord::Schema.define(version: 20170125210054) do
   add_foreign_key "organization_data", "organizations"
   add_foreign_key "report_types", "organizations"
   add_foreign_key "reports", "inspections"
+  add_foreign_key "reports", "locations", column: "final_location_id"
+  add_foreign_key "reports", "locations", column: "initial_location_id"
   add_foreign_key "reports", "report_types"
   add_foreign_key "roles", "organizations"
   add_foreign_key "sections", "report_types"

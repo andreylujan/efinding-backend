@@ -1,12 +1,17 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::ReportResource < ApplicationResource
   attributes :dynamic_attributes, :creator_id, :created_at, :limit_date,
-    :finished, :assigned_user_id, :pdf, :pdf_uploaded, :marked_location_attributes,
-    :start_location_attributes, :finish_location_attributes, :started_at,
-    :finished_at, :images_attributes, :report_type_id, :synced, :is_draft,
+    :finished, :assigned_user_id, :pdf, :pdf_uploaded, 
+    :initial_location_attributes,
+    :final_location_attributes,
+    :started_at,
+    :finished_at, 
+    :images_attributes,
+     :report_type_id, :synced, :is_draft,
     :state_name,
-    :formatted_finished_at, :formatted_created_at, :formatted_limit_date,
-    :end_location_attributes,
+    :formatted_finished_at, 
+    :formatted_created_at, 
+    :formatted_limit_date,
     :inspection_id,
     :html
 
@@ -127,9 +132,9 @@ class Api::V1::ReportResource < ApplicationResource
   }
 
 
-  filter :"marked_location_attributes", apply: ->(records, value, _options) {
+  filter :"initial_location_attributes", apply: ->(records, value, _options) {
     if not value.empty?
-      records = records.includes(:marked_location)
+      records = records.includes(:initial_location)
     end
     if value.first.is_a? Hash
       value.first.each do |key, key_value|
@@ -227,7 +232,7 @@ class Api::V1::ReportResource < ApplicationResource
 
 
   def fetchable_fields
-    super - [ :start_location_attributes, :finish_location_attributes, :images_attributes,
-              :report_type_id, :end_location_attributes ]
+    super - [ :initial_location_attributes, :final_location_attributes, :images_attributes,
+              :report_type_id ]
   end
 end
