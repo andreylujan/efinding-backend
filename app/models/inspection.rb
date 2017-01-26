@@ -27,6 +27,20 @@ class Inspection < ApplicationRecord
   validates :creator, presence: true
   validates :state, presence: true
   has_and_belongs_to_many :users
+  mount_uploader :pdf, PdfUploader
+
+  def generate_pdf
+    if not self.pdf_uploaded?
+      regenerate_pdf
+    end
+  end
+
+  def regenerate_pdf(force_random = false)
+    if force_random
+      update_columns pdf: nil, pdf_uploaded: false
+    end
+    InspectionPdfJob.set(queue: ENV['REPORT_QUEUE'] || 'echeckit_report').perform_later(self.id.to_s)
+  end
 
   def check_state
     if state == "first_signature_done" and reports.where.not(state: "unchecked").count == 0

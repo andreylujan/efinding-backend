@@ -58,5 +58,10 @@ class UploadPdfJob < ApplicationJob
       file.close
       file.unlink   # deletes the temp file
     end
+
+    begin
+      report.inspection.regenerate_pdf(true)
+    rescue => e
+    end
   end
 end

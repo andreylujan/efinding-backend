@@ -5,7 +5,12 @@ class Api::V1::InspectionResource < JSONAPI::Resource
   has_many :users
   has_one :initial_signer
 
-  attributes :created_at, :resolved_at, :construction_id, :state, :num_reports
+  attributes :created_at, :resolved_at, :construction_id, :state, :num_reports,
+    :pdf, :pdf_uploaded
+
+  def pdf
+    @model.pdf.url
+  end
 
   filter :creator, apply: ->(records, value, _options) {
     if not value.empty?

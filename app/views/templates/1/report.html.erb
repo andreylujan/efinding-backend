@@ -401,7 +401,7 @@
 							<% end %>
 						</td>
 						<td>
-							<% if report.inspection.state == "final_signature_pending" %>
+							<% if report.state != "unchecked" %>
 								<%= report.resolver.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
 								<!-- <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/768AF9B25098A450CD52CD5B6339D3E8.png" alt="check_x" /> -->
 							<% end %>

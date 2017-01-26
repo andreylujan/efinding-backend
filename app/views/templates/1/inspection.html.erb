@@ -236,81 +236,82 @@
 		<!-- <img src="http://d21zid65ggdxzg.cloudfront.net/echeckit-logo.png" alt="logo_belltech" class="logo"> -->
 		<img src="http://ddejhenv4m3e3.cloudfront.net/logos/moller.png" alt="logo_moller" class="logo">
 		<hr>
-		<h3 class="inspeccion">INSPECCIÓN: <%= inspection.construction.name %></h3>		
-		
+		<h3 class="inspeccion">INSPECCIÓN: <%= inspection.construction.name %></h3>
 	</div>
 	<% inspection.reports.each do |report| %>
-		<h3>HALLAZGO <%= report.position.to_s %> </h3>
-		<div class="formHeaders">
-			<div class="formHeader" style="float: left">
-				<div class="field ">
-					<div class="label wpi-140">Contratista:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('2', 'text') %></div>
+		<div style="margin: 10px 0;">
+			<h3>HALLAZGO <%= report.position.to_s %> </h3>
+			<div class="formHeaders">
+				<div class="formHeader" style="float: left">
+					<div class="field ">
+						<div class="label wpi-140">Contratista:</div>
+						<div class="value wpi-170"><%= report.dynamic_attributes.dig('2', 'text') %></div>
+					</div>
+					<div class="field ">
+						<div class="label wpi-140">Grupo de actividad:</div>
+						<div class="value wpi-170"><%= report.dynamic_attributes.dig('3', 'text') %></div>
+					</div>
+					<div class="field ">
+						<div class="label wpi-140">Detalle de actividad:</div>
+						<div class="value wpi-170"><%= report.dynamic_attributes.dig('4', 'text') %></div>
+					</div>
 				</div>
-				<div class="field ">
-					<div class="label wpi-140">Grupo de actividad:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('3', 'text') %></div>
-				</div>
-				<div class="field ">
-					<div class="label wpi-140">Detalle de actividad:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('4', 'text') %></div>
-				</div>
-			</div>
-			<div class="formHeader" style="float: right;">
-				<div class="field ">
-					<div class="label wpi-120">Frente de trabajo:</div>
-					<div class="value"><%= report.dynamic_attributes.dig('5', 'text') %></div>
-				</div>
-				<div class="field">
-					<div class="label wpi-120">Acción/condición detectada:</div>
-					<div class="value"><%= report.dynamic_attributes.dig('6', 'text') %></div>
-				</div>
-			</div>
-		</div>
-		<hr>
-		<div class="formHeaders">
-			<div class="formHeader" style="float: left">
-				<div class="field ">
-					<div class="label wpi-140">Gravedad potencial:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('7', 'text') %></div>
-				</div>
-				<div class="field ">
-					<div class="label wpi-140">Grado de riesgo:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('8', 'text') %></div>
-				</div>
-				<div class="field ">
-					<div class="label wpi-140">Clasificación:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('9', 'text') %></div>
-				</div>
-				<div class="field ">
-					<div class="label wpi-140">Causa directa:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('10', 'text') %></div>
-				</div>
-				<div class="field ">
-					<div class="label wpi-140">Causa básica:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('12', 'text') %></div>
+				<div class="formHeader" style="float: right;">
+					<div class="field ">
+						<div class="label wpi-120">Frente de trabajo:</div>
+						<div class="value"><%= report.dynamic_attributes.dig('5', 'text') %></div>
+					</div>
+					<div class="field">
+						<div class="label wpi-120">Acción/condición detectada:</div>
+						<div class="value"><%= report.dynamic_attributes.dig('6', 'text') %></div>
+					</div>
 				</div>
 			</div>
-			<div class="formHeader" style="float: right;">
-				<div class="field ">
-					<div class="label wpi-120">Supervisor responsable:</div>
-					<div class="value"><%= report.dynamic_attributes.dig('15', 'text') %></div>
+			<hr>
+			<div class="formHeaders">
+				<div class="formHeader" style="float: left">
+					<div class="field ">
+						<div class="label wpi-140">Gravedad potencial:</div>
+						<div class="value wpi-170"><%= report.dynamic_attributes.dig('7', 'text') %></div>
+					</div>
+					<div class="field ">
+						<div class="label wpi-140">Grado de riesgo:</div>
+						<div class="value wpi-170"><%= report.dynamic_attributes.dig('8', 'text') %></div>
+					</div>
+					<div class="field ">
+						<div class="label wpi-140">Clasificación:</div>
+						<div class="value wpi-170"><%= report.dynamic_attributes.dig('9', 'text') %></div>
+					</div>
+					<div class="field ">
+						<div class="label wpi-140">Causa directa:</div>
+						<div class="value wpi-170"><%= report.dynamic_attributes.dig('10', 'text') %></div>
+					</div>
+					<div class="field ">
+						<div class="label wpi-140">Causa básica:</div>
+						<div class="value wpi-170"><%= report.dynamic_attributes.dig('12', 'text') %></div>
+					</div>
 				</div>
-				<div class="field">
-					<div class="label wpi-120">Jefe de terreno:</div>
-					<div class="value"><%= report.dynamic_attributes.dig('16', 'text') %></div>
-				</div>
-				<div class="field">
-					<div class="label wpi-120">Experto SSOMA:</div>
-					<div class="value"><%= report.dynamic_attributes.dig('17', 'text') %></div>
-				</div>
-				<div class="field">
-					<div class="label wpi-120">Plazo de cumplimiento:</div>
-					<div class="value"><%= report.dynamic_attributes.dig('18', 'text') %></div>
-				</div>
-				<div class="field">
-					<div class="label wpi-120">Fecha de cumplimiento:</div>
-					<div class="value"><%= report.formatted_limit_date %></div>
+				<div class="formHeader" style="float: right;">
+					<div class="field ">
+						<div class="label wpi-120">Supervisor responsable:</div>
+						<div class="value"><%= report.dynamic_attributes.dig('15', 'text') %></div>
+					</div>
+					<div class="field">
+						<div class="label wpi-120">Jefe de terreno:</div>
+						<div class="value"><%= report.dynamic_attributes.dig('16', 'text') %></div>
+					</div>
+					<div class="field">
+						<div class="label wpi-120">Experto SSOMA:</div>
+						<div class="value"><%= report.dynamic_attributes.dig('17', 'text') %></div>
+					</div>
+					<div class="field">
+						<div class="label wpi-120">Plazo de cumplimiento:</div>
+						<div class="value"><%= report.dynamic_attributes.dig('18', 'text') %></div>
+					</div>
+					<div class="field">
+						<div class="label wpi-120">Fecha de cumplimiento:</div>
+						<div class="value"><%= report.formatted_limit_date %></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -322,30 +323,35 @@
 				<h3>GEOLOCALIZACIÓN</h3>
 				<div class="label wpi-180">Hallazgo</div>
 				<br>
-				<img id="firstMap" src="<%= location_url %>" style="width: 100%;" />
+				<img id="firstMap" src="<%= report.initial_location_image_url %>" style="width: 100%;" />
 			</div>
 			<div class="formHeader" style="float: right;">
 				<h3>FOTOS</h3>
+				<% report.images.where(is_initial: true).each do |image| %>
 				<div class="picsField">
-					<img src="<%= report.images.first.url.gsub('https', 'http') %>" style="width: 400px; height: 250px">
+					<img src="<%= image.url.gsub('https', 'http') %>" style="width: 400px; height: 250px">
 				</div>
+				<% end %>
 			</div>
 		</div>
-
+		<% if report.state != "unchecked" %>
 		<div class="formHeaders">
 			<div class="formHeader" style="float: left">
 				<h3>GEOLOCALIZACIÓN</h3>
 				<div class="label wpi-180">Resolución hallazgo:</div>
 				<br>
-				<img id="secondMap" src="<%= location_url %>" style="width: 100%;" />
+				<img id="secondMap" src="<%= report.final_location_image_url %>" style="width: 100%;" />
 			</div>
 			<div class="formHeader" style="float: right;">
 				<h3>FOTOS</h3>
+				<% report.images.where(is_initial: false).each do |image| %>
 				<div class="picsField">
 					<img src="<%= report.images.first.url.gsub('https', 'http') %>" style="width: 400px; height: 250px">
 				</div>
+				<% end %>
 			</div>
 		</div>
+		<% end %>
 		<br>
 		<div class="formHeaders">
 			<div class="formHeader">
@@ -365,12 +371,57 @@
 					<div class="label wpi-170">Referencia:</div>
 					<div class="value wpi-170"><%= report.initial_location.reference %></div>
 				</div>
+				<% if report.state != "unchecked" %>
 				<div class="field">
 					<div class="label wpi-170">Recomendaciones:</div>
-					<div class="value wpi-170"><%= report.initial_location.reference %></div>
+					<div class="value wpi-170"><%= report.resolution_comment %></div>
 				</div>
+				<% end %>
 			</div>
 		</div>
+		<hr>
+		<br>
+		<div class="content">
+			<section id="checklist">
+				<h3>Firmas</h3>
+				<table>
+					<thead>
+						<tr>
+							<th>Supervisor SSOMA</th>
+							<th>Administrador de obra</th>
+							<th>Experto SSOMA</th>
+							<th>Adminsitrador de obra firma final</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<%= report.creator.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
+							</td>
+							<td>
+								<% if report.inspection.state == "first_signature_done" %>
+									<%= report.initial_signer.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
+								<% end %>
+							</td>
+							<td>
+								<% if report.state != "unchecked" %>
+									<%= report.resolver.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
+									<!-- <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/768AF9B25098A450CD52CD5B6339D3E8.png" alt="check_x" /> -->
+								<% end %>
+							</td>
+							<td>
+								<% if report.inspection.state == "finished" %>
+									<%= report.final_signer.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
+								<% end %>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</section>
+		</div>
+		<br>
+		<br>
 	<% end %>
 </body>
 </html>
