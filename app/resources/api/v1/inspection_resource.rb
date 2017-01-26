@@ -4,6 +4,7 @@ class Api::V1::InspectionResource < JSONAPI::Resource
   has_one :construction
   has_many :users
   has_one :initial_signer
+  has_one :final_signer
 
   attributes :created_at, :resolved_at, :construction_id, :state, :num_reports,
     :pdf, :pdf_uploaded
@@ -44,6 +45,14 @@ class Api::V1::InspectionResource < JSONAPI::Resource
 
   before_save do
     @model.creator_id = context[:current_user].id if @model.new_record?
-  end
 
+    if @model.state_changed?
+      if @model.state_change[1] == "first_signature_done"
+        @model.initial_signer = context[:current_user]
+      end
+      if @model.state_change[1] == "finished"
+        @model.final_signer = context[:current_user]
+      end
+    end
+  end
 end

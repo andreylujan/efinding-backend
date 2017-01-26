@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170126195903) do
+ActiveRecord::Schema.define(version: 20170126203822) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -137,16 +137,17 @@ ActiveRecord::Schema.define(version: 20170126195903) do
 
   create_table "inspections", force: :cascade do |t|
     t.integer  "construction_id"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.integer  "creator_id"
     t.datetime "resolved_at"
-    t.integer  "signer_id"
+    t.integer  "initial_signer_id"
     t.datetime "signed_at"
     t.text     "state"
     t.datetime "deleted_at"
     t.text     "pdf"
-    t.boolean  "pdf_uploaded",    default: false, null: false
+    t.boolean  "pdf_uploaded",      default: false, null: false
+    t.integer  "final_signer_id"
     t.index ["construction_id"], name: "index_inspections_on_construction_id", using: :btree
     t.index ["creator_id"], name: "index_inspections_on_creator_id", using: :btree
     t.index ["deleted_at"], name: "index_inspections_on_deleted_at", using: :btree
@@ -408,7 +409,8 @@ ActiveRecord::Schema.define(version: 20170126195903) do
   add_foreign_key "images", "reports"
   add_foreign_key "inspections", "constructions"
   add_foreign_key "inspections", "users", column: "creator_id"
-  add_foreign_key "inspections", "users", column: "signer_id"
+  add_foreign_key "inspections", "users", column: "final_signer_id"
+  add_foreign_key "inspections", "users", column: "initial_signer_id"
   add_foreign_key "invitations", "roles"
   add_foreign_key "menu_items", "menu_sections"
   add_foreign_key "menu_sections", "organizations"

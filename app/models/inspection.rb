@@ -3,16 +3,18 @@
 #
 # Table name: inspections
 #
-#  id              :integer          not null, primary key
-#  construction_id :integer
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  creator_id      :integer
-#  resolved_at     :datetime
-#  signer_id       :integer
-#  signed_at       :datetime
-#  state           :text
-#  deleted_at      :datetime
+#  id                :integer          not null, primary key
+#  construction_id   :integer
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  creator_id        :integer
+#  resolved_at       :datetime
+#  initial_signer_id :integer
+#  signed_at         :datetime
+#  state             :text
+#  deleted_at        :datetime
+#  pdf               :text
+#  pdf_uploaded      :boolean          default(FALSE), not null
 #
 
 class Inspection < ApplicationRecord
@@ -22,7 +24,8 @@ class Inspection < ApplicationRecord
   belongs_to :construction
   has_many :reports, -> { order(position: :asc) }, dependent: :destroy
   belongs_to :creator, class_name: :User, foreign_key: :creator_id
-  belongs_to :initial_signer, class_name: :User, foreign_key: :signer_id
+  belongs_to :initial_signer, class_name: :User, foreign_key: :initial_signer_id
+  belongs_to :final_signer, class_name: :User, foreign_key: :final_signer_id
   validates :construction, presence: true
   validates :creator, presence: true
   validates :state, presence: true

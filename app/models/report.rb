@@ -3,25 +3,31 @@
 #
 # Table name: reports
 #
-#  id                  :uuid             not null, primary key
-#  report_type_id      :integer          not null
-#  dynamic_attributes  :json             not null
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  creator_id          :integer          not null
-#  limit_date          :datetime
-#  finished            :boolean
-#  assigned_user_id    :integer
-#  pdf                 :text
-#  pdf_uploaded        :boolean          default(FALSE), not null
-#  started_at          :datetime
-#  finished_at         :datetime
-#  deleted_at          :datetime
-#  inspection_id       :integer
-#  html                :text
-#  position            :integer
-#  initial_location_id :integer
-#  final_location_id   :integer
+#  id                     :uuid             not null, primary key
+#  report_type_id         :integer          not null
+#  dynamic_attributes     :json             not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  creator_id             :integer          not null
+#  limit_date             :datetime
+#  finished               :boolean
+#  assigned_user_id       :integer
+#  pdf                    :text
+#  pdf_uploaded           :boolean          default(FALSE), not null
+#  started_at             :datetime
+#  finished_at            :datetime
+#  deleted_at             :datetime
+#  inspection_id          :integer
+#  html                   :text
+#  position               :integer
+#  initial_location_id    :integer
+#  final_location_id      :integer
+#  state                  :integer          default("unchecked"), not null
+#  resolved_at            :datetime
+#  resolver_id            :integer
+#  resolution_comment     :text
+#  initial_location_image :text
+#  final_location_image   :text
 #
 
 class Report < ApplicationRecord
