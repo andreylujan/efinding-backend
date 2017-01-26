@@ -13,13 +13,18 @@ class Api::V1::ReportResource < ApplicationResource
     :formatted_created_at, 
     :formatted_limit_date,
     :inspection_id,
-    :html
+    :html,
+    :state,
+    :resolved_at,
+    :resolution_comment
 
   has_one :report_type
   has_many :images
   has_one :assigned_user
   has_one :creator
   has_one :inspection
+  has_one :resolver
+
   key_type :uuid
   
 

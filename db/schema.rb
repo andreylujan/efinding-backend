@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170126165520) do
+ActiveRecord::Schema.define(version: 20170126170227) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -312,6 +312,9 @@ ActiveRecord::Schema.define(version: 20170126165520) do
     t.integer  "position"
     t.integer  "initial_location_id"
     t.integer  "final_location_id"
+    t.integer  "state",               default: 0,     null: false
+    t.datetime "resolved_at"
+    t.integer  "resolver_id"
     t.index ["assigned_user_id"], name: "index_reports_on_assigned_user_id", using: :btree
     t.index ["creator_id"], name: "index_reports_on_creator_id", using: :btree
     t.index ["deleted_at"], name: "index_reports_on_deleted_at", using: :btree
@@ -410,6 +413,7 @@ ActiveRecord::Schema.define(version: 20170126165520) do
   add_foreign_key "reports", "locations", column: "final_location_id"
   add_foreign_key "reports", "locations", column: "initial_location_id"
   add_foreign_key "reports", "report_types"
+  add_foreign_key "reports", "users", column: "resolver_id"
   add_foreign_key "roles", "organizations"
   add_foreign_key "sections", "report_types"
   add_foreign_key "table_columns", "organizations"
