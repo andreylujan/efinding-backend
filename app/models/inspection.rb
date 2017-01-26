@@ -69,16 +69,13 @@ class Inspection < ApplicationRecord
     end
 
     event :sign do
-      transition :first_signature_pending => :first_signature_done
+      transition first_signature_pending: :first_signature_done, final_signature_pending: :finished
     end
 
     event :resolve_reports do
       transition :first_signature_done => :final_signature_pending
     end
 
-    event :finalize do
-    	transition :final_signature_pending => :finished
-    end
 
   end
 end
