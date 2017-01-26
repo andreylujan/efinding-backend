@@ -252,9 +252,8 @@ class Api::V1::CsvController < ApplicationController
   def context
     @context ||= ({
                     role_id: current_user.role_id,
-                    creator_id: current_user.id,
-                    report_type_id: current_user.organization.default_report_type_id
-    })
+                    creator_id: current_user.id
+                  })
   end
 
 end

@@ -38,6 +38,11 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
     super
   end
 
+  def update
+    params.permit!
+    super
+  end
+  
   def zip
     params["action"] = "index"
     params["all"] = true

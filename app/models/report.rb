@@ -77,7 +77,9 @@ class Report < ApplicationRecord
 
   def images_attributes=(val)
     val.each do |attrs|
-      self.images << Image.new(attrs)
+      if not Image.find_by_id(attrs[:id])
+        self.images << Image.new(attrs)
+      end
     end
   end
 

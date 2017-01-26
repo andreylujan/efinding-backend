@@ -214,14 +214,13 @@ class Api::V1::ReportResource < ApplicationResource
   end
 
   before_save do
-    @model.creator_id = context[:current_user].id if @model.new_record?
-    if @model.report_type.nil? or @model.report_type.organization_id != context[:current_user].role.organization_id
-      if context[:current_user].organization.default_report_type.present?
-        @model.report_type = context[:current_user].organization.default_report_type
-      else
-        @model.report_type = context[:current_user].organization.report_types.first
+    if @model.state_changed?
+      if @model.state_change[1] == "resolved"
+        @model.resolver = context[:current_user]
       end
+      @model.pdf_uploaded = false
     end
+    @model.creator_id = context[:current_user].id if @model.new_record?
   end
 
   def self.records(options = {})
