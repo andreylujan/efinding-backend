@@ -53,20 +53,20 @@ class Inspection < ApplicationRecord
   end
 
   def formatted_created_at
-    created_at.strftime("%d/%m/%Y %R") 
+    created_at.strftime("%d/%m/%Y") 
   end
 
   def formatted_resolved_at
     if state == "final_signature_pending" || state == "finished"
       report = reports.order("resolved_at DESC").first
       if report.present?
-        report.resolved_at.strftime("%d/%m/%Y %R") 
+        report.resolved_at.strftime("%d/%m/%Y") 
       end
     end
   end
 
   def formatted_final_signed_at
-    final_signed_at.strftime("%d/%m/%Y %R") if final_signed_at.present?
+    final_signed_at.strftime("%d/%m/%Y") if final_signed_at.present?
   end
 
   def regenerate_all_pdfs
@@ -91,6 +91,14 @@ class Inspection < ApplicationRecord
 
   def num_reports
     reports.count
+  end
+
+  def state_name
+    if state == "final_signature_pending" || state == "finished"
+      "Resuelto"
+    else
+      "Pendiente"
+    end
   end
 
   state_machine :state, initial: :reports_pending do

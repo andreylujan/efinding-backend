@@ -37,16 +37,14 @@ class Api::V1::InspectionResource < ApplicationResource
   end
 
   def num_expired_reports
-    @model.reports.count
+    0
   end
 
   def num_pending_reports
-    @model.reports.count
+    @model.reports.where(state: "unchecked").count
   end
 
-  def state_name
-    @model.state
-  end
+  
 
   add_foreign_keys :construction_id
 
