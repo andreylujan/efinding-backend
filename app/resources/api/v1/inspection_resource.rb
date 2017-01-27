@@ -25,6 +25,10 @@ class Api::V1::InspectionResource < ApplicationResource
     records
   }
 
+  filter :company, apply: ->(records, value, _options) {
+    records
+  }
+
   filter :formatted_created_at, apply: ->(records, value, _options) {
     records
   }
