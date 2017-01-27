@@ -2,7 +2,7 @@ class Api::V1::ConstructionResource < ApplicationResource
 	attributes :name, :company_id
 	has_one :company
     add_foreign_keys :company_id
-    
+    has_one :administrator    
 
 	def self.records(options = {})
     context = options[:context]

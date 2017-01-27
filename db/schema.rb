@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170127163240) do
+ActiveRecord::Schema.define(version: 20170127201435) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -74,10 +74,11 @@ ActiveRecord::Schema.define(version: 20170127163240) do
   end
 
   create_table "constructions", force: :cascade do |t|
-    t.text     "name",       null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.text     "name",             null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
     t.integer  "company_id"
+    t.integer  "administrator_id"
     t.index ["company_id"], name: "index_constructions_on_company_id", using: :btree
     t.index ["name", "company_id"], name: "index_constructions_on_name_and_company_id", unique: true, using: :btree
   end
@@ -150,6 +151,8 @@ ActiveRecord::Schema.define(version: 20170127163240) do
     t.integer  "final_signer_id"
     t.datetime "initial_signed_at"
     t.datetime "final_signed_at"
+    t.integer  "field_chief_id"
+    t.integer  "expert_id"
     t.index ["construction_id"], name: "index_inspections_on_construction_id", using: :btree
     t.index ["creator_id"], name: "index_inspections_on_creator_id", using: :btree
     t.index ["deleted_at"], name: "index_inspections_on_deleted_at", using: :btree
@@ -404,6 +407,7 @@ ActiveRecord::Schema.define(version: 20170127163240) do
   add_foreign_key "communes", "regions"
   add_foreign_key "companies", "organizations"
   add_foreign_key "constructions", "companies"
+  add_foreign_key "constructions", "users", column: "administrator_id"
   add_foreign_key "data_parts", "data_parts"
   add_foreign_key "data_parts", "sections"
   add_foreign_key "devices", "users"
@@ -411,6 +415,8 @@ ActiveRecord::Schema.define(version: 20170127163240) do
   add_foreign_key "images", "reports"
   add_foreign_key "inspections", "constructions"
   add_foreign_key "inspections", "users", column: "creator_id"
+  add_foreign_key "inspections", "users", column: "expert_id"
+  add_foreign_key "inspections", "users", column: "field_chief_id"
   add_foreign_key "inspections", "users", column: "final_signer_id"
   add_foreign_key "inspections", "users", column: "initial_signer_id"
   add_foreign_key "invitations", "roles"

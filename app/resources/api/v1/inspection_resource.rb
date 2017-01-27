@@ -6,6 +6,8 @@ class Api::V1::InspectionResource < ApplicationResource
   has_one :initial_signer
   has_one :final_signer
   has_one :company
+  has_one :field_chief
+  has_one :expert
 
   attributes :created_at, :resolved_at, :state,
     :pdf, :pdf_uploaded,

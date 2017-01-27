@@ -15,4 +15,5 @@ class Construction < ApplicationRecord
   has_many :inspections
   validates :company, presence: true
   validates :name, presence: true, uniqueness: { scope: :company }
+  belongs_to :administrator, class_name: :User, foreign_key: :administrator_id
 end
