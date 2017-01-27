@@ -48,7 +48,10 @@ class Inspection < ApplicationRecord
 
   def formatted_resolved_at
     if state == "final_signature_pending" || state == "finished"
-      reports.order("resolved_at DESC").first.resolved_at.strftime("%d/%m/%Y %R") 
+      report = reports.order("resolved_at DESC").first
+      if report.present?
+        report.resolved_at.strftime("%d/%m/%Y %R") 
+      end
     end
   end
 
