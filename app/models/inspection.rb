@@ -22,6 +22,8 @@ class Inspection < ApplicationRecord
   acts_as_paranoid
 
   belongs_to :construction
+  has_one :company, through: :construction
+
   has_many :reports, -> { order(position: :asc) }, dependent: :destroy
   belongs_to :creator, class_name: :User, foreign_key: :creator_id
   belongs_to :initial_signer, class_name: :User, foreign_key: :initial_signer_id
@@ -31,6 +33,10 @@ class Inspection < ApplicationRecord
   validates :state, presence: true
   has_and_belongs_to_many :users
   mount_uploader :pdf, PdfUploader
+
+  def company_id
+    construction.company_id
+  end
 
   def generate_pdf
     if not self.pdf_uploaded?

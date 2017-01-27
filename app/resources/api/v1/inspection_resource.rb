@@ -5,6 +5,7 @@ class Api::V1::InspectionResource < ApplicationResource
   has_many :users
   has_one :initial_signer
   has_one :final_signer
+  has_one :company
 
   attributes :created_at, :resolved_at, :state,
     :pdf, :pdf_uploaded,
