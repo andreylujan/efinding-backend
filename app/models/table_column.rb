@@ -18,7 +18,7 @@
 
 class TableColumn < ApplicationRecord
   belongs_to :organization
-  acts_as_list scope: [ :collection_name, :collection_source ]
+  acts_as_list scope: [ :collection_name ]
   enum data_type: [ :numeric, :text, :date ]
   enum collection_source: [ :postgres, :mongo ]
 end
