@@ -9,13 +9,30 @@ class Api::V1::InspectionResource < ApplicationResource
   has_one :field_chief
   has_one :expert
 
-  attributes :created_at, :resolved_at, :state,
+  attributes :created_at, :resolved_at, 
+    :state,
     :pdf, :pdf_uploaded,
     :formatted_created_at,
     :formatted_resolved_at,
     :formatted_final_signed_at,
     :num_pending_reports,
-    :num_reports
+    :num_reports,
+    :num_expired_reports,
+    :field_chief_name,
+    :administrator_name,
+    :expert_name
+
+  def field_chief_name
+    @model.field_chief.name if @model.field_chief.present?
+  end
+
+  def administrator_name
+    @model.construction.administrator.name if @model.construction.administrator.present?
+  end
+
+  def expert_name
+    @model.expert.name if @model.expert.present?
+  end
 
   add_foreign_keys :construction_id
 
@@ -23,6 +40,22 @@ class Api::V1::InspectionResource < ApplicationResource
     @model.pdf.url
   end
 
+  filter :num_expired_reports, apply: ->(records, value, _options) {
+    records
+  }
+
+  filter :field_chief_name, apply: ->(records, value, _options) {
+    records
+  }
+
+  filter :administrator_name, apply: ->(records, value, _options) {
+    records
+  }
+
+  filter :expert_name, apply: ->(records, value, _options) {
+    records
+  }
+  
   filter :construction, apply: ->(records, value, _options) {
     records
   }
