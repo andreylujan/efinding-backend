@@ -34,6 +34,10 @@ class Api::V1::InspectionResource < ApplicationResource
     @model.expert.name if @model.expert.present?
   end
 
+  def num_expired_reports
+    @model.reports.count
+  end
+
   add_foreign_keys :construction_id
 
   def pdf
@@ -55,7 +59,7 @@ class Api::V1::InspectionResource < ApplicationResource
   filter :expert_name, apply: ->(records, value, _options) {
     records
   }
-  
+
   filter :construction, apply: ->(records, value, _options) {
     records
   }
