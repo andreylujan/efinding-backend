@@ -22,6 +22,7 @@ class Organization < ApplicationRecord
     has_many :menu_sections, -> { order(position: :asc) }
     has_many :companies
     has_many :reports, through: :report_types
+    has_many :users, through: :roles
     
     def users
     	User.joins(:role)
