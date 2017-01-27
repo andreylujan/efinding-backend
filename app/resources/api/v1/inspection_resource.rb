@@ -20,6 +20,7 @@ class Api::V1::InspectionResource < ApplicationResource
     :num_expired_reports,
     :field_chief_name,
     :administrator_name,
+    :num_pending_reports,
     :expert_name
 
   def field_chief_name
@@ -35,6 +36,10 @@ class Api::V1::InspectionResource < ApplicationResource
   end
 
   def num_expired_reports
+    @model.reports.count
+  end
+
+  def num_pending_reports
     @model.reports.count
   end
 
@@ -61,6 +66,11 @@ class Api::V1::InspectionResource < ApplicationResource
   }
 
   filter :construction, apply: ->(records, value, _options) {
+    records
+  }
+
+
+  filter :num_pending_reports, apply: ->(records, value, _options) {
     records
   }
 
