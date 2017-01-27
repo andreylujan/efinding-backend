@@ -6,14 +6,43 @@ class Api::V1::InspectionResource < ApplicationResource
   has_one :initial_signer
   has_one :final_signer
 
-  attributes :created_at, :resolved_at, :state, :num_reports,
-    :pdf, :pdf_uploaded
+  attributes :created_at, :resolved_at, :state,
+    :pdf, :pdf_uploaded,
+    :formatted_created_at,
+    :formatted_resolved_at,
+    :formatted_final_signed_at,
+    :num_pending_reports,
+    :num_reports
 
   add_foreign_keys :construction_id
 
   def pdf
     @model.pdf.url
   end
+
+  filter :construction, apply: ->(records, value, _options) {
+    records
+  }
+
+  filter :formatted_created_at, apply: ->(records, value, _options) {
+    records
+  }
+
+  filter :formatted_resolved_at, apply: ->(records, value, _options) {
+    records
+  }
+
+  filter :formatted_final_signed_at, apply: ->(records, value, _options) {
+    records
+  }
+
+  filter :num_pending_reports, apply: ->(records, value, _options) {
+    records
+  }
+
+  filter :num_reports, apply: ->(records, value, _options) {
+    records
+  }
 
   filter :creator, apply: ->(records, value, _options) {
     if not value.empty?

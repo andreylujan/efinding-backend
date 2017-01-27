@@ -38,6 +38,24 @@ class Inspection < ApplicationRecord
     end
   end
 
+  def num_pending_reports
+    reports.where(state: "unchecked").count
+  end
+
+  def formatted_created_at
+    created_at.strftime("%d/%m/%Y %R") 
+  end
+
+  def formatted_resolved_at
+    if state == "final_signature_pending" || state == "finished"
+      reports.order("resolved_at DESC").first.resolved_at.strftime("%d/%m/%Y %R") 
+    end
+  end
+
+  def formatted_final_signed_at
+    final_signed_at.strftime("%d/%m/%Y %R") if final_signed_at.present?
+  end
+
   def regenerate_all_pdfs
     regenerate_pdf(true)
     reports.each do |report|
@@ -63,6 +81,15 @@ class Inspection < ApplicationRecord
   end
 
   state_machine :state, initial: :reports_pending do
+
+    after_transition any => :first_signature_done do |inspection, transition|
+      inspection.initial_signed_at = DateTime.now
+    end
+
+    after_transition any => :finished do |inspection, transition|
+      inspection.final_signed_at = DateTime.now
+    end
+  
 
     event :send_for_revision do
       transition :reports_pending => :first_signature_pending

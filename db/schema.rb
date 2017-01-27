@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170126203822) do
+ActiveRecord::Schema.define(version: 20170127163240) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -148,6 +148,8 @@ ActiveRecord::Schema.define(version: 20170126203822) do
     t.text     "pdf"
     t.boolean  "pdf_uploaded",      default: false, null: false
     t.integer  "final_signer_id"
+    t.datetime "initial_signed_at"
+    t.datetime "final_signed_at"
     t.index ["construction_id"], name: "index_inspections_on_construction_id", using: :btree
     t.index ["creator_id"], name: "index_inspections_on_creator_id", using: :btree
     t.index ["deleted_at"], name: "index_inspections_on_deleted_at", using: :btree
