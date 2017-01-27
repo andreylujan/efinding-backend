@@ -21,7 +21,8 @@ class Api::V1::InspectionResource < ApplicationResource
     :field_chief_name,
     :administrator_name,
     :num_pending_reports,
-    :expert_name
+    :expert_name,
+    :state_name
 
   def field_chief_name
     @model.field_chief.name if @model.field_chief.present?
@@ -43,6 +44,10 @@ class Api::V1::InspectionResource < ApplicationResource
     @model.reports.count
   end
 
+  def state_name
+    @model.state
+  end
+
   add_foreign_keys :construction_id
 
   def pdf
@@ -50,6 +55,10 @@ class Api::V1::InspectionResource < ApplicationResource
   end
 
   filter :num_expired_reports, apply: ->(records, value, _options) {
+    records
+  }
+
+  filter :state_name, apply: ->(records, value, _options) {
     records
   }
 
