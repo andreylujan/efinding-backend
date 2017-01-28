@@ -83,7 +83,6 @@ class Api::V1::InspectionResource < ApplicationResource
       .where(reports: { state: 'unchecked' })
       .group("inspections.id").having('count(reports.id) = ?', value[0])
     else
-      byebug
       records
     end
   }
