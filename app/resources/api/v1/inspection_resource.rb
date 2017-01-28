@@ -78,7 +78,14 @@ class Api::V1::InspectionResource < ApplicationResource
 
 
   filter :num_pending_reports, apply: ->(records, value, _options) {
-    records
+    if not value.empty?
+      records = records.joins("LEFT OUTER JOIN reports ON reports.inspection_id = inspections.id")
+      .where(reports: { state: 'unchecked' })
+      .group("inspections.id").having('count(reports.id) = ?', value[0])
+    else
+      byebug
+      records
+    end
   }
 
   filter :company, apply: ->(records, value, _options) {
@@ -86,7 +93,11 @@ class Api::V1::InspectionResource < ApplicationResource
   }
 
   filter :formatted_created_at, apply: ->(records, value, _options) {
-    records
+    if not value.empty?
+      records.where("to_char(inspections.created_at, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
+    else
+      records
+    end
   }
 
   filter :formatted_resolved_at, apply: ->(records, value, _options) {
@@ -94,15 +105,20 @@ class Api::V1::InspectionResource < ApplicationResource
   }
 
   filter :formatted_final_signed_at, apply: ->(records, value, _options) {
-    records
-  }
-
-  filter :num_pending_reports, apply: ->(records, value, _options) {
-    records
+    if not value.empty?
+      records.where("to_char(inspections.final_signed_at, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
+    else
+      records
+    end
   }
 
   filter :num_reports, apply: ->(records, value, _options) {
-    records
+    if not value.empty?
+      records = records.joins("LEFT OUTER JOIN reports ON reports.inspection_id = inspections.id")
+      .group("inspections.id").having('count(reports.id) = ?', value[0])
+    else
+      records
+    end
   }
 
   filter :creator, apply: ->(records, value, _options) {
