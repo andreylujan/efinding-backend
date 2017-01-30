@@ -18,10 +18,7 @@ class Api::V1::InspectionResource < ApplicationResource
     :num_pending_reports,
     :num_reports,
     :num_expired_reports,
-    :field_chief_name,
-    :administrator_name,
     :num_pending_reports,
-    :expert_name,
     :state_name
 
 
