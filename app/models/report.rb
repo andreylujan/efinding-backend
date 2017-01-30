@@ -94,10 +94,10 @@ class Report < ApplicationRecord
   end
 
   def update_inspection
-    chief_terrain_id = dynamic_attributes.dig('16', 'id')
+    field_chief_id = dynamic_attributes.dig('16', 'id')
     needs_save = false
-    if chief_terrain_id.present? and inspection.chief_terrain.nil?
-      inspection.chief_terrain_id = chief_terrain_id
+    if field_chief_id.present? and inspection.field_chief.nil?
+      inspection.field_chief_id = field_chief_id
       needs_save = true
     end
     expert_id = dynamic_attributes.dig('17', 'id')
