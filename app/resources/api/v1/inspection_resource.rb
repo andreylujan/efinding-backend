@@ -24,17 +24,6 @@ class Api::V1::InspectionResource < ApplicationResource
     :expert_name,
     :state_name
 
-  def field_chief_name
-    @model.field_chief.name if @model.field_chief.present?
-  end
-
-  def administrator_name
-    @model.construction.administrator.name if @model.construction.administrator.present?
-  end
-
-  def expert_name
-    @model.expert.name if @model.expert.present?
-  end
 
   def num_expired_reports
     0
@@ -60,15 +49,15 @@ class Api::V1::InspectionResource < ApplicationResource
     records
   }
 
-  filter :field_chief_name, apply: ->(records, value, _options) {
+  filter :field_chief, apply: ->(records, value, _options) {
     records
   }
 
-  filter :administrator_name, apply: ->(records, value, _options) {
+  filter :administrator, apply: ->(records, value, _options) {
     records
   }
 
-  filter :expert_name, apply: ->(records, value, _options) {
+  filter :expert, apply: ->(records, value, _options) {
     records
   }
 
