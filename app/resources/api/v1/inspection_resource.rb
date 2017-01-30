@@ -19,12 +19,11 @@ class Api::V1::InspectionResource < ApplicationResource
     :num_pending_reports,
     :num_reports,
     :num_expired_reports,
-    :num_pending_reports,
     :state_name
 
 
   def num_expired_reports
-    0
+    @model.reports.where("limit_date <= ?", DateTime.now)
   end
 
   def num_pending_reports
@@ -39,18 +38,28 @@ class Api::V1::InspectionResource < ApplicationResource
     @model.pdf.url
   end
 
+  filter :num_pending_reports, apply: ->(records, value, _options) {
+    if not value.empty?
+      records = records.joins("FULL OUTER JOIN reports ON reports.inspection_id = inspections.id AND reports.state = #{Report.states['unchecked']}")
+      .group("inspections.id").having('count(reports.id) = ?', value[0])
+    else
+      records
+    end
+  }
+
   filter :num_expired_reports, apply: ->(records, value, _options) {
-    records
+    if not value.empty?
+      records = records
+      .joins("FULL OUTER JOIN reports ON reports.inspection_id = inspections.id AND reports.limit_date <= '#{DateTime.now.to_s}'")
+      .group("inspections.id").having('count(reports.id) = ?', value[0])
+    else
+      records
+    end
   }
 
   filter :state_name, apply: ->(records, value, _options) {
     records
   }
-
-  filter :field_chief, apply: ->(records, value, _options) {
-    records
-  }
-
 
   filter :expert, apply: ->(records, value, _options) {
     if not value.empty?
@@ -68,8 +77,8 @@ class Api::V1::InspectionResource < ApplicationResource
   filter :field_chief, apply: ->(records, value, _options) {
     if not value.empty?
       if value[0].is_a? ActionController::Parameters and value[0]["full_name"].present?
-        records.joins("LEFT OUTER JOIN users as experts ON experts.id = inspections.expert_id")
-        .where("experts.first_name || ' ' || experts.last_name ilike '%" + value[0]["full_name"] + "%'")
+        records.joins("LEFT OUTER JOIN users as field_chiefs ON field_chiefs.id = inspections.expert_id")
+        .where("field_chiefs.first_name || ' ' || field_chiefs.last_name ilike '%" + value[0]["full_name"] + "%'")
       else
         records
       end
@@ -92,15 +101,7 @@ class Api::V1::InspectionResource < ApplicationResource
   }
 
 
-  filter :num_pending_reports, apply: ->(records, value, _options) {
-    if not value.empty?
-      records = records.joins("LEFT OUTER JOIN reports ON reports.inspection_id = inspections.id")
-      .where(reports: { state: 'unchecked' })
-      .group("inspections.id").having('count(reports.id) = ?', value[0])
-    else
-      records
-    end
-  }
+
 
   filter :construction, apply: ->(records, value, _options) {
     if not value.empty?
@@ -148,7 +149,7 @@ class Api::V1::InspectionResource < ApplicationResource
 
   filter :num_reports, apply: ->(records, value, _options) {
     if not value.empty?
-      records = records.joins("LEFT OUTER JOIN reports ON reports.inspection_id = inspections.id")
+      records = records.joins("FULL OUTER JOIN reports ON reports.inspection_id = inspections.id")
       .group("inspections.id").having('count(reports.id) = ?', value[0])
     else
       records
