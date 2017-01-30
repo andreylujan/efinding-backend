@@ -70,7 +70,8 @@ class Report < ApplicationRecord
 
   validate :limit_date_cannot_be_in_the_past, on: :create
   before_save :default_values
-  after_commit :check_inspection_state, on: [ :update ]
+  before_save :check_limit_date
+  after_commit :update_inspection, on: [ :create, :update ]
 
   acts_as_xlsx columns: [
     :id,
@@ -86,8 +87,25 @@ class Report < ApplicationRecord
     :pdf_url
   ]
 
-  def check_inspection_state
+  def check_limit_date
+    if limit_date.nil? and dynamic_attributes.dig('19', 'iso_string').present?
+      self.limit_date = dynamic_attributes.dig('19', 'iso_string')
+    end
+  end
 
+  def update_inspection
+    chief_terrain_id = dynamic_attributes.dig('16', 'id')
+    needs_save = false
+    if chief_terrain_id.present? and inspection.chief_terrain.nil?
+      inspection.chief_terrain_id = chief_terrain_id
+      needs_save = true
+    end
+    expert_id = dynamic_attributes.dig('17', 'id')
+    if expert_id.present? and inspection.expert.nil?
+      inspection.expert_id = expert_id
+      needs_save = true
+    end
+    inspection.save!
   end
 
   def images_attributes=(val)
