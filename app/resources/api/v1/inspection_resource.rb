@@ -8,6 +8,7 @@ class Api::V1::InspectionResource < ApplicationResource
   has_one :company
   has_one :field_chief
   has_one :expert
+  has_one :administrator
 
   attributes :created_at, :resolved_at, 
     :state,
@@ -50,16 +51,44 @@ class Api::V1::InspectionResource < ApplicationResource
     records
   }
 
-  filter :administrator, apply: ->(records, value, _options) {
-    records
-  }
 
   filter :expert, apply: ->(records, value, _options) {
-    records
+    if not value.empty?
+      if value[0].is_a? ActionController::Parameters and value[0]["full_name"].present?
+        records.joins("LEFT OUTER JOIN users as experts ON experts.id = inspections.expert_id")
+        .where("experts.first_name || ' ' || experts.last_name ilike '%" + value[0]["full_name"] + "%'")
+      else
+        records
+      end
+    else
+      records
+    end
   }
 
-  filter :construction, apply: ->(records, value, _options) {
-    records
+  filter :field_chief, apply: ->(records, value, _options) {
+    if not value.empty?
+      if value[0].is_a? ActionController::Parameters and value[0]["full_name"].present?
+        records.joins("LEFT OUTER JOIN users as experts ON experts.id = inspections.expert_id")
+        .where("experts.first_name || ' ' || experts.last_name ilike '%" + value[0]["full_name"] + "%'")
+      else
+        records
+      end
+    else
+      records
+    end
+  }
+
+  filter :administrator, apply: ->(records, value, _options) {
+    if not value.empty?
+      if value[0].is_a? ActionController::Parameters and value[0]["full_name"].present?
+        records.joins("INNER JOIN users as administrators ON administrators.id = inspections.expert_id")
+        .where("administrators.first_name || ' ' || administrators.last_name ilike '%" + value[0]["full_name"] + "%'")
+      else
+        records
+      end
+    else
+      records
+    end
   }
 
 
@@ -68,6 +97,18 @@ class Api::V1::InspectionResource < ApplicationResource
       records = records.joins("LEFT OUTER JOIN reports ON reports.inspection_id = inspections.id")
       .where(reports: { state: 'unchecked' })
       .group("inspections.id").having('count(reports.id) = ?', value[0])
+    else
+      records
+    end
+  }
+
+  filter :construction, apply: ->(records, value, _options) {
+    if not value.empty?
+      if value[0].is_a? ActionController::Parameters and value[0][:name].present?
+        records.joins(:construction).where("constructions.name ilike '%" + value[0]["name"] + "%'")
+      else
+        records
+      end
     else
       records
     end
@@ -116,10 +157,9 @@ class Api::V1::InspectionResource < ApplicationResource
 
   filter :creator, apply: ->(records, value, _options) {
     if not value.empty?
-      if value[0].is_a? Hash and value[0]["full_name"].present?
-        records.includes(:creator).where("creators_inspections.first_name || ' ' || creators_inspections.last_name ilike '%" + value[0]["full_name"] + "%'")
-        .where.not(creator_id: nil).references(:users)
-
+      if value[0].is_a? ActionController::Parameters and value[0]["full_name"].present?
+        records.joins("INNER JOIN users as creators ON creators.id = inspections.creator_id")
+          .where("creators.first_name || ' ' || creators.last_name ilike '%" + value[0]["full_name"] + "%'")
       else
         records
       end
