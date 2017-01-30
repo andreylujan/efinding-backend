@@ -23,7 +23,7 @@ class Api::V1::InspectionResource < ApplicationResource
 
 
   def num_expired_reports
-    @model.reports.where("limit_date <= ?", DateTime.now)
+    @model.reports.where("limit_date <= ?", DateTime.now).count
   end
 
   def num_pending_reports
