@@ -88,7 +88,15 @@ class Api::V1::InspectionResource < ApplicationResource
   }
 
   filter :company, apply: ->(records, value, _options) {
-    records
+    if not value.empty?
+      if value[0].is_a? ActionController::Parameters and value[0][:name].present?
+        records.joins(construction: :company).where("companies.name ilike '%" + value[0]["name"] + "%'")
+      else
+        records
+      end
+    else
+      records
+    end
   }
 
   filter :formatted_created_at, apply: ->(records, value, _options) {
