@@ -48,6 +48,13 @@ class Inspection < ApplicationRecord
     end
   end
 
+  def check_state
+    if state == "first_signature_done" and reports.count == 
+      reports.where.not(state: "unchecked").count
+      resolve_reports!
+    end
+  end
+
   def num_pending_reports
     reports.where(state: "unchecked").count
   end

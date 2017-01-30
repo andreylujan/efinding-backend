@@ -106,6 +106,7 @@ class Report < ApplicationRecord
       needs_save = true
     end
     inspection.save!
+    inspection.check_state
   end
 
   def images_attributes=(val)
