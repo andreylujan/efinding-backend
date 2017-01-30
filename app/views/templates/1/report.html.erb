@@ -218,7 +218,6 @@
 		}
 		.logo {
 			width: 200px;
-			height: 100px;
 			margin-bottom: 15px;
 			height: 
 		}
@@ -255,12 +254,12 @@
 			</div>
 			<div class="formHeader" style="float: right;">
 				<div class="field ">
-					<div class="label wpi-120">Frente de trabajo:</div>
-					<div class="value"><%= report.dynamic_attributes.dig('5', 'text') %></div>
+					<div class="label wpi-140">Frente de trabajo:</div>
+					<div class="value wpi-170"><%= report.dynamic_attributes.dig('5', 'text') %></div>
 				</div>
 				<div class="field">
-					<div class="label wpi-120">Acción/condición detectada:</div>
-					<div class="value"><%= report.dynamic_attributes.dig('6', 'text') %></div>
+					<div class="label wpi-140">Acción/condición detectada:</div>
+					<div class="value wpi-170"><%= report.dynamic_attributes.dig('6', 'text') %></div>
 				</div>
 			</div>
 		</div>
@@ -326,7 +325,7 @@
 			<h3>FOTOS</h3>
 			<% report.images.where(is_initial: true).each do |image| %>
 			<div class="picsField">
-				<img src="<%= image.url.gsub('https', 'http') %>" style="width: 400px; height: 250px">
+				<img src="<%= image.url.gsub('https', 'http') %>" style="width: 400px; ">
 			</div>
 			<% end %>
 		</div>
@@ -343,7 +342,7 @@
 			<h3>FOTOS</h3>
 			<% report.images.where(is_initial: false).each do |image| %>
 			<div class="picsField">
-				<img src="<%= report.images.first.url.gsub('https', 'http') %>" style="width: 400px; height: 250px">
+				<img src="<%= report.images.first.url.gsub('https', 'http') %>" style="width: 400px; ">
 			</div>
 			<% end %>
 		</div>
@@ -397,18 +396,18 @@
 						</td>
 						<td>
 							<% if report.inspection.state != "reports_pending" and report.inspection.state != "first_signature_pending" %>
-								<%= report.inspection.initial_signer.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
+							<%= report.inspection.initial_signer.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
 							<% end %>
 						</td>
 						<td>
 							<% if report.state != "unchecked" %>
-								<%= report.resolver.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
-								<!-- <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/768AF9B25098A450CD52CD5B6339D3E8.png" alt="check_x" /> -->
+							<%= report.resolver.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
+							<!-- <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/768AF9B25098A450CD52CD5B6339D3E8.png" alt="check_x" /> -->
 							<% end %>
 						</td>
 						<td>
 							<% if report.inspection.state == "finished" %>
-								<%= report.inspection.final_signer.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
+							<%= report.inspection.final_signer.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
 							<% end %>
 						</td>
 					</tr>
