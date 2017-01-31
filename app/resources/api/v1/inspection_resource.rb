@@ -10,7 +10,7 @@ class Api::V1::InspectionResource < ApplicationResource
   has_one :expert
   has_one :administrator
 
-  attributes :created_at, :resolved_at, 
+  attributes :created_at, :resolved_at,
     :state,
     :pdf, :pdf_uploaded,
     :formatted_created_at,
@@ -84,26 +84,32 @@ class Api::V1::InspectionResource < ApplicationResource
     end
   }
 
-  filter :administrator, apply: ->(records, value, _options) {
-    if not value.empty?
-      if value[0].is_a? ActionController::Parameters and value[0]["full_name"].present?
-        records.joins("INNER JOIN users as administrators ON administrators.id = inspections.expert_id")
-        .where("administrators.first_name || ' ' || administrators.last_name ilike '%" + value[0]["full_name"] + "%'")
-      else
-        records
-      end
-    else
-      records
-    end
-  }
-
-
 
 
   filter :construction, apply: ->(records, value, _options) {
     if not value.empty?
-      if value[0].is_a? ActionController::Parameters and value[0][:name].present?
-        records.joins(:construction).where("constructions.name ilike '%" + value[0]["name"] + "%'")
+      if value[0].is_a? ActionController::Parameters
+        value = value[0]
+        if value[:name].present?
+          records = records.joins(:construction).where("constructions.name ilike '%" + value[:name] + "%'")
+        end
+        if value[:company].present? and value[:company].is_a? ActionController::Parameters
+          if value[:company][:name].present?
+            records = records.joins(construction: :company).where("companies.name ilike '%" + value[:company][:name] + "%'")
+          end
+          if value[:company][:organization].present? and value[:company][:organization].is_a? ActionController::Parameters
+            if value[:company][:organization][:name].present?
+              records = records.joins(construction: { company: :organization})
+              .where("organizations.name ilike '%" + value[:company][:organization][:name] + "%'")
+            end
+          end
+        end
+        if value[:administrator].present? and value[:administrator].is_a? ActionController::Parameters
+          if value[:administrator][:full_name].present?
+            records = records.joins("INNER JOIN users as administrators ON administrators.id = inspections.expert_id")
+            .where("administrators.first_name || ' ' || administrators.last_name ilike '%" + value[:administrator][:full_name] + "%'")
+          end
+        end
       else
         records
       end
@@ -112,17 +118,6 @@ class Api::V1::InspectionResource < ApplicationResource
     end
   }
 
-  filter :company, apply: ->(records, value, _options) {
-    if not value.empty?
-      if value[0].is_a? ActionController::Parameters and value[0][:name].present?
-        records.joins(construction: :company).where("companies.name ilike '%" + value[0]["name"] + "%'")
-      else
-        records
-      end
-    else
-      records
-    end
-  }
 
   filter :formatted_created_at, apply: ->(records, value, _options) {
     if not value.empty?
@@ -148,13 +143,13 @@ class Api::V1::InspectionResource < ApplicationResource
     end
   }
 
-  
+
 
   filter :creator, apply: ->(records, value, _options) {
     if not value.empty?
       if value[0].is_a? ActionController::Parameters and value[0]["full_name"].present?
         records.joins("INNER JOIN users as creators ON creators.id = inspections.creator_id")
-          .where("creators.first_name || ' ' || creators.last_name ilike '%" + value[0]["full_name"] + "%'")
+        .where("creators.first_name || ' ' || creators.last_name ilike '%" + value[0]["full_name"] + "%'")
       else
         records
       end
@@ -182,8 +177,8 @@ class Api::V1::InspectionResource < ApplicationResource
   def self.records(options = {})
     Inspection
     .joins("LEFT OUTER JOIN reports ON reports.inspection_id = inspections.id")
-    .select("inspections.*, count(reports.id) as num_reports, count(case when reports.state = 0 THEN 1 END) as num_pending_reports, count(case when reports.limit_date <= '" + 
-      DateTime.now.to_s + "' THEN 1 END) as num_expired_reports")
+    .select("inspections.*, count(reports.id) as num_reports, count(case when reports.state = 0 THEN 1 END) as num_pending_reports, count(case when reports.limit_date <= '" +
+            DateTime.now.to_s + "' THEN 1 END) as num_expired_reports")
     .group("inspections.id")
   end
 
