@@ -133,7 +133,11 @@ class Api::V1::InspectionResource < ApplicationResource
   }
 
   filter :formatted_resolved_at, apply: ->(records, value, _options) {
-    records
+    if not value.empty?
+      records.where("to_char(inspections.resolved_at, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
+    else
+      records
+    end
   }
 
   filter :formatted_final_signed_at, apply: ->(records, value, _options) {
@@ -169,7 +173,7 @@ class Api::V1::InspectionResource < ApplicationResource
 
   filter :resolved_at, apply: ->(records, value, _options) {
     if not value.empty?
-      records.where("to_char(inspections.created_at, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
+      records.where("to_char(inspections.resolved_at, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
     else
       records
     end
