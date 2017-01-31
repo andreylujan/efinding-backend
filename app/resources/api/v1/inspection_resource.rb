@@ -187,7 +187,7 @@ class Api::V1::InspectionResource < ApplicationResource
   def self.count_records(records)
     counts = records.count(:all)
     if counts.is_a? Hash
-      counts.values.sum
+      counts.length
     else
       counts
     end
