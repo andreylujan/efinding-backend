@@ -22,16 +22,6 @@ class Api::V1::InspectionResource < ApplicationResource
     :state_name
 
 
-  def num_expired_reports
-    @model.reports.where("limit_date <= ?", DateTime.now).count
-  end
-
-  def num_pending_reports
-    @model.reports.where(state: "unchecked").count
-  end
-
-  
-
   add_foreign_keys :construction_id
 
   def pdf
@@ -40,8 +30,8 @@ class Api::V1::InspectionResource < ApplicationResource
 
   filter :num_pending_reports, apply: ->(records, value, _options) {
     if not value.empty?
-      records = records.joins("FULL OUTER JOIN reports ON reports.inspection_id = inspections.id AND reports.state = #{Report.states['unchecked']}")
-      .group("inspections.id").having('count(reports.id) = ?', value[0])
+      records = records
+      .having("count(CASE WHEN reports.state = 0 THEN 1 END) = ?", value[0])
     else
       records
     end
@@ -50,8 +40,15 @@ class Api::V1::InspectionResource < ApplicationResource
   filter :num_expired_reports, apply: ->(records, value, _options) {
     if not value.empty?
       records = records
-      .joins("FULL OUTER JOIN reports ON reports.inspection_id = inspections.id AND reports.limit_date <= '#{DateTime.now.to_s}'")
-      .group("inspections.id").having('count(reports.id) = ?', value[0])
+      .having("count(CASE WHEN reports.limit_date <= '#{DateTime.now.to_s}' THEN 1 END) = ?", value[0])
+    else
+      records
+    end
+  }
+
+  filter :num_reports, apply: ->(records, value, _options) {
+    if not value.empty?
+      records = records.having('count(reports.id) = ?', value[0])
     else
       records
     end
@@ -147,14 +144,7 @@ class Api::V1::InspectionResource < ApplicationResource
     end
   }
 
-  filter :num_reports, apply: ->(records, value, _options) {
-    if not value.empty?
-      records = records.joins("FULL OUTER JOIN reports ON reports.inspection_id = inspections.id")
-      .group("inspections.id").having('count(reports.id) = ?', value[0])
-    else
-      records
-    end
-  }
+  
 
   filter :creator, apply: ->(records, value, _options) {
     if not value.empty?
@@ -184,6 +174,23 @@ class Api::V1::InspectionResource < ApplicationResource
       records
     end
   }
+
+  def self.records(options = {})
+    Inspection
+    .joins("LEFT OUTER JOIN reports ON reports.inspection_id = inspections.id")
+    .select("inspections.*, count(reports.id) as num_reports, count(case when reports.state = 0 THEN 1 END) as num_pending_reports, count(case when reports.limit_date <= '" + 
+      DateTime.now.to_s + "' THEN 1 END) as num_expired_reports")
+    .group("inspections.id")
+  end
+
+  def self.count_records(records)
+    counts = records.count(:all)
+    if counts.is_a? Hash
+      counts.values.sum
+    else
+      counts
+    end
+  end
 
   before_save do
     @model.creator_id = context[:current_user].id if @model.new_record?

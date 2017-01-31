@@ -55,9 +55,7 @@ class Inspection < ApplicationRecord
     end
   end
 
-  def num_pending_reports
-    reports.where(state: "unchecked").count
-  end
+
 
   def formatted_created_at
     created_at.strftime("%d/%m/%Y") 
@@ -96,9 +94,7 @@ class Inspection < ApplicationRecord
     end
   end
 
-  def num_reports
-    reports.count
-  end
+  
 
   def state_name
     if state == "final_signature_pending" || state == "finished"

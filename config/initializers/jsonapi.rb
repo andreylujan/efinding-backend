@@ -35,6 +35,7 @@ Rails.configuration.to_prepare do
         (record_count / @size.to_f).ceil
       end
     end
+
   end
 
   JSONAPI::ResourceSerializer.class_eval do
