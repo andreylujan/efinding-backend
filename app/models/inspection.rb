@@ -48,15 +48,6 @@ class Inspection < ApplicationRecord
     end
   end
 
-  def check_state
-    if state == "first_signature_done" and reports.count == 
-      reports.where.not(state: "unchecked").count
-      resolve_reports!
-    end
-  end
-
-
-
   def formatted_created_at
     created_at.strftime("%d/%m/%Y") 
   end
@@ -90,6 +81,7 @@ class Inspection < ApplicationRecord
 
   def check_state
     if state == "first_signature_done" and reports.where(state: "unchecked").count == 0
+      self.resolved_at = DateTime.now
       resolve_reports!
     end
   end
