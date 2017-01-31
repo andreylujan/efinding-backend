@@ -108,6 +108,8 @@ class Api::V1::InspectionResource < ApplicationResource
           if value[:administrator][:full_name].present?
             records = records.joins("INNER JOIN users as administrators ON administrators.id = inspections.expert_id")
             .where("administrators.first_name || ' ' || administrators.last_name ilike '%" + value[:administrator][:full_name] + "%'")
+          else
+            records
           end
         end
       else
