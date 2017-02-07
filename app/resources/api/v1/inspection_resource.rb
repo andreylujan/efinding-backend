@@ -176,6 +176,30 @@ class Api::V1::InspectionResource < ApplicationResource
     end
   }
 
+  def num_reports
+    if @model.respond_to? :num_reports
+      @model.num_reports
+    else
+      0
+    end
+  end
+
+  def num_expired_reports
+    if @model.respond_to? :num_expired_reports
+      @model.num_expired_reports
+    else
+      0
+    end
+  end
+
+  def num_pending_reports
+    if @model.respond_to? :num_pending_reports
+      @model.num_pending_reports
+    else
+      0
+    end
+  end
+
   def self.records(options = {})
     Inspection
     .joins("LEFT OUTER JOIN reports ON reports.inspection_id = inspections.id")
