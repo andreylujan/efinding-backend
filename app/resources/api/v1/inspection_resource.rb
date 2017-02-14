@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Api::V1::InspectionResource < ApplicationResource
 
   has_one :creator
@@ -8,7 +9,6 @@ class Api::V1::InspectionResource < ApplicationResource
   has_one :company
   has_one :field_chief
   has_one :expert
-  has_one :administrator
 
   attributes :created_at, :resolved_at,
     :state,
@@ -105,9 +105,9 @@ class Api::V1::InspectionResource < ApplicationResource
           end
         end
         if value[:administrator].present? and value[:administrator].is_a? ActionController::Parameters
-          if value[:administrator][:full_name].present?
-            records = records.joins("INNER JOIN users as administrators ON administrators.id = inspections.expert_id")
-            .where("administrators.first_name || ' ' || administrators.last_name ilike '%" + value[:administrator][:full_name] + "%'")
+          if value[:administrator][:name].present?
+            records = records.joins("INNER JOIN people as administrators ON people.id = inspections.administrator_id")
+            .where("administrators.name ilike '%" + value[:administrator][:name] + "%'")
           else
             records
           end

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreateJoinTableInspectionUser < ActiveRecord::Migration[5.0]
   def change
     create_join_table :inspections, :users do |t|

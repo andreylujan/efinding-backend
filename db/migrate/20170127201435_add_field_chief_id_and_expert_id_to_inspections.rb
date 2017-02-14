@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddFieldChiefIdAndExpertIdToInspections < ActiveRecord::Migration[5.0]
   def change
     add_column :inspections, :field_chief_id, :integer

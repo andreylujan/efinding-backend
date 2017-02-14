@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddInitialSignerIdAndInitialSignedAtToInspections < ActiveRecord::Migration[5.0]
   def change
     add_column :inspections, :signer_id, :integer

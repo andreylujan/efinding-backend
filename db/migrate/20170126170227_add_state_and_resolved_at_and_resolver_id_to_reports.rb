@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddStateAndResolvedAtAndResolverIdToReports < ActiveRecord::Migration[5.0]
   def change
     add_column :reports, :state, :integer, null: false, default: 0

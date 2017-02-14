@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class RemoveMarkedLocationIdAndStartLocationIdAndFinishLocationIdAndEndLocationIdFromReports < ActiveRecord::Migration[5.0]
   def change
     remove_column :reports, :start_location_id, :integer

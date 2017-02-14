@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Api::V1::ConstructionResource < ApplicationResource
 	attributes :name, :company_id
 	has_one :company

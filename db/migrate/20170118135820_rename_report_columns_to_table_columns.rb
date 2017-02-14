@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class RenameReportColumnsToTableColumns < ActiveRecord::Migration[5.0]
   def change
   	rename_table :report_columns, :table_columns

@@ -15,6 +15,11 @@
 #  deleted_at        :datetime
 #  pdf               :text
 #  pdf_uploaded      :boolean          default(FALSE), not null
+#  final_signer_id   :integer
+#  initial_signed_at :datetime
+#  final_signed_at   :datetime
+#  field_chief_id    :integer
+#  expert_id         :integer
 #
 
 class Inspection < ApplicationRecord
