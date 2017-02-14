@@ -108,9 +108,15 @@ class Api::V1::InspectionResource < ApplicationResource
         if value[:name].present?
           records = records.joins(:construction).where("constructions.name ilike '%" + value[:name] + "%'")
         end
+        if value[:id].present?
+          records = records.where(construction_id: value[0])
+        end
         if value[:company].present? and value[:company].is_a? ActionController::Parameters
           if value[:company][:name].present?
             records = records.joins(construction: :company).where("companies.name ilike '%" + value[:company][:name] + "%'")
+          end
+          if value[:company][:id].present?
+            records = records.joins(:construction).where("constructions.company_id = ?", value[:company][:id])
           end
           if value[:company][:organization].present? and value[:company][:organization].is_a? ActionController::Parameters
             if value[:company][:organization][:name].present?
