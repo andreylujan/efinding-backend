@@ -5,6 +5,8 @@ class Api::V1::ConstructionResource < ApplicationResource
     add_foreign_keys :company_id
     has_one :administrator    
 
+    filter :company_id
+    
 	def self.records(options = {})
     context = options[:context]
     if context[:company_id]
