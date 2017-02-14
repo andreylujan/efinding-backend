@@ -20,5 +20,5 @@ class Construction < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :company }
   belongs_to :administrator, class_name: :Person, foreign_key: :administrator_id
   belongs_to :visitor, class_name: :Person, foreign_key: :visitor_id
-  has_and_belongs_to_many :contractors, class_name: "Person", foreign_key: :person_id
+  has_and_belongs_to_many :contractors, class_name: "Person", association_foreign_key: :person_id, foreign_key: :construction_id
 end
