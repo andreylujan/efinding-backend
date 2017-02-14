@@ -109,7 +109,7 @@ class Api::V1::InspectionResource < ApplicationResource
           records = records.joins(:construction).where("constructions.name ilike '%" + value[:name] + "%'")
         end
         if value[:id].present?
-          records = records.where(construction_id: value[0])
+          records = records.where(construction_id: value[:id])
         end
         if value[:company].present? and value[:company].is_a? ActionController::Parameters
           if value[:company][:name].present?
@@ -164,16 +164,16 @@ class Api::V1::InspectionResource < ApplicationResource
 
 
   filter :creator, apply: ->(records, value, _options) {
-    if not value.empty?
-      if value[0].is_a? ActionController::Parameters and value[0]["full_name"].present?
-        records.joins("INNER JOIN users as creators ON creators.id = inspections.creator_id")
+    if not value.empty? and value[0].is_a? ActionController::Parameters
+      if value[0]["full_name"].present?
+        records = records.joins("INNER JOIN users as creators ON creators.id = inspections.creator_id")
         .where("creators.first_name || ' ' || creators.last_name ilike '%" + value[0]["full_name"] + "%'")
-      else
-        records
       end
-    else
-      records
+      if value[0][:id].present?
+        records = records.where(creator_id: value[0][:id])
+      end
     end
+    records
   }
 
   filter :created_at, apply: ->(records, value, _options) {
