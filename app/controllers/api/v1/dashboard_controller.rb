@@ -2,78 +2,73 @@
 class Api::V1::DashboardController < Api::V1::JsonApiController
 
   before_action :doorkeeper_authorize!
+
   def show
-    yearly_reports = filter_by_organization(Report
-                                            .includes(:assigned_user, :creator)
-                                            .where("reports.created_at >= ? AND reports.created_at < ?",
-                                                   DateTime.now.beginning_of_year, DateTime.now.end_of_year)
-                                            .order('reports.created_at ASC'))
-    filtered_reports = yearly_reports
-    reports_by_month = filtered_reports.group_by(&:month_criteria).map do |month|
-    	
-    	{
-    		num_assigned: month[1].count { |r| r.assigned_user.present? },
-        num_executed: month[1].count { |r| r.finished? },
-        month_name: I18n.l(month[0], format: '%B').capitalize
 
-    	}
+    inspections = Api::V1::InspectionResource.records({
+        context: {
+          current_user: current_user
+        }
+      })
+    
+    filters = Api::V1::InspectionResource.verify_filters(params[:filter])
+    
+    inspections = Api::V1::InspectionResource.apply_filters(inspections,
+      filters)
+    
+    reports = Report.joins(:inspection)
+      .where(inspections:  { id: inspections.map { |i| i.id }})
+    
+    report_ratios = reports.group("reports.state").select("reports.state, count(reports.id) as num_reports").order("")
+      .as_json.map do |json|
+        json.delete "id"
+        json
+      end
+    state_names = Report.states.keys
+    report_fulfillment = reports.group("inspections.id, reports.state")
+      .select("inspections.id as inspection_id, reports.state, count(reports.id) as num_reports")
+      .order("").group_by { |r| r.inspection_id }.map do |inspection_id, report_group|
+        json = {
+          inspection_id: inspection_id
+        }
+        state_names.each do |state_name|
+          json["num_" + state_name.to_s] = 0
+        end
+        report_group.each do |report|
+          json["num_" + report.state] = report.num_reports
+        end
+        json
     end
-
-    current_month_user_reports = filtered_reports.where("reports.created_at >= ? AND reports.created_at < ?",
-        DateTime.now.beginning_of_month, DateTime.now.end_of_month)
-        # .where.not(assigned_user_id: nil)
-
-    current_month_reports_by_user = current_month_user_reports.where.not(assigned_user_id: nil).group_by(&:assigned_user).map do |info|
+    activity_groups = {}
+  
+    report_locations = reports.includes(:initial_location).group_by(&:state).map do |state, report_group|
       {
-        user_name: info[0].name,
-        num_assigned_reports: info[1].length,
-        num_executed_reports: info[1].count { |r| r.finished? }
+        state: state,
+        coordinates: report_group.map do |report|
+          json =
+          {
+            latitude: report.initial_location.lonlat.y.round(8),
+            longitude: report.initial_location.lonlat.x.round(8)
+          }
+          
+          json
+        end
       }
-    end.sort! { |a, b| a[:user_name] <=> b[:user_name] }
-
-    last_month_user_reports = filtered_reports.where("reports.created_at >= ? AND reports.created_at < ?",
-        DateTime.now.beginning_of_month - 1.month, DateTime.now.end_of_month - 1.month)
-        # .where.not(assigned_user_id: nil)
-
-    last_month_reports_by_user = last_month_user_reports.where.not(assigned_user_id: nil).group_by(&:assigned_user).select { |x| x.present? }.map do |info|
-      {
-        user_name: info[0].name,
-        num_assigned_reports: info[1].length,
-        num_executed_reports: info[1].count { |r| r.finished? }
-      }
-    end.sort! { |a, b| a[:user_name] <=> b[:user_name] }
-
-    report_counts = {
-      num_last_month: last_month_user_reports.count,
-      num_current_month: current_month_user_reports.count
-    }
-
+    end
+    
     dashboard_info = {
       id: SecureRandom.uuid,
-      report_counts: report_counts,
-      reports_by_month: reports_by_month,
-      last_month_reports_by_user: last_month_reports_by_user,
-      current_month_reports_by_user: current_month_reports_by_user
+      activity_groups: activity_groups,
+      report_fulfillment: report_fulfillment,
+      report_ratios: report_ratios,
+      report_locations: report_locations
     }
 
     dashboard = Dashboard.new dashboard_info
-    
+
     render json: JSONAPI::ResourceSerializer.new(Api::V1::DashboardResource)
     .serialize_to_hash(Api::V1::DashboardResource.new(dashboard, nil))
-
-    
-
-
   end
 
-  def filter_by_organization(reports = nil)
-    if reports.nil?
-      Report.joins(creator: :role)
-      .where(roles: { organization_id: current_user.organization_id })
-    else
-      reports.joins(creator: :role)
-      .where(roles: { organization_id: current_user.organization_id })
-    end
-  end
 
 end

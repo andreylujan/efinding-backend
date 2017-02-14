@@ -48,7 +48,7 @@ Rails.application.routes.draw do
         end
       end
 
-      jsonapi_resources :constructions, only: [ :create, :update, :destroy, :show ] do
+      jsonapi_resources :constructions, only: [ :index, :create, :update, :destroy, :show ] do
         
       end
 

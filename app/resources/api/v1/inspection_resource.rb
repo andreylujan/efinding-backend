@@ -85,6 +85,21 @@ class Api::V1::InspectionResource < ApplicationResource
   }
 
 
+  filter :start_date, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.where("inspections.created_at >= ?", value[0])
+    else
+      records
+    end
+  }
+
+  filter :end_date, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.where("inspections.created_at <= ?", value[0])
+    else
+      records
+    end
+  }
 
   filter :construction, apply: ->(records, value, _options) {
     if not value.empty?
@@ -108,16 +123,11 @@ class Api::V1::InspectionResource < ApplicationResource
           if value[:administrator][:name].present?
             records = records.joins("INNER JOIN people as administrators ON people.id = inspections.administrator_id")
             .where("administrators.name ilike '%" + value[:administrator][:name] + "%'")
-          else
-            records
           end
         end
-      else
-        records
       end
-    else
-      records
     end
+    records
   }
 
 
@@ -201,11 +211,17 @@ class Api::V1::InspectionResource < ApplicationResource
   end
 
   def self.records(options = {})
-    Inspection
-    .joins("LEFT OUTER JOIN reports ON reports.inspection_id = inspections.id")
-    .select("inspections.*, count(reports.id) as num_reports, count(case when reports.state = 0 THEN 1 END) as num_pending_reports, count(case when reports.limit_date <= '" +
-            DateTime.now.to_s + "' THEN 1 END) as num_expired_reports")
-    .group("inspections.id")
+    if options[:context] and current_user = options[:context][:current_user]
+      Inspection
+      .joins("LEFT OUTER JOIN reports ON reports.inspection_id = inspections.id")
+      .joins(creator: :role)
+      .where(roles: { organization_id: current_user.organization_id })
+      .select("inspections.*, count(reports.id) as num_reports, count(case when reports.state = 0 THEN 1 END) as num_pending_reports, count(case when reports.limit_date <= '" +
+              DateTime.now.to_s + "' THEN 1 END) as num_expired_reports")
+      .group("inspections.id")
+    else
+      Inspection.where("1 = 0")
+    end
   end
 
   def self.count_records(records)
