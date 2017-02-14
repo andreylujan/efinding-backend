@@ -78,8 +78,8 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
 
     dashboard_info = {
       id: SecureRandom.uuid,
-      groupos_actividad_vs_riesgo: activity_groups,
-      groupos_actividad: activity_names,
+      grupos_actividad_vs_riesgo: activity_groups,
+      grupos_actividad: activity_names,
       grados_riesgo: groups,
       report_fulfillment: report_fulfillment,
       report_ratios: report_ratios,
