@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreateJoinTableConstructionPerson < ActiveRecord::Migration[5.0]
   def change
     create_join_table :constructions, :people do |t|

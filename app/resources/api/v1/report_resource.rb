@@ -1,8 +1,6 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::ReportResource < ApplicationResource
 
-  
-
   attributes :dynamic_attributes, :created_at, :limit_date,
     :finished, :pdf, :pdf_uploaded, 
     :initial_location_attributes,

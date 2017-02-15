@@ -18,6 +18,9 @@ Rails.application.routes.draw do
       jsonapi_resources :checkins, only: [ :create ] do
       end
 
+      jsonapi_resources :collections, only: [ :index, :show, :create, :update, :destroy ] do
+      end
+
       jsonapi_resources :checkouts, only: [ :create ] do
       end
 

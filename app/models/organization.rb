@@ -16,13 +16,13 @@ class Organization < ApplicationRecord
     has_many :roles
     has_many :categories
     has_many :report_types
-    has_many :data_parts
     has_many :table_columns, -> { order(position: :asc) }
     has_many :organization_data, dependent: :destroy
     has_many :menu_sections, -> { order(position: :asc) }
     has_many :companies
     has_many :reports, through: :report_types
     has_many :users, through: :roles
+    has_many :collections
     
     def users
     	User.joins(:role)

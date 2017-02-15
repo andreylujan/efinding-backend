@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170214135525) do
+ActiveRecord::Schema.define(version: 20170215161344) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +56,26 @@ ActiveRecord::Schema.define(version: 20170214135525) do
     t.index ["user_id"], name: "index_checkins_on_user_id", using: :btree
   end
 
+  create_table "collection_items", force: :cascade do |t|
+    t.integer  "collection_id"
+    t.text     "name"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["collection_id", "name"], name: "index_collection_items_on_collection_id_and_name", unique: true, using: :btree
+    t.index ["collection_id"], name: "index_collection_items_on_collection_id", using: :btree
+    t.index ["name"], name: "index_collection_items_on_name", using: :btree
+  end
+
+  create_table "collections", force: :cascade do |t|
+    t.text     "name"
+    t.integer  "parent_collection_id"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.integer  "organization_id"
+    t.index ["organization_id"], name: "index_collections_on_organization_id", using: :btree
+    t.index ["parent_collection_id"], name: "index_collections_on_parent_collection_id", using: :btree
+  end
+
   create_table "communes", force: :cascade do |t|
     t.integer  "region_id"
     t.text     "name",       null: false
@@ -97,18 +118,16 @@ ActiveRecord::Schema.define(version: 20170214135525) do
   end
 
   create_table "data_parts", force: :cascade do |t|
-    t.text     "type",                        null: false
-    t.text     "name",                        null: false
+    t.text     "type",                      null: false
+    t.text     "name",                      null: false
     t.text     "icon"
-    t.boolean  "required",     default: true, null: false
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.json     "config",       default: {},   null: false
-    t.integer  "position",     default: 0,    null: false
+    t.boolean  "required",   default: true, null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.json     "config",     default: {},   null: false
+    t.integer  "position",   default: 0,    null: false
     t.integer  "detail_id"
     t.integer  "section_id"
-    t.integer  "data_part_id"
-    t.index ["data_part_id"], name: "index_data_parts_on_data_part_id", using: :btree
     t.index ["detail_id"], name: "index_data_parts_on_detail_id", using: :btree
     t.index ["section_id"], name: "index_data_parts_on_section_id", using: :btree
   end
@@ -274,17 +293,6 @@ ActiveRecord::Schema.define(version: 20170214135525) do
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
   end
 
-  create_table "organization_data", force: :cascade do |t|
-    t.integer  "organization_id", null: false
-    t.text     "path_suffix",     null: false
-    t.text     "collection_name", null: false
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.index ["organization_id", "collection_name"], name: "index_organization_data_on_organization_id_and_collection_name", unique: true, using: :btree
-    t.index ["organization_id", "path_suffix"], name: "index_organization_data_on_organization_id_and_path_suffix", unique: true, using: :btree
-    t.index ["organization_id"], name: "index_organization_data_on_organization_id", using: :btree
-  end
-
   create_table "organizations", force: :cascade do |t|
     t.text     "name",                        null: false
     t.datetime "created_at",                  null: false
@@ -425,12 +433,14 @@ ActiveRecord::Schema.define(version: 20170214135525) do
   add_foreign_key "batch_uploads", "users"
   add_foreign_key "categories", "organizations"
   add_foreign_key "checkins", "users"
+  add_foreign_key "collection_items", "collections"
+  add_foreign_key "collections", "collections", column: "parent_collection_id"
+  add_foreign_key "collections", "organizations"
   add_foreign_key "communes", "regions"
   add_foreign_key "companies", "organizations"
   add_foreign_key "constructions", "companies"
   add_foreign_key "constructions", "people", column: "administrator_id"
   add_foreign_key "constructions", "people", column: "visitor_id"
-  add_foreign_key "data_parts", "data_parts"
   add_foreign_key "data_parts", "sections"
   add_foreign_key "devices", "users"
   add_foreign_key "images", "categories"
@@ -444,7 +454,6 @@ ActiveRecord::Schema.define(version: 20170214135525) do
   add_foreign_key "invitations", "roles"
   add_foreign_key "menu_items", "menu_sections"
   add_foreign_key "menu_sections", "organizations"
-  add_foreign_key "organization_data", "organizations"
   add_foreign_key "report_types", "organizations"
   add_foreign_key "reports", "inspections"
   add_foreign_key "reports", "locations", column: "final_location_id"
