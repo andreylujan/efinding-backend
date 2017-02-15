@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170215161344) do
+ActiveRecord::Schema.define(version: 20170215180852) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,11 +58,13 @@ ActiveRecord::Schema.define(version: 20170215161344) do
   create_table "collection_items", force: :cascade do |t|
     t.integer  "collection_id"
     t.text     "name"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.integer  "parent_item_id"
     t.index ["collection_id", "name"], name: "index_collection_items_on_collection_id_and_name", unique: true, using: :btree
     t.index ["collection_id"], name: "index_collection_items_on_collection_id", using: :btree
     t.index ["name"], name: "index_collection_items_on_name", using: :btree
+    t.index ["parent_item_id"], name: "index_collection_items_on_parent_item_id", using: :btree
   end
 
   create_table "collections", force: :cascade do |t|
@@ -433,6 +434,7 @@ ActiveRecord::Schema.define(version: 20170215161344) do
   add_foreign_key "batch_uploads", "users"
   add_foreign_key "categories", "organizations"
   add_foreign_key "checkins", "users"
+  add_foreign_key "collection_items", "collection_items", column: "parent_item_id"
   add_foreign_key "collection_items", "collections"
   add_foreign_key "collections", "collections", column: "parent_collection_id"
   add_foreign_key "collections", "organizations"

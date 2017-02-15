@@ -12,7 +12,8 @@
 #
 
 class Collection < ApplicationRecord
-	belongs_to :collection
+	belongs_to :parent_collection, 
+		class_name: :Collection, foreign_key: :parent_collection_id
 	belongs_to :organization
 	has_many :collection_items
 	validates :organization, presence: true
