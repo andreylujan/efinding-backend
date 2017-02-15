@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170215180852) do
+ActiveRecord::Schema.define(version: 20170215201610) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -119,16 +119,18 @@ ActiveRecord::Schema.define(version: 20170215180852) do
   end
 
   create_table "data_parts", force: :cascade do |t|
-    t.text     "type",                      null: false
-    t.text     "name",                      null: false
+    t.text     "type",                         null: false
+    t.text     "name",                         null: false
     t.text     "icon"
-    t.boolean  "required",   default: true, null: false
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.json     "config",     default: {},   null: false
-    t.integer  "position",   default: 0,    null: false
+    t.boolean  "required",      default: true, null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.json     "config",        default: {},   null: false
+    t.integer  "position",      default: 0,    null: false
     t.integer  "detail_id"
     t.integer  "section_id"
+    t.integer  "collection_id"
+    t.index ["collection_id"], name: "index_data_parts_on_collection_id", using: :btree
     t.index ["detail_id"], name: "index_data_parts_on_detail_id", using: :btree
     t.index ["section_id"], name: "index_data_parts_on_section_id", using: :btree
   end
@@ -443,6 +445,7 @@ ActiveRecord::Schema.define(version: 20170215180852) do
   add_foreign_key "constructions", "companies"
   add_foreign_key "constructions", "people", column: "administrator_id"
   add_foreign_key "constructions", "people", column: "visitor_id"
+  add_foreign_key "data_parts", "collections"
   add_foreign_key "data_parts", "sections"
   add_foreign_key "devices", "users"
   add_foreign_key "images", "categories"

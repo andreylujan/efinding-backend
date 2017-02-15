@@ -5,7 +5,7 @@ class Api::V1::OrganizationResource < ApplicationResource
   has_many :report_types
   has_many :table_columns
   has_many :data_parts
-  has_many :organization_data
+  has_many :collections
   has_many :users
 
   def custom_links(options)

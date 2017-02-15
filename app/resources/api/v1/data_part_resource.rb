@@ -3,8 +3,9 @@ class Api::V1::DataPartResource < ApplicationResource
 	attributes :name, :icon, :required, :config, 
 		:data_part_type, :position
 
-	add_foreign_keys :section_id
-
+	add_foreign_keys :section_id, :collection_id
+	has_one :collection
+	
 	def data_part_type
 		@model.type
 	end
