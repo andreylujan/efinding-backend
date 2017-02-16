@@ -40,8 +40,8 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
       json
     end
 
-    activity_names = DataPart.find(3).config.dig('source', 'models').map { |c| c['name'] }
-    groups = DataPart.find(8).config.dig('source', 'models').map { |c| c['name'] }
+    activity_names = Collection.find(1).collection_items.order("name ASC").map { |c| c['name'] }
+    groups = Collection.find(4).collection_items.order("name ASC").map { |c| c['name'] }
 
     activity_groups = reports.group("dynamic_attributes->'3'->>'text', dynamic_attributes->'8'->>'text'")
     .select("count(reports.id) as num_reports, dynamic_attributes->'3'->>'text' as grupo_actividad, dynamic_attributes->'8'->>'text' as grado_riesgo")
