@@ -15,4 +15,7 @@ class CollectionItem < ApplicationRecord
   belongs_to :collection
   belongs_to :parent_item, class_name: :CollectionItem,
   	foreign_key: :parent_item_id
+
+  validates :collection, presence: true
+  validates :name, presence: true, uniqueness: { scope: :collection }
 end
