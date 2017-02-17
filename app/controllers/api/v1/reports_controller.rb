@@ -6,7 +6,8 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
 
   def context
     super.merge({
-      inspection_id: params[:inspection_id]
+      inspection_id: params[:inspection_id],
+      report_type_id: params[:report_type_id]
     })
   end
 

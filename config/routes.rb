@@ -40,6 +40,11 @@ Rails.application.routes.draw do
         jsonapi_resources :users, only: [ :index ]
       end
 
+      jsonapi_resources :report_types, only: [] do
+        jsonapi_resources :reports, only: [ :index ] do
+        end
+      end
+
       jsonapi_resources :reports, only: [ :create, :index, :show, :update, :destroy ] do
         collection do
           get :zip

@@ -215,6 +215,8 @@ class Api::V1::ReportResource < ApplicationResource
     current_user = context[:current_user]
     if context[:inspection_id]
       Inspection.find(context[:inspection_id]).reports
+    elsif context[:report_type_id]
+      ReportType.find(context[:report_type_id]).reports
     else
       Report.joins(creator: { role: :organization }).where(organizations: { id: current_user.organization.id })
     end
