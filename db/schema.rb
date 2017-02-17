@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170215201610) do
+ActiveRecord::Schema.define(version: 20170217150305) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -238,6 +238,8 @@ ActiveRecord::Schema.define(version: 20170215201610) do
     t.integer  "position"
     t.text     "collection_name"
     t.text     "url_include"
+    t.integer  "collection_id"
+    t.index ["collection_id"], name: "index_menu_items_on_collection_id", using: :btree
     t.index ["menu_section_id"], name: "index_menu_items_on_menu_section_id", using: :btree
   end
 
@@ -457,6 +459,7 @@ ActiveRecord::Schema.define(version: 20170215201610) do
   add_foreign_key "inspections", "users", column: "final_signer_id"
   add_foreign_key "inspections", "users", column: "initial_signer_id"
   add_foreign_key "invitations", "roles"
+  add_foreign_key "menu_items", "collections"
   add_foreign_key "menu_items", "menu_sections"
   add_foreign_key "menu_sections", "organizations"
   add_foreign_key "report_types", "organizations"
