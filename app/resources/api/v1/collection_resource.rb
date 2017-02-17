@@ -3,7 +3,7 @@ class Api::V1::CollectionResource < ApplicationResource
   attributes :name
   has_one :collection
   has_many :collection_items
-  add_foreign_keys :parent_collection_id, :collection_id
+  add_foreign_keys :parent_collection_id
   
   def self.records(options = {})
     context = options[:context]
