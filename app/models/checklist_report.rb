@@ -31,10 +31,15 @@ class ChecklistReport < ApplicationRecord
   validates :location, presence: true
   validates :creator, presence: true
   validates :code, presence: true
+  validates :id, uniqueness: true
+
+  accepts_nested_attributes_for :location
 
   before_validation(on: :create) do
     self.code = next_seq unless attribute_present? :code
   end
+
+
 
   def user_names
   	users.map { |s| s.name }.sort.join(", ")

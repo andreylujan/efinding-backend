@@ -1,13 +1,15 @@
 class Api::V1::ChecklistReportResource < ApplicationResource
   
   attributes :checklist_data, :created_at, :pdf, :pdf_uploaded,
-    :code, :user_names
+    :code, :user_names, :location_attributes
 
   has_one :checklist
   has_many :users
   has_one :creator
   has_one :construction
 
+  key_type :uuid
+  
   filter :code, apply: ->(records, value, _options) {
     if not value.empty?
       records = records.where("checklist_reports.code::text ilike '%" + value[0].to_s + "%'")
@@ -72,6 +74,11 @@ class Api::V1::ChecklistReportResource < ApplicationResource
     records
   }
 
+  before_save do
+    @model.creator_id = context[:current_user].id if @model.new_record?
+    @model.report_type_id = 2 if @model.new_record?
+  end
+
   filter :formatted_created_at, apply: ->(records, value, _options) {
     if not value.empty?
       records.where("to_char(checklist_reports.created_at, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
@@ -97,4 +104,9 @@ class Api::V1::ChecklistReportResource < ApplicationResource
       .where(organizations: { id: current_user.organization.id })
     end
   end
+
+  def fetchable_fields
+    super - [ :location_attributes ]
+  end
+
 end
