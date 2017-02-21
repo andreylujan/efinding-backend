@@ -28,17 +28,30 @@ class Api::V1::UsersController < Api::V1::JsonApiController
 
   def index
     org_id = current_user.role.organization_id
+    if params[:organization_id].present?
+      if org_id.to_s != params[:organization_id].to_s
+        render json: unauthorized_error, status: :unauthorized
+        return
+      end
+    end
     org_users = User.includes(:role).
       where(roles: { organization_id: org_id }, deleted_at: nil)
-    user_emails = org_users.map { |u| u.email }
-    invitations = Invitation.includes(:role)
-    .where(roles: { organization_id: org_id })
-    .where.not(email: user_emails)
-    inv_users = []
-    invitations.each do |i|
-      inv_users << User.new(email: i.email, role: i.role)
+
+    # Temporary fix for inconsistency
+    if params[:organization_id].blank?
+      user_emails = org_users.map { |u| u.email }
+      invitations = Invitation.includes(:role)
+      .where(roles: { organization_id: org_id })
+      .where.not(email: user_emails)
+      inv_users = []
+      invitations.each do |i|
+        inv_users << User.new(email: i.email, role: i.role)
+      end
+      all_users = org_users.to_a.concat(inv_users)
+    else
+      all_users = org_users.to_a
     end
-    all_users = org_users.to_a.concat(inv_users)
+
     json = {}
     data = []
     all_users.each do |user|
@@ -110,8 +123,8 @@ class Api::V1::UsersController < Api::V1::JsonApiController
       end
     else
       render json: {
-          errors: [ { title: "No permitido", detail: "No puede eliminar usuarios de otra organización" }]
-        }, status: :unprocessable_entity
+        errors: [ { title: "No permitido", detail: "No puede eliminar usuarios de otra organización" }]
+      }, status: :unprocessable_entity
     end
   end
 
