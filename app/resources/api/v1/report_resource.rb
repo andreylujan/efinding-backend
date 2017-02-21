@@ -47,6 +47,15 @@ class Api::V1::ReportResource < ApplicationResource
     end
   }
 
+  filter :report_type, apply: ->(records, value, _options) {
+    if not value.empty?
+      if value[0].is_a? Hash and value[0]["id"].present?
+        records = records.where(report_type_id: value[0]["id"])
+      end
+    end
+    records
+  }
+
   filter :assigned_user, apply: ->(records, value, _options) {
     if not value.empty?
       if value[0].is_a? Hash and value[0]["full_name"].present?

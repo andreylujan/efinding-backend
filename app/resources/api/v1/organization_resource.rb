@@ -7,6 +7,7 @@ class Api::V1::OrganizationResource < ApplicationResource
   has_many :data_parts
   has_many :collections
   has_many :users
+  has_one :checklist
 
   def custom_links(options)
     { self: nil }

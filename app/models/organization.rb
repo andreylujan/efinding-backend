@@ -23,7 +23,14 @@ class Organization < ApplicationRecord
     has_many :reports, through: :report_types
     has_many :users, through: :roles
     has_many :collections
+    has_one :checklist
     
+    def checklist_id
+        if checklist.present?
+            checklist.id
+        end
+    end
+
     def users
     	User.joins(:role)
     	.where(roles: { organization_id: self.id })

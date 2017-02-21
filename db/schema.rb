@@ -10,11 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170217150305) do
+ActiveRecord::Schema.define(version: 20170221151203) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
+  enable_extension "uuid-ossp"
 
   create_table "batch_uploads", force: :cascade do |t|
     t.integer  "user_id",                    null: false
@@ -53,6 +54,43 @@ ActiveRecord::Schema.define(version: 20170217150305) do
     t.index ["arrival_lonlat"], name: "index_checkins_on_arrival_lonlat", using: :gist
     t.index ["exit_lonlat"], name: "index_checkins_on_exit_lonlat", using: :gist
     t.index ["user_id"], name: "index_checkins_on_user_id", using: :btree
+  end
+
+  create_table "checklist_reports", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.integer  "report_type_id",                  null: false
+    t.integer  "construction_id",                 null: false
+    t.integer  "creator_id",                      null: false
+    t.integer  "location_id",                     null: false
+    t.text     "pdf"
+    t.boolean  "pdf_uploaded",    default: false, null: false
+    t.datetime "deleted_at"
+    t.text     "html"
+    t.text     "location_image"
+    t.json     "checklist_data",  default: [],    null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.integer  "code"
+    t.index ["construction_id"], name: "index_checklist_reports_on_construction_id", using: :btree
+    t.index ["creator_id"], name: "index_checklist_reports_on_creator_id", using: :btree
+    t.index ["deleted_at"], name: "index_checklist_reports_on_deleted_at", using: :btree
+    t.index ["location_id"], name: "index_checklist_reports_on_location_id", using: :btree
+    t.index ["report_type_id"], name: "index_checklist_reports_on_report_type_id", using: :btree
+  end
+
+  create_table "checklist_reports_users", id: false, force: :cascade do |t|
+    t.uuid    "checklist_report_id"
+    t.integer "user_id"
+    t.index ["checklist_report_id", "user_id"], name: "checklists_users", unique: true, using: :btree
+    t.index ["user_id", "checklist_report_id"], name: "users_checklists", unique: true, using: :btree
+  end
+
+  create_table "checklists", force: :cascade do |t|
+    t.text     "name"
+    t.json     "sections",        default: [], null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.integer  "organization_id",              null: false
+    t.index ["organization_id"], name: "index_checklists_on_organization_id", using: :btree
   end
 
   create_table "collection_items", force: :cascade do |t|
@@ -191,13 +229,6 @@ ActiveRecord::Schema.define(version: 20170217150305) do
     t.index ["construction_id"], name: "index_inspections_on_construction_id", using: :btree
     t.index ["creator_id"], name: "index_inspections_on_creator_id", using: :btree
     t.index ["deleted_at"], name: "index_inspections_on_deleted_at", using: :btree
-  end
-
-  create_table "inspections_users", id: false, force: :cascade do |t|
-    t.integer "inspection_id", null: false
-    t.integer "user_id",       null: false
-    t.index ["inspection_id", "user_id"], name: "index_inspections_users_on_inspection_id_and_user_id", using: :btree
-    t.index ["user_id", "inspection_id"], name: "index_inspections_users_on_user_id_and_inspection_id", using: :btree
   end
 
   create_table "invitations", force: :cascade do |t|
@@ -438,6 +469,11 @@ ActiveRecord::Schema.define(version: 20170217150305) do
   add_foreign_key "batch_uploads", "users"
   add_foreign_key "categories", "organizations"
   add_foreign_key "checkins", "users"
+  add_foreign_key "checklist_reports", "constructions"
+  add_foreign_key "checklist_reports", "locations"
+  add_foreign_key "checklist_reports", "report_types"
+  add_foreign_key "checklist_reports", "users", column: "creator_id"
+  add_foreign_key "checklists", "organizations"
   add_foreign_key "collection_items", "collection_items", column: "parent_item_id"
   add_foreign_key "collection_items", "collections"
   add_foreign_key "collections", "collections", column: "parent_collection_id"

@@ -16,5 +16,6 @@ class ReportType < ApplicationRecord
   belongs_to :organization
   has_many :sections
   has_many :reports
+  has_many :checklist_reports
   validates :organization, presence: true
 end

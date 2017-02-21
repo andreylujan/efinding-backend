@@ -12,6 +12,7 @@
 #  position        :integer
 #  collection_name :text
 #  url_include     :text
+#  collection_id   :integer
 #
 
 class MenuItem < ApplicationRecord

@@ -66,10 +66,6 @@ Rails.configuration.to_prepare do
         link_object_hash[:links][:self] = self_link(source, relationship)
         link_object_hash[:links][:related] = related_link(source, relationship)
       end
-
-
-
-
       link_object_hash
     end
 
