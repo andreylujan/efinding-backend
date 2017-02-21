@@ -41,8 +41,8 @@ class ChecklistReport < ApplicationRecord
 
 
 
-  def user_names
-  	users.map { |s| s.name }.sort.join(", ")
+  def formatted_created_at
+    created_at.strftime("%d/%m/%Y %R")
   end
 
   private

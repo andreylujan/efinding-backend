@@ -19,4 +19,16 @@ class Collection < ApplicationRecord
 	has_many :collection_items
 	validates :organization, presence: true
 	validates :name, presence: true, uniqueness: { scope: :organization }
+
+	def to_csv
+	    attributes = %w{id name}
+
+	    CSV.generate(headers: true) do |csv|
+	      csv << attributes
+
+	      collection_items.each do |user|
+	        csv << attributes.map{ |attr| user.send(attr) }
+	      end
+	    end
+  	end
 end

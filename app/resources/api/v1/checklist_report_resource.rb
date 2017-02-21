@@ -1,7 +1,7 @@
 class Api::V1::ChecklistReportResource < ApplicationResource
   
-  attributes :checklist_data, :created_at, :pdf, :pdf_uploaded,
-    :code, :user_names, :location_attributes
+  attributes :checklist_data, :formatted_created_at, :pdf, :pdf_uploaded,
+    :code, :user_names, :location_attributes, :total_indicator
 
   has_one :checklist
   has_many :users
@@ -17,13 +17,17 @@ class Api::V1::ChecklistReportResource < ApplicationResource
     records
   }
 
+  filter :total_indicator, apply: ->(records, value, _options) {
+    if not value.empty?
+      records = records.where("'95%' ilike '%" + value[0].to_s + "%'")
+    end
+    records
+  }
+
   filter :user_names, apply: ->(records, value, _options) {
     if not value.empty?
       names = value.join(",")
       records = records
-      .joins("INNER JOIN checklist_reports_users ON checklist_reports_users.checklist_report_id = checklist_reports.id " + 
-        "INNER JOIN users as checklist_users ON checklist_users.id = checklist_reports_users.user_id")
-      .group("checklist_reports.id")
       .having("string_agg(checklist_users.first_name || ' ' || checklist_users.last_name, ', ' ORDER BY " + 
         "checklist_users.first_name || ' ' || checklist_users.last_name) ILIKE '%" +
         names + "%'")
@@ -88,7 +92,7 @@ class Api::V1::ChecklistReportResource < ApplicationResource
   }
 
   def self.count_records(records)
-    count = records.uniq.count(:all)
+    count = records.distinct.count(:all)
     if count.is_a? Hash
       count.values.sum
     else
@@ -101,7 +105,12 @@ class Api::V1::ChecklistReportResource < ApplicationResource
     current_user = context[:current_user]
     if context[:current_user]
       ChecklistReport.joins(creator: { role: :organization })
+      .joins("INNER JOIN checklist_reports_users ON checklist_reports_users.checklist_report_id = checklist_reports.id " + 
+        "INNER JOIN users as checklist_users ON checklist_users.id = checklist_reports_users.user_id")
+      .group("checklist_reports.id")
       .where(organizations: { id: current_user.organization.id })
+      .select("checklist_reports.*, string_agg(checklist_users.first_name || ' ' || checklist_users.last_name, ', ' ORDER BY " +
+        "checklist_users.first_name || ' ' || checklist_users.last_name) as user_names, '95%' as total_indicator")
     end
   end
 
