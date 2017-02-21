@@ -1,7 +1,9 @@
 class Api::V1::ChecklistReportResource < ApplicationResource
   
   attributes :checklist_data, :formatted_created_at, :pdf, :pdf_uploaded,
-    :code, :user_names, :location_attributes, :total_indicator
+    :code, :user_names, :location_attributes, :total_indicator, :user_ids
+
+  add_foreign_keys :construction_id, :checklist_id
 
   has_one :checklist
   has_many :users
@@ -115,7 +117,7 @@ class Api::V1::ChecklistReportResource < ApplicationResource
   end
 
   def fetchable_fields
-    super - [ :location_attributes ]
+    super - [ :location_attributes, :user_ids ]
   end
 
 end
