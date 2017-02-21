@@ -40,7 +40,6 @@ class Inspection < ApplicationRecord
   validates :construction, presence: true
   validates :creator, presence: true
   validates :state, presence: true
-  has_and_belongs_to_many :users
   mount_uploader :pdf, PdfUploader
 
   def company_id
