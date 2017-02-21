@@ -16,6 +16,7 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  code            :integer
+#  checklist_id    :integer
 #
 
 class ChecklistReport < ApplicationRecord

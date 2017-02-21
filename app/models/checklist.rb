@@ -13,4 +13,5 @@
 class Checklist < ApplicationRecord
   belongs_to :organization
   validates :organization, presence: true, uniqueness: true
+  has_many :checklist_reports
 end

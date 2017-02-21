@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170221151203) do
+ActiveRecord::Schema.define(version: 20170221233242) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,6 +70,8 @@ ActiveRecord::Schema.define(version: 20170221151203) do
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
     t.integer  "code"
+    t.integer  "checklist_id"
+    t.index ["checklist_id"], name: "index_checklist_reports_on_checklist_id", using: :btree
     t.index ["construction_id"], name: "index_checklist_reports_on_construction_id", using: :btree
     t.index ["creator_id"], name: "index_checklist_reports_on_creator_id", using: :btree
     t.index ["deleted_at"], name: "index_checklist_reports_on_deleted_at", using: :btree
@@ -469,6 +471,7 @@ ActiveRecord::Schema.define(version: 20170221151203) do
   add_foreign_key "batch_uploads", "users"
   add_foreign_key "categories", "organizations"
   add_foreign_key "checkins", "users"
+  add_foreign_key "checklist_reports", "checklists"
   add_foreign_key "checklist_reports", "constructions"
   add_foreign_key "checklist_reports", "locations"
   add_foreign_key "checklist_reports", "report_types"
