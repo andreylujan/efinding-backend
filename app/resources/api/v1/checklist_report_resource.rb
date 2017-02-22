@@ -2,7 +2,7 @@ class Api::V1::ChecklistReportResource < ApplicationResource
   
   attributes :checklist_data, :formatted_created_at, :pdf, :pdf_uploaded,
     :code, :user_names, :location_attributes, :total_indicator, :user_ids,
-    :finished, :started_at, :created_at
+    :finished, :started_at, :created_at, :pdf, :html
 
   add_foreign_keys :construction_id, :checklist_id
 
@@ -27,6 +27,14 @@ class Api::V1::ChecklistReportResource < ApplicationResource
     if @model.respond_to? :total_indicator
       @model.total_indicator
     end
+  end
+
+  def pdf
+    @model.pdf.url
+  end
+
+  def html
+    @model.html.url
   end
 
   filter :code, apply: ->(records, value, _options) {
