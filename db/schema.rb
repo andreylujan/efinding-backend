@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170221233242) do
+ActiveRecord::Schema.define(version: 20170222004355) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,6 +71,7 @@ ActiveRecord::Schema.define(version: 20170221233242) do
     t.datetime "updated_at",                      null: false
     t.integer  "code"
     t.integer  "checklist_id"
+    t.datetime "started_at"
     t.index ["checklist_id"], name: "index_checklist_reports_on_checklist_id", using: :btree
     t.index ["construction_id"], name: "index_checklist_reports_on_construction_id", using: :btree
     t.index ["creator_id"], name: "index_checklist_reports_on_creator_id", using: :btree
