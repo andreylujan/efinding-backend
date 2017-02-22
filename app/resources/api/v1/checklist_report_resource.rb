@@ -1,7 +1,8 @@
 class Api::V1::ChecklistReportResource < ApplicationResource
   
   attributes :checklist_data, :formatted_created_at, :pdf, :pdf_uploaded,
-    :code, :user_names, :location_attributes, :total_indicator, :user_ids
+    :code, :user_names, :location_attributes, :total_indicator, :user_ids,
+    :finished
 
   add_foreign_keys :construction_id, :checklist_id
 
@@ -12,6 +13,10 @@ class Api::V1::ChecklistReportResource < ApplicationResource
 
   key_type :uuid
   
+  def finished
+    true
+  end
+
   filter :code, apply: ->(records, value, _options) {
     if not value.empty?
       records = records.where("checklist_reports.code::text ilike '%" + value[0].to_s + "%'")
