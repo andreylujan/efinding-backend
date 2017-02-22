@@ -35,13 +35,33 @@ class ChecklistReport < ApplicationRecord
   validates :code, presence: true
   validates :id, uniqueness: true
 
+  mount_uploader :pdf, PdfUploader
+  mount_uploader :html, HtmlUploader
+  mount_uploader :location_image, ImageUploader
+
   accepts_nested_attributes_for :location
+  acts_as_paranoid
+
+  after_commit :generate_pdf
+
+  attr_accessor :ignore_pdf
 
   before_validation(on: :create) do
     self.code = next_seq unless attribute_present? :code
   end
 
+  def generate_pdf
+    if not @ignore_pdf and not self.pdf_uploaded?
+      regenerate_pdf
+    end
+  end
 
+  def regenerate_pdf(force_random = false)
+    if force_random
+      update_columns pdf: nil, pdf_uploaded: false
+    end
+    ChecklistPdfJob.set(queue: ENV['REPORT_QUEUE'] || 'echeckit_report').perform_later(self.id.to_s)
+  end
 
   def formatted_created_at
     created_at.strftime("%d/%m/%Y %R")
