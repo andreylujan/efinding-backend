@@ -23,6 +23,12 @@ class Api::V1::ChecklistReportResource < ApplicationResource
     end
   end
 
+  def total_indicator
+    if @model.respond_to? :total_indicator
+      @model.total_indicator
+    end
+  end
+
   filter :code, apply: ->(records, value, _options) {
     if not value.empty?
       records = records.where("checklist_reports.code::text ilike '%" + value[0].to_s + "%'")
