@@ -30,11 +30,11 @@ class Api::V1::ChecklistReportResource < ApplicationResource
   end
 
   def pdf
-    @model.pdf.url
+    @model.pdf.url if @model.pdf.present?
   end
 
   def html
-    @model.html.url
+    @model.html.url if @model.html.present?
   end
 
   filter :code, apply: ->(records, value, _options) {
