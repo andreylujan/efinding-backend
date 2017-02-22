@@ -2,7 +2,7 @@ class Api::V1::ChecklistReportResource < ApplicationResource
   
   attributes :checklist_data, :formatted_created_at, :pdf, :pdf_uploaded,
     :code, :user_names, :location_attributes, :total_indicator, :user_ids,
-    :finished
+    :finished, :started_at, :created_at
 
   add_foreign_keys :construction_id, :checklist_id
 
