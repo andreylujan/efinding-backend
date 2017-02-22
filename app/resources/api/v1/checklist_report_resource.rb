@@ -2,7 +2,7 @@ class Api::V1::ChecklistReportResource < ApplicationResource
   
   attributes :checklist_data, :formatted_created_at, :pdf, :pdf_uploaded,
     :code, :user_names, :location_attributes, :total_indicator, :user_ids,
-    :finished, :started_at, :created_at, :pdf, :html
+    :finished, :started_at, :created_at, :html
 
   add_foreign_keys :construction_id, :checklist_id
 
@@ -23,12 +23,6 @@ class Api::V1::ChecklistReportResource < ApplicationResource
     end
   end
 
-  def total_indicator
-    if @model.respond_to? :total_indicator
-      @model.total_indicator
-    end
-  end
-
   def pdf
     @model.pdf.url
   end
@@ -46,7 +40,8 @@ class Api::V1::ChecklistReportResource < ApplicationResource
 
   filter :total_indicator, apply: ->(records, value, _options) {
     if not value.empty?
-      records = records.where("'95%' ilike '%" + value[0].to_s + "%'")
+      # records = records.where("'95%' ilike '%" + value[0].to_s + "%'")
+      records
     end
     records
   }
@@ -137,7 +132,7 @@ class Api::V1::ChecklistReportResource < ApplicationResource
       .group("checklist_reports.id")
       .where(organizations: { id: current_user.organization.id })
       .select("checklist_reports.*, string_agg(checklist_users.first_name || ' ' || checklist_users.last_name, ', ' ORDER BY " +
-        "checklist_users.first_name || ' ' || checklist_users.last_name) as user_names, '95%' as total_indicator")
+        "checklist_users.first_name || ' ' || checklist_users.last_name) as user_names")
     end
   end
 

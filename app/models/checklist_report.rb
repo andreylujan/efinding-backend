@@ -56,6 +56,30 @@ class ChecklistReport < ApplicationRecord
     end
   end
 
+  def total_indicator
+    num_check = 0
+    num_cross = 0
+    if checklist_data.is_a? Array
+      checklist_data.each do |section|
+        section["items"].each do |item|
+          if item["value"].present? and item["value"] == 1
+            num_check = num_check + 1
+          elsif item["value"].present? and item["value"] == 2
+            num_cross = num_cross + 1
+          end
+        end
+      end
+      num_total = num_check + num_cross
+      if num_total == 0
+        "100%"
+      else
+        (num_check.to_f * 100.0 / num_total.to_f).round.to_s + "%"
+      end
+    else
+      "100%"
+    end
+  end
+
   def regenerate_pdf(force_random = false)
     if force_random
       update_columns pdf: nil, pdf_uploaded: false

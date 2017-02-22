@@ -240,8 +240,12 @@
 				<div class="value wpi-500"><%= checklist.construction.name %></div>
 			</div>
 			<div class="field ">
-				<div class="label wpi-140"> Usuarios involucrados:</div>
+				<div class="label wpi-140">Usuarios involucrados:</div>
 				<div class="value wpi-500"><%= checklist.users.order("first_name || ' ' || last_name ASC").map { |u| u.full_name }.join(", ") %></div>
+			</div>
+			<div class="field ">
+				<div class="label wpi-140">Indicador Total:</div>
+				<div class="value wpi-500"><%= checklist.total_indicator %></div>
 			</div>
 		</div>
 
