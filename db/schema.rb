@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170223134516) do
+ActiveRecord::Schema.define(version: 20170223192113) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -155,11 +155,26 @@ ActiveRecord::Schema.define(version: 20170223134516) do
     t.index ["visitor_id"], name: "index_constructions_on_visitor_id", using: :btree
   end
 
+  create_table "constructions_contractors", id: false, force: :cascade do |t|
+    t.integer "construction_id", null: false
+    t.integer "contractor_id",   null: false
+  end
+
   create_table "constructions_people", id: false, force: :cascade do |t|
     t.integer "construction_id", null: false
     t.integer "person_id",       null: false
     t.index ["construction_id", "person_id"], name: "index_constructions_people_on_construction_id_and_person_id", using: :btree
     t.index ["person_id", "construction_id"], name: "index_constructions_people_on_person_id_and_construction_id", using: :btree
+  end
+
+  create_table "contractors", force: :cascade do |t|
+    t.text     "name",            null: false
+    t.text     "rut",             null: false
+    t.integer  "organization_id", null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["organization_id", "rut"], name: "index_contractors_on_organization_id_and_rut", unique: true, using: :btree
+    t.index ["organization_id"], name: "index_contractors_on_organization_id", using: :btree
   end
 
   create_table "data_parts", force: :cascade do |t|
@@ -490,6 +505,7 @@ ActiveRecord::Schema.define(version: 20170223134516) do
   add_foreign_key "constructions", "companies"
   add_foreign_key "constructions", "people", column: "administrator_id"
   add_foreign_key "constructions", "people", column: "visitor_id"
+  add_foreign_key "contractors", "organizations"
   add_foreign_key "data_parts", "collections"
   add_foreign_key "data_parts", "sections"
   add_foreign_key "devices", "users"

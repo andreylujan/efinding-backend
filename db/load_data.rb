@@ -90,7 +90,8 @@ when Net::HTTPSuccess, Net::HTTPRedirection
 
     construction.contractors = []
     construction_json[:contractors].each do |contractor_json|
-      contractor = Person.find_or_initialize_by(rut: contractor_json[:rut]).tap do |cont|
+      contractor = Contractor.find_or_initialize_by(rut: contractor_json[:rut],
+          organization_id: 1).tap do |cont|
         cont.name = contractor_json[:name]
       end
       contractor.save!
