@@ -12,39 +12,78 @@
 #
 
 class Collection < ApplicationRecord
-	belongs_to :parent_collection, 
-		class_name: :Collection, foreign_key: :parent_collection_id
-	belongs_to :organization
-	belongs_to :collection
-	has_many :collection_items
-	validates :organization, presence: true
-	validates :name, presence: true, uniqueness: { scope: :organization }
+  belongs_to :parent_collection,
+    class_name: :Collection, foreign_key: :parent_collection_id
+  belongs_to :organization
+  belongs_to :collection
+  has_many :collection_items
+  validates :organization, presence: true
+  validates :name, presence: true, uniqueness: { scope: :organization }
 
-	def to_csv(file_name=nil)
-	    attributes = %w{code parent_code name}
-	    csv_obj = CSV.generate(headers: true, 
-	    	encoding: "UTF-8", col_sep: '|') do |csv|
-	      csv << attributes
-	      collection_items.each do |item|
-	        csv << item.to_csv(attributes)
-	      end
-	    end
-	    if file_name.present?
-	    	f = File.open(file_name, 'w')
-	    	f.write(csv_obj)
-	    	f.close
-	    end
-	    csv_obj
-  	end
+  def to_csv(file_name=nil)
+    attributes = %w{code parent_code name}
+    csv_obj = CSV.generate(headers: true,
+    encoding: "UTF-8", col_sep: '|') do |csv|
+      csv << attributes
+      collection_items.each do |item|
+        csv << item.to_csv(attributes)
+      end
+    end
+    if file_name.present?
+      f = File.open(file_name, 'w')
+      f.write(csv_obj)
+      f.close
+    end
+    csv_obj
+  end
 
-  	def from_csv(file_name)
-  		csv_text = file_name.read
-  		file_name.close
-  		headers = %w{code parent_code name}
-  		CSV.parse(csv_text, { headers: true, col_sep: '|' }) do |row|
-  			CollectionItem.find_or_initialize_by(code: row["code"], collection_id: self.id).tap do |item|
-  				item.name = row["name"]
-  			end
-  		end
-  	end
+  def from_csv(file_name)
+    csv_text = file_name.read
+    file_name.close
+    headers = %w{code parent_code name}
+    resources = []
+    row_number = 2
+    CSV.parse(csv_text, { headers: true, col_sep: '|' }) do |row|
+      CollectionItem.find_or_initialize_by(code: row["code"], collection_id: self.id).tap do |item|
+        item.name = row["name"]
+        if row["parent_code"].present?
+          parent_item = CollectionItem.find_by_code!(row["parent_code"])
+          item.parent_item = parent_item
+          item.parent_code = parent_item.code
+        end
+
+        errors = {}
+        begin
+          item.save!
+        rescue => e
+          errors = item.errors.as_json
+        end
+
+      
+        created = false
+        changed = false
+        success = true
+        if not errors.empty?
+          success = false
+        elsif item.previous_changes[:id].present?
+          created = true
+        elsif item.previous_changes.any?
+          changed = true
+        end
+
+        csv_resource = CsvUpload.new id: item.id, success: success,
+          errors: errors,
+          row_number: row_number, row_data: row.to_h,
+          created: created, changed: changed
+        row_number = row_number + 1
+
+        resources << csv_resource
+
+        # items << item
+        # resources << JSONAPI::ResourceSerializer.new(Api::V1::CsvUploadResource)
+        # .serialize_to_hash(Api::V1::CsvUploadResource.new(csv_resource, nil))
+      end
+    end
+    resources
+  end
 end
