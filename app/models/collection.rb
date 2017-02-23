@@ -38,12 +38,18 @@ class Collection < ApplicationRecord
   end
 
   def from_csv(file_name)
-    csv_text = file_name.read
-    file_name.close
+    csv_text = CsvUtils.read_file(file_name)
     headers = %w{code parent_code name}
     resources = []
     row_number = 2
-    CSV.parse(csv_text, { headers: true, col_sep: '|' }) do |row|
+
+    begin
+      csv = CSV.parse(csv_text, { headers: true, encoding: "UTF-8", col_sep: '|' })
+    rescue => exception
+      raise exception.message
+    end
+
+    csv.each do |row|
       CollectionItem.find_or_initialize_by(code: row["code"], collection_id: self.id).tap do |item|
         item.name = row["name"]
         if row["parent_code"].present?

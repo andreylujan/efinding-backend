@@ -15,10 +15,20 @@ class Api::V1::CollectionsController < Api::V1::JsonApiController
   def update
     if params[:format] == "csv"
       collection = Collection.find(params.require(:id))
-      resources = collection.from_csv(params.require(:csv))
+      begin
+        resources = collection.from_csv(params.require(:csv))
+      rescue => exception
+        render json: {
+          errors: [
+            status: '400',
+            detail: exception.class.to_s + ": " + exception.message
+          ]
+        }, status: :bad_request
+        return
+      end
       render json: CsvUploadSerializer.serialize(resources, is_collection: true)
     else
-    	super
+      super
     end
   end
 end
