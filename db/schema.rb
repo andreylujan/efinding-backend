@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170222004355) do
+ActiveRecord::Schema.define(version: 20170223134516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,6 +102,9 @@ ActiveRecord::Schema.define(version: 20170222004355) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.integer  "parent_item_id"
+    t.text     "code"
+    t.text     "parent_code"
+    t.index ["collection_id", "code"], name: "index_collection_items_on_collection_id_and_code", unique: true, using: :btree
     t.index ["collection_id", "name"], name: "index_collection_items_on_collection_id_and_name", unique: true, using: :btree
     t.index ["collection_id"], name: "index_collection_items_on_collection_id", using: :btree
     t.index ["name"], name: "index_collection_items_on_name", using: :btree
