@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::CompanyResource < ApplicationResource
   attributes :name, :company_name
+  has_one :organization
   def company_name
   	@model.name
   end
