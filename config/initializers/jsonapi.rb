@@ -38,6 +38,12 @@ Rails.configuration.to_prepare do
 
   end
 
+  JSONAPI::LinkBuilder.class_eval do
+    def self_link(source)
+      nil
+    end
+  end
+
   JSONAPI::ResourceSerializer.class_eval do
 
     def link_object_to_one(source, relationship, include_linkage)
@@ -46,9 +52,7 @@ Rails.configuration.to_prepare do
       if include_linkage
         link_object_hash[:data] = to_one_linkage(source, relationship)
       else
-        link_object_hash[:links] = {}
-        link_object_hash[:links][:self] = self_link(source, relationship)
-        link_object_hash[:links][:related] = related_link(source, relationship)
+        link_object_hash = nil
       end
 
       link_object_hash
@@ -62,9 +66,7 @@ Rails.configuration.to_prepare do
       if include_linkage
         link_object_hash[:data] = to_many_linkage(source, relationship) if include_linkage
       else
-        link_object_hash[:links] = {}
-        link_object_hash[:links][:self] = self_link(source, relationship)
-        link_object_hash[:links][:related] = related_link(source, relationship)
+        link_object_hash = nil
       end
       link_object_hash
     end
