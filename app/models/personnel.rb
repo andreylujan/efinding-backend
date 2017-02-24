@@ -18,4 +18,5 @@ class Personnel < ApplicationRecord
   validates :rut, presence: true, uniqueness: { scope: :organization }
   has_many :construction_personnel
   has_many :constructions, through: :construction_personnel
+  has_many :personnel_types, through: :construction_personnel
 end
