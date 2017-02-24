@@ -1,9 +1,11 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::ConstructionResource < ApplicationResource
-	attributes :name, :company_id, :contractors
+	attributes :name, :company_id, :contractors, :code
 	has_one :company
     add_foreign_keys :company_id
+
     has_one :administrator 
+    has_one :expert
 
     filter :company_id
 
