@@ -127,8 +127,10 @@ class Api::V1::InspectionResource < ApplicationResource
         end
         if value[:administrator].present? and value[:administrator].is_a? ActionController::Parameters
           if value[:administrator][:name].present?
-            records = records.joins("INNER JOIN people as administrators ON people.id = inspections.administrator_id")
-            .where("administrators.name ilike '%" + value[:administrator][:name] + "%'")
+            records = records
+              .joins(:construction)
+              .joins("INNER JOIN users as administrators ON administrators.id = constructions.administrator_id")
+            .where("administrators.first_name || ' ' || administrators.last_name ilike '%" + value[:administrator][:name] + "%'")
           end
         end
       end

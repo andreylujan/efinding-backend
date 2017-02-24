@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170224183422) do
+ActiveRecord::Schema.define(version: 20170224184752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -147,25 +147,16 @@ ActiveRecord::Schema.define(version: 20170224183422) do
     t.datetime "updated_at",       null: false
     t.integer  "company_id"
     t.integer  "administrator_id"
-    t.integer  "visitor_id"
     t.text     "code"
     t.integer  "expert_id"
     t.index ["code"], name: "index_constructions_on_code", unique: true, using: :btree
     t.index ["company_id"], name: "index_constructions_on_company_id", using: :btree
     t.index ["name", "company_id"], name: "index_constructions_on_name_and_company_id", unique: true, using: :btree
-    t.index ["visitor_id"], name: "index_constructions_on_visitor_id", using: :btree
   end
 
   create_table "constructions_contractors", id: false, force: :cascade do |t|
     t.integer "construction_id", null: false
     t.integer "contractor_id",   null: false
-  end
-
-  create_table "constructions_people", id: false, force: :cascade do |t|
-    t.integer "construction_id", null: false
-    t.integer "person_id",       null: false
-    t.index ["construction_id", "person_id"], name: "index_constructions_people_on_construction_id_and_person_id", using: :btree
-    t.index ["person_id", "construction_id"], name: "index_constructions_people_on_person_id_and_construction_id", using: :btree
   end
 
   create_table "contractors", force: :cascade do |t|
@@ -358,14 +349,6 @@ ActiveRecord::Schema.define(version: 20170224183422) do
     t.text     "logo"
     t.text     "csv_separator", default: "|", null: false
     t.index ["name"], name: "index_organizations_on_name", unique: true, using: :btree
-  end
-
-  create_table "people", force: :cascade do |t|
-    t.text     "rut"
-    t.text     "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["rut"], name: "index_people_on_rut", using: :btree
   end
 
   create_table "regions", force: :cascade do |t|
