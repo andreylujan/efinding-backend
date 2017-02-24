@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CsvUtils
 	require 'charlock_holmes'
 	def self.read_file(csv_file)

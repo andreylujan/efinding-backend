@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 c1 = Collection.create! name: "Grupo actividad", organization_id: 1
 c.collection_items.create! [{"name"=>"A1000 -Trabajos Previos"}, {"name"=>"A2000 -Movimiento de Tierras"}, {"name"=>"A3000 -Obra Gruesa"}, {"name"=>"A4000 -Terminaciones"}, {"name"=>"A5000 -Instalaciones y otros"}, {"name"=>"A6000 -Obras exteriores o complementarias"}, {"name"=>"A7000 -Construcciones Industriales"}]
 

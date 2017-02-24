@@ -39,6 +39,12 @@ Rails.application.routes.draw do
 
       jsonapi_resources :checklists, only: [ :index ] do
       end
+
+      jsonapi_resources :personnel, only: [ :index, :create, :show, :update, :destroy ] do
+      end
+
+      jsonapi_resources :personnel_types, only: [ :index ] do
+      end
       
       jsonapi_resources :organizations, only: [ :index, :show ] do
         jsonapi_related_resources :roles, only: [ :index ]

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Api::V1::ChecklistReportResource < ApplicationResource
   
   attributes :checklist_data, :formatted_created_at, :pdf, :pdf_uploaded,

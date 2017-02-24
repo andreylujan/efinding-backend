@@ -6,7 +6,9 @@ class Api::V1::ConstructionResource < ApplicationResource
 
     has_one :administrator 
     has_one :expert
-
+    has_many :construction_personnel
+    has_many :contractors
+    
     filter :company_id
 
     def contractors

@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::CollectionResource < ApplicationResource
   attributes :name
-  has_one :collection
+  has_one :parent_collection
   has_many :collection_items
   add_foreign_keys :parent_collection_id
   

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170224184752) do
+ActiveRecord::Schema.define(version: 20170224193548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -139,6 +139,18 @@ ActiveRecord::Schema.define(version: 20170224184752) do
     t.index ["name", "organization_id"], name: "index_companies_on_name_and_organization_id", unique: true, using: :btree
     t.index ["organization_id"], name: "index_companies_on_organization_id", using: :btree
     t.index ["rut"], name: "index_companies_on_rut", using: :btree
+  end
+
+  create_table "construction_personnel", force: :cascade do |t|
+    t.integer  "construction_id",   null: false
+    t.integer  "personnel_id",      null: false
+    t.integer  "personnel_type_id", null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["construction_id", "personnel_id", "personnel_type_id"], name: "index_construction_personnel", unique: true, using: :btree
+    t.index ["construction_id"], name: "index_construction_personnel_on_construction_id", using: :btree
+    t.index ["personnel_id"], name: "index_construction_personnel_on_personnel_id", using: :btree
+    t.index ["personnel_type_id"], name: "index_construction_personnel_on_personnel_type_id", using: :btree
   end
 
   create_table "constructions", force: :cascade do |t|
@@ -351,6 +363,25 @@ ActiveRecord::Schema.define(version: 20170224184752) do
     t.index ["name"], name: "index_organizations_on_name", unique: true, using: :btree
   end
 
+  create_table "personnel", force: :cascade do |t|
+    t.integer  "organization_id", null: false
+    t.text     "rut",             null: false
+    t.text     "name",            null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["organization_id", "rut"], name: "index_personnel_on_organization_id_and_rut", unique: true, using: :btree
+    t.index ["organization_id"], name: "index_personnel_on_organization_id", using: :btree
+    t.index ["rut"], name: "index_personnel_on_rut", using: :btree
+  end
+
+  create_table "personnel_types", force: :cascade do |t|
+    t.integer  "organization_id", null: false
+    t.text     "name",            null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["organization_id"], name: "index_personnel_types_on_organization_id", using: :btree
+  end
+
   create_table "regions", force: :cascade do |t|
     t.text     "name",          null: false
     t.text     "roman_numeral", null: false
@@ -497,6 +528,9 @@ ActiveRecord::Schema.define(version: 20170224184752) do
   add_foreign_key "collections", "organizations"
   add_foreign_key "communes", "regions"
   add_foreign_key "companies", "organizations"
+  add_foreign_key "construction_personnel", "constructions"
+  add_foreign_key "construction_personnel", "personnel"
+  add_foreign_key "construction_personnel", "personnel_types"
   add_foreign_key "constructions", "companies"
   add_foreign_key "constructions", "users", column: "administrator_id"
   add_foreign_key "constructions", "users", column: "expert_id"
@@ -516,6 +550,8 @@ ActiveRecord::Schema.define(version: 20170224184752) do
   add_foreign_key "menu_items", "collections"
   add_foreign_key "menu_items", "menu_sections"
   add_foreign_key "menu_sections", "organizations"
+  add_foreign_key "personnel", "organizations"
+  add_foreign_key "personnel_types", "organizations"
   add_foreign_key "report_types", "organizations"
   add_foreign_key "reports", "inspections"
   add_foreign_key "reports", "locations", column: "final_location_id"

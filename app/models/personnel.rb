@@ -1,20 +1,21 @@
 # -*- encoding : utf-8 -*-
 # == Schema Information
 #
-# Table name: contractors
+# Table name: personnel
 #
 #  id              :integer          not null, primary key
-#  name            :text             not null
-#  rut             :text             not null
 #  organization_id :integer          not null
+#  rut             :text             not null
+#  name            :text             not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #
 
-class Contractor < ApplicationRecord
+class Personnel < ApplicationRecord
   belongs_to :organization
+  validates :organization, presence: true
   validates :name, presence: true
   validates :rut, presence: true, uniqueness: { scope: :organization }
-  validates :organization, presence: true
-  has_and_belongs_to_many :constructions
+  has_many :construction_personnel
+  has_many :constructions, through: :construction_personnel
 end

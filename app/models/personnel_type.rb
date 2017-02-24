@@ -1,20 +1,16 @@
-# -*- encoding : utf-8 -*-
 # == Schema Information
 #
-# Table name: request_logs
+# Table name: personnel_types
 #
 #  id              :integer          not null, primary key
 #  organization_id :integer          not null
-#  url             :text             not null
-#  status_code     :integer
-#  response_body   :text
-#  error_messages  :json
+#  name            :text             not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #
 
-class RequestLog < ApplicationRecord
+class PersonnelType < ApplicationRecord
   belongs_to :organization
   validates :organization, presence: true
-  validates :url, presence: true
+  validates :name, presence: true, uniqueness: { scope: :organization }
 end

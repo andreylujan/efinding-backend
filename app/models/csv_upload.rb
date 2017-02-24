@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CsvUpload
   include ActiveModel::Model
   attr_accessor :id, :row_number, :row_data, :errors,
