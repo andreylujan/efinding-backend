@@ -44,6 +44,30 @@ Rails.configuration.to_prepare do
     end
   end
 
+  JSONAPI::ActsAsResourceController.class_eval do
+    def render_response_document
+      content = response_document.contents
+
+      render_options = {}
+      if response_document.has_errors?
+        render_options[:json] = content
+      else
+        # Bypasing ActiveSupport allows us to use CompiledJson objects for cached response fragments
+        render_options[:body] = JSON.generate(content)
+
+        render_options[:location] = content['data']['links']['self'] if (response_document.status == 201 && content[:data].class != Array &&
+          content['data']['links'].present?)
+      end
+
+      # For whatever reason, `render` ignores :status and :content_type when :body is set.
+      # But, we can just set those values directly in the Response object instead.
+      response.status = response_document.status
+      response.headers['Content-Type'] = JSONAPI::MEDIA_TYPE
+
+      render(render_options)
+    end
+  end
+
   JSONAPI::ResourceSerializer.class_eval do
 
     def link_object_to_one(source, relationship, include_linkage)
