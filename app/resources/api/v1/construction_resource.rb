@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::ConstructionResource < ApplicationResource
-	attributes :name, :company_id, :contractors, :code
+	attributes :name, :company_id, :contractors, :code, :construction_personnel_attributes
 	has_one :company
     add_foreign_keys :company_id
 
@@ -27,5 +27,9 @@ class Api::V1::ConstructionResource < ApplicationResource
     	Construction.joins(company: :organization)
     		.where(organizations: { id: context[:current_user].organization.id })
     end
+  end
+
+  def fetchable_fields
+    super - [ :construction_personnel_attributes ]
   end
 end

@@ -24,5 +24,11 @@ class Construction < ApplicationRecord
   # belongs_to :visitor, class_name: :Person, foreign_key: :visitor_id
   has_and_belongs_to_many :contractors
   has_many :construction_personnel
+  accepts_nested_attributes_for :construction_personnel
   has_many :personnel, through: :construction_personnel
+
+  def construction_personnel_attributes=(val)
+    self.construction_personnel.each { |p| p.destroy! }
+    super
+  end
 end
