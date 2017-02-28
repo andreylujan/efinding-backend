@@ -37,7 +37,7 @@ Rails.application.routes.draw do
       jsonapi_resources :checklist_reports, only: [ :create, :index, :show ] do
       end
 
-      jsonapi_resources :checklists, only: [ :index ] do
+      jsonapi_resources :checklists, only: [ :index, :create, :update, :destroy, :show ] do
       end
 
       jsonapi_resources :personnel, only: [ :index, :create, :show, :update, :destroy ] do
