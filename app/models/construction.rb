@@ -31,4 +31,97 @@ class Construction < ApplicationRecord
     self.construction_personnel.each { |p| p.destroy! }
     super
   end
+
+  def self.to_csv(file_name=nil)
+    attributes = %w{code personnel_type_id personnel_id}
+    csv_obj = CSV.generate(headers: true,
+    encoding: "UTF-8", col_sep: '|') do |csv|
+      csv << attributes
+      Construction.includes(:construction_personnel).each do |construction|
+        construction.construction_personnel.each do |personnel|
+          csv << [
+            construction.code,
+            personnel.personnel_type_id,
+            personnel.personnel_id
+          ]
+        end
+      end
+    end
+    if file_name.present?
+      f = File.open(file_name, 'w')
+      f.write(csv_obj)
+      f.close
+    end
+    csv_obj
+  end
+
+  def self.from_csv(file_name)
+    csv_text = CsvUtils.read_file(file_name)
+    headers = %w{code personnel_type_id personnel_id}
+    resources = []
+    row_number = 2
+
+    begin
+      csv = CSV.parse(csv_text, { headers: true, encoding: "UTF-8", col_sep: '|' })
+    rescue => exception
+      raise exception.message
+    end
+
+    ids = []
+
+    csv.each do |row|
+
+      errors = {}
+      construction = Construction.find_by_code(row["code"])
+
+      if construction.present?
+
+        
+
+        new_personnel = []
+        item = ConstructionPersonnel.find_or_initialize_by(construction_id: construction.id,
+          personnel_type_id: row["personnel_type_id"]).tap do |cp|
+          cp.personnel_id = row["personnel_id"]
+        end
+
+        begin
+          item.save!
+          ids << item.id
+        rescue => e
+          errors = item.errors.as_json
+        end
+
+
+
+        created = false
+        changed = false
+        success = true
+        if not errors.empty?
+          success = false
+        elsif item.previous_changes[:id].present?
+          created = true
+        elsif item.previous_changes.any?
+          changed = true
+        end
+
+        csv_resource = CsvUpload.new id: item.id, success: success,
+          errors: errors,
+          row_number: row_number, row_data: row.to_h,
+          created: created, changed: changed
+        row_number = row_number + 1
+
+
+      else
+        csv_resource = CsvUpload.new id: item.id, success: false,
+          errors: { code: "Obra con código #{row['code']} no existe" },
+          row_number: row_number, row_data: row.to_h,
+          created: false, changed: false
+        row_number = row_number + 1
+      end
+      resources << csv_resource
+    end
+    
+    ConstructionPersonnel.where.not(id: ids).destroy_all
+    resources
+  end
 end

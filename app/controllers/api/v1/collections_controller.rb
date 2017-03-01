@@ -5,13 +5,13 @@ class Api::V1::CollectionsController < Api::V1::JsonApiController
   def show
     if params[:format] == "csv"
       collection = Collection.find(params.require(:id))
-      send_data collection.to_csv, filename: "maestro.csv",
+      send_data collection.to_csv, filename: "#{collection.name.parameterize.underscore}.csv",
         disposition: "attachment", type: "text/csv"
     else
       super
     end
   end
-
+  
   def update
     if params[:format] == "csv"
       collection = Collection.find(params.require(:id))

@@ -76,7 +76,10 @@ Rails.application.routes.draw do
       end
 
       jsonapi_resources :constructions, only: [ :index, :create, :update, :destroy, :show ] do
-        
+        collection do
+          post :construction_personnel, to: "constructions#create_personnel"
+          get :construction_personnel, to: "constructions#get_personnel"
+        end
       end
 
       jsonapi_resources :table_columns, only: [ :index ] do

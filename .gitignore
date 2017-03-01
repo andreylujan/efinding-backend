@@ -20,3 +20,5 @@
 dump.sql
 .DS_Store
 *.xml
+*.sql
+*.pdf
