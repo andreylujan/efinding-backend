@@ -40,10 +40,22 @@ class Inspection < ApplicationRecord
   validates :construction, presence: true
   validates :creator, presence: true
   validates :state, presence: true
+  before_create :cache_data
+
   mount_uploader :pdf, PdfUploader
 
   def company_id
     construction.company_id
+  end
+
+  def cache_data
+    if not cached_data
+      self.cached_data = {}
+    end
+    construction.construction_personnel.each do |personnel|
+      type_id = personnel.personnel_type_id
+      self.cached_data[type_id.to_s] = personnel.personnel.name
+    end
   end
 
   def generate_pdf
