@@ -19,7 +19,8 @@ class Api::V1::InspectionResource < ApplicationResource
     :num_pending_reports,
     :num_reports,
     :num_expired_reports,
-    :state_name
+    :state_name,
+    :cached_data
 
 
   add_foreign_keys :construction_id
