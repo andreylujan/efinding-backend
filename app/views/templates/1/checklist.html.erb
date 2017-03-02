@@ -305,7 +305,11 @@
 												<%= item["name"] %>
 											</td>
 											<td>
-												<%= item["comment"] || "Sin comentarios" %>
+												<% if item["comment"] %>
+													<%= simple_format(item["comment"]) %>
+												<% else %>
+													Sin comentarios
+												<% end %>
 											</td>
 										</tr>
 									<% end %>
