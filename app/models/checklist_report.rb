@@ -51,6 +51,17 @@ class ChecklistReport < ApplicationRecord
     self.code = next_seq unless attribute_present? :code
   end
 
+  def user_names
+    names = []
+    if construction.expert.present?
+      names << construction.expert.name
+    end
+    if construction.administrator.present?
+      names << construction.administrator.name
+    end
+    names.sort.join(', ')
+  end
+
   def generate_pdf
     if not @ignore_pdf and not self.pdf_uploaded?
       regenerate_pdf

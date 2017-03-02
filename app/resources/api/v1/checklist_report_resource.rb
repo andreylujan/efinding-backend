@@ -48,13 +48,13 @@ class Api::V1::ChecklistReportResource < ApplicationResource
   }
 
   filter :user_names, apply: ->(records, value, _options) {
-    if not value.empty?
-      names = value.join(",")
-      records = records
-      .having("string_agg(checklist_users.first_name || ' ' || checklist_users.last_name, ', ' ORDER BY " + 
-        "checklist_users.first_name || ' ' || checklist_users.last_name) ILIKE '%" +
-        names + "%'")
-    end
+    # if not value.empty?
+    #   names = value.join(",")
+    #   records = records
+    #   .having("string_agg(checklist_users.first_name || ' ' || checklist_users.last_name, ', ' ORDER BY " + 
+    #     "checklist_users.first_name || ' ' || checklist_users.last_name) ILIKE '%" +
+    #     names + "%'")
+    # end
     records
   }
 
@@ -127,14 +127,14 @@ class Api::V1::ChecklistReportResource < ApplicationResource
     context = options[:context]
     current_user = context[:current_user]
     if context[:current_user]
-      ChecklistReport.joins(creator: { role: :organization })
-      .joins("INNER JOIN checklist_reports_users ON checklist_reports_users.checklist_report_id = checklist_reports.id " + 
-        "INNER JOIN users as checklist_users ON checklist_users.id = checklist_reports_users.user_id")
+      checklists = ChecklistReport.joins(creator: { role: :organization })
+      .joins(:construction)
       .group("checklist_reports.id")
       .where(organizations: { id: current_user.organization.id })
-      .select("checklist_reports.*, string_agg(checklist_users.first_name || ' ' || checklist_users.last_name, ', ' ORDER BY " +
-        "checklist_users.first_name || ' ' || checklist_users.last_name) as user_names")
+      
+
     end
+    checklists
   end
 
   def fetchable_fields
