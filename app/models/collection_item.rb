@@ -15,6 +15,7 @@
 
 class CollectionItem < ApplicationRecord
   belongs_to :collection
+  acts_as_list scope: :collection
   belongs_to :parent_item, class_name: :CollectionItem,
   	foreign_key: :parent_item_id
 

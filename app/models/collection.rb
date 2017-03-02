@@ -15,7 +15,7 @@ class Collection < ApplicationRecord
   belongs_to :parent_collection,
     class_name: :Collection, foreign_key: :parent_collection_id
   belongs_to :organization
-  has_many :collection_items
+  has_many :collection_items, -> { order(position: :asc) }
   validates :organization, presence: true
   validates :name, presence: true, uniqueness: { scope: :organization }
 
