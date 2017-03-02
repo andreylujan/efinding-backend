@@ -31,11 +31,11 @@ log.save!
 case res
 when Net::HTTPSuccess, Net::HTTPRedirection
   constructions = []
-  doc = Nokogiri::XML.parse(res.body) { |config| config.noblanks }
+  doc = Nokogiri::XML.parse(body, nil, "UTF-8") { |config| config.noblanks }
 
   doc.xpath("//Obra").each do |construction|
     construction_json = {}
-    construction_json[:codigo] = construction.at_css("Codigo").text
+    construction_json[:codigo] = construction.at_css("Codigo").text.upcase
     construction_json[:name] = construction.at_css("Nombre").text
     admin = construction.at_css("Administrador")
     visitor = construction.at_css("Visitador")
