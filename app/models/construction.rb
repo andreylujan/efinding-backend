@@ -26,6 +26,13 @@ class Construction < ApplicationRecord
   has_many :construction_personnel
   accepts_nested_attributes_for :construction_personnel
   has_many :personnel, through: :construction_personnel
+  before_create :upcase_code
+
+  def upcase_code
+    if self.code.present?
+      self.code = self.code.strip.upcase
+    end
+  end
 
   def construction_personnel_attributes=(val)
     self.construction_personnel.each { |p| p.destroy! }
