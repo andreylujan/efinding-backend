@@ -8,11 +8,11 @@ end
 gem 'openssl'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0.1'
+gem 'rails', '~> 5.0.2'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.19.0'
 # Use Puma as the app server
-gem 'puma', '~> 3.6', '>= 3.6.2'
+gem 'puma', '~> 3.7', '>= 3.7.1'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
@@ -25,14 +25,14 @@ gem 'puma', '~> 3.6', '>= 3.6.2'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
-gem 'dotenv-rails', '~> 2.1', '>= 2.1.1'
+gem 'dotenv-rails', '~> 2.2'
 
 gem 'activerecord-postgis-adapter', '~> 4.0', '>= 4.0.2'
-gem 'paranoia', '~> 2.2'
+gem 'paranoia', '~> 2.2', '>= 2.2.1'
 gem 'versionist', '~> 1.5'
 gem 'jsonapi-resources', git: 'https://github.com/cerebris/jsonapi-resources', ref: 'd9fdcb3fcdd2b5c39722e6d772ca7f4bf6272702'
 gem 'fog', '~> 1.38'
-gem 'fog-aws', '~> 1.1'
+gem 'fog-aws', '~> 1.2', '>= 1.2.1'
 gem 'sidekiq', '~> 4.2', '>= 4.2.7'
 gem 'redis', '~> 3.3', '>= 3.3.2'
 gem 'wicked_pdf', '~> 1.1'
