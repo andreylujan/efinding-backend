@@ -15,10 +15,6 @@ class Api::V1::ConstructionResource < ApplicationResource
         @model.contractors.order("name ASC").map { |u| { name: u.name, rut: u.rut, id: u.id } }
     end
 
-    def name
-        "#{@model.code} - #{@model.name}"
-    end
-
 	def self.records(options = {})
     context = options[:context]
     if context[:company_id]
