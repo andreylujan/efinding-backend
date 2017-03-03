@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170302164752) do
+ActiveRecord::Schema.define(version: 20170303201436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "postgis"
   enable_extension "uuid-ossp"
 
   create_table "batch_uploads", force: :cascade do |t|
@@ -39,6 +40,20 @@ ActiveRecord::Schema.define(version: 20170302164752) do
     t.datetime "updated_at",      null: false
     t.index ["organization_id", "name"], name: "index_categories_on_organization_id_and_name", unique: true, using: :btree
     t.index ["organization_id"], name: "index_categories_on_organization_id", using: :btree
+  end
+
+  create_table "checkins", force: :cascade do |t|
+    t.integer  "user_id",                                                        null: false
+    t.datetime "arrival_time",                                                   null: false
+    t.datetime "exit_time"
+    t.datetime "created_at",                                                     null: false
+    t.datetime "updated_at",                                                     null: false
+    t.json     "data",                                              default: {}, null: false
+    t.geometry "arrival_lonlat", limit: {:srid=>0, :type=>"point"}
+    t.geometry "exit_lonlat",    limit: {:srid=>0, :type=>"point"}
+    t.index ["arrival_lonlat"], name: "index_checkins_on_arrival_lonlat", using: :gist
+    t.index ["exit_lonlat"], name: "index_checkins_on_exit_lonlat", using: :gist
+    t.index ["user_id"], name: "index_checkins_on_user_id", using: :btree
   end
 
   create_table "checklist_reports", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -258,6 +273,20 @@ ActiveRecord::Schema.define(version: 20170302164752) do
     t.index ["role_id"], name: "index_invitations_on_role_id", using: :btree
   end
 
+  create_table "locations", force: :cascade do |t|
+    t.geometry "lonlat",     limit: {:srid=>0, :type=>"point"}, null: false
+    t.integer  "accuracy"
+    t.bigint   "timestamp"
+    t.text     "provider"
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
+    t.text     "address"
+    t.text     "region"
+    t.text     "commune"
+    t.text     "reference"
+    t.index ["lonlat"], name: "index_locations_on_lonlat", using: :gist
+  end
+
   create_table "menu_items", force: :cascade do |t|
     t.integer  "menu_section_id"
     t.text     "name",            null: false
@@ -333,6 +362,8 @@ ActiveRecord::Schema.define(version: 20170302164752) do
     t.datetime "updated_at",                  null: false
     t.text     "logo"
     t.text     "csv_separator", default: "|", null: false
+    t.integer  "checklist_id"
+    t.index ["checklist_id"], name: "index_organizations_on_checklist_id", using: :btree
     t.index ["name"], name: "index_organizations_on_name", unique: true, using: :btree
   end
 
@@ -488,8 +519,10 @@ ActiveRecord::Schema.define(version: 20170302164752) do
 
   add_foreign_key "batch_uploads", "users"
   add_foreign_key "categories", "organizations"
+  add_foreign_key "checkins", "users"
   add_foreign_key "checklist_reports", "checklists"
   add_foreign_key "checklist_reports", "constructions"
+  add_foreign_key "checklist_reports", "locations"
   add_foreign_key "checklist_reports", "report_types"
   add_foreign_key "checklist_reports", "users", column: "creator_id"
   add_foreign_key "checklists", "organizations"
@@ -521,10 +554,13 @@ ActiveRecord::Schema.define(version: 20170302164752) do
   add_foreign_key "menu_items", "collections"
   add_foreign_key "menu_items", "menu_sections"
   add_foreign_key "menu_sections", "organizations"
+  add_foreign_key "organizations", "checklists"
   add_foreign_key "personnel", "organizations"
   add_foreign_key "personnel_types", "organizations"
   add_foreign_key "report_types", "organizations"
   add_foreign_key "reports", "inspections"
+  add_foreign_key "reports", "locations", column: "final_location_id"
+  add_foreign_key "reports", "locations", column: "initial_location_id"
   add_foreign_key "reports", "report_types"
   add_foreign_key "reports", "users", column: "resolver_id"
   add_foreign_key "request_logs", "organizations"

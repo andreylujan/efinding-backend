@@ -22,7 +22,8 @@ class Organization < ApplicationRecord
     has_many :reports, through: :report_types
     has_many :users, through: :roles
     has_many :collections
-    has_one :checklist
+    belongs_to :checklist
+    has_many :checklists
     has_many :personnel_types
     
     def checklist_id

@@ -8,7 +8,7 @@ class Api::V1::InspectionResource < ApplicationResource
   has_one :final_signer
   has_one :company
   has_one :field_chief
-  has_one :expert
+  has_one :expe
 
   attributes :created_at, :resolved_at,
     :state,
