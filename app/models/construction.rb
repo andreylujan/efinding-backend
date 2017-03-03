@@ -29,6 +29,7 @@ class Construction < ApplicationRecord
 
   def construction_personnel_attributes=(val)
     self.construction_personnel.each { |p| p.destroy! }
+    val.select! { |v| v.key?("personnel_id") and v.key?("personnel_type_id") }
     super
   end
 
