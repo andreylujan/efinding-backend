@@ -2,88 +2,26 @@
 <html lang="es">
 <head>
 	<meta charset="UTF-8">
-	<title>Inspeccion</title>
+	<title></title>
 	<style>
-		body {
-			font-family: 'Helvetica';
-			font-size: 14px;
-			color: #3F5B71;
+		.logo {
+			width: 200px;
+			margin-bottom: 15px;
+			margin-top: 10px;
+			height: 
 		}
-		html {
-			text-align: center;
-			width: 100%;
+
+		.inspeccion {
+			color: #3F5B71 !important;
+			font-size: 1.1em !important;
 		}
-		body {
-			display: inline-block;
-			margin: 0px auto;
-			text-align: left;
-			width: 90%;
-		}
+
 		h3 {
-			color: #f19122;
-			margin-left: 20px;
-			margin-right: 20px;
-			font-size: 1.1em;
+			color: #f19122 !important;
+			font-size: 1.1em !important;
+			font-weight: bold !important;
 		}
-		h4 {
-			margin: 10px 0;
-		}
-		.field {
-			/*margin-left: 20px;*/
-			margin: 10px 0;
-			width: 100%
-		}
-		.formHeaders {
-			display: inline-block;
-			vertical-align: top;
-			margin-left: 10px;
-			width: 100%;
-		}
-		.formHeader {
-			display: inline-block;
-			vertical-align: top;
-			margin-left: 10px;
-			width: 45%
-		}
-		.label {
-			display: inline-block;
-			font-weight: bold;
-			/*text-align: justify;*/
-			vertical-align: middle;
-		}
-		.labelChecklist {
-			display: inline-block;
-			font-weight: bold;
-			margin-left: 10px;
-			max-width: 86%;
-			margin-top: 2px;
-			/*text-align: justify;*/
-		}
-		.suggestion {
-			display: block;
-			margin-left: 60px;
-			margin-top: 5px;
-			color: gray;
-			text-align: justify;
-			text-justify: inter-word;
-		}
-		.value {
-			/*color: #4078c0;*/
-			display: inline-block;
-			text-align: justify;
-			vertical-align: middle;
-		}
-		.value.icon {
-			display: inline-block;
-			max-width: 100%;
-			max-height : 100%;
-		}
-		.value.images {
-			display: block;
-		}
-		.check {
-			width: 17px;
-		}
+
 		.checklist {
 			display: inline-block;
 			margin-bottom: 15px;
@@ -91,107 +29,7 @@
 			vertical-align: top;
 			width: 99%;
 		}
-		.maps {
-			margin-left: 20px;
-			margin-bottom: 20px;
-			display: inline-block;
-		}
-		.pictures {
-			width: 100%;
-			/*display: block;*/
-			/*margin-bottom: 15px;*/
-			margin: 10px auto;
-			/*margin-left: 20px;*/
-		}
-		.picture {
-			display: inline-block;
-			margin: 0 .5%;
-			vertical-align: top;
-			width: 23.3%;
-			/*border: 1px  blue solid;*/
-		}
-		.pictureComment {
-			max-width: 250px;
-			color: gray;
-			text-align: justify;
-			text-justify: inter-word;
-		}
-		.general-comments {
-			margin-left: 15px;
-			text-align: justify;
-		}
-		.wpi-60 {
-			width: 60px;
-		}
-		.wpi-80 {
-			width: 80px;
-		}
-		.wpi-100 {
-			width: 100px;
-		}
-		.wpi-120 {
-			width: 120px;
-		}
-		.wpi-140 {
-			width: 140px;
-		}
-		.wpi-160 {
-			width: 160px;
-		}
-		.wpi-180 {
-			width: 180px;
-		}
-		.wpe-30 {
-			width: 30%;
-		}
-		.mw-70 {
-			max-width: 65%;
-		}
-		.ml-50 {
-			margin-left: 50px;
-		}
-		.right-content {
-			display: inline-block;
-			vertical-align: top;
-			width:45%;
-		}
-		.left-content {
-			display: inline-block;
-			vertical-align: top;
-			margin-left: 1%;
-			width: 45%;
-		}
-		.checklistTable {
-			display: inline-block;
-			width: 32.9%;
-			margin-bottom: 20px;
-			vertical-align: top;
-		}
-		.picsField {
-			margin: 20px 0;
-		}
-		.picLabel {
-			display: inline-block;
-			width: 25%;
-		}
-		.commentValue {
-			display: inline-block;
-			width: 74%;
-			vertical-align: top;
-			text-align: justify;
-		}
-		.icon-section {
-			width: 30px;
-		}
-		.center-cropped {
-		  width: 400px;
-		  height: 250px;
-		  background-position: center center;
-		  background-repeat: no-repeat;
-		}
-		h5 {
-			font-size: 1em;
-		}
+
 		table {
 			border-collapse: collapse;
 			width: 100%;
@@ -222,207 +60,337 @@
 			text-align:center; 
 			vertical-align:middle;
 		}
-		.logo {
-			width: 200px;
-			margin-bottom: 15px;
-			height: 
+
+		.check {
+			width: 17px;
 		}
-		.inspeccion {
-			color: #3F5B71;
-			margin-left: 20px;
-			margin-right: 20px;
-			font-size: 1.1em;
+
+		.info-label {
+			display: inline-block;
+			font-weight: bold;
+			/*text-align: justify;*/
+			vertical-align: middle;
+		}
+
+		body {
+			font-family: 'Helvetica' !important;
+			font-size: 14px !important;
+			color: #3F5B71 !important;
+		}
+
+		#location-info {
+			margin-top: 15px;
+		}
+
+		.location-field {
+			/*margin-left: 20px;*/
+			margin: 10px 0 !important;
+			width: 100% !important;
+		}
+
+		.picsField {
+			width: 400px;
+			margin-top: 5px;
+			height: 250px;
+		}
+
+		.center-cropped {
+
+		  background-position: left center;
+		  background-repeat: no-repeat;
+		}
+
+		.standalone-container {
+			page-break-inside: avoid;
+		}
+
+		.map {
+			margin-top: 5px;
+			height: 250px;
+			width: 400px;
 		}
 
 	</style>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
-	<div style="margin: 10px 0;">
-		<!-- <img src="http://d21zid65ggdxzg.cloudfront.net/echeckit-logo.png" alt="logo_belltech" class="logo"> -->
-		<img src="http://ddejhenv4m3e3.cloudfront.net/logos/moller.png" alt="logo_moller" class="logo">
-		<hr>
-		<h3 class="inspeccion">INSPECCIÓN: <%= report.inspection.construction.name %></h3>
-		<h3>HALLAZGO <%= report.position.to_s %> </h3>
-		<div class="formHeaders">
-			<div class="formHeader" style="float: left">
-				<div class="field ">
-					<div class="label wpi-140">Contratista:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('2', 'text') %></div>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<img src="http://ddejhenv4m3e3.cloudfront.net/logos/moller.png" alt="logo_moller" class="logo">
+			</div>
+		</div>
+		<hr />
+		<h3 class="inspeccion">INSPECCIÓN: 1</h3>
+		<h3>HALLAZGO 1</h3>
+		<div class="row">
+			<div class="col-xs-6">
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Contratista:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('2', 'text') %>
+					</div>
 				</div>
-				<div class="field ">
-					<div class="label wpi-140">Grupo de actividad:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('3', 'text') %></div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Grupo de actividad:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('3', 'text') %>
+					</div>
 				</div>
-				<div class="field ">
-					<div class="label wpi-140">Detalle de actividad:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('4', 'text') %></div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Detalle de actividad:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('4', 'text') %>
+					</div>
 				</div>
 			</div>
-			<div class="formHeader" style="float: right;">
-				<div class="field ">
-					<div class="label wpi-140">Frente de trabajo:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('5', 'text') %></div>
+			<div class="col-xs-6">
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Frente de trabajo:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('5', 'text') %>
+					</div>
 				</div>
-				<div class="field">
-					<div class="label wpi-140">Acción/condición detectada:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('6', 'text') %></div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Acción/condición detectada:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('6', 'text') %>
+					</div>
 				</div>
 			</div>
 		</div>
-		<hr>
-		<div class="formHeaders">
-			<div class="formHeader" style="float: left">
-				<div class="field ">
-					<div class="label wpi-140">Gravedad potencial:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('7', 'text') %></div>
+		<hr />
+		<div class="row">
+			<div class="col-xs-6">
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Gravedad potencial:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('7', 'text') %>
+					</div>
 				</div>
-				<div class="field ">
-					<div class="label wpi-140">Grado de riesgo:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('8', 'text') %></div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Grado de riesgo:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('8', 'text') %>
+					</div>
 				</div>
-				<div class="field ">
-					<div class="label wpi-140">Clasificación:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('9', 'text') %></div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Clasificación:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('9', 'text') %>
+					</div>
 				</div>
-				<div class="field ">
-					<div class="label wpi-140">Causa directa:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('10', 'text') %></div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Causa directa:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('10', 'text') %>
+					</div>
 				</div>
-				<div class="field ">
-					<div class="label wpi-140">Causa básica:</div>
-					<div class="value wpi-170"><%= report.dynamic_attributes.dig('12', 'text') %></div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Causa básica:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('12', 'text') %>
+					</div>
 				</div>
 			</div>
-			<div class="formHeader" style="float: right;">
-				<div class="field ">
-					<div class="label wpi-120">Supervisor responsable:</div>
-					<div class="value"><%= report.dynamic_attributes.dig('15', 'text') %></div>
+			<div class="col-xs-6">
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Supervisor responsable:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('15', 'text')  %>
+					</div>
 				</div>
-				<div class="field">
-					<div class="label wpi-120">Jefe de terreno:</div>
-					<div class="value"><%= report.dynamic_attributes.dig('16', 'text') %></div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Jefe de terreno:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('16', 'text')  %>
+					</div>
 				</div>
-				<div class="field">
-					<div class="label wpi-120">Experto SSOMA Obra:</div>
-					<div class="value"><%= report.dynamic_attributes.dig('17', 'text') %></div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Experto SSOMA Obra:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('17', 'text')  %>
+					</div>
 				</div>
-				<div class="field">
-					<div class="label wpi-120">Plazo de cumplimiento:</div>
-					<div class="value"><%= report.dynamic_attributes.dig('18', 'text') %></div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Plazo de cumplimiento:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('18', 'text')  %>
+					</div>
 				</div>
-				<div class="field">
-					<div class="label wpi-120">Fecha de cumplimiento:</div>
-					<div class="value"><%= report.formatted_limit_date %></div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Fecha de cumplimiento:
+					</div>
+					<div class="col-xs-8">
+						<%= report.formatted_limit_date  %>
+					</div>
 				</div>
 			</div>
 		</div>
+		<hr />
+		<div class="row standalone-container">
+			<div class="col-xs-6">
+				<div class="row">
+					<div class="col-xs-12">
+						<h3>GEOLOCALIZACIÓN</h3>
+					</div>
+				</div>
+				<div class="row info-label">
+					<div class="col-xs-12">
+						Hallazgo
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12"> 
+						<div class="center-cropped map" style="background-image: url('<%= report.initial_location_image %>');">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-6">
+				<div class="row">
+					<div class="col-xs-12">
+						<h3>FOTOS</h3>
+					</div>
+				</div>
+				<div class="row info-label">
+					<div class="col-xs-12">
+						Hallazgo
+					</div>
+				</div>
+				<% report.images.where(is_initial: true).each do |image| %>
+				<div class="picsField center-cropped"
+					style="background-image: url('<%= image.url.gsub('https', 'http') %>');">
+				</div>
+				<% end %>
+			</div>
+		</div>
+		<% if report.state != "unchecked" %>
+			<div class="row standalone-container" style="margin-top: 20px">
+				<div class="col-xs-6">
+					<div class="row info-label">
+						<div class="col-xs-12">
+							Resolución Hallazgo
+						</div>
+					</div>
+					<div class="row">
+					<div class="col-xs-12"> 
+							<div class="center-cropped map" style="background-image: url('<%= report.final_location_image %>');">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="row info-label">
+						<div class="col-xs-12">
+							Resolución Hallazgo
+						</div>
+					</div>
+					<% report.images.where(is_initial: false).each do |image| %>
+					<div class="picsField center-cropped"
+						style="background-image: url('<%= image.url.gsub('https', 'http') %>');">
+					</div>
+					<% end %>
+				</div>
+			</div>
+		<% end %>
+
+		<div class="row standalone-container" id="location-info">
+			<div class="col-xs-12">
+				<div class="row location-field">
+					<span class="label-text info-label">Dirección: </span>
+					<span class="value">Luis Montaner 457</span>
+				</div>
+				<div class="row location-field">
+					<span class="label-text info-label">Región: </span>
+					<span class="value">Metropolitana</span>
+				</div>
+				<div class="row location-field">
+					<span class="label-text info-label">Comuna: </span>
+					<span class="value">Providencia</span>
+				</div>
+				<div class="row location-field">
+					<span class="label-text info-label">Referencia: </span>
+					<span class="value"></span>
+				</div>
+			</div>
+		</div>
+
+		<div class="row standalone-container">
+			<div class="col-xs-12">
+				<section id="checklist">
+					<h3>Firmas</h3>
+					<table>
+						<thead>
+							<tr>
+								<th>Jefe SSOMA</th>
+								<th>Administrador de obra</th>
+								<th>Experto SSOMA Obra</th>
+								<th>Administrador de obra firma final</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<%= report.creator.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
+								</td>
+								<td>
+									<% if report.inspection.state != "reports_pending" and report.inspection.state != "first_signature_pending" %>
+									<%= report.inspection.initial_signer.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
+									<% end %>
+								</td>
+								<td>
+									<% if report.state != "unchecked" %>
+									<%= report.resolver.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
+									<!-- <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/768AF9B25098A450CD52CD5B6339D3E8.png" alt="check_x" /> -->
+									<% end %>
+								</td>
+								<td>
+									<% if report.inspection.state == "finished" %>
+									<%= report.inspection.final_signer.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
+									<% end %>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+				</section>
+			</div>
+		</div>
+
 	</div>
 
-	<hr>
 
-	<div class="formHeaders">
-		<div class="formHeader" style="float: left">
-			<h3>GEOLOCALIZACIÓN</h3>
-			<div class="label wpi-180">Hallazgo</div>
-			<br>
-			<img id="firstMap" src="<%= report.initial_location_image_url %>" style="width: 100%;" />
-		</div>
-		<div class="formHeader" style="float: right;">
-			<h3>FOTOS</h3>
-			<% report.images.where(is_initial: true).each do |image| %>
-			<div class="picsField center-cropped"
-				style="background-image: url('<%= image.url.gsub('https', 'http') %>');">
-			</div>
-			<% end %>
-		</div>
-	</div>
-	<% if report.state != "unchecked" %>
-	<div class="formHeaders">
-		<div class="formHeader" style="float: left">
-			<h3>GEOLOCALIZACIÓN</h3>
-			<div class="label wpi-180">Resolución hallazgo:</div>
-			<br>
-			<img id="secondMap" src="<%= report.final_location_image_url %>" style="width: 100%;" />
-		</div>
-		<div class="formHeader" style="float: right;">
-			<h3>FOTOS</h3>
-			<% report.images.where(is_initial: false).each do |image| %>
-			<div class="picsField center-cropped"
-				style="background-image: url('<%= image.url.gsub('https', 'http') %>');">
-			</div>
-			<% end %>
-		</div>
-	</div>
-	<% end %>
-	<br>
-	<div class="formHeaders">
-		<div class="formHeader">
-			<div class="field ">
-				<div class="label wpi-170">Dirección:</div>
-				<div class="value wpi-170"><%= report.initial_location.address %></div>
-			</div>
-			<div class="field ">
-				<div class="label wpi-170">Región:</div>
-				<div class="value wpi-170"><%= report.initial_location.region %></div>
-			</div>
-			<div class="field ">
-				<div class="label wpi-170">Comuna:</div>
-				<div class="value wpi-170"><%= report.initial_location.commune %></div>
-			</div>
-			<div class="field">
-				<div class="label wpi-170">Referencia:</div>
-				<div class="value wpi-170"><%= report.initial_location.reference %></div>
-			</div>
-			<% if report.state != "unchecked" %>
-			<div class="field">
-				<div class="label wpi-170">Recomendaciones:</div>
-				<div class="value wpi-170"><%= report.resolution_comment %></div>
-			</div>
-			<% end %>
-		</div>
-	</div>
-	<hr>
-	<br>
-	<div class="content">
-		<section id="checklist">
-			<h3>Firmas</h3>
-			<table>
-				<thead>
-					<tr>
-						<th>Jefe SSOMA</th>
-						<th>Administrador de obra</th>
-						<th>Experto SSOMA Obra</th>
-						<th>Administrador de obra firma final</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>
-							<%= report.creator.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
-						</td>
-						<td>
-							<% if report.inspection.state != "reports_pending" and report.inspection.state != "first_signature_pending" %>
-							<%= report.inspection.initial_signer.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
-							<% end %>
-						</td>
-						<td>
-							<% if report.state != "unchecked" %>
-							<%= report.resolver.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
-							<!-- <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/768AF9B25098A450CD52CD5B6339D3E8.png" alt="check_x" /> -->
-							<% end %>
-						</td>
-						<td>
-							<% if report.inspection.state == "finished" %>
-							<%= report.inspection.final_signer.name %> <img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
-							<% end %>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-
-		</section>
-	</div>
-	<br>
-	<br>
+	
 </body>
 </html>
