@@ -20,7 +20,7 @@ class Api::V1::ConstructionsController < Api::V1::JsonApiController
 
   def create_personnel
     begin
-      resources = Construction.from_csv(params.require(:csv))
+      resources = Construction.from_csv(params.require(:csv), current_user)
     rescue => exception
       render json: {
         errors: [

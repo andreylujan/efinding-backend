@@ -16,7 +16,7 @@ class Api::V1::CollectionsController < Api::V1::JsonApiController
     if params[:format] == "csv"
       collection = Collection.find(params.require(:id))
       begin
-        resources = collection.from_csv(params.require(:csv))
+        resources = collection.from_csv(params.require(:csv), current_user)
       rescue => exception
         render json: {
           errors: [
