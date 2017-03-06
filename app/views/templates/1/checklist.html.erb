@@ -206,34 +206,36 @@
 			<div class="col-xs-12">
 				<% checklist.checklist_data.each do |section| %>
 					<% if section["items"].inject(0) { |sum, x| if x["value"].present? and x["value"] != 0 then sum + 1 else sum end  } > 0 %>
-						<h3><%= section["name"] %></h3>
-						<table>
-							<tbody>
-								<% section["items"].each do |item| %>
-									<% if item["value"].present? and item["value"] != 0 %>
-										<tr>
-											<td>
-												<% if item["value"] == 1 %>
-													<img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
-												<% elsif item["value"] == 2 %>
-													<img class="check" src="http://d21zid65ggdxzg.cloudfront.net/768AF9B25098A450CD52CD5B6339D3E8.png" alt="check_x" />
-												<% end %>
-											</td>
-											<td>
-												<%= item["name"] %>
-											</td>
-											<td>
-												<% if item["comment"] %>
-													<%= simple_format(item["comment"]) %>
-												<% else %>
-													Sin comentarios
-												<% end %>
-											</td>
-										</tr>
+						<div class="standalone-container">
+							<h3><%= section["name"] %></h3>
+							<table>
+								<tbody>
+									<% section["items"].each do |item| %>
+										<% if item["value"].present? and item["value"] != 0 %>
+											<tr>
+												<td>
+													<% if item["value"] == 1 %>
+														<img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
+													<% elsif item["value"] == 2 %>
+														<img class="check" src="http://d21zid65ggdxzg.cloudfront.net/768AF9B25098A450CD52CD5B6339D3E8.png" alt="check_x" />
+													<% end %>
+												</td>
+												<td>
+													<%= item["name"] %>
+												</td>
+												<td>
+													<% if item["comment"] %>
+														<%= simple_format(item["comment"]) %>
+													<% else %>
+														Sin comentarios
+													<% end %>
+												</td>
+											</tr>
+										<% end %>
 									<% end %>
-								<% end %>
-							</tbody>
-						</table>
+								</tbody>
+							</table>
+						</div>
 					<% end %>
 				<% end %>
 			</div>
