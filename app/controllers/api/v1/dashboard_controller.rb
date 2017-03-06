@@ -19,11 +19,26 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
     reports = Report.joins(:inspection)
     .where(inspections:  { id: inspections.map { |i| i.id }})
 
-    report_ratios = reports.group("reports.state").select("reports.state, count(reports.id) as num_reports").order("")
+    report_ratios = [
+      {
+        state: "unchecked",
+        num_reports: 0
+      },
+      {
+        state: "resolved",
+        num_reports: 0
+      }
+    ]
+    sql_ratios = reports.group("reports.state").select("reports.state, count(reports.id) as num_reports").order("")
     .as_json.map do |json|
       json.delete "id"
       json
     end
+    sql_ratios.each do |ratio|
+      idx = ratio["state"] == "unchecked" ? 0 : 1
+      report_ratios[idx]["num_reports"] = ratio["num_reports"]
+    end
+    
     state_names = Report.states.keys
     report_fulfillment = reports.group("inspections.id, reports.state")
     .select("inspections.id as inspection_id, reports.state, count(reports.id) as num_reports")
@@ -61,7 +76,17 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
 
     end
 
-    report_locations = reports.includes(:initial_location).group_by(&:state).map do |state, report_group|
+    report_locations = [
+      {
+        state: "unchecked",
+        coordinates: []
+      },
+      {
+        state: "resolved",
+        coordinates: []
+      }
+    ]
+    sql_locations = reports.includes(:initial_location).group_by(&:state).map do |state, report_group|
       {
         state: state,
         coordinates: report_group.map do |report|
@@ -74,6 +99,10 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
           json
         end
       }
+    end
+    sql_locations.each do |location|
+      idx = location[:state] == "unchecked" ? 0 : 1
+      report_locations[idx][:coordinates] = location[:coordinates]
     end
 
     dashboard_info = {
