@@ -1,11 +1,11 @@
 # -*- encoding : utf-8 -*-
 class UserMailer < ApplicationMailer
 
-	default from: 'e-Checkit Admin<solutions@ewin.cl>'
+	default from: 'eFinding Admin<solutions@ewin.cl>'
 
 	def invite_email(invitation)
 		@invitation = invitation
-		@url = Rails.env.production? ? "http://50.16.161.152/generic/admin/#/signup" : "http://50.16.161.152/generic-staging/admin/#/signup"
+		@url = Rails.env.production? ? "http://50.16.161.152/efinding/admin/#/signup" : "http://50.16.161.152/efinding-staging/admin/#/signup"
 		mail(to: @invitation.email, subject: "Únete a #{invitation.role.organization.name}",
 			from: "#{invitation.role.organization.name} Admin<solutions@ewin.cl>")
 	end	

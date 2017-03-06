@@ -206,7 +206,9 @@
 			<div class="col-xs-12">
 				<% checklist.checklist_data.each do |section| %>
 					<% if section["items"].inject(0) { |sum, x| if x["value"].present? and x["value"] != 0 then sum + 1 else sum end  } > 0 %>
-						<h3 style="page-break-after: avoid;"><%= section["name"] %></h3>
+						<div style="page-break-after: avoid;">
+							<h3><%= section["name"] %></h3>
+						</div>
 						<table>
 							<tbody>
 								<% section["items"].each do |item| %>
