@@ -65,10 +65,11 @@ class Construction < ApplicationRecord
 
   def self.from_csv(file_name, current_user)
 
+    upload = BatchUpload.create! user: current_user, uploaded_file: file_name,
+      uploaded_resource_type: "Obras"
+
     csv_text = CsvUtils.read_file(file_name)
 
-    upload = BatchUpload.create! user: current_user, uploaded_file: csv_text,
-      uploaded_resource_type: "Obras"
 
     headers = %w{code personnel_type_id personnel_id}
     resources = []

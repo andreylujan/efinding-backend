@@ -37,13 +37,14 @@ class Collection < ApplicationRecord
   end
 
   def from_csv(file_name, current_user)
+
+    upload = BatchUpload.create! user: current_user, uploaded_file: file_name,
+      uploaded_resource_type: "#{self.name}"
+
     csv_text = CsvUtils.read_file(file_name)
     headers = %w{code parent_code name}
     resources = []
     row_number = 2
-
-    upload = BatchUpload.create! user: current_user, uploaded_file: csv_text,
-      uploaded_resource_type: "#{self.name}"
 
     begin
       csv = CSV.parse(csv_text, { headers: true, encoding: "UTF-8", col_sep: '|' })
