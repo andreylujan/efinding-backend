@@ -11,6 +11,7 @@
 #  parent_item_id :integer
 #  code           :text
 #  parent_code    :text
+#  position       :integer
 #
 
 class CollectionItem < ApplicationRecord

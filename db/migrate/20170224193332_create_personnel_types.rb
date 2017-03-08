@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreatePersonnelTypes < ActiveRecord::Migration[5.0]
   def change
     create_table :personnel_types do |t|

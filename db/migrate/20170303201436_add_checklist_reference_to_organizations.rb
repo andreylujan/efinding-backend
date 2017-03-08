@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddChecklistReferenceToOrganizations < ActiveRecord::Migration[5.0]
   def change
     add_reference :organizations, :checklist, foreign_key: true

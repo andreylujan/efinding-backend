@@ -20,6 +20,7 @@
 #  final_signed_at   :datetime
 #  field_chief_id    :integer
 #  expert_id         :integer
+#  cached_data       :json
 #
 
 class Inspection < ApplicationRecord

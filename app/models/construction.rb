@@ -11,11 +11,13 @@
 #  administrator_id :integer
 #  code             :text
 #  expert_id        :integer
+#  deleted_at       :datetime
 #
 
 class Construction < ApplicationRecord
+  acts_as_paranoid
   belongs_to :company
-  has_many :inspections
+  has_many :inspections, dependent: :destroy
   validates :company, presence: true
   validates :name, presence: true
   validates :code, presence: true, uniqueness: { scope: :company }
@@ -23,9 +25,10 @@ class Construction < ApplicationRecord
   belongs_to :expert, class_name: :User, foreign_key: :expert_id
   # belongs_to :visitor, class_name: :Person, foreign_key: :visitor_id
   has_and_belongs_to_many :contractors
-  has_many :construction_personnel
+  has_many :construction_personnel, dependent: :destroy
   accepts_nested_attributes_for :construction_personnel
   has_many :personnel, through: :construction_personnel
+  has_many :checklist_reports, dependent: :destroy
   before_create :upcase_code
 
   def upcase_code

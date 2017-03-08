@@ -56,4 +56,10 @@ class PdfUploader < CarrierWave::Uploader::Base
     end
   end
 
+  def remove!
+    if Rails.env.production?
+      super
+    end
+  end
+
 end

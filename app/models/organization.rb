@@ -9,6 +9,7 @@
 #  updated_at    :datetime         not null
 #  logo          :text
 #  csv_separator :text             default("|"), not null
+#  checklist_id  :integer
 #
 
 class Organization < ApplicationRecord

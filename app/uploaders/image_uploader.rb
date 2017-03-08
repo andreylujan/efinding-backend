@@ -52,4 +52,10 @@ class ImageUploader < CarrierWave::Uploader::Base
     "#{md5}.jpg"
   end
 
+  def remove!
+    unless Rails.env.production?
+      super
+    end
+  end
+
 end

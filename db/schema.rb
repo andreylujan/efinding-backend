@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170308193907) do
+ActiveRecord::Schema.define(version: 20170308202400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -162,8 +163,10 @@ ActiveRecord::Schema.define(version: 20170308193907) do
     t.integer  "administrator_id"
     t.text     "code"
     t.integer  "expert_id"
+    t.datetime "deleted_at"
     t.index ["code"], name: "index_constructions_on_code", unique: true, using: :btree
     t.index ["company_id"], name: "index_constructions_on_company_id", using: :btree
+    t.index ["deleted_at"], name: "index_constructions_on_deleted_at", using: :btree
     t.index ["name", "company_id"], name: "index_constructions_on_name_and_company_id", unique: true, using: :btree
   end
 

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 not_found = []
 
 data = CSV.read("db/personnel.csv", { headers: false })

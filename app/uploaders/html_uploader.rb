@@ -47,5 +47,11 @@ class HtmlUploader < CarrierWave::Uploader::Base
   def filename
     model.pdf.filename.gsub(".pdf", ".html")
   end
+  
+  def remove!
+    if Rails.env.production?
+      super
+    end
+  end
 
 end

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Api::V1::PersonnelResource < JSONAPI::Resource
   
   attributes :name, :rut, :email

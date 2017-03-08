@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module Api::V1
   def self.table_name_prefix
     'api_v1_'
