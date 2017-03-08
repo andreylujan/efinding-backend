@@ -28,6 +28,7 @@ data.each do |row|
 			end
 			admin.role_id = 4
 			admin.save!
+			construction.administrator = admin
 		end
 
 		Personnel.find_or_initialize_by(rut: rut_jefe.upcase.gsub('.', '').gsub('-', '')).tap do |jefe|
@@ -35,17 +36,19 @@ data.each do |row|
 			jefe.email = email_jefe
 			jefe.organization_id = 1
 			jefe.save!
+			ConstructionPersonnel.find_or_create_by!(construction: construction, personnel: jefe,
+				personnel_type_id: 1)
 		end
 
-		User.find_or_initialize_by(email: email_super).tap do |supervisor|
-			supervisor.first_name = nombre_super
-			supervisor.rut = rut_super.upcase.gsub('.', '').gsub('-', '')
-			if not supervisor.persisted?
-				supervisor.password = "12345678"
-			end
-			supervisor.role_id = 2
-			supervisor.save!
-		end
+		# User.find_or_initialize_by(email: email_super).tap do |supervisor|
+		# 	supervisor.first_name = nombre_super
+		# 	supervisor.rut = rut_super.upcase.gsub('.', '').gsub('-', '')
+		# 	if not supervisor.persisted?
+		# 		supervisor.password = "12345678"
+		# 	end
+		# 	supervisor.role_id = 2
+		# supervisor.save!
+		# end
 
 		User.find_or_initialize_by(email: email_experto).tap do |expert|
 			expert.first_name = nombre_experto
@@ -55,9 +58,11 @@ data.each do |row|
 			end
 			expert.role_id = 3
 			expert.save!
+			construction.expert = expert
 		end
 		
-	
+		construction.save!
+		
 	else
 		not_found << code
 	end
