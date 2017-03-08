@@ -34,7 +34,7 @@ class User < ApplicationRecord
   validates :email, uniqueness: true, presence: true
   validates :rut, uniqueness: true, allow_nil: true
   validates :first_name, presence: true
-  validates :last_name, presence: true
+  # validates :last_name, presence: true
   validates :phone_number, uniqueness: true, allow_nil: true
   belongs_to :role
   before_create :assign_role_id

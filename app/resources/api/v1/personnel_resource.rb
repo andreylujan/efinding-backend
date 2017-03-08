@@ -1,6 +1,6 @@
 class Api::V1::PersonnelResource < JSONAPI::Resource
   
-  attributes :name, :rut
+  attributes :name, :rut, :email
   has_many :personnel_types
   has_many :constructions
   
