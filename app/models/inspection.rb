@@ -49,6 +49,23 @@ class Inspection < ApplicationRecord
     construction.company_id
   end
 
+  def field_chief_name
+    personnel = construction.construction_personnel.where(personnel_type_id: 1)
+    if personnel.count > 0
+      personnel.first.personnel.name
+    else
+      "Sin Jefe de erreno"
+    end
+  end
+
+  def expert_name
+    if construction.expert.present?
+      construction.expert.name
+    else
+      "Sin Experto SSOMA"
+    end
+  end
+
   def cache_data
     if not cached_data
       self.cached_data = {}
