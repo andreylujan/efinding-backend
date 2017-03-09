@@ -2,10 +2,11 @@
 class Api::V1::ConstructionResource < ApplicationResource
 	attributes :name, :company_id, :contractors, :code, :construction_personnel_attributes
 	has_one :company
-    add_foreign_keys :company_id, :administrator_id, :expert_id
+    add_foreign_keys :company_id, :administrator_id, :expert_id, :supervisor_id
 
     has_one :administrator 
     has_one :expert
+    has_one :supervisor
     has_many :construction_personnel
     has_many :contractors
     

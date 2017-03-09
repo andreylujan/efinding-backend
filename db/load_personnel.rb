@@ -41,15 +41,16 @@ data.each do |row|
 				personnel_type_id: 1)
 		end
 
-		# User.find_or_initialize_by(email: email_super).tap do |supervisor|
-		# 	supervisor.first_name = nombre_super
-		# 	supervisor.rut = rut_super.upcase.gsub('.', '').gsub('-', '')
-		# 	if not supervisor.persisted?
-		# 		supervisor.password = "12345678"
-		# 	end
-		# 	supervisor.role_id = 2
-		# supervisor.save!
-		# end
+		User.find_or_initialize_by(email: email_super).tap do |supervisor|
+			supervisor.first_name = nombre_super
+			supervisor.rut = rut_super.upcase.gsub('.', '').gsub('-', '')
+			if not supervisor.persisted?
+				supervisor.password = "12345678"
+			end
+			supervisor.role_id = 2
+			supervisor.save!
+			construction.supervisor = supervisor
+		end
 
 		User.find_or_initialize_by(email: email_experto).tap do |expert|
 			expert.first_name = nombre_experto

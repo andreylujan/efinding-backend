@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170308202400) do
+ActiveRecord::Schema.define(version: 20170309214515) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -164,10 +163,12 @@ ActiveRecord::Schema.define(version: 20170308202400) do
     t.text     "code"
     t.integer  "expert_id"
     t.datetime "deleted_at"
+    t.integer  "supervisor_id"
     t.index ["code"], name: "index_constructions_on_code", unique: true, using: :btree
     t.index ["company_id"], name: "index_constructions_on_company_id", using: :btree
     t.index ["deleted_at"], name: "index_constructions_on_deleted_at", using: :btree
     t.index ["name", "company_id"], name: "index_constructions_on_name_and_company_id", unique: true, using: :btree
+    t.index ["supervisor_id"], name: "index_constructions_on_supervisor_id", using: :btree
   end
 
   create_table "constructions_contractors", id: false, force: :cascade do |t|
@@ -542,6 +543,7 @@ ActiveRecord::Schema.define(version: 20170308202400) do
   add_foreign_key "constructions", "companies"
   add_foreign_key "constructions", "users", column: "administrator_id"
   add_foreign_key "constructions", "users", column: "expert_id"
+  add_foreign_key "constructions", "users", column: "supervisor_id"
   add_foreign_key "contractors", "organizations"
   add_foreign_key "data_parts", "collections"
   add_foreign_key "data_parts", "sections"

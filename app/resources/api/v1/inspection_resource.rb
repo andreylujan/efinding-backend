@@ -221,13 +221,25 @@ class Api::V1::InspectionResource < ApplicationResource
 
   def self.records(options = {})
     if options[:context] and current_user = options[:context][:current_user]
-      Inspection
+      inspections = Inspection
       .joins("LEFT OUTER JOIN reports ON reports.inspection_id = inspections.id")
       .joins(creator: :role)
       .where(roles: { organization_id: current_user.organization_id })
       .select("inspections.*, count(reports.id) as num_reports, count(case when reports.state = 0 THEN 1 END) as num_pending_reports, count(case when reports.state = 0 AND reports.limit_date <= '" +
               DateTime.now.to_s + "' THEN 1 END) as num_expired_reports")
       .group("inspections.id")
+
+      if current_user.role_id == 2
+        inspections = inspections.joins(:construction)
+          .where(constructions: { supervisor_id: current_user.id })
+      elsif current_user.role_id == 3
+        inspections = inspections.joins(:construction)
+          .where(constructions: { expert_id: current_user.id })
+      elsif current_user.role_id == 4
+        inspections = inspections.joins(:construction)
+          .where(constructions: { administrator_id: current_user.id })
+      end
+      inspections
     else
       Inspection.where("1 = 0")
     end
