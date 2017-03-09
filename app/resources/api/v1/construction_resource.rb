@@ -18,12 +18,20 @@ class Api::V1::ConstructionResource < ApplicationResource
 
 	def self.records(options = {})
     context = options[:context]
+    current_user = context[:current_user]
     if context[:company_id]
-    	Company.find(context[:company_id]).constructions
+    	constructions = Company.find(context[:company_id]).constructions
     else
-    	Construction.joins(company: :organization)
+    	constructions = Construction.joins(company: :organization)
     		.where(organizations: { id: context[:current_user].organization.id })
     end
+    
+    if current_user.role_id == 2
+        constructions = constructions.where(supervisor_id: current_user.id)
+    elsif current_user.role_id == 3
+        constructions = constructions.where(expert_id: current_user.id)
+    end
+    constructions
   end
 
   def fetchable_fields
