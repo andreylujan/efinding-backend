@@ -132,6 +132,16 @@ class Api::V1::ChecklistReportResource < ApplicationResource
       .group("checklist_reports.id")
       .where(organizations: { id: current_user.organization.id })
       
+      if current_user.role_id == 2
+        checklists = checklists.joins(:construction)
+          .where(constructions: { supervisor_id: current_user.id })
+      elsif current_user.role_id == 3
+        checklists = checklists.joins(:construction)
+          .where(constructions: { expert_id: current_user.id })
+      elsif current_user.role_id == 4
+        checklists = checklists.joins(:construction)
+          .where(constructions: { administrator_id: current_user.id })
+      end
 
     end
     checklists
