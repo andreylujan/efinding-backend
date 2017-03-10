@@ -235,6 +235,8 @@ class Api::V1::InspectionResource < ApplicationResource
       elsif current_user.role_id == 3
         inspections = inspections.joins(:construction)
           .where(constructions: { expert_id: current_user.id })
+          .where.not(state: "reports_pending")
+          .where.not(state: "first_signature_pending")
       elsif current_user.role_id == 4
         inspections = inspections.joins(:construction)
           .where(constructions: { administrator_id: current_user.id })
