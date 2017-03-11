@@ -111,6 +111,10 @@
 			.picsField {
 				width: 400px;
 			}
+
+			.always-break {
+				page-break-before: always;
+			}
 		}
 
 		.standalone-container {
@@ -122,9 +126,7 @@
 			height: 250px;
 		}
 
-		.page-break-before {
-			page-break-before: always;
-		}
+		
 
 	</style>
 	<!-- Latest compiled and minified CSS -->
@@ -141,7 +143,7 @@
 		<h3 class="inspeccion">INSPECCIÓN: 1</h3>
 		<% inspection.reports.each_with_index do |report, index| %>
 		<% if index > 0 %>
-			<div class="standalone-container alway-break">
+			<div class="standalone-container always-break">
 		<% else %>
 			<div>
 		<% end %>
