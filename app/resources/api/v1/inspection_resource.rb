@@ -20,7 +20,8 @@ class Api::V1::InspectionResource < ApplicationResource
     :num_reports,
     :num_expired_reports,
     :state_name,
-    :cached_data
+    :cached_data,
+    :field_chief_name
 
 
   add_foreign_keys :construction_id
@@ -72,9 +73,23 @@ class Api::V1::InspectionResource < ApplicationResource
     end
   }
 
+  filter :field_chief_name, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.joins(:construction)
+        .joins("LEFT OUTER JOIN construction_personnel ON constructions.id = construction_personnel.construction_id")
+        .joins("LEFT OUTER JOIN personnel on personnel.id = construction_personnel.personnel_id")
+        .where("construction_personnel.personnel_type_id = 1")
+        .where("personnel.name ilike '%" + value[0] + "%'")
+    else
+      records
+    end
+  }
+
+
   filter :field_chief, apply: ->(records, value, _options) {
     if not value.empty?
       if value[0].is_a? ActionController::Parameters and value[0]["full_name"].present?
+        byebug
         records.joins("LEFT OUTER JOIN users as field_chiefs ON field_chiefs.id = inspections.expert_id")
         .where("field_chiefs.first_name || ' ' || field_chiefs.last_name ilike '%" + value[0]["full_name"] + "%'")
       else
@@ -127,11 +142,11 @@ class Api::V1::InspectionResource < ApplicationResource
           end
         end
         if value[:administrator].present? and value[:administrator].is_a? ActionController::Parameters
-          if value[:administrator][:name].present?
+          if value[:administrator][:full_name].present?
             records = records
               .joins(:construction)
               .joins("INNER JOIN users as administrators ON administrators.id = constructions.administrator_id")
-            .where("administrators.first_name || ' ' || administrators.last_name ilike '%" + value[:administrator][:name] + "%'")
+            .where("administrators.first_name || ' ' || administrators.last_name ilike '%" + value[:administrator][:full_name] + "%'")
           end
         end
       end
