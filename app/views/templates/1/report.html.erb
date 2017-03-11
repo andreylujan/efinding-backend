@@ -195,12 +195,62 @@
 			<div class="col-xs-6">
 				<div class="row location-field">
 					<div class="col-xs-4 info-label">
+						Causa directa:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('20', 'text') %>
+					</div>
+				</div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Descripción Causa Directa:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('10', 'text') %>
+					</div>
+				</div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Detalle de cada Causa Directa:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('11', 'text') %>
+					</div>
+				</div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Causa básica:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('21', 'text') %>
+					</div>
+				</div>			
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Descripción Causa Básica:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('12', 'text') %>
+					</div>
+				</div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Detalle de cada Causa Básica:
+					</div>
+					<div class="col-xs-8">
+						<%= report.dynamic_attributes.dig('13', 'text') %>
+					</div>
+				</div>				
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
 						Gravedad potencial:
 					</div>
 					<div class="col-xs-8">
 						<%= report.dynamic_attributes.dig('7', 'text') %>
 					</div>
 				</div>
+			</div>
+			<div class="col-xs-6">
 				<div class="row location-field">
 					<div class="col-xs-4 info-label">
 						Grado de riesgo:
@@ -217,24 +267,6 @@
 						<%= report.dynamic_attributes.dig('9', 'text') %>
 					</div>
 				</div>
-				<div class="row location-field">
-					<div class="col-xs-4 info-label">
-						Causa directa:
-					</div>
-					<div class="col-xs-8">
-						<%= report.dynamic_attributes.dig('20', 'text') %>
-					</div>
-				</div>
-				<div class="row location-field">
-					<div class="col-xs-4 info-label">
-						Causa básica:
-					</div>
-					<div class="col-xs-8">
-						<%= report.dynamic_attributes.dig('21', 'text') %>
-					</div>
-				</div>
-			</div>
-			<div class="col-xs-6">
 				<div class="row location-field">
 					<div class="col-xs-4 info-label">
 						Supervisor responsable:
@@ -273,6 +305,18 @@
 					</div>
 					<div class="col-xs-8">
 						<%= report.formatted_limit_date  %>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="row location-field">
+					<div class="col-xs-2 info-label">
+						Recomendaciones:
+					</div>
+					<div class="col-xs-10">
+						<%= report.dynamic_attributes.dig('14', 'text')  %>
 					</div>
 				</div>
 			</div>
@@ -349,19 +393,19 @@
 	<div class="col-xs-12">
 		<div class="row location-field">
 			<span class="label-text info-label">Dirección: </span>
-			<span class="value">Luis Montaner 457</span>
+			<span class="value"><%= report.final_location.present? ? report.final_location.address : report.initial_location.address %></span>
 		</div>
 		<div class="row location-field">
 			<span class="label-text info-label">Región: </span>
-			<span class="value">Metropolitana</span>
+			<span class="value"><%= report.final_location.present? ? report.final_location.region : report.initial_location.region %></span>
 		</div>
 		<div class="row location-field">
 			<span class="label-text info-label">Comuna: </span>
-			<span class="value">Providencia</span>
+			<span class="value"><%= report.final_location.present? ? report.final_location.commune : report.initial_location.commune %></span>
 		</div>
 		<div class="row location-field">
 			<span class="label-text info-label">Referencia: </span>
-			<span class="value"></span>
+			<span class="value"><%= report.final_location.present? ? report.final_location.reference : report.initial_location.reference %></span>
 		</div>
 	</div>
 </div>
