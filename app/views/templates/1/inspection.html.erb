@@ -22,6 +22,12 @@
 			font-weight: bold !important;
 		}
 
+		@media not print {
+			.container {
+				width: 100%;
+			}
+		}
+		
 		.checklist {
 			display: inline-block;
 			margin-bottom: 15px;
@@ -201,7 +207,7 @@
 					</div>
 					<div class="row location-field">
 						<div class="col-xs-4 info-label">
-							Clasificación:
+							Clasificación de posible incidente:
 						</div>
 						<div class="col-xs-8">
 							<%= report.dynamic_attributes.dig('9', 'text') %>
