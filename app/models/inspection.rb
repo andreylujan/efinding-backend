@@ -74,6 +74,9 @@ class Inspection < ApplicationRecord
       type_id = personnel.personnel_type_id
       self.cached_data[type_id.to_s] = personnel.personnel.name
     end
+    if construction.expert.present?
+      self.cached_data["expert"] = construction.expert.name
+    end
   end
 
   def generate_pdf
