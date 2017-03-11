@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170309214515) do
+ActiveRecord::Schema.define(version: 20170311231624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,10 +69,11 @@ ActiveRecord::Schema.define(version: 20170309214515) do
     t.json     "checklist_data",  default: [],    null: false
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
-    t.integer  "code"
+    t.integer  "code",                            null: false
     t.integer  "checklist_id"
     t.datetime "started_at"
     t.index ["checklist_id"], name: "index_checklist_reports_on_checklist_id", using: :btree
+    t.index ["construction_id", "code"], name: "index_checklist_reports_on_construction_id_and_code", unique: true, using: :btree
     t.index ["construction_id"], name: "index_checklist_reports_on_construction_id", using: :btree
     t.index ["creator_id"], name: "index_checklist_reports_on_creator_id", using: :btree
     t.index ["deleted_at"], name: "index_checklist_reports_on_deleted_at", using: :btree

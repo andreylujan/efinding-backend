@@ -105,8 +105,12 @@ class ChecklistReport < ApplicationRecord
 
   private
   def next_seq
-  	result = ChecklistReport.connection.execute("SELECT nextval('checklist_reports_code_seq')")
-  	result[0]['nextval']
+  	last = self.construction.checklist_reports.with_deleted.order("code DESC").first
+    if last.nil?
+      1
+    else
+      last.code + 1
+    end
   end
 
 
