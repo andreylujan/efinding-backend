@@ -38,6 +38,8 @@
 		@media not print {
 			.container {
 				width: 100% !important;
+				padding-left: 20px !important;
+				padding-right: 20px !important;
 			}
 		}
 
@@ -101,8 +103,18 @@
 
 		.center-cropped {
 
-		  background-position: left center;
+		  background-position: center center;
 		  background-repeat: no-repeat;
+		}
+
+		@media print {
+			.picsField {
+				width: 400px;
+			}
+
+			.center-cropped {
+				background-position: left center;
+			}
 		}
 
 		.standalone-container {
@@ -112,7 +124,6 @@
 		.map {
 			margin-top: 5px;
 			height: 250px;
-			width: 400px;
 		}
 
 		table { page-break-inside:auto }
