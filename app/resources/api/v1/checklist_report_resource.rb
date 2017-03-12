@@ -19,7 +19,7 @@ class Api::V1::ChecklistReportResource < ApplicationResource
   end
 
   def code
-    "#{@model.construction.code} - #{@model.code}"
+    "#{@model.construction.code}-#{@model.code}"
   end
 
   def user_names
@@ -40,7 +40,7 @@ class Api::V1::ChecklistReportResource < ApplicationResource
     if not value.empty?
       records = records
         .joins(:construction)
-        .where("constructions.code || ' - ' || checklist_reports.code::text ilike '%" + value[0].to_s + "%'")
+        .where("constructions.code || '-' || checklist_reports.code::text ilike '%" + value[0].to_s + "%'")
     end
     records
   }
