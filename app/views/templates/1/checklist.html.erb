@@ -160,10 +160,10 @@
 				</div>
 				<div class="row location-field">
 					<div class="col-xs-4 info-label">
-						Número de checklist:
+						Código de checklist:
 					</div>
 					<div class="col-xs-8">
-						<%= checklist.code %>
+						<%= "#{checklist.construction.code}-#{checklist.code}" %>
 					</div>
 				</div>
 				<div class="row location-field">
