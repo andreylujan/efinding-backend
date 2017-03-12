@@ -18,6 +18,10 @@ class Api::V1::ChecklistReportResource < ApplicationResource
     true
   end
 
+  def code
+    "#{@model.construction.code} - #{@model.code}"
+  end
+
   def user_names
     if @model.respond_to? :user_names
       @model.user_names
@@ -34,7 +38,9 @@ class Api::V1::ChecklistReportResource < ApplicationResource
 
   filter :code, apply: ->(records, value, _options) {
     if not value.empty?
-      records = records.where("checklist_reports.code::text ilike '%" + value[0].to_s + "%'")
+      records = records
+        .joins(:construction)
+        .where("constructions.code || ' - ' || checklist_reports.code::text ilike '%" + value[0].to_s + "%'")
     end
     records
   }
