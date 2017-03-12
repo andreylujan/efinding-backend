@@ -41,7 +41,7 @@ class Report < ApplicationRecord
   belongs_to :assigned_user, class_name: :User, foreign_key: :assigned_user_id
   belongs_to :resolver, class_name: :User, foreign_key: :resolver_id
   audited
-  
+
   enum state: [ :unchecked, :resolved, :pending ]
 
   mount_uploader :pdf, PdfUploader
@@ -87,6 +87,10 @@ class Report < ApplicationRecord
     :execution_time,
     :pdf_url
   ]
+
+  def self.non_audited_columns
+    super + [ "html", "pdf", "pdf_uploaded"  ]
+  end
 
   def check_limit_date
     if limit_date.nil? and dynamic_attributes.dig('19', 'iso_string').present?
