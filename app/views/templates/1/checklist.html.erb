@@ -171,7 +171,7 @@
 						Jefe SSOMA MPC:
 					</div>
 					<div class="col-xs-8">
-						<%= if checklist.construction.supervisor.present? then checklist.construction.supervisor.name else "Obra sin Jefe SSOMA MPC" %>
+						<%= if checklist.construction.supervisor.present? then checklist.construction.supervisor.name else "Obra sin Jefe SSOMA MPC" end %>
 					</div>
 				</div>
 				<div class="row location-field">
@@ -179,7 +179,7 @@
 						Experto SSOMA:
 					</div>
 					<div class="col-xs-8">
-						<%= if checklist.construction.expert.present? then checklist.construction.expert.name else "Obra sin Experto SSOMA" %>
+						<%= if checklist.construction.expert.present? then checklist.construction.expert.name else "Obra sin Experto SSOMA" end %>
 					</div>
 				</div>
 				<div class="row location-field">
@@ -187,7 +187,7 @@
 						Administrador de Obra:
 					</div>
 					<div class="col-xs-8">
-						<%= if checklist.construction.administrator.present? then checklist.construction.administrator.name else "Obra sin Administrador" %>
+						<%= if checklist.construction.administrator.present? then checklist.construction.administrator.name else "Obra sin Administrador" end %>
 					</div>
 				</div>
 				<div class="row location-field">
