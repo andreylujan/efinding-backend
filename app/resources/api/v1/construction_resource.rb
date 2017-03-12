@@ -31,7 +31,7 @@ class Api::V1::ConstructionResource < ApplicationResource
     elsif current_user.role_id == 3
         constructions = constructions.where(expert_id: current_user.id)
     end
-    constructions
+    constructions.distinct
   end
 
   def fetchable_fields

@@ -20,6 +20,7 @@ class Api::V1::CompanyResource < ApplicationResource
     	companies = companies.joins(:constructions)
     		.where(constructions: { expert_id: current_user.id })
     end
+    companies.distinct
   end
 
 end
