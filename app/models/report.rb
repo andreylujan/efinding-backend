@@ -89,7 +89,7 @@ class Report < ApplicationRecord
   ]
 
   def self.non_audited_columns
-    super + [ "html", "pdf", "pdf_uploaded"  ]
+    super + [ "html", "pdf", "pdf_uploaded", "initial_location_image", "final_location_image" ]
   end
 
   def check_limit_date
