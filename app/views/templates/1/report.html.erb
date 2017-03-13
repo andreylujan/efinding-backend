@@ -409,6 +409,12 @@
 			<span class="label-text info-label">Referencia: </span>
 			<span class="value"><%= report.final_location.present? ? report.final_location.reference : report.initial_location.reference %></span>
 		</div>
+		<% if report.state != "unchecked" %>
+			<div class="row location-field">
+				<span class="label-text info-label">Comentarios de resolución: </span>
+				<span class="value"><%= report.resolution_comment %></span>
+			</div>
+		<% end %>
 	</div>
 </div>
 
