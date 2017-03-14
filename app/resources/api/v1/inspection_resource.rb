@@ -57,6 +57,19 @@ class Api::V1::InspectionResource < ApplicationResource
   }
 
   filter :state_name, apply: ->(records, value, _options) {
+    if not value.empty?
+      if "resuelto".include? value[0].strip.downcase
+        records = records.where("inspections.state = 'final_signature_pending' OR inspections.state = 'finished'")
+      elsif "pendiente".include? value[0].strip.downcase
+        records = records.where.not("inspections.state = 'final_signature_pending' OR inspections.state = 'finished'")
+      else
+        records = records.none
+      end
+    else
+      records
+    end
+
+
     records
   }
 
