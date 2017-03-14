@@ -304,7 +304,7 @@
 						Fecha de cumplimiento:
 					</div>
 					<div class="col-xs-8">
-						<%= report.limit_date.strftime("%d/%m/%Y") if report.limit_date.present?  %>
+						<%= report.limit_date.in_time_zone("Chile/Continental").strftime("%d/%m/%Y") if report.limit_date.present?  %>
 					</div>
 				</div>
 			</div>
