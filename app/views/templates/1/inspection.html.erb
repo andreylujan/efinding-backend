@@ -316,7 +316,7 @@
 								Fecha de cumplimiento:
 							</div>
 							<div class="col-xs-8">
-								<%= report.formatted_limit_date  %>
+								<%= report.limit_date.strftime("%d/%m/%Y") if report.limit_date.present?  %>
 							</div>
 						</div>
 					</div>

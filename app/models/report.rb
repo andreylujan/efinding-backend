@@ -94,7 +94,9 @@ class Report < ApplicationRecord
 
   def check_limit_date
     if limit_date.nil? and dynamic_attributes.dig('19', 'iso_string').present?
-      self.limit_date = dynamic_attributes.dig('19', 'iso_string')
+      date = DateTime.parse(dynamic_attributes.dig('19', 'iso_string'))
+      .in_time_zone("Chile/Continental")
+      self.limit_date = date.end_of_day
     end
   end
 
