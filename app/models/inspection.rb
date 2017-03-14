@@ -45,6 +45,10 @@ class Inspection < ApplicationRecord
 
   mount_uploader :pdf, PdfUploader
 
+  before_validation(on: :create) do
+    self.code = next_seq unless attribute_present? :code
+  end
+
   def company_id
     construction.company_id
   end
@@ -86,14 +90,14 @@ class Inspection < ApplicationRecord
   end
 
   def formatted_created_at
-    created_at.strftime("%d/%m/%Y") 
+    created_at.strftime("%d/%m/%Y")
   end
 
   def formatted_resolved_at
     if state == "final_signature_pending" || state == "finished"
       report = reports.order("resolved_at DESC").first
       if report.present?
-        report.resolved_at.strftime("%d/%m/%Y") 
+        report.resolved_at.strftime("%d/%m/%Y")
       end
     end
   end
@@ -123,7 +127,7 @@ class Inspection < ApplicationRecord
     end
   end
 
-  
+
 
   def state_name
     if state == "final_signature_pending" || state == "finished"
@@ -142,7 +146,7 @@ class Inspection < ApplicationRecord
     after_transition any => :finished do |inspection, transition|
       inspection.final_signed_at = DateTime.now
     end
-  
+
 
     event :send_for_revision do
       transition :reports_pending => :first_signature_pending
@@ -157,5 +161,15 @@ class Inspection < ApplicationRecord
     end
 
 
+  end
+
+  private
+  def next_seq
+    last = self.construction.inspections.with_deleted.order("code DESC").first
+    if last.nil?
+      1
+    else
+      last.code + 1
+    end
   end
 end

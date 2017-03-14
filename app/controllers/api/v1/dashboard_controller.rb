@@ -7,7 +7,8 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
 
     inspections = Api::V1::InspectionResource.records({
                                                         context: {
-                                                          current_user: current_user
+                                                          current_user: current_user,
+                                                          dashboard: true
                                                         }
     })
 
@@ -40,11 +41,11 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
     end
     
     state_names = Report.states.keys
-    report_fulfillment = reports.group("inspections.id, reports.state")
-    .select("inspections.id as inspection_id, reports.state, count(reports.id) as num_reports")
-    .order("").group_by { |r| r.inspection_id }.map do |inspection_id, report_group|
+    report_fulfillment = reports.joins(inspection: :construction).group("inspections.id, constructions.name, reports.state")
+    .select("inspections.id as inspection_id, constructions.name as construction_name, reports.state, count(reports.id) as num_reports")
+    .order("constructions.name ASC").group_by { |r| r.inspection_id.to_s + "-" + r.construction_name }.map do |construction_name, report_group|
       json = {
-        inspection_id: inspection_id
+        inspection_id: construction_name.split('-')[1]
       }
       state_names.each do |state_name|
         json["num_" + state_name.to_s] = 0

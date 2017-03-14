@@ -76,10 +76,10 @@ class Api::V1::InspectionResource < ApplicationResource
   filter :field_chief_name, apply: ->(records, value, _options) {
     if not value.empty?
       records.joins(:construction)
-        .joins("LEFT OUTER JOIN construction_personnel ON constructions.id = construction_personnel.construction_id")
-        .joins("LEFT OUTER JOIN personnel on personnel.id = construction_personnel.personnel_id")
-        .where("construction_personnel.personnel_type_id = 1")
-        .where("personnel.name ilike '%" + value[0] + "%'")
+      .joins("LEFT OUTER JOIN construction_personnel ON constructions.id = construction_personnel.construction_id")
+      .joins("LEFT OUTER JOIN personnel on personnel.id = construction_personnel.personnel_id")
+      .where("construction_personnel.personnel_type_id = 1")
+      .where("personnel.name ilike '%" + value[0] + "%'")
     else
       records
     end
@@ -144,8 +144,8 @@ class Api::V1::InspectionResource < ApplicationResource
         if value[:administrator].present? and value[:administrator].is_a? ActionController::Parameters
           if value[:administrator][:full_name].present?
             records = records
-              .joins(:construction)
-              .joins("INNER JOIN users as administrators ON administrators.id = constructions.administrator_id")
+            .joins(:construction)
+            .joins("INNER JOIN users as administrators ON administrators.id = constructions.administrator_id")
             .where("administrators.first_name || ' ' || administrators.last_name ilike '%" + value[:administrator][:full_name] + "%'")
           end
         end
@@ -236,27 +236,32 @@ class Api::V1::InspectionResource < ApplicationResource
 
   def self.records(options = {})
     if options[:context] and current_user = options[:context][:current_user]
-      inspections = Inspection
-      .joins("LEFT OUTER JOIN reports ON reports.inspection_id = inspections.id")
-      .joins(creator: :role)
-      .where(roles: { organization_id: current_user.organization_id })
-      .select("inspections.*, count(reports.id) as num_reports, count(case when reports.state = 0 THEN 1 END) as num_pending_reports, count(case when reports.state = 0 AND reports.limit_date <= '" +
-              DateTime.now.to_s + "' THEN 1 END) as num_expired_reports")
-      .group("inspections.id")
+      if options[:context][:dashboard]
+        Inspection.joins(creator: :role)
+        .where(roles: { organization_id: current_user.organization_id })
+      else
+        inspections = Inspection
+        .joins("LEFT OUTER JOIN reports ON reports.inspection_id = inspections.id")
+        .joins(creator: :role)
+        .where(roles: { organization_id: current_user.organization_id })
+        .select("inspections.*, count(reports.id) as num_reports, count(case when reports.state = 0 THEN 1 END) as num_pending_reports, count(case when reports.state = 0 AND reports.limit_date <= '" +
+                DateTime.now.to_s + "' THEN 1 END) as num_expired_reports")
+        .group("inspections.id")
 
-      if current_user.role_id == 2
-        inspections = inspections.joins(:construction)
+        if current_user.role_id == 2
+          inspections = inspections.joins(:construction)
           .where(constructions: { supervisor_id: current_user.id })
-      elsif current_user.role_id == 3
-        inspections = inspections.joins(:construction)
+        elsif current_user.role_id == 3
+          inspections = inspections.joins(:construction)
           .where(constructions: { expert_id: current_user.id })
           .where.not(state: "reports_pending")
           .where.not(state: "first_signature_pending")
-      elsif current_user.role_id == 4
-        inspections = inspections.joins(:construction)
+        elsif current_user.role_id == 4
+          inspections = inspections.joins(:construction)
           .where(constructions: { administrator_id: current_user.id })
+        end
+        inspections
       end
-      inspections
     else
       Inspection.where("1 = 0")
     end
