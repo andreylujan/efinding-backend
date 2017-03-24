@@ -139,10 +139,29 @@ class Inspection < ApplicationRecord
       inspection.initial_signed_at = DateTime.now
     end
 
+    after_transition any => :first_signature_pending do |inspection, transition|
+      users = [ inspection.construction.administrator ]
+      users.each do |user|
+        UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+          .inspection_email(user, 'Solicitud de firma de inspección',
+            "#{inspection.construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
+            "en la obra #{inspection.construction.name}.")
+      end
+    end
+
+    after_transition any => :final_signature_pending do |inspection, transition|
+      users = [ inspection.construction.administrator, inspection.construction.supervisor ]
+      users.each do |user|
+        UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+          .inspection_email(user)
+      end
+    end
+
     after_transition any => :finished do |inspection, transition|
       inspection.final_signed_at = DateTime.now
+      UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+        .inspection_email(inspection.construction.supervisor)
     end
-  
 
     event :send_for_revision do
       transition :reports_pending => :first_signature_pending

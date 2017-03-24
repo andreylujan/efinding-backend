@@ -21,6 +21,13 @@ class UserMailer < ApplicationMailer
 		mail(to: @user.email, subject: 'Recuperación de contraseña')
 	end
 	
+	def inspection_email(user, subject, message)
+		@user = user
+		@message = message
+		@url = "http://50.16.161.152/efinding/admin/#/efinding/inspecciones/lista"
+		mail(to: @user.email, subject: subject)
+	end
+
 	def report_email()
 	end
 
