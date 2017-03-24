@@ -107,7 +107,11 @@ class Api::V1::UsersController < Api::V1::JsonApiController
         password: params.require(:password),
         password_confirmation: params.require(:password_confirmation)
       )
-      token = Doorkeeper::AccessToken.find_or_create_for(nil, @user.id, 'user', 7200, true)
+      if doorkeeper_token.present?
+        token = doorkeeper_token
+      else
+        token = Doorkeeper::AccessToken.find_or_create_for(nil, @user.id, 'user', 7200, true)
+      end
       body = response_from_token(token)
       render json: body
     else
