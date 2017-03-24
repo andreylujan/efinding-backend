@@ -91,7 +91,15 @@ class Api::V1::UsersController < Api::V1::JsonApiController
   def password
     @user = User.find(params.require(:id))
 
-    if @user.reset_password_token != params.require(:reset_password_token)
+    if params[:reset_password_token].blank? and params[:old_password].blank?
+      render json: unauthorized_error, status: :unauthorized and return
+    end
+
+    if params[:old_password].present? and not @user.valid_password? params[:old_password]
+      render json: unauthorized_error, status: :unauthorized and return
+    end
+
+    if params[:reset_password_token].present? and @user.reset_password_token != params.require(:reset_password_token)
       render json: unauthorized_error, status: :unauthorized and return
     end
 
