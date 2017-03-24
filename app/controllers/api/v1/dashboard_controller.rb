@@ -7,7 +7,8 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
 
     inspections = Api::V1::InspectionResource.records({
                                                         context: {
-                                                          current_user: current_user
+                                                          current_user: current_user,
+                                                          dashboard: true
                                                         }
     })
 
@@ -40,11 +41,11 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
     end
     
     state_names = Report.states.keys
-    report_fulfillment = reports.group("inspections.id, reports.state")
-    .select("inspections.id as inspection_id, reports.state, count(reports.id) as num_reports")
-    .order("").group_by { |r| r.inspection_id }.map do |inspection_id, report_group|
+    report_fulfillment = reports.joins(inspection: :construction).group("inspections.id, constructions.name, reports.state")
+    .select("inspections.id as inspection_id, constructions.name as construction_name, reports.state, count(reports.id) as num_reports")
+    .order("constructions.name ASC").group_by { |r| r.inspection_id.to_s + "-" + r.construction_name }.map do |construction_name, report_group|
       json = {
-        inspection_id: inspection_id
+        inspection_id: construction_name.split('-')[1]
       }
       state_names.each do |state_name|
         json["num_" + state_name.to_s] = 0
@@ -57,12 +58,14 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
 
     activity_names = Collection.find(1).collection_items.order("name ASC").map { |c| c['name'] }
     groups = Collection.find(4).collection_items.order("name ASC").map { |c| c['name'] }
-
-    activity_groups = reports.group("dynamic_attributes->'3'->>'text', dynamic_attributes->'8'->>'text'")
+    activity_groups = []
+    activity_names.each do |name|
+      activity_groups << Array.new(groups.length, 0)
+    end
+    reports.group("dynamic_attributes->'3'->>'text', dynamic_attributes->'8'->>'text'")
     .select("count(reports.id) as num_reports, dynamic_attributes->'3'->>'text' as grupo_actividad, dynamic_attributes->'8'->>'text' as grado_riesgo")
-    .group_by { |r| r.grupo_actividad }.map do |grupo_actividad, report_group|
+    .group_by { |r| r.grupo_actividad }.each do |grupo_actividad, report_group|
       json = []
-
       groups.each do |group|
         json << 0
       end
@@ -72,7 +75,12 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
         end
         json[index] = report.num_reports
       end
-      json
+      
+      
+      activity_idx = activity_names.find_index do |activity_name|
+        activity_name == grupo_actividad
+      end
+      activity_groups[activity_idx] = json
 
     end
 
