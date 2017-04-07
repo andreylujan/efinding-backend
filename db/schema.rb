@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170314222936) do
+ActiveRecord::Schema.define(version: 20170407210726) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -187,7 +187,7 @@ ActiveRecord::Schema.define(version: 20170314222936) do
     t.integer  "expert_id"
     t.datetime "deleted_at"
     t.integer  "supervisor_id"
-    t.index ["code"], name: "index_constructions_on_code", unique: true, using: :btree
+    t.index ["company_id", "code"], name: "index_constructions_on_company_id_and_code", unique: true, using: :btree
     t.index ["company_id"], name: "index_constructions_on_company_id", using: :btree
     t.index ["deleted_at"], name: "index_constructions_on_deleted_at", using: :btree
     t.index ["name", "company_id"], name: "index_constructions_on_name_and_company_id", unique: true, using: :btree
@@ -485,6 +485,7 @@ ActiveRecord::Schema.define(version: 20170314222936) do
     t.text     "name",            null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "role_type"
     t.index ["organization_id", "name"], name: "index_roles_on_organization_id_and_name", unique: true, using: :btree
     t.index ["organization_id"], name: "index_roles_on_organization_id", using: :btree
   end
