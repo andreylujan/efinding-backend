@@ -14,4 +14,5 @@ class Role < ApplicationRecord
   belongs_to :organization
   has_many :users
   has_and_belongs_to_many :menu_items
+  enum role_type: [ :superuser, :administrator, :expert, :supervisor ]
 end
