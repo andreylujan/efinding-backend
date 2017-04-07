@@ -26,9 +26,9 @@ class Api::V1::ConstructionResource < ApplicationResource
     		.where(organizations: { id: context[:current_user].organization.id })
     end
     
-    if current_user.role_id == 2
+    if current_user.supervisor?
         constructions = constructions.where(supervisor_id: current_user.id)
-    elsif current_user.role_id == 3
+    elsif current_user.expert?
         constructions = constructions.where(expert_id: current_user.id)
     end
     constructions.distinct
