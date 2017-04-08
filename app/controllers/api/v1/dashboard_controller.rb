@@ -62,8 +62,17 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
     activity_names.each do |name|
       activity_groups << Array.new(groups.length, 0)
     end
-    reports.group("dynamic_attributes->'3'->>'text', dynamic_attributes->'8'->>'text'")
-    .select("count(reports.id) as num_reports, dynamic_attributes->'3'->>'text' as grupo_actividad, dynamic_attributes->'8'->>'text' as grado_riesgo")
+
+    if current_user.organization_id == 1
+      riesgo_id = 8
+      grupo_id = 3
+    elsif current_user.organization_id == 2
+      riesgo_id = 23
+      grupo_id = 39
+    end
+
+    reports.group("dynamic_attributes->'#{grupo_id}'->>'text', dynamic_attributes->'#{riesgo_id}'->>'text'")
+    .select("count(reports.id) as num_reports, dynamic_attributes->'#{grupo_id}'->>'text' as grupo_actividad, dynamic_attributes->'#{riesgo_id}'->>'text' as grado_riesgo")
     .group_by { |r| r.grupo_actividad }.each do |grupo_actividad, report_group|
       json = []
       groups.each do |group|
