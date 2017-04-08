@@ -19,4 +19,17 @@ class ConstructionPersonnel < ApplicationRecord
   validates :construction, presence: true
   validates :personnel, presence: true
   validates :personnel_type, presence: true
+
+  validate :correct_organization
+
+  private
+  def correct_organization
+    org = construction.company.organization
+    if org != personnel.organization
+      errors.add(:personnel, "El personal no pertenece a la misma organización que la obra")
+    end
+    if org != personnel_type.organization
+      errors.add(:personnel_type, "El tipo de personal no pertenece a la misma organización que la obra")
+    end
+  end
 end
