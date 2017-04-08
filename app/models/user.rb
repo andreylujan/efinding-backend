@@ -62,6 +62,10 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def role_type
+    self.role.role_type
+  end
+
   def name
     full_name
   end
