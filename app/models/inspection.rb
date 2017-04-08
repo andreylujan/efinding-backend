@@ -54,13 +54,19 @@ class Inspection < ApplicationRecord
     construction.company_id
   end
 
-  def field_chief_name
-    personnel = construction.construction_personnel.where(personnel_type_id: 1)
+  def personnel_by_name(name)
+    personnel = construction.construction_personnel
+    .joins(:personnel_type)
+    .where(personnel_types: { name: name })
     if personnel.count > 0
       personnel.first.personnel.name
     else
-      "Sin Jefe de erreno"
+      "Sin #{name}"
     end
+  end
+
+  def field_chief_name
+    personnel_by_name("Jefe de Terreno")
   end
 
   def expert_name
@@ -148,9 +154,9 @@ class Inspection < ApplicationRecord
       users = [ inspection.construction.administrator ]
       users.each do |user|
         UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
-          .inspection_email(user, 'Solicitud de firma de inspección',
-            "#{inspection.construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
-            "en la obra #{inspection.construction.name}.")
+        .inspection_email(user, 'Solicitud de firma de inspección',
+                          "#{inspection.construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
+                          "en la obra #{inspection.construction.name}.")
       end
     end
 
@@ -158,14 +164,14 @@ class Inspection < ApplicationRecord
       users = [ inspection.construction.administrator, inspection.construction.supervisor ]
       users.each do |user|
         UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
-          .inspection_email(user)
+        .inspection_email(user)
       end
     end
 
     after_transition any => :finished do |inspection, transition|
       inspection.final_signed_at = DateTime.now
       UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
-        .inspection_email(inspection.construction.supervisor)
+      .inspection_email(inspection.construction.supervisor)
     end
 
     event :send_for_revision do
