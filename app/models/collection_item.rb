@@ -21,8 +21,11 @@ class CollectionItem < ApplicationRecord
   	foreign_key: :parent_item_id
 
   validates :collection, presence: true
-  validates :name, presence: true, uniqueness: { scope: :collection }
-  validates :code, presence: true, uniqueness: { scope: :collection }
+  validates :name, presence: true
+  validates :code, presence: true
+  validates_uniqueness_of :code, scope: :collection
+  validates_uniqueness_of :name, scope: :collection
+
 
   def to_csv(csv_columns)
   	csv_columns.map do |column_name|
