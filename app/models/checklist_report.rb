@@ -16,7 +16,7 @@
 #  checklist_data  :json             not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  code            :integer
+#  code            :integer          not null
 #  checklist_id    :integer
 #  started_at      :datetime
 #

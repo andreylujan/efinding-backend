@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class InstallAudited < ActiveRecord::Migration
   def self.up
     create_table :audits, :force => true do |t|

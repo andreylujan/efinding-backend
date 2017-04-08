@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class ChangeCodeIndexInConstructions < ActiveRecord::Migration[5.0]
   def change
   	remove_index :constructions, :code

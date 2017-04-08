@@ -12,6 +12,7 @@
 #  code             :text
 #  expert_id        :integer
 #  deleted_at       :datetime
+#  supervisor_id    :integer
 #
 
 class Construction < ApplicationRecord

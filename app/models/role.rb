@@ -8,6 +8,7 @@
 #  name            :text             not null
 #  created_at      :datetime
 #  updated_at      :datetime
+#  role_type       :integer
 #
 
 class Role < ApplicationRecord

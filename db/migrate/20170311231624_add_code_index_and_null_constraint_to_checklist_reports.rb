@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddCodeIndexAndNullConstraintToChecklistReports < ActiveRecord::Migration[5.0]
   def change
   	change_column :checklist_reports, :code, :integer, null: false

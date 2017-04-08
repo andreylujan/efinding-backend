@@ -21,6 +21,7 @@
 #  field_chief_id    :integer
 #  expert_id         :integer
 #  cached_data       :json
+#  code              :integer
 #
 
 class Inspection < ApplicationRecord
