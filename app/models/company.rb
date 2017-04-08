@@ -12,6 +12,7 @@
 #
 
 class Company < ApplicationRecord
+  acts_as_paranoid
   belongs_to :organization
   validates :organization, presence: true
   validates :name, presence: true, uniqueness: { scope: :organization }

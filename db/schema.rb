@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170407210726) do
+ActiveRecord::Schema.define(version: 20170408190644) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -161,6 +160,8 @@ ActiveRecord::Schema.define(version: 20170407210726) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.text     "rut"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_companies_on_deleted_at", using: :btree
     t.index ["name", "organization_id"], name: "index_companies_on_name_and_organization_id", unique: true, using: :btree
     t.index ["organization_id"], name: "index_companies_on_organization_id", using: :btree
     t.index ["rut"], name: "index_companies_on_rut", using: :btree
