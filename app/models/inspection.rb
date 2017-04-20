@@ -226,7 +226,7 @@ acts_as_xlsx columns: [
       UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
       .inspection_email(inspection.construction.supervisor,
         "Firma final realizada - #{inspection.construction.name}",
-        "#{inspection.final_signer.name} ha realizado la firma final para la inspección #{inspection.id} - #{inspection.construction.name}.")
+        "#{inspection.construction.administrator.name} ha realizado la firma final para la inspección #{inspection.id} - #{inspection.construction.name}.")
     end
 
     event :send_for_revision do
