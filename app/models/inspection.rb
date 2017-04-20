@@ -46,6 +46,20 @@ class Inspection < ApplicationRecord
 
   mount_uploader :pdf, PdfUploader
 
+acts_as_xlsx columns: [
+    :id
+    # :created_at,
+    # :finished_at,
+    # :limit_date,
+    # :creator_email,
+    # :assigned_user_email,
+    # :start_location_coords,
+    # :finish_location_coords,
+    # :location_delta,
+    # :execution_time,
+    # :pdf_url
+  ]
+
   before_validation(on: :create) do
     self.code = next_seq unless attribute_present? :code
   end

@@ -2,6 +2,22 @@
 class Api::V1::InspectionsController < Api::V1::JsonApiController
   before_action :doorkeeper_authorize!
 
+  def index
+    if params[:format] == "xlsx"
+      get_excel
+      return
+    end
+    super
+  end
+
+  def get_excel
+    package = Axlsx::Package.new
+    Inspection.to_xlsx(package: package)
+    Report.to_xlsx(package: package)
+    send_data package.to_stream.read, filename: "inspecciones_reportes.xlsx",
+        disposition: "attachment", type: "application/vnd.ms-excel"
+  end
+
   def transition
     @inspection = Inspection.find(params.require(:id))
     transition_name = params.require(:transition_name)
