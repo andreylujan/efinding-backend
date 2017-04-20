@@ -76,17 +76,32 @@ class Report < ApplicationRecord
 
   acts_as_xlsx columns: [
     :id,
+    :state,
     :created_at,
     :finished_at,
     :limit_date,
-    :creator_email,
-    :assigned_user_email,
-    :start_location_coords,
-    :finish_location_coords,
-    :location_delta,
-    :execution_time,
-    :pdf_url
+    :creator_name,
+    :initial_location_image,
+    :final_location_image,
+    :pdf_url,
+    :resolved_at,
+    :resolver_name,
+    :resolution_comment,
+    :report_fields
   ]
+
+  def resolver_name
+    if resolver.present?
+      resolver.name
+    end
+  end
+
+  def report_fields
+    dynamic_attributes.map do |key, val|
+      data_part = DataPart.find(key)
+      "#{data_part.name} - #{val['text']}"
+    end.join("\n")
+  end
 
   def self.non_audited_columns
     super + [ "html", "pdf", "pdf_uploaded", "initial_location_image", "final_location_image" ]
@@ -130,9 +145,14 @@ class Report < ApplicationRecord
     creator.email
   end
 
+  def creator_name
+    creator.name
+  end
+
   def assigned_user_email
     assigned_user.present? ? assigned_user.email : creator.email
   end
+
 
   def start_location_coords
   end
