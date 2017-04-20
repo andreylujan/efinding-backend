@@ -203,28 +203,29 @@ acts_as_xlsx columns: [
     after_transition any => :first_signature_pending do |inspection, transition|
       users = [ inspection.construction.administrator ]
       users.each do |user|
-        UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
-        .inspection_email(user, "Solicitud de firma - #{inspection.construction.name}",
+        UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+        .inspection_email(inspection.id, user, "Solicitud de firma - #{inspection.construction.name}",
                           "#{inspection.construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
-                          "en la obra #{inspection.construction.name}.")
+                          "en la obra #{inspection.construction.name}.<br><br>" +
+                          "Para realizar la firma, puedes ingresar a http://50.16.161.152/efinding/admin/#/efinding/inspecciones/lista")
       end
     end
 
     after_transition any => :final_signature_pending do |inspection, transition|
       users = [ inspection.construction.administrator, inspection.construction.supervisor ]
       users.each do |user|
-        UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
-        .inspection_email(user, 
+        UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+        .inspection_email(inspection.id, user, 
           "Solicitud de firma final - #{inspection.construction.name}",
-          "#{inspection.construction.expert.name} ha cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}.\n" + 
+          "#{inspection.construction.expert.name} ha cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}.<br><br>" + 
           "Para realizar la firma final, puedes ingresar a http://50.16.161.152/efinding/admin/#/efinding/inspecciones/lista")
       end
     end
 
     after_transition any => :finished do |inspection, transition|
       inspection.final_signed_at = DateTime.now
-      UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
-      .inspection_email(inspection.construction.supervisor,
+      UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+      .inspection_email(inspection.id, inspection.construction.supervisor,
         "Firma final realizada - #{inspection.construction.name}",
         "#{inspection.construction.administrator.name} ha realizado la firma final para la inspección #{inspection.id} - #{inspection.construction.name}.")
     end

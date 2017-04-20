@@ -21,10 +21,11 @@ class UserMailer < ApplicationMailer
 		mail(to: @user.email, subject: 'Recuperación de contraseña')
 	end
 	
-	def inspection_email(user, subject, message)
+	def inspection_email(inspection_id, user, subject, message)
+		inspection = Inspection.find(inspection_id)
 		@user = user
 		@message = message
-		@url = "http://50.16.161.152/efinding/admin/#/efinding/inspecciones/lista"
+		@url = inspection.pdf_url
 		mail(to: @user.email, subject: subject)
 	end
 
