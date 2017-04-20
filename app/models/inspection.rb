@@ -206,7 +206,7 @@ acts_as_xlsx columns: [
         UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
         .inspection_email(inspection.id, user, "Solicitud de firma - #{inspection.construction.name}",
                           "#{inspection.construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
-                          "en la obra #{inspection.construction.name}.<br><br>" +
+                          "en la obra #{inspection.construction.name}. " +
                           "Para realizar la firma, puedes ingresar a http://50.16.161.152/efinding/admin/#/efinding/inspecciones/lista")
       end
     end
@@ -217,7 +217,7 @@ acts_as_xlsx columns: [
         UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
         .inspection_email(inspection.id, user, 
           "Solicitud de firma final - #{inspection.construction.name}",
-          "#{inspection.construction.expert.name} ha cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}.<br><br>" + 
+          "#{inspection.construction.expert.name} ha cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}. " + 
           "Para realizar la firma final, puedes ingresar a http://50.16.161.152/efinding/admin/#/efinding/inspecciones/lista")
       end
     end
