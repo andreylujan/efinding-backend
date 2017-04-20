@@ -85,7 +85,7 @@ Rails.application.routes.draw do
       jsonapi_resources :table_columns, only: [ :index ] do
       end
 
-      jsonapi_resources :inspections, only: [ :index, :create, :show, :update ] do
+      jsonapi_resources :inspections, only: [ :index, :create, :show, :update, :destroy ] do
         jsonapi_resources :reports, only: [ :index ] do
         end
 

@@ -60,12 +60,12 @@ class Report < ApplicationRecord
 
   accepts_nested_attributes_for :initial_location
   accepts_nested_attributes_for :final_location
-  
+
   validates :initial_location, presence: true
-  
+
   belongs_to :inspection
   acts_as_list scope: :inspection
-  
+
   after_commit :generate_pdf
   after_commit :send_task_job, on: [ :create ]
 
@@ -101,19 +101,21 @@ class Report < ApplicationRecord
   end
 
   def update_inspection
-    field_chief_id = dynamic_attributes.dig('16', 'id')
-    needs_save = false
-    if field_chief_id.present? and inspection.field_chief.nil?
-      inspection.field_chief_id = field_chief_id
-      needs_save = true
+    if inspection.present?
+      field_chief_id = dynamic_attributes.dig('16', 'id')
+      needs_save = false
+      if field_chief_id.present? and inspection.field_chief.nil?
+        inspection.field_chief_id = field_chief_id
+        needs_save = true
+      end
+      expert_id = dynamic_attributes.dig('17', 'id')
+      if expert_id.present? and inspection.expert.nil?
+        inspection.expert_id = expert_id
+        needs_save = true
+      end
+      inspection.save!
+      inspection.check_state
     end
-    expert_id = dynamic_attributes.dig('17', 'id')
-    if expert_id.present? and inspection.expert.nil?
-      inspection.expert_id = expert_id
-      needs_save = true
-    end
-    inspection.save!
-    inspection.check_state
   end
 
   def images_attributes=(val)

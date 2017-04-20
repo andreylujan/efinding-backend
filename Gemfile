@@ -30,6 +30,7 @@ gem 'dotenv-rails', '~> 2.2'
 gem 'audited', '~> 4.3'
 gem "rails-observers", github: 'rails/rails-observers'
 
+gem 'georuby'
 gem 'activerecord-postgis-adapter', '~> 4.0', '>= 4.0.2'
 gem 'paranoia', '~> 2.2', '>= 2.2.1'
 gem 'versionist', '~> 1.5'
