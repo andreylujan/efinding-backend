@@ -4,6 +4,8 @@ class Api::V1::InspectionsController < Api::V1::JsonApiController
 
   def index
     if params[:format] == "xlsx"
+      @month = params.require(:month).to_i
+      @year = params.require(:year).to_i
       get_excel
       return
     end
@@ -12,8 +14,22 @@ class Api::V1::InspectionsController < Api::V1::JsonApiController
 
   def get_excel
     package = Axlsx::Package.new
-    Inspection.to_xlsx(package: package)
-    Report.to_xlsx(package: package)
+    start_date = DateTime.new(@year, @month)
+    end_date = start_date.end_of_month
+
+    inspections = Inspection.joins(creator: :role)
+      .includes(:creator, :initial_signer, :final_signer)
+      .includes(construction: :company)
+      .where(roles: { organization_id: current_user.organization_id })
+      .where("inspections.created_at >= ? AND inspections.created_at <= ?", start_date, end_date)
+
+    reports = Report.joins(creator: :role)
+      .includes(:creator, :assigned_user)
+      .where(roles: { organization_id: current_user.organization_id })
+      .where("reports.created_at >= ? AND reports.created_at <= ?", start_date, end_date)
+    
+    inspections.to_xlsx(package: package)
+    reports.to_xlsx(package: package)
     send_data package.to_stream.read, filename: "inspecciones_reportes.xlsx",
         disposition: "attachment", type: "application/vnd.ms-excel"
   end
