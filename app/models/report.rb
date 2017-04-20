@@ -75,6 +75,7 @@ class Report < ApplicationRecord
   after_commit :update_inspection, on: [ :create, :update ]
 
   acts_as_xlsx columns: [
+    :inspection_id,
     :id,
     :state,
     :created_at,
