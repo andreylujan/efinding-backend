@@ -204,7 +204,7 @@ acts_as_xlsx columns: [
       users = [ inspection.construction.administrator ]
       users.each do |user|
         UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
-        .inspection_email(user, 'Solicitud de firma de inspección',
+        .inspection_email(user, "Solicitud de firma - #{inspection.construction.name}",
                           "#{inspection.construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
                           "en la obra #{inspection.construction.name}.")
       end
@@ -214,14 +214,19 @@ acts_as_xlsx columns: [
       users = [ inspection.construction.administrator, inspection.construction.supervisor ]
       users.each do |user|
         UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
-        .inspection_email(user)
+        .inspection_email(user, 
+          "Solicitud de firma final - #{inspection.construction.name}",
+          "#{inspection.construction.expert.name} ha cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}.\n" + 
+          "Para realizar la firma final, puedes ingresar a http://50.16.161.152/efinding/admin/#/efinding/inspecciones/lista")
       end
     end
 
     after_transition any => :finished do |inspection, transition|
       inspection.final_signed_at = DateTime.now
       UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
-      .inspection_email(inspection.construction.supervisor)
+      .inspection_email(inspection.construction.supervisor,
+        "Firma final realizada - #{inspection.construction.name}",
+        "#{final_signer.name} ha realizado la firma final para la inspección #{inspection.id} - #{inspection.construction.name}.")
     end
 
     event :send_for_revision do
