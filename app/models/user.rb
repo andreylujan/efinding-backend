@@ -48,6 +48,22 @@ class User < ApplicationRecord
   has_many :checkins
   has_many :batch_uploads
   has_and_belongs_to_many :checklist_reports
+  validate :correct_rut
+  before_save :format_rut
+
+  def correct_rut
+    if rut.present?
+      unless RUT::validar(self.rut)
+        errors.add(:rut, "Formato de RUT inválido")
+      end
+    end
+  end
+
+  def format_rut
+    if rut.present? and RUT::validar(rut)
+      self.rut = RUT::formatear(RUT::quitarFormato(self.rut).gsub(/^0+|$/, ''))
+    end
+  end
 
   def send_confirmation_email
     UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email').confirmation_email(self)

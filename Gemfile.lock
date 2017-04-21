@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/Numerico/rut-chileno
+  revision: 157d9d4aacfe9cac7f001007acaf9664ba20567f
+  ref: 157d9d4aacfe9cac7f001007acaf9664ba20567f
+  specs:
+    rut_chileno (0.5)
+
+GIT
   remote: https://github.com/cerebris/jsonapi-resources
   revision: d9fdcb3fcdd2b5c39722e6d772ca7f4bf6272702
   ref: d9fdcb3fcdd2b5c39722e6d772ca7f4bf6272702
@@ -479,6 +486,7 @@ DEPENDENCIES
   rails-erd (~> 1.5)
   rails-observers!
   redis (~> 3.3, >= 3.3.2)
+  rut_chileno!
   sidekiq (~> 4.2, >= 4.2.7)
   spring (~> 2.0)
   spring-watcher-listen (~> 2.0, >= 2.0.1)
@@ -489,4 +497,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.3.1)
 
 BUNDLED WITH
-   1.14.5
+   1.14.6

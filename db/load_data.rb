@@ -87,7 +87,11 @@ doc.xpath("//Obra").each do |construction|
 end
 # ap constructions
 constructions.each do |construction_json|
-  company = Company.find_or_initialize_by(organization_id: 1, rut: construction_json[:company][:rut]).tap do |company|
+  company_rut = construction_json[:company][:rut]
+  if RUT::validar(company_rut)
+    company_rut = RUT::formatear(RUT::quitarFormato(company_rut).gsub(/^0+|$/, '')).upcase
+  end
+  company = Company.find_or_initialize_by(organization_id: 1, rut: company_rut).tap do |company|
     company.name = construction_json[:company][:name]
   end
   company.save!
@@ -98,8 +102,11 @@ constructions.each do |construction_json|
   construction.save!
 
   if construction_json[:administrator].present?
-    administrator = User.find_by(rut: construction_json[:administrator][:rut].strip.upcase.gsub('.', '')
-                                 .gsub('-', ''))
+    admin_rut = construction_json[:administrator][:rut]
+    if RUT::validar(admin_rut)
+      admin_rut = RUT::formatear(RUT::quitarFormato(admin_rut).gsub(/^0+|$/, '')).upcase
+    end
+    administrator = User.find_by(rut: admin_rut)
     if administrator.present?
       administrator.save!
       construction.update_attributes! administrator: administrator
@@ -107,8 +114,11 @@ constructions.each do |construction_json|
   end
 
   if construction_json[:visitor].present?
-    Personnel.find_or_initialize_by(rut: construction_json[:visitor][:rut].strip.upcase.gsub('.', '')
-    .gsub('-', '')) do |visitor|
+    personnel_rut = construction_json[:visitor][:rut]
+    if RUT::validar(personnel_rut)
+      personnel_rut = RUT::formatear(RUT::quitarFormato(personnel_rut).gsub(/^0+|$/, '')).upcase
+    end
+    Personnel.find_or_initialize_by(rut: personnel_rut) do |visitor|
       visitor.name = construction_json[:visitor][:name]
       visitor.organization_id = 1
       visitor.save!
@@ -119,7 +129,11 @@ constructions.each do |construction_json|
 
   construction.contractors = []
   construction_json[:contractors].each do |contractor_json|
-    contractor = Contractor.find_or_initialize_by(rut: contractor_json[:rut],
+    contractor_rut = contractor_json[:rut]
+    if RUT::validar(contractor_rut)
+      contractor_rut = RUT::formatear(RUT::quitarFormato(contractor_rut).gsub(/^0+|$/, '')).upcase
+    end
+    contractor = Contractor.find_or_initialize_by(rut: contractor_rut,
     organization_id: 1).tap do |cont|
       cont.name = contractor_json[:name]
     end
