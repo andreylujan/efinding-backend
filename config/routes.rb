@@ -14,7 +14,11 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      
+      namespace :manflas do
+        jsonapi_resources :stations, only: [ :index ] do
+        end
+      end
+
       jsonapi_resources :checkins, only: [ :create ] do
       end
 
@@ -26,7 +30,7 @@ Rails.application.routes.draw do
 
       jsonapi_resources :collection_items, only: [ :show, :create, :update, :destroy ] do
       end
-    
+
 
       jsonapi_resources :checkouts, only: [ :create ] do
       end
@@ -45,7 +49,7 @@ Rails.application.routes.draw do
 
       jsonapi_resources :personnel_types, only: [ :index ] do
       end
-      
+
       jsonapi_resources :organizations, only: [ :index, :show ] do
         jsonapi_related_resources :roles, only: [ :index ]
         jsonapi_related_resources :report_types, only: [ :index ]
@@ -69,7 +73,7 @@ Rails.application.routes.draw do
         :create,
         :update
       ]
-      
+
       jsonapi_resources :companies, only: [ :index, :create, :update, :destroy, :show ] do
         jsonapi_resources :constructions, only: [ :index ] do
         end
