@@ -23,7 +23,8 @@ class Invitation < ApplicationRecord
   validates_uniqueness_of :email
   validates_uniqueness_of :internal_id, allow_nil: true
   before_create :generate_confirmation_token
-
+  delegate :organization, to: :role, allow_nil: false
+  
   before_validation :lowercase_email
   before_validation :verify_email, on: :create
   validate :user_existence
