@@ -6,11 +6,14 @@ class Api::V1::InvitationsController < Api::V1::JsonApiController
 
   def create
     role_id = params.dig(:data, :relationships, :role, :data, :id)
+    if role_id.nil?
+      role_id = params.dig(:data, :attributes, :role_id)
+    end
     if role_id.present?
       role = Role.find(role_id)
       if current_user.organization_id != role.organization_id
-      	render json: unauthorized_error, status: :unauthorized
-      	return
+        render json: unauthorized_error, status: :unauthorized
+        return
       end
     end
     super
