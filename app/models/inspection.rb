@@ -46,7 +46,7 @@ class Inspection < ApplicationRecord
 
   mount_uploader :pdf, PdfUploader
 
-acts_as_xlsx columns: [
+  acts_as_xlsx columns: [
     :id,
     :created_at,
     :creator_name,
@@ -212,22 +212,25 @@ acts_as_xlsx columns: [
     end
 
     after_transition any => :final_signature_pending do |inspection, transition|
-      users = [ inspection.construction.administrator, inspection.construction.supervisor ]
-      users.each do |user|
-        UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
-        .inspection_email(inspection.id, user, 
-          "Solicitud de firma final - #{inspection.construction.name}",
-          "#{inspection.construction.expert.name} ha cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}. " + 
-          "Para realizar la firma final, puedes ingresar a http://50.16.161.152/efinding/admin/#/efinding/inspecciones/lista")
-      end
+      UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+      .inspection_email(inspection.id, inspection.construction.administrator,
+                        "Solicitud de firma final - #{inspection.construction.name}",
+                        "#{inspection.construction.expert.name} ha cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}. " +
+                        "Para realizar la firma final, puedes ingresar a http://50.16.161.152/efinding/admin/#/efinding/inspecciones/lista")
+
+      UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+      .inspection_email(inspection.id, inspection.construction.supervisor,
+                        "Aviso de levantamiento - #{inspection.construction.name}",
+                        "Se informa que #{inspection.construction.expert.name} ha cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}. " +
+                        "Se ha enviado una solicitud de firma al Administrador de Obra #{inspection.construction.administrator.name}.")
     end
 
     after_transition any => :finished do |inspection, transition|
       inspection.final_signed_at = DateTime.now
       UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
       .inspection_email(inspection.id, inspection.construction.supervisor,
-        "Firma final realizada - #{inspection.construction.name}",
-        "#{inspection.construction.administrator.name} ha realizado la firma final para la inspección #{inspection.id} - #{inspection.construction.name}.")
+                        "Firma final realizada - #{inspection.construction.name}",
+                        "#{inspection.construction.administrator.name} ha realizado la firma final para la inspección #{inspection.id} - #{inspection.construction.name}.")
     end
 
     event :send_for_revision do
