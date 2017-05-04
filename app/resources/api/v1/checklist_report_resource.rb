@@ -135,7 +135,6 @@ class Api::V1::ChecklistReportResource < ApplicationResource
     if context[:current_user]
       checklists = ChecklistReport.joins(creator: { role: :organization })
       .joins(:construction)
-      .group("checklist_reports.id")
       .where(organizations: { id: current_user.organization.id })
       
       if current_user.role_id == 2
@@ -150,7 +149,7 @@ class Api::V1::ChecklistReportResource < ApplicationResource
       end
 
     end
-    checklists
+    checklists.order("checklist_reports.created_at DESC")
   end
 
   def fetchable_fields
