@@ -79,7 +79,6 @@ class Report < ApplicationRecord
     :id,
     :state,
     :created_at,
-    :finished_at,
     :limit_date,
     :creator_name,
     :initial_location_image,
@@ -95,6 +94,64 @@ class Report < ApplicationRecord
     if resolver.present?
       resolver.name
     end
+  end
+
+  def self.standard_columns
+    [
+      :inspection_id,
+      :id,
+      :state,
+      :created_at,
+      :limit_date,
+      :creator_name,
+      :initial_location_image,
+      :final_location_image,
+      :pdf_url,
+      :resolved_at,
+      :resolver_name,
+      :resolution_comment
+    ]
+  end
+
+  def self.column_translations
+    {
+      inspection_id: "Id inspección",
+      id: "Id reporte",
+      state: "Estado",
+      created_at: "Fecha de creación",
+      limit_date: "Fecha límite",
+      creator_name: "Nombre del creador",
+      initial_location_image: "Ubicación inicial",
+      final_location_image: "Ubicación de resolución",
+      pdf_url: "PDF hallazgo",
+      resolved_at: "Fecha de resolución",
+      resolution_comment: "Comentario de resolución"
+    }
+  end
+
+  def self.setup_xlsx(organization_id)
+    data_parts = DataPart.joins(section: :report_type).where(report_types: { organization_id: organization_id})
+    .order("sections.position ASC, data_parts.position ASC")
+    cols = []
+    column_translations.each do |key, value|
+      define_method :"#{value}" do
+        send key
+      end
+      cols << "#{value}"
+    end
+    data_parts.each do | data_part |
+      define_method :"#{data_part.name}" do
+        val = dynamic_attributes.dig(data_part.id.to_s, "text")
+        if (val.nil? or val == "") and inspection.present?
+          cached_id = data_part.config.dig("depends", "cached_id")
+          inspection.cached_data[cached_id]
+        else
+          val
+        end
+      end
+      cols << data_part.name
+    end
+    Report.acts_as_xlsx columns: cols
   end
 
   def report_fields

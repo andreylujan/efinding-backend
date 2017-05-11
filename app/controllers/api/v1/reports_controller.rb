@@ -25,6 +25,7 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
     .includes(:assigned_user)
     .where(roles: { organization_id: current_user.organization_id })
     .where("reports.created_at >= ? AND reports.created_at <= ?", @start_date, @end_date)
+    Report.setup_xlsx(current_user.organization_id)
     xlsx = reports.to_xlsx
     send_data(xlsx.to_stream.read, :type => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
      :filename => 'reports.xlsx')
