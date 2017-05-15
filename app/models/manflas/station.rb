@@ -33,4 +33,24 @@ class Manflas::Station
   	json.delete("description")
   	json
   end
+
+  def html
+    @html ||= Nokogiri::HTML(description)
+  end
+
+  def plantation_year
+    html.xpath('//tr/td[contains(text(), "Año_de_pl")]/following-sibling::td').text.strip
+  end
+
+  def plantation_density
+    html.xpath('//tr/td[contains(text(), "Plantas_h")]/following-sibling::td').text.strip
+  end
+
+  def last_year_production
+    html.xpath('//tr/td[contains(text(), "Producció")]/following-sibling::td').text.strip
+  end
+
+  def water_precipitation
+    html.xpath('//tr/td[contains(text(), "Precipitac")]/following-sibling::td').text.strip
+  end
 end

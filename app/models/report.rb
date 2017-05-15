@@ -173,6 +173,14 @@ class Report < ApplicationRecord
     end
   end
 
+  def station
+    station_id = dynamic_attributes.dig("station_id")
+    if station_id.present?
+      Mongoid.raise_not_found_error = false
+      @station ||= Manflas::Station.find(station_id)
+    end
+  end
+
   def update_inspection
     if inspection.present?
       field_chief_id = dynamic_attributes.dig('16', 'id')
@@ -231,6 +239,10 @@ class Report < ApplicationRecord
 
   def formatted_limit_date
     limit_date.strftime("%d/%m/%Y %R") if limit_date.present?
+  end
+
+  def formatted_resolved_at
+    resolved_at.strftime("%d/%m/%Y %R") if resolved_at.present?
   end
 
   def execution_time

@@ -150,7 +150,7 @@
 								Nombre hallazgo:
 							</div>
 							<div class="col-xs-8">
-								AQUI VA EL ID + EL CUARTEL
+								<%= "#{report.station.name} - #{report.station.sector}" %>
 							</div>
 						</div>
 						<div class="row location-field">
@@ -158,7 +158,7 @@
 								Área:
 							</div>
 							<div class="col-xs-8">
-								<%= report.dynamic_attributes.dig('4', 'text') %>
+								<%= report.dynamic_attributes.dig('43', 'text') %>
 							</div>
 						</div>
 						<div class="row location-field">
@@ -166,7 +166,7 @@
 								Categoría:
 							</div>
 							<div class="col-xs-8">
-								<%= report.dynamic_attributes.dig('2', 'text') %>
+								<%= report.dynamic_attributes.dig('44', 'text') %>
 							</div>
 						</div>
 					</div>
@@ -176,7 +176,7 @@
 								Estado:
 							</div>
 							<div class="col-xs-8">
-								<%= report.dynamic_attributes.dig('5', 'text') %>
+								<%= report.state_name %>
 							</div>
 						</div>
 						<div class="row location-field">
@@ -184,7 +184,7 @@
 								Fecha de creación:
 							</div>
 							<div class="col-xs-8">
-								<%= report.dynamic_attributes.dig('6', 'text') %>
+								<%= report.formatted_created_at %>
 							</div>
 						</div>
 					</div>
@@ -213,7 +213,8 @@
 						<% report.images.where(is_initial: true).each do |image| %>
 						<div class="picsField center-cropped"
 						style="background-image: url('<%= image.url.gsub('https', 'http') %>');">
-					</div>
+						</div>
+						<% end %>
 				</div>
 			</div>
 			<hr />
@@ -225,7 +226,7 @@
 							Sector:
 						</div>
 						<div class="col-xs-8">
-							<%= report.dynamic_attributes.dig('20', 'text') %>
+							<%= report.station.sector %>
 						</div>
 					</div>
 					<div class="row location-field">
@@ -233,7 +234,7 @@
 							Cuartel:
 						</div>
 						<div class="col-xs-8">
-							<%= report.dynamic_attributes.dig('10', 'text') %>
+							<%= report.station.name %>
 						</div>
 					</div>
 					<div class="row location-field">
@@ -241,7 +242,7 @@
 							Variedad:
 						</div>
 						<div class="col-xs-8">
-							<%= report.dynamic_attributes.dig('11', 'text') %>
+							<%= report.station.variety %>
 						</div>
 					</div>
 					<div class="row location-field">
@@ -249,7 +250,7 @@
 							Año de plantación:
 						</div>
 						<div class="col-xs-8">
-							<%= report.dynamic_attributes.dig('21', 'text') %>
+							<%= report.station.plantation_year %>
 						</div>
 					</div>			
 				</div>
@@ -259,7 +260,7 @@
 							Densidad de la plantación:
 						</div>
 						<div class="col-xs-8">
-							<%= report.dynamic_attributes.dig('8', 'text') %>
+							<%= report.station.plantation_density %>
 						</div>
 					</div>
 					<div class="row location-field">
@@ -267,7 +268,7 @@
 							Producción del año anterior:
 						</div>
 						<div class="col-xs-8">
-							<%= report.dynamic_attributes.dig('9', 'text') %>
+							<%= report.station.last_year_production %>
 						</div>
 					</div>
 					<div class="row location-field">
@@ -275,7 +276,7 @@
 							Precipitación de riego:
 						</div>
 						<div class="col-xs-8">
-							<%= report.dynamic_attributes.dig('15', 'text')  %>
+							<%= report.station.water_precipitation  %>
 						</div>
 					</div>
 				</div>
@@ -290,7 +291,7 @@
 							Estado:
 						</div>
 						<div class="col-xs-8">
-							<%= report.dynamic_attributes.dig('20', 'text') %>
+							<%= report.state_name %>
 						</div>
 					</div>
 					<div class="row location-field">
@@ -298,7 +299,7 @@
 							Usuario Asignado:
 						</div>
 						<div class="col-xs-8">
-							<%= report.dynamic_attributes.dig('10', 'text') %>
+							<%= report.assigned_user.present? ? report.assigned_user.name : report.creator.name %>
 						</div>
 					</div>
 					<div class="row location-field">
@@ -306,7 +307,7 @@
 							Fecha Resolución:
 						</div>
 						<div class="col-xs-8">
-							<%= report.dynamic_attributes.dig('10', 'text') %>
+							<%= report.formatted_resolved_at %>
 						</div>
 					</div>	
 				</div>
