@@ -47,6 +47,14 @@ class Api::V1::ReportResource < ApplicationResource
     end
   }
 
+  filter :station_id, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.where("dynamic_attributes->>'station_id' = ?", value[0])
+    else
+      records
+    end
+  }
+
   filter :report_type, apply: ->(records, value, _options) {
     if not value.empty?
       if value[0].is_a? Hash and value[0]["id"].present?
