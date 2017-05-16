@@ -22,13 +22,16 @@ class Api::V1::InspectionsController < Api::V1::JsonApiController
       .includes(construction: :company)
       .where(roles: { organization_id: current_user.organization_id })
       .where("inspections.created_at >= ? AND inspections.created_at <= ?", start_date, end_date)
+      .order("inspections.created_at ASC")
 
     reports = Report.joins(creator: :role)
       .includes(:creator, :assigned_user)
       .where(roles: { organization_id: current_user.organization_id })
       .where("reports.created_at >= ? AND reports.created_at <= ?", start_date, end_date)
-    
+      .order("reports.created_at ASC")
+    Inspection.setup_xlsx
     inspections.to_xlsx(package: package)
+    Report.setup_xlsx(current_user.organization_id)
     reports.to_xlsx(package: package)
     send_data package.to_stream.read, filename: "inspecciones_reportes.xlsx",
         disposition: "attachment", type: "application/vnd.ms-excel"

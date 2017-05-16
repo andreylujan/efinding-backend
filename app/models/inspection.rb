@@ -72,6 +72,34 @@ class Inspection < ApplicationRecord
     # :pdf_url
   ]
 
+  def self.column_translations
+    {
+      id: "Id inspección",
+      construction_name: "Nombre obra",
+      company_name: "Nombre empresa",
+      created_at: "Fecha de creación",
+      creator_name: "Nombre creador",
+      resolved_at: "Fecha de resolución",
+      initial_signer_name: "Primer firmante",
+      initial_signed_at: "Fecha primera firma",
+      state: "Estado",
+      pdf_url: "PDF",
+      final_signer_name: "Último firmante",
+      final_signed_at: "Fecha última firma"
+    }
+  end
+
+  def self.setup_xlsx
+    cols = []
+    column_translations.each do |key, value|
+      define_method :"#{value}" do
+        send key
+      end
+      cols << "#{value}"
+    end
+    Inspection.acts_as_xlsx columns: cols
+  end
+
   def creator_name
     creator.name
   end
