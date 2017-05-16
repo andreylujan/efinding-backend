@@ -230,13 +230,15 @@ class Api::V1::ReportResource < ApplicationResource
   def self.records(options = {})
     context = options[:context]
     current_user = context[:current_user]
+    records = Report.none
     if context[:inspection_id]
-      Inspection.find(context[:inspection_id]).reports
+      records = Inspection.find(context[:inspection_id]).reports
     elsif context[:report_type_id]
-      ReportType.find(context[:report_type_id]).reports
+      records = ReportType.find(context[:report_type_id]).reports
     else
-      Report.joins(creator: { role: :organization }).where(organizations: { id: current_user.organization.id })
+      records = Report.joins(creator: { role: :organization }).where(organizations: { id: current_user.organization.id })
     end
+    records.order("reports.created_at DESC")
   end
 
 
