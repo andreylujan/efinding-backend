@@ -4,6 +4,7 @@ class Api::V1::CollectionItemResource < ApplicationResource
   add_foreign_keys :parent_item_id, :collection_id
   has_one :collection
   has_one :parent_item
+  has_one :resource_owner, polymorphic: true
 
   def self.records(options = {})
     context = options[:context]
