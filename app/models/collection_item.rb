@@ -20,6 +20,7 @@ class CollectionItem < ApplicationRecord
   belongs_to :parent_item, class_name: :CollectionItem,
   	foreign_key: :parent_item_id
 
+  belongs_to :resource_owner, polymorphic: true
   validates :collection, presence: true
   validates :name, presence: true
   validates :code, presence: true
