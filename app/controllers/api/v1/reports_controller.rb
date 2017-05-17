@@ -11,6 +11,14 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
     })
   end
 
+  def mine
+    params["action"] = "index"
+    params["filter"] ||= {}
+    params["filter"]["creator_id"] = current_user.id
+    params["filter"].delete "creator"
+    index
+  end
+
   def xlsx
     params["action"] = "index"
     params["all"] = true
