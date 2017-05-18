@@ -30,7 +30,7 @@ class Api::V1::ReportResource < ApplicationResource
   
   
   filters :pdf_uploaded,
-    :report_type_id, :state_name, :creator_id
+    :report_type_id, :state_name, :creator_id, :assigned_user_id
  
 
   filter :creator, apply: ->(records, value, _options) {
