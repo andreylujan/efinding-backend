@@ -19,6 +19,14 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
     index
   end
 
+  def tasks
+    params["action"] = "index"
+    params["filter"] ||= {}
+    params["filter"]["assigned_user_id"] = current_user.id
+    params["filter"].delete "assigned_user"
+    index
+  end
+
   def xlsx
     params["action"] = "index"
     params["all"] = true

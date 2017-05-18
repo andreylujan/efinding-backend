@@ -66,6 +66,7 @@ Rails.application.routes.draw do
           get :zip
           get :xlsx
           get :mine
+          get :tasks
         end
       end
 
