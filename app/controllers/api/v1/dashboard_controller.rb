@@ -11,9 +11,20 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
                                                 },
                                                 order: ""
     })
-    params[:filter] ||= {}
-    filters = Api::V1::ReportResource.verify_filters(params[:filter])
-
+    # filters = Api::V1::ReportResource.verify_filters(params[:filter])
+    filters = params[:filter] || {}
+    if filters[:start_date]
+      reports = reports.where("reports.created_at >= ?", filters[:start_date])
+    end
+    if filters[:end_date]
+      reports = reports.where("reports.created_at <= ?", filters[:start_date])
+    end
+    if filters[:state_name]
+      reports = reports.where("reports.state = ?", Report.states[filters[:state_name]])
+    end
+    if filters[:area_id]
+      reports = reports.where("dynamic_attributes->>'43' = ?", filters[:area_id])
+    end
     # reports = Api::V1::ReportResource.apply_filters(reports,
     #                                                        filters)
     report_ratios = [
