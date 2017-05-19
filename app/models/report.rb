@@ -93,7 +93,6 @@ class Report < ApplicationRecord
 
   def assign_user
     if creator.present? and creator.organization_id == 3
-      byebug
       area_id = dynamic_attributes.dig("43", "id")
       if area_id.present?
         item = CollectionItem.find(area_id)
