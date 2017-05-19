@@ -39,35 +39,20 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
     report_fulfillment = reports.group_by(&:station_id_criteria).map do |station_id, report_group|
       json = {}
       begin
-        station = Manflas::Station.find(station_id)
+        station = ::Manflas::Station.find(station_id)
         json[:inspection_id] = station.name
         state_names.each do |state_name|
           json["num_" + state_name.to_s] = 0
         end
         report_group.each do |report|
-          json["num_" + report.state] = report.num_reports
+          json["num_" + report.state] = report_group.length
         end
         json
       rescue => e
         
       end
       json
-    end.select! { |f| not f.empty? }
-
-    report_fulfillment = reports.joins(inspection: :construction).group("inspections.id, constructions.name, reports.state")
-    .select("inspections.id as inspection_id, constructions.name as construction_name, reports.state, count(reports.id) as num_reports")
-    .order("constructions.name ASC").group_by { |r| r.inspection_id.to_s + "-" + r.construction_name }.map do |construction_name, report_group|
-      json = {
-        inspection_id: construction_name.split('-')[1]
-      }
-      state_names.each do |state_name|
-        json["num_" + state_name.to_s] = 0
-      end
-      report_group.each do |report|
-        json["num_" + report.state] = report.num_reports
-      end
-      json
-    end
+    end.select { |f| not f.empty? }
 
     dashboard_info = {
       id: SecureRandom.uuid,
