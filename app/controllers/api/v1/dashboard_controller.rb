@@ -11,7 +11,7 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
                                                 },
                                                 order: ""
     })
-    params[:filters] ||= {}
+    params[:filter] ||= {}
     filters = Api::V1::ReportResource.verify_filters(params[:filter])
 
     report_ratios = [
@@ -94,7 +94,7 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
                                                           dashboard: true
                                                         }
     })
-    params[:filters] ||= {}
+    params[:filter] ||= {}
     filters = Api::V1::InspectionResource.verify_filters(params[:filter])
 
     inspections = Api::V1::InspectionResource.apply_filters(inspections,
