@@ -400,8 +400,10 @@ class Report < ApplicationRecord
       station = Manflas::Station.find(dynamic_attributes["station_id"])
       if station.present?
         dynamic_attributes["station"] = {
-          name: station.name,
-          sector: station.sector
+          text: station.name
+        }
+        dynamic_attributes["sector"] = {
+          text: station.sector
         }
       end
     end
