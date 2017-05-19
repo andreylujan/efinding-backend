@@ -47,6 +47,10 @@ class Api::V1::ReportResource < ApplicationResource
     end
   }
 
+  filter :state_name, apply: ->(records, value, _options) {
+    records
+  }
+
   filter :station_id, apply: ->(records, value, _options) {
     if not value.empty?
       records.where("dynamic_attributes->>'station_id' = ?", value[0])
