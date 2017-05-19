@@ -191,6 +191,7 @@ class Report < ApplicationRecord
     end
   end
 
+
   def station
     station_id = dynamic_attributes.dig("station_id")
     if station_id.present?
@@ -393,6 +394,16 @@ class Report < ApplicationRecord
   def cache_data
     if self.dynamic_attributes.nil?
       self.dynamic_attributes = {}
+    end
+    if self.dynamic_attributes["station_id"].present?
+      Mongoid.raise_not_found_error = false
+      station = Manflas::Station.find(dynamic_attributes["station_id"])
+      if station.present?
+        dynamic_attributes["station"] = {
+          name: station.name,
+          sector: station.sector
+        }
+      end
     end
   end
 
