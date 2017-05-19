@@ -14,6 +14,8 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
     params[:filter] ||= {}
     filters = Api::V1::ReportResource.verify_filters(params[:filter])
 
+    # reports = Api::V1::ReportResource.apply_filters(reports,
+    #                                                        filters)
     report_ratios = [
       {
         state: "unchecked",
@@ -42,10 +44,9 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
         station = ::Manflas::Station.find(station_id)
         json[:inspection_id] = station.name
         state_names.each do |state_name|
-          json["num_" + state_name.to_s] = 0
-        end
-        report_group.each do |report|
-          json["num_" + report.state] = report_group.length
+          json["num_" + state_name.to_s] = report_group.count do |report|
+            report.state == state_name.to_s
+          end
         end
         json
       rescue => e
