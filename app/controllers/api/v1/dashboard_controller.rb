@@ -3,15 +3,98 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
 
   before_action :doorkeeper_authorize!
 
-  def show
+  def show_manflas
+    reports = Api::V1::ReportResource.records({
+                                                context: {
+                                                  current_user: current_user,
+                                                  dashboard: true
+                                                },
+                                                order: ""
+    })
+    filters ||= {}
+    filters = Api::V1::ReportResource.verify_filters(params[:filter])
 
+    report_ratios = [
+      {
+        state: "unchecked",
+        num_reports: 0
+      },
+      {
+        state: "resolved",
+        num_reports: 0
+      }
+    ]
+
+    sql_ratios = reports.group("reports.state").select("reports.state, count(reports.id) as num_reports")
+    .as_json.map do |json|
+      json.delete "id"
+      json
+    end
+    sql_ratios.each do |ratio|
+      idx = ratio["state"] == "unchecked" ? 0 : 1
+      report_ratios[idx]["num_reports"] = ratio["num_reports"]
+    end
+
+    state_names = Report.states.keys
+    report_fulfillment = reports.group_by(&:station_id_criteria).map do |station_id, report_group|
+      json = {}
+      begin
+        station = Manflas::Station.find(station_id)
+        json[:inspection_id] = station.name
+        state_names.each do |state_name|
+          json["num_" + state_name.to_s] = 0
+        end
+        report_group.each do |report|
+          json["num_" + report.state] = report.num_reports
+        end
+        json
+      rescue => e
+        
+      end
+      json
+    end.select! { |f| not f.empty? }
+
+    report_fulfillment = reports.joins(inspection: :construction).group("inspections.id, constructions.name, reports.state")
+    .select("inspections.id as inspection_id, constructions.name as construction_name, reports.state, count(reports.id) as num_reports")
+    .order("constructions.name ASC").group_by { |r| r.inspection_id.to_s + "-" + r.construction_name }.map do |construction_name, report_group|
+      json = {
+        inspection_id: construction_name.split('-')[1]
+      }
+      state_names.each do |state_name|
+        json["num_" + state_name.to_s] = 0
+      end
+      report_group.each do |report|
+        json["num_" + report.state] = report.num_reports
+      end
+      json
+    end
+
+    dashboard_info = {
+      id: SecureRandom.uuid,
+      report_fulfillment: report_fulfillment,
+      report_ratios: report_ratios
+    }
+
+    dashboard = Dashboard.new dashboard_info
+
+    render json: JSONAPI::ResourceSerializer.new(Api::V1::DashboardResource)
+    .serialize_to_hash(Api::V1::DashboardResource.new(dashboard, nil))
+
+
+  end
+
+  def show
+    if current_user.organization_id == 3
+      show_manflas
+      return
+    end
     inspections = Api::V1::InspectionResource.records({
                                                         context: {
                                                           current_user: current_user,
                                                           dashboard: true
                                                         }
     })
-
+    filters ||= {}
     filters = Api::V1::InspectionResource.verify_filters(params[:filter])
 
     inspections = Api::V1::InspectionResource.apply_filters(inspections,
@@ -39,7 +122,7 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
       idx = ratio["state"] == "unchecked" ? 0 : 1
       report_ratios[idx]["num_reports"] = ratio["num_reports"]
     end
-    
+
     state_names = Report.states.keys
     report_fulfillment = reports.joins(inspection: :construction).group("inspections.id, constructions.name, reports.state")
     .select("inspections.id as inspection_id, constructions.name as construction_name, reports.state, count(reports.id) as num_reports")
@@ -84,8 +167,8 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
         end
         json[index] = report.num_reports
       end
-      
-      
+
+
       activity_idx = activity_names.find_index do |activity_name|
         activity_name == grupo_actividad
       end

@@ -391,6 +391,10 @@ class Report < ApplicationRecord
     UploadPdfJob.set(queue: ENV['REPORT_QUEUE'] || 'echeckit_report').perform_later(self.id.to_s)
   end
 
+  def station_id_criteria
+    dynamic_attributes["station_id"]
+  end
+
   def cache_data
     if self.dynamic_attributes.nil?
       self.dynamic_attributes = {}
