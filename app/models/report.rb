@@ -97,6 +97,13 @@ class Report < ApplicationRecord
       if area_id.present?
         item = CollectionItem.find(area_id)
         self.assigned_user = item.resource_owner
+        if self.assigned_user.present?
+          self.dynamic_attributes["assigned_user"] = {
+            name: self.assigned_user.name,
+            email: self.assigned_user.email,
+            id: self.assigned_user.id
+          }
+        end
       end
     end
   end
