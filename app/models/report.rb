@@ -72,6 +72,7 @@ class Report < ApplicationRecord
   validate :limit_date_cannot_be_in_the_past, on: :create
   before_save :default_values
   before_save :check_limit_date
+  before_save :assign_user
   after_commit :update_inspection, on: [ :create, :update ]
 
   acts_as_xlsx columns: [
@@ -89,6 +90,17 @@ class Report < ApplicationRecord
     :resolution_comment,
     :report_fields
   ]
+
+  def assign_user
+    if creator.present? and creator.organization_id == 3
+      byebug
+      area_id = dynamic_attributes.dig("43", "id")
+      if area_id.present?
+        item = CollectionItem.find(area_id)
+        self.assigned_user = item.resource_owner
+      end
+    end
+  end
 
   def resolver_name
     if resolver.present?
