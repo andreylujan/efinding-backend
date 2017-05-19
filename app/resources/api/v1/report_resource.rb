@@ -12,6 +12,7 @@ class Api::V1::ReportResource < ApplicationResource
     :formatted_finished_at, 
     :formatted_created_at, 
     :formatted_limit_date,
+    :formatted_resolved_at,
     :html,
     :state,
     :resolved_at,
@@ -119,6 +120,14 @@ class Api::V1::ReportResource < ApplicationResource
   filter :formatted_created_at, apply: ->(records, value, _options) {
     if not value.empty?
       records.where("to_char(reports.created_at, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
+    else
+      records
+    end
+  }
+
+  filter :formatted_resolved_at, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.where("to_char(reports.resolved_at, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
     else
       records
     end
