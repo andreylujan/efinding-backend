@@ -72,7 +72,7 @@ class Report < ApplicationRecord
   validate :limit_date_cannot_be_in_the_past, on: :create
   before_save :default_values
   before_save :check_limit_date
-  before_save :assign_user
+  before_create :assign_user
   after_commit :update_inspection, on: [ :create, :update ]
 
   acts_as_xlsx columns: [
