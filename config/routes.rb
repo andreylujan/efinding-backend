@@ -14,6 +14,11 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+
+      namespace :delivery do
+        resources :orders, only: [ :create ]
+      end
+
       namespace :manflas do
         jsonapi_resources :stations, only: [ :index ] do
         end
