@@ -61,7 +61,7 @@ class Report < ApplicationRecord
   accepts_nested_attributes_for :initial_location
   accepts_nested_attributes_for :final_location
 
-  validates :initial_location, presence: true
+  # validates :initial_location, presence: true
 
   belongs_to :inspection
   acts_as_list scope: :inspection
