@@ -26,6 +26,8 @@ class Organization < ApplicationRecord
     belongs_to :checklist
     has_many :checklists
     has_many :personnel_types
+
+    validates :default_admin_path, presence: true
     
     def checklist_id
         if checklist.present?

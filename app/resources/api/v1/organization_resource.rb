@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::OrganizationResource < ApplicationResource
-  attributes :name, :logo
+  attributes :name, :logo, :default_admin_path
   has_many :roles
   has_many :report_types
   has_many :table_columns
