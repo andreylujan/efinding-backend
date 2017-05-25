@@ -74,6 +74,7 @@ class Report < ApplicationRecord
   before_save :check_limit_date
   before_create :assign_user
   after_commit :update_inspection, on: [ :create, :update ]
+  after_save :change_state, on: [ :update ]
 
   acts_as_xlsx columns: [
     :inspection_id,
@@ -105,6 +106,12 @@ class Report < ApplicationRecord
           }
         end
       end
+    end
+  end
+
+  def change_state
+    if self.creator.organization_id == 4 and self.state_changed? and self.pending?
+      ChangeStateJob.perform_later(self.id.to_s)
     end
   end
 
