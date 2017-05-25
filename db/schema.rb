@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170516183602) do
+ActiveRecord::Schema.define(version: 20170525165012) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -393,12 +393,13 @@ ActiveRecord::Schema.define(version: 20170516183602) do
   end
 
   create_table "organizations", force: :cascade do |t|
-    t.text     "name",                        null: false
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.text     "name",                             null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.text     "logo"
-    t.text     "csv_separator", default: "|", null: false
+    t.text     "csv_separator",      default: "|", null: false
     t.integer  "checklist_id"
+    t.text     "default_admin_path"
     t.index ["checklist_id"], name: "index_organizations_on_checklist_id", using: :btree
     t.index ["name"], name: "index_organizations_on_name", unique: true, using: :btree
   end
