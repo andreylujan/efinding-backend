@@ -75,6 +75,7 @@ class Report < ApplicationRecord
   before_create :assign_user
   after_commit :update_inspection, on: [ :create, :update ]
   after_save :change_state, on: [ :update ]
+  before_save :calculate_delivery_date, on: [ :update ]
 
   acts_as_xlsx columns: [
     :inspection_id,
@@ -106,12 +107,6 @@ class Report < ApplicationRecord
           }
         end
       end
-    end
-  end
-
-  def change_state
-    if self.creator.organization_id == 4 and self.state_changed? and self.pending?
-      ChangeStateJob.set(queue: ENV['REPORT_QUEUE'] || "efinding_report").perform_later(self.id.to_s)
     end
   end
 
@@ -424,6 +419,19 @@ class Report < ApplicationRecord
   def limit_date_cannot_be_in_the_past
     if limit_date.present? && limit_date < DateTime.now
       errors.add(:limit_date, "No puede estar en el pasado")
+    end
+  end
+
+  def change_state
+    if self.creator.organization_id == 4 and self.state_changed? and self.pending?
+      ChangeStateJob.set(queue: ENV['REPORT_QUEUE'] || "efinding_report").perform_later(self.id.to_s)
+    end
+  end
+
+  def calculate_delivery_date
+    if self.creator.organization_id == 4 and delivery_time = dynamic_attributes.dig("45", "code")
+      delivery_time = created_at.in_time_zone("Chile/Continental") + (delivery_time.to_i).minutes
+      self.dynamic_attributes["subtitle"] = "Retiro: #{created_at.strftime('%H:%M')}"
     end
   end
 
