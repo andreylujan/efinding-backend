@@ -111,7 +111,7 @@ class Report < ApplicationRecord
 
   def change_state
     if self.creator.organization_id == 4 and self.state_changed? and self.pending?
-      ChangeStateJob.perform_later(self.id.to_s)
+      ChangeStateJob.set(queue: ENV['REPORT_QUEUE'] || "efinding_report").perform_later(self.id.to_s)
     end
   end
 
