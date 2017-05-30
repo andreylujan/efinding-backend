@@ -258,7 +258,7 @@ class Api::V1::ReportResource < ApplicationResource
     end
 
     if current_user.organization_id == 4
-      if current_user.role.name = "Transportista"
+      if current_user.role.name == "Transportista"
         records = records.where("reports.state != 'unchecked'")
       end
     end
