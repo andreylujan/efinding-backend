@@ -2,15 +2,15 @@
 class Api::V1::ReportResource < ApplicationResource
 
   attributes :dynamic_attributes, :created_at, :limit_date,
-    :finished, :pdf, :pdf_uploaded, 
+    :finished, :pdf, :pdf_uploaded,
     :initial_location_attributes,
     :final_location_attributes,
     :started_at,
-    :finished_at, 
+    :finished_at,
     :images_attributes, :synced, :is_draft,
     :state_name,
-    :formatted_finished_at, 
-    :formatted_created_at, 
+    :formatted_finished_at,
+    :formatted_created_at,
     :formatted_limit_date,
     :formatted_resolved_at,
     :html,
@@ -28,17 +28,17 @@ class Api::V1::ReportResource < ApplicationResource
   has_one :resolver
 
   key_type :uuid
-  
-  
+
+
   filters :pdf_uploaded,
     :report_type_id, :state_name, :creator_id, :assigned_user_id
- 
+
 
   filter :creator, apply: ->(records, value, _options) {
     if not value.empty?
       if value[0].is_a? Hash and value[0]["full_name"].present?
         records.includes(:assigned_user, :creator).where("creators_reports.first_name || ' ' || creators_reports.last_name ilike '%" + value[0]["full_name"] + "%'")
-          .where.not(creator_id: nil).references(:users)
+        .where.not(creator_id: nil).references(:users)
 
       else
         records
@@ -82,7 +82,7 @@ class Api::V1::ReportResource < ApplicationResource
     end
   }
 
-  
+
 
   filter :started_at, apply: ->(records, value, _options) {
     if not value.empty?
@@ -256,6 +256,14 @@ class Api::V1::ReportResource < ApplicationResource
     else
       records.order("reports.created_at DESC")
     end
+
+    if current_user.organization_id == 4
+      if current_user.role.name = "Transportista"
+        records = records.where("reports.state != 'unchecked'")
+      end
+    end
+    records
+
   end
 
 
