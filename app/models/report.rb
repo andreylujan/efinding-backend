@@ -433,7 +433,7 @@ class Report < ApplicationRecord
   end
 
   def calculate_delivery_date
-    if self.state_changed? and self.state == "pending" and self.creator.organization_id == 4 and delivery_time = dynamic_attributes.dig("45", "code")
+    if self.state_changed? and self.state == "pending" and self.creator.organization_id == 4 and delivery_time = dynamic_attributes.dig("48", "code")
       delivery_time = DateTime.now.in_time_zone("Chile/Continental") + (delivery_time.to_i).minutes
       self.dynamic_attributes["subtitle"] = "Retiro: #{delivery_time.strftime('%H:%M')}"
     end

@@ -19,7 +19,7 @@ class Api::V1::Delivery::OrdersController < ApplicationController
     user = params.require(:user_info)
 
     report = Report.new id: SecureRandom.uuid,
-      creator_id: 67,
+      creator_id: 68,
       state: "unchecked",
       finished: false,
       report_type_id: 6
@@ -36,7 +36,7 @@ class Api::V1::Delivery::OrdersController < ApplicationController
       }
     end
 
-    report.dynamic_attributes["51"] = {
+    report.dynamic_attributes["47"] = {
       sections: [
         {
           id: order_id.to_s,
@@ -46,7 +46,7 @@ class Api::V1::Delivery::OrdersController < ApplicationController
       ]
     }
 
-    report.dynamic_attributes["47"] = {
+    report.dynamic_attributes["49"] = {
     	text: order_id.to_s
     }
 
@@ -54,11 +54,11 @@ class Api::V1::Delivery::OrdersController < ApplicationController
     if user.dig("user_last_name")
     	user_name = user_name + " " + user.dig("user_last_name")
     end
-    report.dynamic_attributes["48"] = {
+    report.dynamic_attributes["50"] = {
     	text: user_name
     }
 
-    report.dynamic_attributes["49"] = {
+    report.dynamic_attributes["51"] = {
     	text: user.dig("user_phone") || "Sin número de teléfono"
     }
 
