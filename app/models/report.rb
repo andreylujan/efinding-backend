@@ -42,7 +42,7 @@ class Report < ApplicationRecord
   belongs_to :resolver, class_name: :User, foreign_key: :resolver_id
   audited
 
-  enum state: [ :unchecked, :resolved, :pending ]
+  # enum state: [ :unchecked, :resolved, :pending ]
 
   mount_uploader :pdf, PdfUploader
   mount_uploader :html, HtmlUploader
@@ -92,6 +92,10 @@ class Report < ApplicationRecord
     :resolution_comment,
     :report_fields
   ]
+
+  def self.states
+    { "unchecked" => 0, "resolved" => 1, "pending" => 2}
+  end
 
   def assign_user
     if creator.present? and creator.organization_id == 3
@@ -423,13 +427,13 @@ class Report < ApplicationRecord
   end
 
   def change_state
-    if self.creator.organization_id == 4 and self.state_changed? and self.pending?
+    if self.creator.organization_id == 4 and self.state_changed? and self.state == "pending"
       ChangeStateJob.set(queue: ENV['REPORT_QUEUE'] || "efinding_report").perform_later(self.id.to_s)
     end
   end
 
   def calculate_delivery_date
-    if self.state_changed? and self.pending? and self.creator.organization_id == 4 and delivery_time = dynamic_attributes.dig("45", "code")
+    if self.state_changed? and self.state == "pending" and self.creator.organization_id == 4 and delivery_time = dynamic_attributes.dig("45", "code")
       delivery_time = DateTime.now.in_time_zone("Chile/Continental") + (delivery_time.to_i).minutes
       self.dynamic_attributes["subtitle"] = "Retiro: #{delivery_time.strftime('%H:%M')}"
     end

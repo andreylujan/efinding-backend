@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170525165012) do
+ActiveRecord::Schema.define(version: 20170530144344) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -445,16 +445,16 @@ ActiveRecord::Schema.define(version: 20170525165012) do
   end
 
   create_table "reports", id: :uuid, default: nil, force: :cascade do |t|
-    t.integer  "report_type_id",                         null: false
-    t.json     "dynamic_attributes",     default: {},    null: false
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
-    t.integer  "creator_id",                             null: false
+    t.integer  "report_type_id",                               null: false
+    t.json     "dynamic_attributes",     default: {},          null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
+    t.integer  "creator_id",                                   null: false
     t.datetime "limit_date"
     t.boolean  "finished"
     t.integer  "assigned_user_id"
     t.text     "pdf"
-    t.boolean  "pdf_uploaded",           default: false, null: false
+    t.boolean  "pdf_uploaded",           default: false,       null: false
     t.datetime "started_at"
     t.datetime "finished_at"
     t.datetime "deleted_at"
@@ -463,12 +463,12 @@ ActiveRecord::Schema.define(version: 20170525165012) do
     t.integer  "position"
     t.integer  "initial_location_id"
     t.integer  "final_location_id"
-    t.integer  "state",                  default: 0,     null: false
     t.datetime "resolved_at"
     t.integer  "resolver_id"
     t.text     "resolution_comment"
     t.text     "initial_location_image"
     t.text     "final_location_image"
+    t.text     "state",                  default: "unchecked", null: false
     t.index ["assigned_user_id"], name: "index_reports_on_assigned_user_id", using: :btree
     t.index ["creator_id"], name: "index_reports_on_creator_id", using: :btree
     t.index ["deleted_at"], name: "index_reports_on_deleted_at", using: :btree
