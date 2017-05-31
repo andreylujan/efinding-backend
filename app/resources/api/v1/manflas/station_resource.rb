@@ -5,7 +5,11 @@ class Api::V1::Manflas::StationResource < JSONAPI::Resource
   			:variety,
   			:polygon,
   			:style,
-        :num_reports
+        :num_reports,
+        :plantation_year,
+        :plantation_density,
+        :last_year_production,
+        :water_precipitation
 
   def num_reports
     if context[:report_counts].present?
