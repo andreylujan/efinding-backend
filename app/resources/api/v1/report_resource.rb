@@ -259,7 +259,8 @@ class Api::V1::ReportResource < ApplicationResource
 
     if current_user.organization_id == 4
       if current_user.role.name == "Transportista"
-        records = records.where("reports.state != 'unchecked'")
+        records = records.where("reports.state = 'awaiting_delivery' OR " +
+          "reports.state = 'delivering' OR reports.state = 'delivered'")
       end
     end
     records

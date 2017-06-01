@@ -6,7 +6,11 @@ class ChangeStateJob < ApplicationJob
 
     report = Report.find(report_id)
     order_id = report.dynamic_attributes.dig("47", "text").to_i
-
+    # state = ""
+    # if report.state == "pending"
+    #   state = "pedido creado"
+    # elsif report.state == ""
+    # end
     conn = Faraday.new(:url => "http://ec2-54-88-114-83.compute-1.amazonaws.com")
     body = {
       id_order: order_id,
