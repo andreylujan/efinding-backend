@@ -38,27 +38,30 @@ class Api::V1::Delivery::OrdersController < ApplicationController
       end
       report.state = state
     end
-    items = []
-    products.each do |product|
-      desc = product[:quantity].to_s + " " + product[:name]
-      if product[:size].present?
-        desc = desc + "\n" + "Tamaño #{product[:size]}"
+
+    if report.state == "unchecked"
+      items = []
+      products.each do |product|
+        desc = product[:quantity].to_s + " " + product[:name]
+        if product[:size].present?
+          desc = desc + "\n" + "Tamaño #{product[:size]}"
+        end
+        items << {
+          id: product[:id].to_s,
+          name: desc
+        }
       end
-      items << {
-        id: product[:id].to_s,
-        name: desc
+
+      report.dynamic_attributes["47"] = {
+        sections: [
+          {
+            id: order_id.to_s,
+            name: nil,
+            items: items
+          }
+        ]
       }
     end
-
-    report.dynamic_attributes["47"] = {
-      sections: [
-        {
-          id: order_id.to_s,
-          name: nil,
-          items: items
-        }
-      ]
-    }
 
     report.dynamic_attributes["49"] = {
       text: order_id.to_s
