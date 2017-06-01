@@ -391,10 +391,12 @@ class Report < ApplicationRecord
   end
 
   def regenerate_pdf(force_random = false)
-    if force_random
-      update_columns pdf: nil, pdf_uploaded: false
+    if report_type.has_pdf?
+      if force_random
+        update_columns pdf: nil, pdf_uploaded: false
+      end
+      UploadPdfJob.set(queue: ENV['REPORT_QUEUE'] || 'echeckit_report').perform_later(self.id.to_s)
     end
-    UploadPdfJob.set(queue: ENV['REPORT_QUEUE'] || 'echeckit_report').perform_later(self.id.to_s)
   end
 
   def station_id_criteria
@@ -453,8 +455,8 @@ class Report < ApplicationRecord
     if self.state_changed? and self.state == "accepted" and self.creator.organization_id == 4 and delivery_time = dynamic_attributes.dig("48", "code")
       delivery_time = DateTime.now.in_time_zone("Chile/Continental") + (delivery_time.to_i).minutes
       self.dynamic_attributes["subtitle"] = "Retiro: #{delivery_time.strftime('%H:%M')}"
-    end
-  end
+       end
+       end
 
 
-end
+       end

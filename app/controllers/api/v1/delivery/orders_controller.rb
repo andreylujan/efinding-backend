@@ -1,8 +1,9 @@
 class Api::V1::Delivery::OrdersController < ApplicationController
   def create
     order_id = params.require(:order_id)
-    order_state = params.require(:order_state)
+    order_state = params.require(:order_state)["order_state_description"].downcase
     created_at = params.require(:order_creation_date)
+    report = Report.where("dynamic_attributes->'49'->>'text' = '#{order_id}'").first
 
     products = params["detail"].map do |detail|
       {
@@ -17,13 +18,23 @@ class Api::V1::Delivery::OrdersController < ApplicationController
     end
 
     user = params.require(:user_info)
-
-    report = Report.new id: SecureRandom.uuid,
-      creator_id: 68,
-      state: "unchecked",
-      finished: false,
-      report_type_id: 6
-
+    if report.nil?
+      report = Report.new id: SecureRandom.uuid,
+        creator_id: 68,
+        state: "unchecked",
+        finished: true,
+        report_type_id: 6
+    else
+      state = nil
+      if order_state == "pedido creado"
+        state = "unchecked"
+      elsif order_state == "pedido pagado"
+        state = "awaiting_delivery"
+      elsif order_state == "pedido cancelado"
+        state = "canceled"
+      end
+      report.state = state
+    end
     items = []
     products.each do |product|
       desc = product[:quantity].to_s + " " + product[:name]
@@ -47,19 +58,19 @@ class Api::V1::Delivery::OrdersController < ApplicationController
     }
 
     report.dynamic_attributes["49"] = {
-    	text: order_id.to_s
+      text: order_id.to_s
     }
 
     user_name = user.dig("user_name")
     if user.dig("user_last_name")
-    	user_name = user_name + " " + user.dig("user_last_name")
+      user_name = user_name + " " + user.dig("user_last_name")
     end
     report.dynamic_attributes["50"] = {
-    	text: user_name
+      text: user_name
     }
 
     report.dynamic_attributes["51"] = {
-    	text: user.dig("user_phone") || "Sin número de teléfono"
+      text: user.dig("user_phone") || "Sin número de teléfono"
     }
 
     report.dynamic_attributes["title"] = user_name

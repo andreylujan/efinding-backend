@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170530150516) do
+ActiveRecord::Schema.define(version: 20170601173846) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -437,10 +437,11 @@ ActiveRecord::Schema.define(version: 20170530150516) do
   create_table "report_types", force: :cascade do |t|
     t.text     "name"
     t.integer  "organization_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.text     "title_field"
     t.text     "subtitle_field"
+    t.boolean  "has_pdf",         default: true, null: false
     t.index ["organization_id"], name: "index_report_types_on_organization_id", using: :btree
   end
 
