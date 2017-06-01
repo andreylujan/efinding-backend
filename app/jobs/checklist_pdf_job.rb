@@ -19,7 +19,7 @@ class ChecklistPdfJob < ApplicationJob
 
     if checklist.location.present?
       location_image = open("http://maps.googleapis.com/maps/api/staticmap?&maptype=roadmap&zoom=15&size=400x250&markers=size:" + 
-        "mid%7Ccolor:green%7C#{checklist.location.lonlat.y},#{checklist.location.lonlat.x}&key=AIzaSyCfbgt7XmdEbRPTXaiNq5bOvFWDVpmBx3A")
+        "mid%7Ccolor:green%7C#{checklist.location.lonlat.y},#{checklist.location.lonlat.x}&key=AIzaSyAxdoh8VjK53CCCYNmGx0RGuompeK-ejzc")
       checklist.location_image = location_image
       checklist.save!
     end
