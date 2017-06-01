@@ -43,6 +43,7 @@ class Report < ApplicationRecord
   audited
 
   # enum state: [ :unchecked, :resolved, :pending ]
+  attr_accessor :ignore_state_changes
 
   mount_uploader :pdf, PdfUploader
   mount_uploader :html, HtmlUploader
@@ -446,8 +447,10 @@ class Report < ApplicationRecord
   end
 
   def change_state
-    if self.creator.organization_id == 4 and self.state_changed?
-      ChangeStateJob.set(queue: ENV['REPORT_QUEUE'] || "efinding_report").perform_later(self.id.to_s)
+    unless self.ignore_state_changes
+      if self.creator.organization_id == 4 and self.state_changed?
+        ChangeStateJob.set(queue: ENV['REPORT_QUEUE'] || "efinding_report").perform_later(self.id.to_s)
+      end
     end
   end
 

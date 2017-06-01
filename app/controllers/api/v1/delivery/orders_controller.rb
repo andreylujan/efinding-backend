@@ -25,6 +25,7 @@ class Api::V1::Delivery::OrdersController < ApplicationController
         finished: true,
         report_type_id: 6
     else
+      report.ignore_state_changes = true
       state = nil
       if order_state == "pedido creado"
         state = "unchecked"
@@ -32,6 +33,8 @@ class Api::V1::Delivery::OrdersController < ApplicationController
         state = "awaiting_delivery"
       elsif order_state == "pedido cancelado"
         state = "canceled"
+      elsif order_state == "pedido aceptado"
+        state = "accepted"
       end
       report.state = state
     end
@@ -77,7 +80,7 @@ class Api::V1::Delivery::OrdersController < ApplicationController
     report.dynamic_attributes["subtitle"] = "Pedido #{order_id}"
 
     report.save!
-
+    report.ignore_state_changes = false
 
     render json: {
       code: 200,
