@@ -33,7 +33,7 @@ class Api::V1::InspectionResource < ApplicationResource
   filter :num_pending_reports, apply: ->(records, value, _options) {
     if not value.empty?
       records = records
-      .having("count(CASE WHEN reports.state = 0 THEN 1 END) = ?", value[0])
+      .having("count(CASE WHEN reports.state = 'unchecked' THEN 1 END) = ?", value[0])
     else
       records
     end
@@ -42,7 +42,7 @@ class Api::V1::InspectionResource < ApplicationResource
   filter :num_expired_reports, apply: ->(records, value, _options) {
     if not value.empty?
       records = records
-      .having("count(CASE WHEN reports.state = 0 AND reports.limit_date <= '#{DateTime.now.to_s}' THEN 1 END) = ?", value[0])
+      .having("count(CASE WHEN reports.state = 'unchecked' AND reports.limit_date <= '#{DateTime.now.to_s}' THEN 1 END) = ?", value[0])
     else
       records
     end
@@ -253,7 +253,7 @@ class Api::V1::InspectionResource < ApplicationResource
       .joins("LEFT OUTER JOIN reports ON reports.inspection_id = inspections.id")
       .joins(creator: :role)
       .where(roles: { organization_id: current_user.organization_id })
-      .select("inspections.*, count(reports.id) as num_reports, count(case when reports.state = 0 THEN 1 END) as num_pending_reports, count(case when reports.state = 0 AND reports.limit_date <= '" +
+      .select("inspections.*, count(reports.id) as num_reports, count(case when reports.state = 'unchecked' THEN 1 END) as num_pending_reports, count(case when reports.state = 'unchecked' AND reports.limit_date <= '" +
               DateTime.now.to_s + "' THEN 1 END) as num_expired_reports")
       .group("inspections.id")
 
