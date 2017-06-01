@@ -419,6 +419,23 @@ class Report < ApplicationRecord
     end
   end
 
+  def get_message
+    if self.creator.organization_id == 4
+      sections = dynamic_attributes.dig("47", "sections")
+      if sections.present?
+        suggestions = []
+        sections.each do |section|
+          section["items"].each do |item|
+            if item["value"] == 0 and item["comment"].present?
+              suggestions << (item["name"].gsub("\n", " ") + ": " + item["comment"])
+            end
+          end
+        end
+        return suggestions.join("\n\n")
+      end
+    end
+  end
+
   private
   def limit_date_cannot_be_in_the_past
     if limit_date.present? && limit_date < DateTime.now
