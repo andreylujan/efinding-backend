@@ -5,7 +5,7 @@ class ChangeStateJob < ApplicationJob
   def perform(report_id)
 
     report = Report.find(report_id)
-    order_id = report.dynamic_attributes.dig("47", "text").to_i
+    order_id = report.dynamic_attributes.dig("49", "text").to_i
     state = ""
     message = nil
     if report.state == "accepted"
