@@ -262,9 +262,8 @@ class Api::V1::ReportResource < ApplicationResource
         records = records.where("reports.state = 'awaiting_delivery' OR " +
           "reports.state = 'delivering' OR reports.state = 'delivered'")
       end
-      # records = records.where("reports.created_at >= ?", DateTime.now - 1.day).limit(20)
     end
-    
+    records
 
   end
 
