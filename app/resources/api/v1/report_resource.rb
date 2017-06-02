@@ -252,9 +252,9 @@ class Api::V1::ReportResource < ApplicationResource
       records = Report.joins(creator: { role: :organization }).where(organizations: { id: current_user.organization.id })
     end
     if options.has_key? :order
-      records.order(options[:order])
+      records = records.order(options[:order])
     else
-      records.order("reports.created_at DESC")
+      records = records.order("reports.created_at DESC")
     end
 
     if current_user.organization_id == 4
