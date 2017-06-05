@@ -22,8 +22,8 @@ class SendTaskJob < ApplicationJob
     params = {
       alert: "Tarea asignada",
       data: {
-        message: "Se le ha asignado una tarea de mantención preventiva",
-        title: "Tare asignada",
+        message: "Se le ha asignado una tarea",
+        title: "Tarea asignada",
         report_id: report.id.to_s
       },
       gcm_app_name: gcm_app_name,
