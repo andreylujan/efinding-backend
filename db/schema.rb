@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170601173846) do
+ActiveRecord::Schema.define(version: 20170605202916) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -470,12 +470,14 @@ ActiveRecord::Schema.define(version: 20170601173846) do
     t.text     "initial_location_image"
     t.text     "final_location_image"
     t.text     "state",                  default: "unchecked", null: false
+    t.datetime "scheduled_at"
     t.index ["assigned_user_id"], name: "index_reports_on_assigned_user_id", using: :btree
     t.index ["creator_id"], name: "index_reports_on_creator_id", using: :btree
     t.index ["deleted_at"], name: "index_reports_on_deleted_at", using: :btree
     t.index ["id"], name: "index_reports_on_id", using: :btree
     t.index ["inspection_id"], name: "index_reports_on_inspection_id", using: :btree
     t.index ["report_type_id"], name: "index_reports_on_report_type_id", using: :btree
+    t.index ["scheduled_at"], name: "index_reports_on_scheduled_at", using: :btree
   end
 
   create_table "request_logs", force: :cascade do |t|

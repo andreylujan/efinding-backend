@@ -3,13 +3,14 @@
 #
 # Table name: organizations
 #
-#  id            :integer          not null, primary key
-#  name          :text             not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  logo          :text
-#  csv_separator :text             default("|"), not null
-#  checklist_id  :integer
+#  id                 :integer          not null, primary key
+#  name               :text             not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  logo               :text
+#  csv_separator      :text             default("|"), not null
+#  checklist_id       :integer
+#  default_admin_path :text
 #
 
 class Organization < ApplicationRecord

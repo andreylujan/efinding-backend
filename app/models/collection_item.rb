@@ -3,15 +3,17 @@
 #
 # Table name: collection_items
 #
-#  id             :integer          not null, primary key
-#  collection_id  :integer
-#  name           :text
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  parent_item_id :integer
-#  code           :text
-#  parent_code    :text
-#  position       :integer
+#  id                  :integer          not null, primary key
+#  collection_id       :integer
+#  name                :text
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  parent_item_id      :integer
+#  code                :text
+#  parent_code         :text
+#  position            :integer
+#  resource_owner_id   :integer
+#  resource_owner_type :text
 #
 
 class CollectionItem < ApplicationRecord

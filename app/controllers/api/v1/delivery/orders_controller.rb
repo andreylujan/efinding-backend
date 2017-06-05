@@ -5,6 +5,16 @@ class Api::V1::Delivery::OrdersController < ApplicationController
     created_at = params.require(:order_creation_date)
     report = Report.where("dynamic_attributes->'49'->>'text' = '#{order_id}'").first
 
+    address_info = params.require(:address_info)
+
+    coord_str = address_info["address_coordinates"][1...-1].split(',')
+
+    address = {
+      street: address_info["address_street"],
+      name: address_info["address_name"],
+      coordinates: coord_str.map { |c| c.to_f }
+    }
+
     products = params["detail"].map do |detail|
       {
         quantity: detail["order_product_quantity"],
@@ -51,7 +61,13 @@ class Api::V1::Delivery::OrdersController < ApplicationController
           name: desc
         }
       end
-
+      report.dynamic_attributes["address"] = address
+      is_scheduled = params[:order_is_scheduled]
+      scheduled_at = nil
+      if is_scheduled
+        report.scheduled_at = DateTime.parse(params[:order_scheduled_date])
+          .change(offset: "-0400")
+      end
       report.dynamic_attributes["47"] = {
         sections: [
           {

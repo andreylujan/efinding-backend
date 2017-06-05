@@ -263,7 +263,7 @@ class Api::V1::ReportResource < ApplicationResource
           "reports.state = 'delivering' OR reports.state = 'delivered'")
       end
     end
-    records
+    records.where("reports.scheduled_at IS NULL OR reports.scheduled_at <= ?", DateTime.now)
 
   end
 

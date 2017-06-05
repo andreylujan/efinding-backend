@@ -10,6 +10,7 @@
 #  updated_at      :datetime         not null
 #  title_field     :text
 #  subtitle_field  :text
+#  has_pdf         :boolean          default(TRUE), not null
 #
 
 class ReportType < ApplicationRecord

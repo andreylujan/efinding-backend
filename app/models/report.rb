@@ -22,12 +22,13 @@
 #  position               :integer
 #  initial_location_id    :integer
 #  final_location_id      :integer
-#  state                  :integer          default("unchecked"), not null
 #  resolved_at            :datetime
 #  resolver_id            :integer
 #  resolution_comment     :text
 #  initial_location_image :text
 #  final_location_image   :text
+#  state                  :text             default("unchecked"), not null
+#  scheduled_at           :datetime
 #
 
 class Report < ApplicationRecord
