@@ -27,8 +27,8 @@
 #  resolution_comment     :text
 #  initial_location_image :text
 #  final_location_image   :text
-#  state                  :text             default("unchecked"), not null
 #  scheduled_at           :datetime
+#  state_id               :integer          not null
 #
 
 class Report < ApplicationRecord
@@ -41,6 +41,7 @@ class Report < ApplicationRecord
   belongs_to :creator, class_name: :User, foreign_key: :creator_id
   belongs_to :assigned_user, class_name: :User, foreign_key: :assigned_user_id
   belongs_to :resolver, class_name: :User, foreign_key: :resolver_id
+  belongs_to :state
   audited
 
   # enum state: [ :unchecked, :resolved, :pending ]
@@ -76,8 +77,6 @@ class Report < ApplicationRecord
   before_save :check_limit_date
   before_create :assign_user
   after_commit :update_inspection, on: [ :create, :update ]
-  after_save :change_state, on: [ :update ]
-  before_save :calculate_delivery_date, on: [ :update ]
 
   acts_as_xlsx columns: [
     :inspection_id,
@@ -446,21 +445,7 @@ class Report < ApplicationRecord
       errors.add(:limit_date, "No puede estar en el pasado")
     end
   end
-
-  def change_state
-    unless self.ignore_state_changes
-      if self.creator.organization_id == 4 and self.state_changed?
-        ChangeStateJob.set(wait: 3.seconds, queue: ENV['REPORT_QUEUE'] || "efinding_report").perform_later(self.id.to_s)
-      end
-    end
-  end
-
-  def calculate_delivery_date
-    if self.state_changed? and self.state == "accepted" and self.creator.organization_id == 4 and delivery_time = dynamic_attributes.dig("48", "code")
-      delivery_time = DateTime.now.in_time_zone("Chile/Continental") + (delivery_time.to_i).minutes
-      self.dynamic_attributes["subtitle"] = "Retiro: #{delivery_time.strftime('%H:%M')}"
-       end
-       end
+  
 
 
        end

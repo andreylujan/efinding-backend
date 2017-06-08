@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170605202916) do
+ActiveRecord::Schema.define(version: 20170608175158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,15 +53,6 @@ ActiveRecord::Schema.define(version: 20170605202916) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.index ["user_id"], name: "index_batch_uploads_on_user_id", using: :btree
-  end
-
-  create_table "categories", force: :cascade do |t|
-    t.text     "name",            null: false
-    t.integer  "organization_id", null: false
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.index ["organization_id", "name"], name: "index_categories_on_organization_id_and_name", unique: true, using: :btree
-    t.index ["organization_id"], name: "index_categories_on_organization_id", using: :btree
   end
 
   create_table "checkins", force: :cascade do |t|
@@ -255,14 +246,12 @@ ActiveRecord::Schema.define(version: 20170605202916) do
     t.text     "url"
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
-    t.integer  "category_id"
     t.uuid     "report_id"
     t.integer  "resource_id"
     t.text     "resource_type"
     t.text     "comment"
     t.boolean  "is_initial",    default: true, null: false
     t.datetime "deleted_at"
-    t.index ["category_id"], name: "index_images_on_category_id", using: :btree
     t.index ["deleted_at"], name: "index_images_on_deleted_at", using: :btree
     t.index ["report_id"], name: "index_images_on_report_id", using: :btree
     t.index ["resource_id"], name: "index_images_on_resource_id", using: :btree
@@ -393,14 +382,16 @@ ActiveRecord::Schema.define(version: 20170605202916) do
   end
 
   create_table "organizations", force: :cascade do |t|
-    t.text     "name",                             null: false
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.text     "name",                                 null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.text     "logo"
-    t.text     "csv_separator",      default: "|", null: false
+    t.text     "csv_separator",          default: "|", null: false
     t.integer  "checklist_id"
     t.text     "default_admin_path"
+    t.integer  "default_report_type_id"
     t.index ["checklist_id"], name: "index_organizations_on_checklist_id", using: :btree
+    t.index ["default_report_type_id"], name: "index_organizations_on_default_report_type_id", using: :btree
     t.index ["name"], name: "index_organizations_on_name", unique: true, using: :btree
   end
 
@@ -437,25 +428,27 @@ ActiveRecord::Schema.define(version: 20170605202916) do
   create_table "report_types", force: :cascade do |t|
     t.text     "name"
     t.integer  "organization_id"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.text     "title_field"
     t.text     "subtitle_field"
-    t.boolean  "has_pdf",         default: true, null: false
+    t.boolean  "has_pdf",          default: true, null: false
+    t.integer  "initial_state_id"
+    t.index ["initial_state_id"], name: "index_report_types_on_initial_state_id", using: :btree
     t.index ["organization_id"], name: "index_report_types_on_organization_id", using: :btree
   end
 
   create_table "reports", id: :uuid, default: nil, force: :cascade do |t|
-    t.integer  "report_type_id",                               null: false
-    t.json     "dynamic_attributes",     default: {},          null: false
-    t.datetime "created_at",                                   null: false
-    t.datetime "updated_at",                                   null: false
-    t.integer  "creator_id",                                   null: false
+    t.integer  "report_type_id",                         null: false
+    t.json     "dynamic_attributes",     default: {},    null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.integer  "creator_id",                             null: false
     t.datetime "limit_date"
     t.boolean  "finished"
     t.integer  "assigned_user_id"
     t.text     "pdf"
-    t.boolean  "pdf_uploaded",           default: false,       null: false
+    t.boolean  "pdf_uploaded",           default: false, null: false
     t.datetime "started_at"
     t.datetime "finished_at"
     t.datetime "deleted_at"
@@ -469,8 +462,8 @@ ActiveRecord::Schema.define(version: 20170605202916) do
     t.text     "resolution_comment"
     t.text     "initial_location_image"
     t.text     "final_location_image"
-    t.text     "state",                  default: "unchecked", null: false
     t.datetime "scheduled_at"
+    t.integer  "state_id",                               null: false
     t.index ["assigned_user_id"], name: "index_reports_on_assigned_user_id", using: :btree
     t.index ["creator_id"], name: "index_reports_on_creator_id", using: :btree
     t.index ["deleted_at"], name: "index_reports_on_deleted_at", using: :btree
@@ -478,6 +471,7 @@ ActiveRecord::Schema.define(version: 20170605202916) do
     t.index ["inspection_id"], name: "index_reports_on_inspection_id", using: :btree
     t.index ["report_type_id"], name: "index_reports_on_report_type_id", using: :btree
     t.index ["scheduled_at"], name: "index_reports_on_scheduled_at", using: :btree
+    t.index ["state_id"], name: "index_reports_on_state_id", using: :btree
   end
 
   create_table "request_logs", force: :cascade do |t|
@@ -509,12 +503,30 @@ ActiveRecord::Schema.define(version: 20170605202916) do
   create_table "sections", force: :cascade do |t|
     t.integer  "position"
     t.text     "name"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.integer  "report_type_id"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
     t.integer  "section_type"
-    t.json     "config",         default: {}, null: false
-    t.index ["report_type_id"], name: "index_sections_on_report_type_id", using: :btree
+    t.json     "config",       default: {}, null: false
+    t.integer  "state_id"
+    t.index ["state_id"], name: "index_sections_on_state_id", using: :btree
+  end
+
+  create_table "state_transitions", force: :cascade do |t|
+    t.integer  "previous_state_id", null: false
+    t.integer  "next_state_id",     null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["next_state_id", "previous_state_id"], name: "index_state_transitions_on_next_state_id_and_previous_state_id", unique: true, using: :btree
+    t.index ["previous_state_id", "next_state_id"], name: "index_state_transitions_on_previous_state_id_and_next_state_id", unique: true, using: :btree
+  end
+
+  create_table "states", force: :cascade do |t|
+    t.text     "name",           null: false
+    t.integer  "report_type_id", null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.index ["name", "report_type_id"], name: "index_states_on_name_and_report_type_id", unique: true, using: :btree
+    t.index ["report_type_id"], name: "index_states_on_report_type_id", using: :btree
   end
 
   create_table "table_columns", force: :cascade do |t|
@@ -560,7 +572,6 @@ ActiveRecord::Schema.define(version: 20170605202916) do
   end
 
   add_foreign_key "batch_uploads", "users"
-  add_foreign_key "categories", "organizations"
   add_foreign_key "checkins", "users"
   add_foreign_key "checklist_reports", "checklists"
   add_foreign_key "checklist_reports", "constructions"
@@ -585,7 +596,6 @@ ActiveRecord::Schema.define(version: 20170605202916) do
   add_foreign_key "data_parts", "collections"
   add_foreign_key "data_parts", "sections"
   add_foreign_key "devices", "users"
-  add_foreign_key "images", "categories"
   add_foreign_key "images", "reports"
   add_foreign_key "inspections", "constructions"
   add_foreign_key "inspections", "users", column: "creator_id"
@@ -598,17 +608,23 @@ ActiveRecord::Schema.define(version: 20170605202916) do
   add_foreign_key "menu_items", "menu_sections"
   add_foreign_key "menu_sections", "organizations"
   add_foreign_key "organizations", "checklists"
+  add_foreign_key "organizations", "report_types", column: "default_report_type_id"
   add_foreign_key "personnel", "organizations"
   add_foreign_key "personnel_types", "organizations"
   add_foreign_key "report_types", "organizations"
+  add_foreign_key "report_types", "states", column: "initial_state_id"
   add_foreign_key "reports", "inspections"
   add_foreign_key "reports", "locations", column: "final_location_id"
   add_foreign_key "reports", "locations", column: "initial_location_id"
   add_foreign_key "reports", "report_types"
+  add_foreign_key "reports", "states"
   add_foreign_key "reports", "users", column: "resolver_id"
   add_foreign_key "request_logs", "organizations"
   add_foreign_key "roles", "organizations"
-  add_foreign_key "sections", "report_types"
+  add_foreign_key "sections", "states"
+  add_foreign_key "state_transitions", "states", column: "next_state_id"
+  add_foreign_key "state_transitions", "states", column: "previous_state_id"
+  add_foreign_key "states", "report_types"
   add_foreign_key "table_columns", "organizations"
   add_foreign_key "users", "roles"
 end

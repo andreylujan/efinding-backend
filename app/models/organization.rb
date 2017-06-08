@@ -3,14 +3,15 @@
 #
 # Table name: organizations
 #
-#  id                 :integer          not null, primary key
-#  name               :text             not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  logo               :text
-#  csv_separator      :text             default("|"), not null
-#  checklist_id       :integer
-#  default_admin_path :text
+#  id                     :integer          not null, primary key
+#  name                   :text             not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  logo                   :text
+#  csv_separator          :text             default("|"), not null
+#  checklist_id           :integer
+#  default_admin_path     :text
+#  default_report_type_id :integer
 #
 
 class Organization < ApplicationRecord
@@ -27,6 +28,7 @@ class Organization < ApplicationRecord
     belongs_to :checklist
     has_many :checklists
     has_many :personnel_types
+    belongs_to :default_report_type, class_name: :ReportType, foreign_key: :default_report_type_id
 
     validates :default_admin_path, presence: true
     

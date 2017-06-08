@@ -3,14 +3,14 @@
 #
 # Table name: sections
 #
-#  id             :integer          not null, primary key
-#  position       :integer
-#  name           :text
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  report_type_id :integer
-#  section_type   :integer
-#  config         :json             not null
+#  id           :integer          not null, primary key
+#  position     :integer
+#  name         :text
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  section_type :integer
+#  config       :json             not null
+#  state_id     :integer
 #
 
 class SectionSerializer < ActiveModel::Serializer

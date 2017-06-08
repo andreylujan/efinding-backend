@@ -14,11 +14,6 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-
-      namespace :delivery do
-        resources :orders, only: [ :create ]
-      end
-
       namespace :manflas do
         jsonapi_resources :stations, only: [ :index ] do
         end
@@ -103,9 +98,6 @@ Rails.application.routes.draw do
         member do
           post :transition
         end
-      end
-
-      jsonapi_resources :categories, only: [ :index ] do
       end
 
       jsonapi_resources :data_parts, only: [ :index ] do

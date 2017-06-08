@@ -7,7 +7,6 @@
 #  url           :text
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  category_id   :integer
 #  report_id     :uuid
 #  resource_id   :integer
 #  resource_type :text
@@ -20,7 +19,6 @@ class Image < ApplicationRecord
 
   # mount_base64_uploader :image, ImageUploader
   acts_as_paranoid
-  belongs_to :category
   belongs_to :report
   # validates_presence_of :image
   validates_presence_of :url
