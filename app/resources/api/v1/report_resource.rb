@@ -8,13 +8,11 @@ class Api::V1::ReportResource < ApplicationResource
     :started_at,
     :finished_at,
     :images_attributes, :synced, :is_draft,
-    :state_name,
     :formatted_finished_at,
     :formatted_created_at,
     :formatted_limit_date,
     :formatted_resolved_at,
     :html,
-    :state,
     :resolved_at,
     :resolution_comment
 
@@ -26,12 +24,13 @@ class Api::V1::ReportResource < ApplicationResource
   has_one :creator
   has_one :inspection
   has_one :resolver
+  has_one :state
 
   key_type :uuid
 
 
   filters :pdf_uploaded,
-    :report_type_id, :state_name, :creator_id, :assigned_user_id
+    :report_type_id, :creator_id, :assigned_user_id
 
 
   filter :creator, apply: ->(records, value, _options) {
@@ -48,9 +47,6 @@ class Api::V1::ReportResource < ApplicationResource
     end
   }
 
-  filter :state_name, apply: ->(records, value, _options) {
-    records
-  }
 
   filter :station_id, apply: ->(records, value, _options) {
     if not value.empty?
@@ -230,15 +226,15 @@ class Api::V1::ReportResource < ApplicationResource
     @model.html.url
   end
 
-  before_save do
-    if @model.state_changed?
-      if @model.state_change[1] == "resolved" || @model.state_change[1] == "pending"
-        @model.resolver = context[:current_user]
-      end
-      @model.pdf_uploaded = false
-    end
-    @model.creator_id = context[:current_user].id if @model.new_record?
-  end
+  # before_save do
+  #   if @model.state_changed?
+  #     if @model.state_change[1] == "resolved" || @model.state_change[1] == "pending"
+  #       @model.resolver = context[:current_user]
+  #     end
+  #     @model.pdf_uploaded = false
+  #   end
+  #   @model.creator_id = context[:current_user].id if @model.new_record?
+  # end
 
   def self.records(options = {})
     context = options[:context]
@@ -257,12 +253,6 @@ class Api::V1::ReportResource < ApplicationResource
       records = records.order("reports.created_at DESC")
     end
 
-    if current_user.organization_id == 4
-      if current_user.role.name == "Transportista"
-        records = records.where("reports.state = 'awaiting_delivery' OR " +
-          "reports.state = 'delivering' OR reports.state = 'delivered'")
-      end
-    end
     records.where("reports.scheduled_at IS NULL OR reports.scheduled_at <= ?", DateTime.now)
 
   end

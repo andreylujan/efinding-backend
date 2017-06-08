@@ -21,4 +21,5 @@ class ReportType < ApplicationRecord
   validates :organization, presence: true
   belongs_to :initial_state, class_name: :State, foreign_key: :initial_state_id
   validates :initial_state, presence: true
+  has_many :states
 end

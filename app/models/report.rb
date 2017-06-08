@@ -94,10 +94,6 @@ class Report < ApplicationRecord
     :report_fields
   ]
 
-  def self.states
-    { "unchecked" => 0, "resolved" => 1, "pending" => 2}
-  end
-
   def assign_user
     if creator.present? and creator.organization_id == 3
       area_id = dynamic_attributes.dig("43", "id")
@@ -280,14 +276,6 @@ class Report < ApplicationRecord
   def generate_id
     if self.id.nil?
       self.id = SecureRandom.uuid
-    end
-  end
-
-  def state_name
-    if self.finished?
-      "Ejecutado"
-    else
-      "Pendiente"
     end
   end
 
