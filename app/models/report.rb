@@ -33,6 +33,60 @@
 
 class Report < ApplicationRecord
 
+  # state_machine :state do
+  # end
+
+  # # Replace this with an external source (like a db)
+  # def transitions
+  #   trans = StateTransition.joins(:previous_state)
+  #     .where(states: { report_type_id: self.report_type_id })
+  #     .map do |transition|
+  #       trans_hash = {}
+  #       trans_hash[transition.previous_state.name] =
+  #         transition.next_state.name
+  #       trans_hash[:on] = transition.action
+  #       trans_hash
+  #     end
+  #   trans
+  # end
+
+  # # Create a state machine for this vehicle instance dynamically based on the
+  # # transitions defined from the source above
+  # def machine
+  #   if report_type.present?
+  #     report = self
+  #     # @machine ||= Machine.new(report, initial: :parked, action: :save) do
+  #     Machine.new(report, initial: report.state || report_type.initial_state.name, action: :save) do
+  #       report.transitions.each {|attrs| transition(attrs)}
+  #     end
+  #   end
+  # end
+
+  # # Generic class for building machines
+  # class Machine
+  #   def self.new(object, *args, &block)
+  #     machine_class = Class.new
+  #     machine = machine_class.state_machine(*args, &block)
+  #     attribute = machine.attribute
+  #     action = machine.action
+
+  #     # Delegate attributes
+  #     machine_class.class_eval do
+  #       define_method(:definition) { machine }
+  #       define_method(attribute) { object.send(attribute) }
+  #       define_method("#{attribute}=") {|value| object.send("#{attribute}=", value) }
+  #       define_method(action) { object.send(action) } if action
+  #     end
+
+  #     machine_class.new
+  #   end
+  # end
+
+  # def save
+  # Save the state change...
+  #  true
+  # end
+
   before_validation :check_report_type
   # before_validation :generate_id
   acts_as_paranoid
@@ -42,6 +96,8 @@ class Report < ApplicationRecord
   belongs_to :assigned_user, class_name: :User, foreign_key: :assigned_user_id
   belongs_to :resolver, class_name: :User, foreign_key: :resolver_id
   belongs_to :state
+  validates :state, presence: true
+
   audited
 
   # enum state: [ :unchecked, :resolved, :pending ]
@@ -73,6 +129,7 @@ class Report < ApplicationRecord
   after_commit :send_task_job, on: [ :create ]
 
   validate :limit_date_cannot_be_in_the_past, on: :create
+  validate :valid_state_transition
   before_save :default_values
   before_save :check_limit_date
   before_create :assign_user
@@ -93,6 +150,16 @@ class Report < ApplicationRecord
     :resolution_comment,
     :report_fields
   ]
+
+  def valid_state_transition
+    if state.present? and changes[:state_id].present?
+      previous_state = State.find(changes[:state_id][0])
+      new_state = previous_state.next_states.find_by_id(changes[:state_id][1])
+      if new_state.nil?
+        errors.add(:state, "Transición inválida")
+      end
+    end
+  end
 
   def assign_user
     if creator.present? and creator.organization_id == 3

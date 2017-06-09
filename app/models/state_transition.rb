@@ -7,6 +7,7 @@
 #  next_state_id     :integer          not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  name              :text             not null
 #
 
 class StateTransition < ApplicationRecord

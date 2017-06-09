@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170608175158) do
+ActiveRecord::Schema.define(version: 20170609190559) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -516,6 +516,7 @@ ActiveRecord::Schema.define(version: 20170608175158) do
     t.integer  "next_state_id",     null: false
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
+    t.text     "name",              null: false
     t.index ["next_state_id", "previous_state_id"], name: "index_state_transitions_on_next_state_id_and_previous_state_id", unique: true, using: :btree
     t.index ["previous_state_id", "next_state_id"], name: "index_state_transitions_on_previous_state_id_and_next_state_id", unique: true, using: :btree
   end
