@@ -38,6 +38,10 @@ class Organization < ApplicationRecord
         end
     end
 
+    def reports
+        Report.joins(creator: :role).where(roles: { organization_id: id })
+    end
+
     def users
     	User.joins(:role)
     	.where(roles: { organization_id: self.id })
