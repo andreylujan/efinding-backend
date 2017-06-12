@@ -30,6 +30,8 @@ class Organization < ApplicationRecord
     has_many :personnel_types
     belongs_to :default_report_type, class_name: :ReportType, foreign_key: :default_report_type_id
 
+    enum map_type: [ :roadmap, :satellite ]
+
     validates :default_admin_path, presence: true
     
     def checklist_id
