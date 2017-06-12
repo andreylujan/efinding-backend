@@ -78,6 +78,7 @@ class Report < ApplicationRecord
   after_commit :update_inspection, on: [ :create, :update ]
   after_save :change_state, on: [ :update ]
   before_save :calculate_delivery_date, on: [ :update ]
+  after_commit :send_email, on: [ :create ]
 
   acts_as_xlsx columns: [
     :inspection_id,
@@ -97,6 +98,15 @@ class Report < ApplicationRecord
 
   def self.states
     { "unchecked" => 0, "resolved" => 1, "pending" => 2}
+  end
+
+  def send_email
+    if self.assigned_user.present? and self.inspection.nil?
+      UserMailer.delay_for(5.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+      .report_email(self.id, self.assigned_user,
+                    "Tarea asignada",
+                    "#{creator.name} ha generado una tarea para tu área.")
+    end
   end
 
   def assign_user

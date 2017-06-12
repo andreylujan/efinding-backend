@@ -20,6 +20,14 @@ class UserMailer < ApplicationMailer
 		@user = user
 		mail(to: @user.email, subject: 'Recuperación de contraseña')
 	end
+
+	def report_email(report_id, user, subject, message)
+		report = Report.find(report_id)
+		@user = user
+		@message = message
+		@url = report.pdf_url
+		mail(to: @user.email, subject: subject)
+	end
 	
 	def inspection_email(inspection_id, user, subject, message)
 		inspection = Inspection.find(inspection_id)
