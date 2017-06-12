@@ -70,6 +70,9 @@ Rails.application.routes.draw do
         end
       end
 
+      jsonapi_resources :report_types, only: [ :index ] do
+      end
+
       jsonapi_resources :roles, only: :index
       jsonapi_resources :invitations, only: [
         :create,
