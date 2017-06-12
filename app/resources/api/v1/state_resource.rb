@@ -3,4 +3,5 @@ class Api::V1::StateResource < JSONAPI::Resource
 	has_many :previous_states
 	has_many :next_states
 	has_many :sections
+	has_many :state_transitions
 end
