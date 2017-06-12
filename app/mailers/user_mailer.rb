@@ -36,8 +36,4 @@ class UserMailer < ApplicationMailer
 		@url = inspection.pdf_url
 		mail(to: @user.email, subject: subject)
 	end
-
-	def report_email()
-	end
-
 end
