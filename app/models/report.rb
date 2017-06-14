@@ -129,7 +129,7 @@ class Report < ApplicationRecord
   after_commit :send_task_job, on: [ :create ]
 
   validate :limit_date_cannot_be_in_the_past, on: :create
-  validate :valid_state_transition
+  validate :valid_state_transition, on: [ :update ]
   before_save :default_values
   before_save :check_limit_date
   before_create :assign_user
