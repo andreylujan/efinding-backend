@@ -211,11 +211,11 @@ class Api::V1::ReportResource < ApplicationResource
   end
 
   def is_draft
-    0
+    false
   end
 
   def synced
-    1
+    true
   end
 
   def pdf
