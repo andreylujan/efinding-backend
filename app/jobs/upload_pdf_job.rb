@@ -19,7 +19,7 @@ class UploadPdfJob < ApplicationJob
 
     report.ignore_pdf = true
 
-    map_type = "staticmap"
+    map_type = "road_map"
     initial_location = report.initial_location
 
     if report.creator.organization_id == 3
@@ -30,14 +30,14 @@ class UploadPdfJob < ApplicationJob
     end
 
     if initial_location.present?
-      initial_location_image = open("http://maps.googleapis.com/maps/api/#{map_type}?&maptype=roadmap&zoom=15&size=400x250&markers=size:" + 
+      initial_location_image = open("http://maps.googleapis.com/maps/api/staticmap?&maptype=#{map_type}&zoom=15&size=400x250&markers=size:" + 
         "mid%7Ccolor:green%7C#{initial_location.lonlat.y},#{initial_location.lonlat.x}&key=AIzaSyAxdoh8VjK53CCCYNmGx0RGuompeK-ejzc")
       report.initial_location_image = initial_location_image
       report.save!
     end
 
     if report.final_location.present?
-      final_location_image = open("http://maps.googleapis.com/maps/api/#{map_type}?&maptype=roadmap&zoom=15&size=400x250&markers=size:" + 
+      final_location_image = open("http://maps.googleapis.com/maps/api/staticmap?&maptype=#{map_type}&zoom=15&size=400x250&markers=size:" + 
         "mid%7Ccolor:orange%7C#{report.final_location.lonlat.y},#{report.final_location.lonlat.x}&key=AIzaSyAxdoh8VjK53CCCYNmGx0RGuompeK-ejzc")
       report.final_location_image = final_location_image
       report.save!
