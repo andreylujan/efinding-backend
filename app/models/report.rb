@@ -70,7 +70,7 @@ class Report < ApplicationRecord
 
   after_commit :generate_pdf
   after_commit :send_task_job, on: [ :create ]
-
+  after_commit :schedule_order, on: [ :create ]
   validate :limit_date_cannot_be_in_the_past, on: :create
   before_save :default_values
   before_save :check_limit_date
@@ -454,6 +454,13 @@ class Report < ApplicationRecord
   def limit_date_cannot_be_in_the_past
     if limit_date.present? && limit_date < DateTime.now
       errors.add(:limit_date, "No puede estar en el pasado")
+    end
+  end
+
+  def schedule_order
+    if self.scheduled_at.present? and self.creator.organization_id == 4
+      ScheduledOrderJob.set(wait_until: self.scheduled_at)
+            .perform_later(self.id)
     end
   end
 
