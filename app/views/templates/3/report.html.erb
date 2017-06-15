@@ -222,6 +222,7 @@
 						<div class="picsField center-cropped"
 						style="background-image: url('<%= image.url.gsub('https', 'http') %>');">
 						</div>
+						<%= image.comment.present? ? image.comment : "Imagen sin comentario" %>
 						<% end %>
 				</div>
 			</div>
