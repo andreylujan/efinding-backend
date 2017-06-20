@@ -389,7 +389,7 @@ class Report < ApplicationRecord
   
   def send_task_job
     if self.assigned_user.present?
-      SendTaskJob.set(wait: 1.second).perform_later(self.id.to_s)
+      SendTaskJob.set(wait: 1.second, queue: ENV['PUSH_QUEUE'] || 'efinding_push').perform_later(self.id.to_s)
     end
   end
   
