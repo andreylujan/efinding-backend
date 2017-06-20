@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170612200235) do
+ActiveRecord::Schema.define(version: 20170619184106) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -217,8 +217,10 @@ ActiveRecord::Schema.define(version: 20170612200235) do
     t.integer  "detail_id"
     t.integer  "section_id"
     t.integer  "collection_id"
+    t.integer  "list_id"
     t.index ["collection_id"], name: "index_data_parts_on_collection_id", using: :btree
     t.index ["detail_id"], name: "index_data_parts_on_detail_id", using: :btree
+    t.index ["list_id"], name: "index_data_parts_on_list_id", using: :btree
     t.index ["section_id"], name: "index_data_parts_on_section_id", using: :btree
   end
 

@@ -18,9 +18,8 @@
 #
 
 class DataPart < ApplicationRecord
-  
   belongs_to :section
   acts_as_list scope: :section
   belongs_to :collection
-
+  belongs_to :list, class_name: :List, foreign_key: :list_id
 end

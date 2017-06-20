@@ -18,6 +18,5 @@
 #
 
 class List < DataPart
-
-
+	has_many :data_parts, -> { order(position: :asc) }
 end
