@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddInitialStateToReportTypes < ActiveRecord::Migration[5.0]
   def change
     add_column :report_types, :initial_state_id, :integer

@@ -12,6 +12,7 @@
 #  checklist_id           :integer
 #  default_admin_path     :text
 #  default_report_type_id :integer
+#  map_type               :integer          default("roadmap"), not null
 #
 
 class Organization < ApplicationRecord

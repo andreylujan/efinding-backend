@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddStateReferenceToReports < ActiveRecord::Migration[5.0]
   def change
     add_reference :reports, :state, foreign_key: true

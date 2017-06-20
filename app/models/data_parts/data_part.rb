@@ -15,6 +15,7 @@
 #  detail_id     :integer
 #  section_id    :integer
 #  collection_id :integer
+#  list_id       :integer
 #
 
 class DataPart < ApplicationRecord
