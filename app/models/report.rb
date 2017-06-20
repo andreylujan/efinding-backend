@@ -109,7 +109,7 @@ class Report < ApplicationRecord
   mount_uploader :final_location_image, ImageUploader
 
   has_many :images, dependent: :destroy
-  before_save :set_default_attributes
+  before_create :set_default_attributes
   before_save :cache_data
 
   validates :report_type_id, presence: true
