@@ -32,15 +32,25 @@ class UploadPdfJob < ApplicationJob
     if initial_location.present?
       initial_location_image = open("http://maps.googleapis.com/maps/api/staticmap?&maptype=#{map_type}&zoom=15&size=400x250&markers=size:" + 
         "mid%7Ccolor:green%7C#{initial_location.lonlat.y},#{initial_location.lonlat.x}&key=AIzaSyAxdoh8VjK53CCCYNmGx0RGuompeK-ejzc")
-      report.initial_location_image = initial_location_image
+      file = Tempfile.new('initial_location_image')
+      file.binmode
+      file.write(initial_location_image.read)
+      report.initial_location_image = file
       report.save!
+      file.close
+      file.unlink
     end
 
     if report.final_location.present?
       final_location_image = open("http://maps.googleapis.com/maps/api/staticmap?&maptype=#{map_type}&zoom=15&size=400x250&markers=size:" + 
         "mid%7Ccolor:orange%7C#{report.final_location.lonlat.y},#{report.final_location.lonlat.x}&key=AIzaSyAxdoh8VjK53CCCYNmGx0RGuompeK-ejzc")
-      report.final_location_image = final_location_image
+      file = Tempfile.new('final_location_image')
+      file.binmode
+      file.write(final_location_image.read)
+      report.final_location_image = file
       report.save!
+      file.close
+      file.unlink
     end
     
     report.ignore_pdf = false
