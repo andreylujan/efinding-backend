@@ -16,7 +16,7 @@ class Api::V1::ReportResource < ApplicationResource
     :resolved_at,
     :resolution_comment
 
-  add_foreign_keys :inspection_id, :creator_id, :assigned_user_id, :report_type_id
+  add_foreign_keys :inspection_id, :creator_id, :assigned_user_id, :report_type_id, :state_id
 
   has_one :report_type
   has_many :images
@@ -211,11 +211,11 @@ class Api::V1::ReportResource < ApplicationResource
   end
 
   def is_draft
-    0
+    false
   end
 
   def synced
-    1
+    true
   end
 
   def pdf

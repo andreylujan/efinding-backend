@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 kml = KMLFile.parse(File.read('./kmz/cuarteles/doc.kml'))
 stations = kml.features[0].features[0].features
 styles = {}

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddDefaultReportTypeIdToOrganizations < ActiveRecord::Migration[5.0]
   def change
     add_column :organizations, :default_report_type_id, :integer

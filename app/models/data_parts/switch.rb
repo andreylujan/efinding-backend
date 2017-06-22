@@ -18,14 +18,7 @@
 #  list_id       :integer
 #
 
-class Label < DataPart
-
-	def columns
-		if config["columns"].nil?
-			[ name ]
-		else
-			config["columns"]
-		end
-	end
+class Switch < DataPart
+  
 
 end

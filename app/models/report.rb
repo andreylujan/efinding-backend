@@ -109,6 +109,7 @@ class Report < ApplicationRecord
   mount_uploader :final_location_image, ImageUploader
 
   has_many :images, dependent: :destroy
+  before_create :set_default_attributes
   before_save :cache_data
 
   validates :report_type_id, presence: true
@@ -388,7 +389,7 @@ class Report < ApplicationRecord
   
   def send_task_job
     if self.assigned_user.present?
-      SendTaskJob.set(wait: 1.second).perform_later(self.id.to_s)
+      SendTaskJob.set(wait: 1.second, queue: ENV['PUSH_QUEUE'] || 'efinding_push').perform_later(self.id.to_s)
     end
   end
   
@@ -499,6 +500,10 @@ class Report < ApplicationRecord
     if limit_date.present? && limit_date < DateTime.now
       errors.add(:limit_date, "No puede estar en el pasado")
     end
+  end
+
+  def set_default_attributes
+    self.dynamic_attributes = self.report_type.default_dynamic_attributes
   end
   
 

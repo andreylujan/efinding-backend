@@ -15,8 +15,9 @@
 #  detail_id     :integer
 #  section_id    :integer
 #  collection_id :integer
+#  list_id       :integer
 #
 
 class Custom < DataPart
-    belongs_to :detail, class_name: :Section, foreign_key: :detail_id	
+    	
 end

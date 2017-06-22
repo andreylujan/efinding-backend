@@ -22,9 +22,14 @@ class SendTaskJob < ApplicationJob
     params = {
       alert: "Tarea asignada",
       data: {
-        message: "Se le ha asignado una tarea",
+        body: "Se le ha asignado una tarea",
         title: "Tarea asignada",
         report_id: report.id.to_s
+      },
+      notification_hash: {
+        body: "Se le ha asignado una tarea",
+        title: "Tarea asignada",
+        icon: "logo"
       },
       gcm_app_name: gcm_app_name,
       apns_app_name: apns_app_name

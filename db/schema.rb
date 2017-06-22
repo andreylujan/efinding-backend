@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170612200235) do
+ActiveRecord::Schema.define(version: 20170620143116) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -217,8 +218,10 @@ ActiveRecord::Schema.define(version: 20170612200235) do
     t.integer  "detail_id"
     t.integer  "section_id"
     t.integer  "collection_id"
+    t.integer  "list_id"
     t.index ["collection_id"], name: "index_data_parts_on_collection_id", using: :btree
     t.index ["detail_id"], name: "index_data_parts_on_detail_id", using: :btree
+    t.index ["list_id"], name: "index_data_parts_on_list_id", using: :btree
     t.index ["section_id"], name: "index_data_parts_on_section_id", using: :btree
   end
 
@@ -429,12 +432,13 @@ ActiveRecord::Schema.define(version: 20170612200235) do
   create_table "report_types", force: :cascade do |t|
     t.text     "name"
     t.integer  "organization_id"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
     t.text     "title_field"
     t.text     "subtitle_field"
-    t.boolean  "has_pdf",          default: true, null: false
+    t.boolean  "has_pdf",                    default: true, null: false
     t.integer  "initial_state_id"
+    t.json     "default_dynamic_attributes", default: {},   null: false
     t.index ["initial_state_id"], name: "index_report_types_on_initial_state_id", using: :btree
     t.index ["organization_id"], name: "index_report_types_on_organization_id", using: :btree
   end

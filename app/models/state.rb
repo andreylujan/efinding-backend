@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # == Schema Information
 #
 # Table name: states
@@ -7,6 +8,7 @@
 #  report_type_id :integer          not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  color          :text
 #
 
 class State < ApplicationRecord

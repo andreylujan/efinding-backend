@@ -18,14 +18,6 @@
 #  list_id       :integer
 #
 
-class Label < DataPart
-
-	def columns
-		if config["columns"].nil?
-			[ name ]
-		else
-			config["columns"]
-		end
-	end
-
+class List < DataPart
+	has_many :data_parts, -> { order(position: :asc) }
 end
