@@ -1,5 +1,5 @@
 # -*- encoding : utf-8 -*-
-class Api::V1::StateResource < JSONAPI::Resource
+class Api::V1::StateResource < ApplicationResource
 	attributes :name, :color
 	has_many :previous_states
 	has_many :next_states
