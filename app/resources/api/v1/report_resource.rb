@@ -31,6 +31,21 @@ class Api::V1::ReportResource < ApplicationResource
   filters :pdf_uploaded,
     :state_id, :creator_id, :assigned_user_id
 
+  filter :creator_id, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.where("reports.creator_id = ?", value[0])
+    else
+      records
+    end
+  }
+
+  filter :assigned_user_id, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.where("reports.assigned_user_id = ?", value[0])
+    else
+      records
+    end
+  }
 
   filter :creator, apply: ->(records, value, _options) {
     if not value.empty?
