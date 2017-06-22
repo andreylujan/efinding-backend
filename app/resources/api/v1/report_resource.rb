@@ -234,6 +234,12 @@ class Api::V1::ReportResource < ApplicationResource
   #   end
   #   @model.creator_id = context[:current_user].id if @model.new_record?
   # end
+  before_save do
+    current_user = context[:current_user]
+    if @model.creator.nil?
+      @model.creator = current_user
+    end
+  end
 
   def self.records(options = {})
     context = options[:context]
