@@ -4,7 +4,6 @@
 # Table name: reports
 #
 #  id                     :uuid             not null, primary key
-#  report_type_id         :integer          not null
 #  dynamic_attributes     :json             not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
@@ -87,15 +86,17 @@ class Report < ApplicationRecord
   #  true
   # end
 
-  before_validation :check_report_type
+  before_validation :check_state
   # before_validation :generate_id
   acts_as_paranoid
   attr_accessor :ignore_pdf
-  belongs_to :report_type
   belongs_to :creator, class_name: :User, foreign_key: :creator_id
   belongs_to :assigned_user, class_name: :User, foreign_key: :assigned_user_id
   belongs_to :resolver, class_name: :User, foreign_key: :resolver_id
   belongs_to :state
+
+  delegate :report_type, to: :state, allow_nil: false
+
   validates :state, presence: true
 
   audited
@@ -109,11 +110,7 @@ class Report < ApplicationRecord
   mount_uploader :final_location_image, ImageUploader
 
   has_many :images, dependent: :destroy
-  before_create :set_default_attributes
   before_save :cache_data
-
-  validates :report_type_id, presence: true
-  validates :report_type, presence: true
 
   belongs_to :initial_location, class_name: :Location
   belongs_to :final_location, class_name: :Location
@@ -362,9 +359,12 @@ class Report < ApplicationRecord
   end
 
 
-  def check_report_type
-    if self.report_type.nil? and self.creator.present?
-      self.report_type = self.creator.organization.report_types.first
+  def check_state
+    if self.state.nil? and self.creator.present?
+      org = self.creator.organization
+      if org.default_report_type.present?
+        self.state = org.default_report_type.initial_state
+      end
     end
   end
   
@@ -500,10 +500,6 @@ class Report < ApplicationRecord
     if limit_date.present? && limit_date < DateTime.now
       errors.add(:limit_date, "No puede estar en el pasado")
     end
-  end
-
-  def set_default_attributes
-    self.dynamic_attributes = self.report_type.default_dynamic_attributes
   end
   
 

@@ -20,4 +20,5 @@ class State < ApplicationRecord
   has_many :previous_states, through: :incoming_transitions
   has_many :next_states, through: :outgoing_transitions
   has_many :sections
+  has_many :reports
 end

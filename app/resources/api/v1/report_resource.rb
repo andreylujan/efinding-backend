@@ -16,9 +16,8 @@ class Api::V1::ReportResource < ApplicationResource
     :resolved_at,
     :resolution_comment
 
-  add_foreign_keys :inspection_id, :creator_id, :assigned_user_id, :report_type_id, :state_id
+  add_foreign_keys :inspection_id, :creator_id, :assigned_user_id, :state_id
 
-  has_one :report_type
   has_many :images
   has_one :assigned_user
   has_one :creator
@@ -30,7 +29,7 @@ class Api::V1::ReportResource < ApplicationResource
 
 
   filters :pdf_uploaded,
-    :report_type_id, :creator_id, :assigned_user_id
+    :state_id, :creator_id, :assigned_user_id
 
 
   filter :creator, apply: ->(records, value, _options) {
@@ -56,10 +55,10 @@ class Api::V1::ReportResource < ApplicationResource
     end
   }
 
-  filter :report_type, apply: ->(records, value, _options) {
+  filter :state, apply: ->(records, value, _options) {
     if not value.empty?
       if value[0].is_a? Hash and value[0]["id"].present?
-        records = records.where(report_type_id: value[0]["id"])
+        records = records.where(state_id: value[0]["id"])
       end
     end
     records
@@ -242,8 +241,8 @@ class Api::V1::ReportResource < ApplicationResource
     records = Report.none
     if context[:inspection_id]
       records = Inspection.find(context[:inspection_id]).reports
-    elsif context[:report_type_id]
-      records = ReportType.find(context[:report_type_id]).reports
+    elsif context[:state_id]
+      records = State.find(context[:state_id]).reports
     else
       records = Report.joins(creator: { role: :organization }).where(organizations: { id: current_user.organization.id })
     end
@@ -260,7 +259,6 @@ class Api::V1::ReportResource < ApplicationResource
 
 
   def fetchable_fields
-    super - [ :initial_location_attributes, :final_location_attributes, :images_attributes,
-              :report_type_id ]
+    super - [ :initial_location_attributes, :final_location_attributes, :images_attributes ]
   end
 end

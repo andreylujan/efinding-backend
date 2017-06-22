@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170620143116) do
+ActiveRecord::Schema.define(version: 20170622175214) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -444,7 +443,6 @@ ActiveRecord::Schema.define(version: 20170620143116) do
   end
 
   create_table "reports", id: :uuid, default: nil, force: :cascade do |t|
-    t.integer  "report_type_id",                         null: false
     t.json     "dynamic_attributes",     default: {},    null: false
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
@@ -474,7 +472,6 @@ ActiveRecord::Schema.define(version: 20170620143116) do
     t.index ["deleted_at"], name: "index_reports_on_deleted_at", using: :btree
     t.index ["id"], name: "index_reports_on_id", using: :btree
     t.index ["inspection_id"], name: "index_reports_on_inspection_id", using: :btree
-    t.index ["report_type_id"], name: "index_reports_on_report_type_id", using: :btree
     t.index ["scheduled_at"], name: "index_reports_on_scheduled_at", using: :btree
     t.index ["state_id"], name: "index_reports_on_state_id", using: :btree
   end
@@ -623,7 +620,6 @@ ActiveRecord::Schema.define(version: 20170620143116) do
   add_foreign_key "reports", "inspections"
   add_foreign_key "reports", "locations", column: "final_location_id"
   add_foreign_key "reports", "locations", column: "initial_location_id"
-  add_foreign_key "reports", "report_types"
   add_foreign_key "reports", "states"
   add_foreign_key "reports", "users", column: "resolver_id"
   add_foreign_key "request_logs", "organizations"
