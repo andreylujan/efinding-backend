@@ -4,4 +4,5 @@ class Api::V1::StateResource < JSONAPI::Resource
 	has_many :next_states
 	has_many :sections
 	has_many :outgoing_transitions
+	add_foreign_keys :report_type_id
 end
