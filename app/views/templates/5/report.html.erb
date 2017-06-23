@@ -139,13 +139,9 @@
 			</div>
 		</div>
 		<hr />
-		<h3 class="inspeccion">Oportunidad de venta: <%= inspection.code %> - <%= inspection.construction.name %></h3>
-		<% inspection.reports.each_with_index do |report, index| %>
-		<% if index > 0 %>
+		<h3 class="inspeccion">Oportunidad de venta: <%= report.dynamic_attributes.dig("64", "value") %></h3>
 		<div>
-			<% else %>
 			<div>
-				<% end %>
 				<h3>REPORTE</h3>
 				<div class="row">
 					<div class="col-xs-6">
@@ -286,7 +282,6 @@
 				</div>
 			</div>
 		</div>
-		<% end %>
 
 		<div class="row standalone-container" id="location-info">
 			<div class="col-xs-12">
@@ -323,10 +318,10 @@
 						<tbody>
 							<tr>
 								<td>
-									<%= report.creator.name %>
+									El detalle
 								</td>
 								<td>
-									<%= report.inspection.initial_signer.name %>
+									El comentario
 								</td>
 							</tr>
 						</tbody>
@@ -351,16 +346,16 @@
 						<tbody>
 							<tr>
 								<td>
-									<%= report.creator.name %>
+									$50.000.000
 								</td>
 								<td>
-									<%= report.inspection.initial_signer.name %>
+									60%
 								</td>
 								<td>
-									<%= report.inspection.initial_signer.name %>
+									Propuesta
 								</td>
 								<td>
-									<%= report.inspection.initial_signer.name %>
+									Comentario
 								</td>
 							</tr>
 						</tbody>
@@ -385,16 +380,16 @@
 						<tbody>
 							<tr>
 								<td>
-									<%= report.creator.name %>
+									El negocio
 								</td>
 								<td>
-									<%= report.inspection.initial_signer.name %>
+									$50.000
 								</td>
 								<td>
-									<%= report.inspection.initial_signer.name %>
+									Los tiempos
 								</td>
 								<td>
-									<%= report.inspection.initial_signer.name %>
+									Un comentario
 								</td>
 							</tr>
 						</tbody>
@@ -481,7 +476,6 @@
 			</div>
 		</div>
 	</div>
-	<% end %>
 </div>
 </body>
 </html>
