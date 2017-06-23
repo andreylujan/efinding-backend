@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170622175214) do
+ActiveRecord::Schema.define(version: 20170623012730) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -302,7 +302,7 @@ ActiveRecord::Schema.define(version: 20170622175214) do
 
   create_table "locations", force: :cascade do |t|
     t.geometry "lonlat",     limit: {:srid=>0, :type=>"point"}, null: false
-    t.integer  "accuracy"
+    t.float    "accuracy"
     t.bigint   "timestamp"
     t.text     "provider"
     t.datetime "created_at",                                    null: false
@@ -311,6 +311,7 @@ ActiveRecord::Schema.define(version: 20170622175214) do
     t.text     "region"
     t.text     "commune"
     t.text     "reference"
+    t.float    "altitude"
     t.index ["lonlat"], name: "index_locations_on_lonlat", using: :gist
   end
 
