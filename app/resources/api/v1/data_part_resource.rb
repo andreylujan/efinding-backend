@@ -7,7 +7,7 @@ class Api::V1::DataPartResource < ApplicationResource
   has_one :collection
 
   def data_part_type
-    @model.type
+    @model.type.underscore
   end
 
   def self.records(options = {})
