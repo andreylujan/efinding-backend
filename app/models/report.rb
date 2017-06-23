@@ -123,9 +123,10 @@ class Report < ApplicationRecord
   belongs_to :inspection
   acts_as_list scope: :inspection
 
-  after_commit :generate_pdf
+  before_save :check_state_changed, on: [ :update ]
+  after_commit :generate_pdf # , on: [ :create ]
   after_commit :send_task_job, on: [ :create ]
-
+  
   validate :limit_date_cannot_be_in_the_past, on: :create
   validate :valid_state_transition, on: [ :update ]
   before_save :default_values
@@ -148,6 +149,12 @@ class Report < ApplicationRecord
     :resolution_comment,
     :report_fields
   ]
+
+  def check_state_changed
+    if self.state_id_changed?
+      assign_attributes pdf: nil, pdf_uploaded: false
+    end
+  end
 
   def valid_state_transition
     if state.present? and changes[:state_id].present?
