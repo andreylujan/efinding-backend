@@ -5,6 +5,7 @@ class Api::V1::DataPartResource < ApplicationResource
 
   add_foreign_keys :section_id, :collection_id, :list_id
   has_one :collection
+  has_many :data_parts
 
   def data_part_type
     @model.type.underscore
