@@ -190,13 +190,23 @@
 								Productos ofrecidos:
 							</div>
 							<div class="col-xs-8">
-							<%= report.dynamic_attributes.dig('67', 'value', 'items') %>								<!--ul>
+							<%= report.dynamic_attributes.dig('67', 'value', 'items').each do |pro| %>	
+								<%= pro.name %>
+								<!--ul>
 									<li>Muros</li>
 									<li>Lozas</li>
 									<li>Andamios</li>
 									<li>Apuntalamiento</li>
 								</ul-->
 							</div>
+
+							<% report.images.where(is_initial: true).each do |image| %>
+								<div class="picsField center-cropped"
+								style="background-image: url('<%= image.url.gsub('https', 'http') %>');">
+								</div>
+								<br />
+								<%= image.comment %>
+							<% end %>
 						</div>
 					</div>
 					<div class="col-xs-6">
