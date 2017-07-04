@@ -191,13 +191,10 @@
 							</div>
 							<div class="col-xs-8">
 							<ul>
-							<%= report.dynamic_attributes.dig('67', 'value', 'items').each do |pro| %>	
-								<li><%= pro.dig('name') %></li>
-									<!--li>Muros</li>
-									<li>Lozas</li>
-									<li>Andamios</li>
-									<li>Apuntalamiento</li-->
-							<% end %>
+								<%= report.dynamic_attributes.dig('67', 'value', 'items').each do |pro| %>	
+									<li><%= pro.dig('name') %> </li>
+								<% end %>
+								<li>prueba</li>
 							</ul>
 							</div>
 						</div>
