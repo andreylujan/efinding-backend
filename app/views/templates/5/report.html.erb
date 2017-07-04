@@ -191,7 +191,7 @@
 							</div>
 							<div class="col-xs-8">
 							<%= report.dynamic_attributes.dig('67', 'value', 'items').each do |pro| %>	
-								<%= pro.name %>
+								<%= pro.dig('name') %>
 								<!--ul>
 									<li>Muros</li>
 									<li>Lozas</li>
