@@ -190,15 +190,15 @@
 								Productos ofrecidos:
 							</div>
 							<div class="col-xs-8">
+							<ul>
 							<%= report.dynamic_attributes.dig('67', 'value', 'items').each do |pro| %>	
-								<%= pro.dig('name') %>
-								<!--ul>
-									<li>Muros</li>
+								<li><%= pro.dig('name') %></li>
+									<!--li>Muros</li>
 									<li>Lozas</li>
 									<li>Andamios</li>
-									<li>Apuntalamiento</li>
-								</ul-->
+									<li>Apuntalamiento</li-->
 							<% end %>
+							</ul>
 							</div>
 						</div>
 					</div>
