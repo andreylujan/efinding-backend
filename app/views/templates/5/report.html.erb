@@ -190,7 +190,7 @@
 								Productos ofrecidos:
 							</div>
 							<div class="col-xs-8">
-							<%= report.dynamic_attributes.dig('67', 'value') %>
+							<%= report.dynamic_attributes.dig('67', 'value')[items] %>
 								<!--ul>
 									<li>Muros</li>
 									<li>Lozas</li>
@@ -206,7 +206,7 @@
 								Persona de contacto:
 							</div>
 							<div class="col-xs-8">
-								<%= report.dynamic_attributes.dig('68', 'value')[items] %>
+								<%= report.dynamic_attributes.dig('68', 'value') %>
 							</div>
 						</div>
 						<div class="row location-field">
