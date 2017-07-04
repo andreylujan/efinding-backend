@@ -206,7 +206,7 @@
 								Persona de contacto:
 							</div>
 							<div class="col-xs-8">
-								<%= report.dynamic_attributes.dig('68', 'value') %>
+								<%= report.dynamic_attributes.dig('68', 'value')[items] %>
 							</div>
 						</div>
 						<div class="row location-field">
@@ -238,7 +238,7 @@
 								Planos del Proyecto:
 							</div>
 							<div class="col-xs-8">
-								<%= report.dynamic_attributes.dig('73', 'value').items %>
+								<%= report.dynamic_attributes.dig('73', 'value') %>
 							</div>
 						</div>
 					</div>
