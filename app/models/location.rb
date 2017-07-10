@@ -5,7 +5,7 @@
 #
 #  id         :integer          not null, primary key
 #  lonlat     :geometry({:srid= not null, point, 0
-#  accuracy   :integer
+#  accuracy   :float
 #  timestamp  :integer
 #  provider   :text
 #  created_at :datetime         not null
@@ -14,6 +14,7 @@
 #  region     :text
 #  commune    :text
 #  reference  :text
+#  altitude   :float
 #
 
 class Location < ApplicationRecord

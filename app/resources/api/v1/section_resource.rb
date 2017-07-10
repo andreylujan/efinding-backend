@@ -2,7 +2,7 @@
 class Api::V1::SectionResource < ApplicationResource
 
   attributes :name, :position, :config, :section_type
-  has_many :data_parts, always_include_linkage_data: false
+  has_many :section_data_parts, always_include_linkage_data: false
   add_foreign_keys :state_id
 
   def custom_links(options)

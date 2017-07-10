@@ -13,15 +13,15 @@
 #  config        :json             not null
 #  position      :integer          default(0), not null
 #  detail_id     :integer
-#  section_id    :integer
 #  collection_id :integer
 #  list_id       :integer
 #
 
 class DataPart < ApplicationRecord
-  belongs_to :section
   acts_as_list scope: :section
   belongs_to :collection
+  has_many :section_data_parts
+  has_many :sections, through: :section_data_parts
   has_many :data_parts, class_name: :DataPart, foreign_key: :list_id
   belongs_to :list, class_name: :List, foreign_key: :list_id
 end

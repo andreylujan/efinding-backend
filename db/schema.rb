@@ -10,34 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170623012730) do
+ActiveRecord::Schema.define(version: 20170710171135) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
   enable_extension "uuid-ossp"
-
-  create_table "audits", force: :cascade do |t|
-    t.integer  "auditable_id"
-    t.string   "auditable_type"
-    t.integer  "associated_id"
-    t.string   "associated_type"
-    t.integer  "user_id"
-    t.string   "user_type"
-    t.string   "username"
-    t.string   "action"
-    t.text     "audited_changes"
-    t.integer  "version",         default: 0
-    t.string   "comment"
-    t.string   "remote_address"
-    t.string   "request_uuid"
-    t.datetime "created_at"
-    t.index ["associated_id", "associated_type"], name: "associated_index", using: :btree
-    t.index ["auditable_id", "auditable_type"], name: "auditable_index", using: :btree
-    t.index ["created_at"], name: "index_audits_on_created_at", using: :btree
-    t.index ["request_uuid"], name: "index_audits_on_request_uuid", using: :btree
-    t.index ["user_id", "user_type"], name: "user_index", using: :btree
-  end
 
   create_table "batch_uploads", force: :cascade do |t|
     t.integer  "user_id",                    null: false
@@ -215,13 +193,11 @@ ActiveRecord::Schema.define(version: 20170623012730) do
     t.json     "config",        default: {},   null: false
     t.integer  "position",      default: 0,    null: false
     t.integer  "detail_id"
-    t.integer  "section_id"
     t.integer  "collection_id"
     t.integer  "list_id"
     t.index ["collection_id"], name: "index_data_parts_on_collection_id", using: :btree
     t.index ["detail_id"], name: "index_data_parts_on_detail_id", using: :btree
     t.index ["list_id"], name: "index_data_parts_on_list_id", using: :btree
-    t.index ["section_id"], name: "index_data_parts_on_section_id", using: :btree
   end
 
   create_table "devices", force: :cascade do |t|
@@ -503,6 +479,18 @@ ActiveRecord::Schema.define(version: 20170623012730) do
     t.integer "user_id", null: false
   end
 
+  create_table "section_data_parts", force: :cascade do |t|
+    t.integer  "section_id",                  null: false
+    t.integer  "data_part_id",                null: false
+    t.boolean  "editable",     default: true, null: false
+    t.integer  "position",     default: 1,    null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.index ["data_part_id"], name: "index_section_data_parts_on_data_part_id", using: :btree
+    t.index ["section_id", "data_part_id"], name: "index_section_data_parts_on_section_id_and_data_part_id", unique: true, using: :btree
+    t.index ["section_id"], name: "index_section_data_parts_on_section_id", using: :btree
+  end
+
   create_table "sections", force: :cascade do |t|
     t.integer  "position"
     t.text     "name"
@@ -599,7 +587,6 @@ ActiveRecord::Schema.define(version: 20170623012730) do
   add_foreign_key "constructions", "users", column: "supervisor_id"
   add_foreign_key "contractors", "organizations"
   add_foreign_key "data_parts", "collections"
-  add_foreign_key "data_parts", "sections"
   add_foreign_key "devices", "users"
   add_foreign_key "images", "reports"
   add_foreign_key "inspections", "constructions"
@@ -625,6 +612,8 @@ ActiveRecord::Schema.define(version: 20170623012730) do
   add_foreign_key "reports", "users", column: "resolver_id"
   add_foreign_key "request_logs", "organizations"
   add_foreign_key "roles", "organizations"
+  add_foreign_key "section_data_parts", "data_parts"
+  add_foreign_key "section_data_parts", "sections"
   add_foreign_key "sections", "states"
   add_foreign_key "state_transitions", "states", column: "next_state_id"
   add_foreign_key "state_transitions", "states", column: "previous_state_id"

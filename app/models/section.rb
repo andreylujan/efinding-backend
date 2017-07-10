@@ -16,6 +16,7 @@
 class Section < ApplicationRecord
   belongs_to :state
   acts_as_list scope: :state
-  has_many :data_parts, -> { order(position: :asc) }
+  has_many :section_data_parts, -> { order(position: :asc) }
+  has_many :data_parts, through: :section_data_parts
   enum section_type: [ :location, :gallery, :data_parts ]
 end

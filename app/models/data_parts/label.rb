@@ -13,7 +13,6 @@
 #  config        :json             not null
 #  position      :integer          default(0), not null
 #  detail_id     :integer
-#  section_id    :integer
 #  collection_id :integer
 #  list_id       :integer
 #

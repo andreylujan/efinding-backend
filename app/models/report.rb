@@ -99,8 +99,6 @@ class Report < ApplicationRecord
 
   validates :state, presence: true
 
-  audited
-
   # enum state: [ :unchecked, :resolved, :pending ]
   attr_accessor :ignore_state_changes
 
