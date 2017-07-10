@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170710171135) do
+ActiveRecord::Schema.define(version: 20170710202723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -100,7 +100,6 @@ ActiveRecord::Schema.define(version: 20170710171135) do
     t.integer  "resource_owner_id"
     t.text     "resource_owner_type"
     t.index ["collection_id", "code"], name: "index_collection_items_on_collection_id_and_code", unique: true, using: :btree
-    t.index ["collection_id", "name"], name: "index_collection_items_on_collection_id_and_name", unique: true, using: :btree
     t.index ["collection_id"], name: "index_collection_items_on_collection_id", using: :btree
     t.index ["name"], name: "index_collection_items_on_name", using: :btree
     t.index ["parent_item_id"], name: "index_collection_items_on_parent_item_id", using: :btree

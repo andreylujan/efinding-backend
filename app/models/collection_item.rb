@@ -27,7 +27,7 @@ class CollectionItem < ApplicationRecord
   validates :name, presence: true
   validates :code, presence: true
   validates_uniqueness_of :code, scope: :collection
-  validates_uniqueness_of :name, scope: :collection
+  # validates_uniqueness_of :name, scope: :collection
 
 
   def to_csv(csv_columns)
