@@ -42,14 +42,21 @@ class User < ApplicationRecord
   has_many :devices, dependent: :destroy
   delegate :organization, to: :role, allow_nil: false
   delegate :organization_id, to: :role, allow_nil: false
-  has_many :created_reports, class_name: :Report, foreign_key: :creator_id
-  has_many :assigned_reports, class_name: :Report, foreign_key: :assigned_user_id
+  has_many :created_reports, class_name: :Report, foreign_key: :creator_id, dependent: :destroy
+  has_many :assigned_reports, class_name: :Report, foreign_key: :assigned_user_id, dependent: :destroy
+  has_many :resolved_reports, class_name: :Report, foreign_key: :resolver_id, dependent: :destroy
   after_create :send_confirmation_email
   has_many :checkins
   has_many :batch_uploads
   has_and_belongs_to_many :checklist_reports
   validate :correct_rut
   before_save :format_rut
+
+  has_many :created_inspections, class_name: :Inspection, foreign_key: :creator_id, dependent: :destroy
+  has_many :initially_signed_inspections, class_name: :Inspection, foreign_key: :initial_signer_id, dependent: :destroy
+  has_many :finally_signed_inspections, class_name: :Inspection, foreign_key: :final_signer_id, dependent: :destroy
+  has_many :chiefed_inspections, class_name: :Inspection, foreign_key: :field_chief_id, dependent: :destroy
+  has_many :experted_inspections, class_name: :Inspection, foreign_key: :expert_id, dependent: :destroy
 
   def correct_rut
     if rut.present?

@@ -21,6 +21,7 @@ class CollectionItem < ApplicationRecord
   acts_as_list scope: :collection
   belongs_to :parent_item, class_name: :CollectionItem,
   	foreign_key: :parent_item_id
+  has_many :children, class_name: :CollectionItem, foreign_key: :parent_item_id, dependent: :destroy
 
   belongs_to :resource_owner, polymorphic: true
   validates :collection, presence: true

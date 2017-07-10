@@ -13,7 +13,8 @@
 
 class Role < ApplicationRecord
   belongs_to :organization
-  has_many :users
+  has_many :users, dependent: :destroy
+  has_many :invitations, dependent: :destroy
   has_and_belongs_to_many :menu_items
   enum role_type: [ :superuser, :administrator, :expert, :supervisor ]
 end

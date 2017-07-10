@@ -14,8 +14,9 @@
 class Collection < ApplicationRecord
   belongs_to :parent_collection,
     class_name: :Collection, foreign_key: :parent_collection_id
+  has_many :children, class_name: :Collection, foreign_key: :parent_collection_id, dependent: :destroy
   belongs_to :organization
-  has_many :collection_items, -> { order(position: :asc) }
+  has_many :collection_items, -> { order(position: :asc) }, dependent: :destroy
   validates :organization, presence: true
   validates :name, presence: true, uniqueness: { scope: :organization }
 

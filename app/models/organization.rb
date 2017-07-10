@@ -15,18 +15,20 @@
 
 class Organization < ApplicationRecord
 
-    has_many :roles
-    has_many :categories
-    has_many :report_types
-    has_many :table_columns, -> { order(position: :asc) }
-    has_many :menu_sections, -> { order(position: :asc) }
-    has_many :companies
+    has_many :roles, dependent: :destroy
+    has_many :categories, dependent: :destroy
+    has_many :report_types, dependent: :destroy
+    has_many :table_columns, -> { order(position: :asc) }, dependent: :destroy
+    has_many :menu_sections, -> { order(position: :asc) }, dependent: :destroy
+    has_many :companies, dependent: :destroy
     has_many :reports, through: :report_types
     has_many :users, through: :roles
-    has_many :collections
+    has_many :collections, dependent: :destroy
     belongs_to :checklist
-    has_many :checklists
-    has_many :personnel_types
+    has_many :checklists, dependent: :destroy
+    has_many :personnel_types, dependent: :destroy
+    has_many :contractors, dependent: :destroy
+    has_many :personnel, dependent: :destroy
 
     validates :default_admin_path, presence: true
     

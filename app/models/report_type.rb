@@ -15,8 +15,8 @@
 
 class ReportType < ApplicationRecord
   belongs_to :organization
-  has_many :sections
-  has_many :reports
-  has_many :checklist_reports
+  has_many :sections, dependent: :destroy
+  has_many :reports, dependent: :destroy
+  has_many :checklist_reports, dependent: :destroy
   validates :organization, presence: true
 end
