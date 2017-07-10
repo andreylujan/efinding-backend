@@ -139,7 +139,7 @@
 			</div>
 		</div>
 		<hr />
-		<h3 class="inspeccion">Oportunidad de venta: <%= report.dynamic_attributes.dig("64", "value") %></h3>
+		<h3 class="inspeccion">Oportunidad de ventas: <%= report.dynamic_attributes.dig("64", "value") %></h3>
 		<div>
 			<div>
 				<h3>REPORTE</h3>
@@ -190,12 +190,11 @@
 								Productos ofrecidos:
 							</div>
 							<div class="col-xs-8">
-								<ul>
-									<li>Muros</li>
-									<li>Lozas</li>
-									<li>Andamios</li>
-									<li>Apuntalamientos</li>
-								</ul>
+							<ul>
+								<% report.dynamic_attributes.dig('67', 'value', 'items').each do |pro| %>	
+									<li><%= pro.dig('name') %></li>
+								<% end %>
+							</ul>
 							</div>
 						</div>
 					</div>
