@@ -13,6 +13,7 @@
 #
 
 class SectionDataPart < ApplicationRecord
+  acts_as_list scope: :section
   belongs_to :section
   belongs_to :data_part
 end

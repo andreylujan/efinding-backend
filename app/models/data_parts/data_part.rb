@@ -18,7 +18,7 @@
 #
 
 class DataPart < ApplicationRecord
-  acts_as_list scope: :section
+  acts_as_list scope: :list
   belongs_to :collection
   has_many :section_data_parts
   has_many :sections, through: :section_data_parts
