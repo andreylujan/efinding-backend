@@ -2,7 +2,7 @@
 class RemoveSectionIdFromDataParts < ActiveRecord::Migration[5.0]
   def change
   	DataPart.all.each do |data_part|
-  		if data_part.section.present?
+  		if data_part.section_id.present?
 	  		SectionDataPart.create! data_part_id: data_part.id,
 	  			editable: true,
 	  			position: data_part.position,
