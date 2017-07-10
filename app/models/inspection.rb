@@ -235,7 +235,7 @@ class Inspection < ApplicationRecord
         .inspection_email(inspection.id, user, "Solicitud de firma - #{inspection.construction.name}",
                           "#{inspection.construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
                           "en la obra #{inspection.construction.name}. " +
-                          "Para realizar la firma, puedes ingresar a http://50.16.161.152/efinding/admin/#/efinding/inspecciones/lista")
+                          "Para realizar la firma, puedes ingresar a #{ENV['ADMIN_URL']}/#/efinding/inspecciones/lista")
       end
     end
 
@@ -244,7 +244,7 @@ class Inspection < ApplicationRecord
       .inspection_email(inspection.id, inspection.construction.administrator,
                         "Solicitud de firma final - #{inspection.construction.name}",
                         "#{inspection.construction.expert.name} ha cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}. " +
-                        "Para realizar la firma final, puedes ingresar a http://50.16.161.152/efinding/admin/#/efinding/inspecciones/lista")
+                        "Para realizar la firma final, puedes ingresar a #{ENV['ADMIN_URL']}/#/efinding/inspecciones/lista")
 
       UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
       .inspection_email(inspection.id, inspection.construction.supervisor,
