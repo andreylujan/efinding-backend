@@ -6,11 +6,11 @@ set :application, 'api'
 set :repo_url, 'git@github.com:andreylujan/efinding-backend.git'
 set :branch, 'moller'
 
-set :ssh_options, {
- keys: [ "#{ENV['HOME']}/.ssh/echeckit_production.pem"  ],
- forward_agent: true,
- auth_methods: ["publickey"]
-}
+# set :ssh_options, {
+#  keys: [ "#{ENV['HOME']}/.ssh/echeckit_production.pem"  ],
+#  forward_agent: true,
+#  auth_methods: ["publickey"]
+# }
 
 # Default value for :scm is :git
 # set :scm, :git

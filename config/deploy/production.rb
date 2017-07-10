@@ -8,7 +8,7 @@
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
-server 'efinding.moller.cl', port: 22, user: 'ubuntu', roles: [:web, :app, :db]
+server 'efinding.moller.cl', port: 22, user: 'plluch', roles: [:web, :app, :db]
 
 set :branch, 'production'
 
