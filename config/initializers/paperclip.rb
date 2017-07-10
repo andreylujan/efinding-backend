@@ -7,6 +7,6 @@ Paperclip::Attachment.default_options[:fog_credentials] = {
     :region                 => 'sa-east-1'                  # optional, defaults to 'us-east-1'}
 }
 
-Paperclip::Attachment.default_options[:fog_directory] = "efinding-moller"
-Paperclip::Attachment.default_options[:fog_host] = "https://d3isa1mztk678k.cloudfront.net"
+Paperclip::Attachment.default_options[:fog_directory] = ENV['AMAZON_BUCKET']
+Paperclip::Attachment.default_options[:fog_host] = ENV['ASSET_HOST']
 Paperclip::Attachment.default_options[:fog_public] = true
