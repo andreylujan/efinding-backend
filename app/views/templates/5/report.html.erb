@@ -236,7 +236,11 @@
 								Planos del Proyecto:
 							</div>
 							<div class="col-xs-8">
-								<%= report.dynamic_attributes.dig('73', 'value') %>
+								<% if report.dynamic_attributes.dig('73', 'value') %>
+									SI
+								<% else %>
+									NO
+								<% end %>
 							</div>
 						</div>
 					</div>
@@ -316,16 +320,20 @@
 								<th>Comentario</th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td>
-									El detalle
-								</td>
-								<td>
-									El comentario
-								</td>
-							</tr>
-						</tbody>
+						<% if report.dynamic_attributes.dig('75') %>	
+							<tbody>
+								<% report.dynamic_attributes.dig('75').each do |cot| %>	
+									<tr>
+										<td>
+											<%= cot.dig('76', 'value') %>
+										</td>
+										<td>
+											<%= cot.dig('77', 'value') %>
+										</td>
+									</tr>
+								<% end %>
+							</tbody>
+						<% end %>
 					</table>
 				</section>
 			</div>
@@ -339,27 +347,31 @@
 						<thead>
 							<tr>
 								<th>Monto de oferta</th>
-								<th>% de descuento</th>
 								<th>Propuesta entregada</th>
 								<th>Comentario</th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td>
-									$50.000.000
-								</td>
-								<td>
-									60%
-								</td>
-								<td>
-									Propuesta
-								</td>
-								<td>
-									Comentario
-								</td>
-							</tr>
-						</tbody>
+						<% if report.dynamic_attributes.dig('57') %>	
+							<tbody>
+								<% report.dynamic_attributes.dig('57').each do |cot| %>	
+									<tr>
+										<td>
+											<%= cot.dig('54', 'value') %>
+										</td>
+										<td>
+											<% if cot.dig('58', 'value') %>
+												SI
+											<% else %>
+												NO
+											<% end %>
+										</td>
+										<td>
+											<%= cot.dig('56', 'value') %>
+										</td>
+									</tr>
+								<% end %>
+							</tbody>
+						<% end %>	
 					</table>
 				</section>
 			</div>
@@ -377,20 +389,24 @@
 								<th>Motivo de pérdida</th>
 								<th>Comentario</th>
 							</tr>
-						</thead>
+						</thead>	
 						<tbody>
 							<tr>
 								<td>
-									El negocio
+									<% if report.dynamic_attributes.dig('60', 'value') %>
+										SI
+									<% else %>
+										<%= report.dynamic_attributes.dig('60', 'value') %>
+									<% end %>
 								</td>
 								<td>
-									$50.000
+									<%= report.dynamic_attributes.dig('63', 'value') %>
 								</td>
 								<td>
-									Los tiempos
+									<%= report.dynamic_attributes.dig('61', 'value') %>
 								</td>
 								<td>
-									Un comentario
+									<%= report.dynamic_attributes.dig('62', 'value') %>
 								</td>
 							</tr>
 						</tbody>
@@ -414,63 +430,80 @@
 								<th>Direccion</th>
 								<th>Comuna</th>
 								<th>Región</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<%= report.dynamic_attributes.dig("65", "value") %>
+								</td>
+								<td>
+									<%= report.dynamic_attributes.dig("64", "value") %>
+								</td>
+								<td>
+									<%= report.final_location.present? ? report.final_location.address : report.initial_location.address %>
+								</td>
+								<td>
+									<%= report.final_location.present? ? report.final_location.commune : report.initial_location.commune %>
+								</td>
+								<td>
+									<%= report.final_location.present? ? report.final_location.region : report.initial_location.region %>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<table>
+						<thead>
+							<tr>
 								<th>Fecha creación</th>
 								<th>Estado proyecto</th>
 								<th>Rut</th>
 								<th>Contacto</th>
 								<th>Fono</th>
 								<th>Mail</th>
-								<th>Fecha presupuesto</th>
-								<th>Monto presupuestado</th>
-								<th>% descuento</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
 								<td>
-									nombre_constructora
+									<%= report.formatted_created_at %>
 								</td>
 								<td>
-									nombre_del_proyecto
+									<%= report.state.name %>
 								</td>
 								<td>
-									calle_numero
+									<%= report.dynamic_attributes.dig('72', 'value') %>
 								</td>
 								<td>
-									comuna
+									<%= report.dynamic_attributes.dig('68', 'value') %>
 								</td>
 								<td>
-									region
+									<%= report.dynamic_attributes.dig('70', 'value') %>
 								</td>
 								<td>
-									fecha_creacion
+									<%= report.dynamic_attributes.dig('69', 'value') %>
 								</td>
-								<td>
-									estado_proyecto
-								</td>
-								<td>
-									rut
-								</td>
-								<td>
-									contacto
-								</td>
-								<td>
-									fono
-								</td>
-								<td>
-									mail
-								</td>
-								<td>
-									fecha_presupuesto
-								</td>
-								<td>
-									monto_presupeusto
-								</td>
-								<td>
-									descuento
-								</td>
-
 							</tr>
+						</tbody>
+					</table>
+					<table>
+						<thead>
+							<tr>
+								<th>Monto presupuestado</th>
+								<th>Comentario</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% if report.dynamic_attributes.dig('57') %>	
+								<tr>
+									<td>
+										<%= report.dynamic_attributes.dig('57').last.dig('54', 'value') %>
+									</td>
+									<td>
+										<%= report.dynamic_attributes.dig('57').last.dig('56', 'value') %>
+									</td>
+								</tr>
+							<% end %>	
 						</tbody>
 					</table>
 				</section>

@@ -423,7 +423,7 @@ class Report < ApplicationRecord
 
   def generate_pdf
     if not @ignore_pdf and self.finished? and not self.pdf_uploaded?
-      regenerate_pdf
+      regenerate_pdf(true)
     end
   end
 
