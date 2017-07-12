@@ -32,6 +32,7 @@ class Organization < ApplicationRecord
     belongs_to :default_report_type, class_name: :ReportType, foreign_key: :default_report_type_id
 
     enum map_type: [ :roadmap, :satellite ]
+    enum app_name: [ :echeckit, :efinding ]
 
     validates :default_admin_path, presence: true
     

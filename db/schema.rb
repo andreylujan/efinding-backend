@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170710202723) do
+ActiveRecord::Schema.define(version: 20170712191800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -369,6 +369,7 @@ ActiveRecord::Schema.define(version: 20170710202723) do
     t.text     "default_admin_path"
     t.integer  "default_report_type_id"
     t.integer  "map_type",               default: 0,   null: false
+    t.integer  "app_name",               default: 0,   null: false
     t.index ["checklist_id"], name: "index_organizations_on_checklist_id", using: :btree
     t.index ["default_report_type_id"], name: "index_organizations_on_default_report_type_id", using: :btree
     t.index ["name"], name: "index_organizations_on_name", unique: true, using: :btree
