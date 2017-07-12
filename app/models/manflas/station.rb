@@ -43,7 +43,9 @@ class Manflas::Station
   end
 
   def plantation_density
-    html.xpath('//tr/td[contains(text(), "Plantas_h")]/following-sibling::td').text.strip
+    w = "%.2f" % html.xpath('//tr/td[contains(text(), "Distancia")]/following-sibling::td').text.strip.gsub(",", ".").to_f
+    h = "%.2f" % html.xpath('//tr/td[contains(text(), "Distanci_1")]/following-sibling::td').text.strip.gsub(",", ".").to_f
+    "#{w.to_s.gsub('.', ',')} x #{h.to_s.gsub('.', ',')}"
   end
 
   def last_year_production
