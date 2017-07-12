@@ -2,11 +2,11 @@
 :concurrency: 5
 :pidfile: tmp/pids/sidekiq.pid
 staging:
-  :concurrency: 10
+  :concurrency: 5
   :queues:
-    - [ efinding_staging_report, 3 ]
-    - [ efinding_staging_email, 2 ]
-    - [ efinding_staging_push, 1 ]
+    - [ efinding_pitagora_report, 3 ]
+    - [ efinding_pitagora_email, 2 ]
+    - [ efinding_pitagora_push, 1 ]
 development:
   :concurrency: 10
   :queues:
