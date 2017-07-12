@@ -8,7 +8,7 @@ class UserMailer < ApplicationMailer
 		@url = Rails.env.production? ? "http://50.16.161.152/efinding/admin/#/signup" : "http://50.16.161.152/efinding-staging/admin/#/signup"
 		mail(to: @invitation.email, subject: "Únete a #{invitation.role.organization.name}",
 			from: "#{invitation.role.organization.name} Admin<solutions@ewin.cl>",
-			template_name: "invite_#{invitation.role.organization.app_name}.html.erb")
+			template_name: "invite_#{invitation.role.organization.app_name}")
 	end	
 
 	def confirmation_email(user)
