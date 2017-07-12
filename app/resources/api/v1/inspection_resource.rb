@@ -254,6 +254,10 @@ class Api::V1::InspectionResource < ApplicationResource
     end
   end
 
+  def self.sortable_fields(context)
+    super + [:"construction.name", :"company.name" ]
+  end
+
   def self.apply_sort(records, order_options, _context = {})
     new_options = {}
     order_options.each do |key, value|

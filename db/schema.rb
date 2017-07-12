@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170605202916) do
+ActiveRecord::Schema.define(version: 20170712212454) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -521,13 +521,14 @@ ActiveRecord::Schema.define(version: 20170605202916) do
     t.text     "field_name"
     t.text     "column_name"
     t.integer  "position"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.text     "relationship_name"
     t.integer  "data_type",         default: 1
     t.text     "collection_name"
     t.integer  "collection_source"
     t.integer  "organization_id"
+    t.text     "headers",           default: [], null: false, array: true
     t.index ["organization_id"], name: "index_table_columns_on_organization_id", using: :btree
   end
 
