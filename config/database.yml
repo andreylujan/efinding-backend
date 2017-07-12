@@ -81,7 +81,7 @@ test:
 
 staging:
   <<: *default
-  database: efinding_staging
+  database: efinding_pitagora
   username: efinding
   password: <%= ENV['EFINDING_DATABASE_PASSWORD'] %>
 
