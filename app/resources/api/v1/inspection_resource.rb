@@ -30,6 +30,12 @@ class Api::V1::InspectionResource < ApplicationResource
     @model.pdf.url
   end
 
+  def self.column_mapping
+    {
+      formatted_created_at: "created_at"
+    }
+  end
+
   filter :num_pending_reports, apply: ->(records, value, _options) {
     if not value.empty?
       records = records
@@ -129,6 +135,7 @@ class Api::V1::InspectionResource < ApplicationResource
       records
     end
   }
+
 
   filter :construction, apply: ->(records, value, _options) {
     if not value.empty?
@@ -245,6 +252,37 @@ class Api::V1::InspectionResource < ApplicationResource
     else
       0
     end
+  end
+
+  def self.apply_sort(records, order_options, _context = {})
+    new_options = {}
+    order_options.each do |key, value|
+      byebug
+      if column_mapping.has_key? key.to_sym
+        new_options[column_mapping[key.to_sym]] = value
+      else
+        new_options[key] = value
+      end
+    end
+    order_options = new_options
+    if order_options.any?
+      order_options.each_pair do |field, direction|
+        if field.to_s.include?(".")
+          *model_names, column_name = field.split(".")
+
+          associations = _lookup_association_chain([records.model.to_s, *model_names])
+          joins_query = _build_joins([records.model, *associations])
+
+          # _sorting is appended to avoid name clashes with manual joins eg. overriden filters
+          order_by_query = "#{associations.last.name}_sorting.#{column_name} #{direction}"
+          records = records.joins(joins_query).order(order_by_query)
+        else
+          records = records.order(field => direction)
+        end
+      end
+    end
+
+    records
   end
 
   def self.records(options = {})
