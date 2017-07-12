@@ -257,7 +257,6 @@ class Api::V1::InspectionResource < ApplicationResource
   def self.apply_sort(records, order_options, _context = {})
     new_options = {}
     order_options.each do |key, value|
-      byebug
       if column_mapping.has_key? key.to_sym
         new_options[column_mapping[key.to_sym]] = value
       else
