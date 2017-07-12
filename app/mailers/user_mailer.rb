@@ -5,7 +5,7 @@ class UserMailer < ApplicationMailer
 
 	def invite_email(invitation)
 		@invitation = invitation
-		@url = @invitation.organization.echeckit? ? "http://50.16.161.152/productos/echeckit-staging/#/signup" : "http://50.16.161.152/productos/efinding-staging/#/signup"
+		@url = @invitation.organization.echeckit? ? "http://50.16.161.152/productos/echeckit-staging/admin/#/signup" : "http://50.16.161.152/productos/efinding-staging/admin/#/signup"
 		mail(to: @invitation.email, subject: "Únete a #{invitation.role.organization.name}",
 			from: "#{invitation.role.organization.name} Admin<solutions@ewin.cl>",
 			template_name: "invite_#{invitation.role.organization.app_name}")
