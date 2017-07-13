@@ -453,7 +453,7 @@ class Report < ApplicationRecord
   end
 
   def regenerate_pdf(force_random = false)
-    if report_type.has_pdf?
+    if not destroyed? and report_type.has_pdf?
       if force_random
         update_columns pdf: nil, pdf_uploaded: false
       end
