@@ -37,7 +37,7 @@ class Api::V1::InspectionResource < ApplicationResource
   end
 
   def formatted_created_at
-    "<p>#{@model.created_at.strftime("%d/%m/%Y")}<br>Holi test</p>"
+    "#{@model.created_at.strftime("%d/%m/%Y")}<h4 style='color: red'>Holi test</h4>"
   end
 
   filter :num_pending_reports, apply: ->(records, value, _options) {
