@@ -174,10 +174,6 @@ class Inspection < ApplicationRecord
     end
   end
 
-  def formatted_created_at
-    created_at.strftime("%d/%m/%Y")
-  end
-
   def formatted_resolved_at
     if state == "final_signature_pending" || state == "finished"
       report = reports.order("resolved_at DESC").first
