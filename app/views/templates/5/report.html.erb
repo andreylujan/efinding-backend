@@ -191,7 +191,7 @@
 							</div>
 							<div class="col-xs-8">
 							<ul>
-								<% report.dynamic_attributes.dig('67', 'value', 'items').each do |pro| %>	
+								<% report.dynamic_attributes.dig('67', 'items').each do |pro| %>	
 									<li><%= pro.dig('name') %></li>
 								<% end %>
 							</ul>
@@ -351,15 +351,15 @@
 								<th>Comentario</th>
 							</tr>
 						</thead>
-						<% if report.dynamic_attributes.dig('57') %>	
+						<% if report.dynamic_attributes.dig('58') %>	
 							<tbody>
-								<% report.dynamic_attributes.dig('57').each do |cot| %>	
+								<% report.dynamic_attributes.dig('58').each do |cot| %>	
 									<tr>
 										<td>
 											<%= cot.dig('54', 'value') %>
 										</td>
 										<td>
-											<% if cot.dig('58', 'value') %>
+											<% if cot.dig('59', 'value') %>
 												SI
 											<% else %>
 												NO
@@ -494,13 +494,13 @@
 							</tr>
 						</thead>
 						<tbody>
-							<% if report.dynamic_attributes.dig('57') %>	
+							<% if proposal = report.dynamic_attributes.dig('58') %>	
 								<tr>
 									<td>
-										<%= report.dynamic_attributes.dig('57').last.dig('54', 'value') %>
+										<%= proposal.last.dig('54', 'value') %>
 									</td>
 									<td>
-										<%= report.dynamic_attributes.dig('57').last.dig('56', 'value') %>
+										<%= proposal.last.dig('56', 'value') %>
 									</td>
 								</tr>
 							<% end %>	
