@@ -39,7 +39,7 @@ class Manflas::Station
   end
 
   def plantation_year
-    html.xpath('//tr/td[contains(text(), "Año_de_pl")]/following-sibling::td').text.strip
+    html.xpath('//tr/td[contains(text(), "Año_Plant")]/following-sibling::td').text.strip
   end
 
   def plantation_density
@@ -49,7 +49,7 @@ class Manflas::Station
   end
 
   def last_year_production
-    html.xpath('//tr/td[contains(text(), "Producció")]/following-sibling::td').text.strip
+    html.xpath('//tr/td[contains(text(), "Prod_2015_")]/following-sibling::td').text.strip
   end
 
   def water_precipitation
