@@ -35,4 +35,79 @@ class Company < ApplicationRecord
       self.rut = RUT::formatear(RUT::quitarFormato(self.rut).gsub(/^0+|$/, ''))
     end
   end
+
+  def self.to_csv(current_user, file_name=nil)
+    attributes = %w{rut name}
+    csv_obj = CSV.generate(headers: true,
+    encoding: "UTF-8", col_sep: current_user.organization.csv_separator) do |csv|
+      csv << attributes
+      current_user.organization.companies.each do |company|
+        csv << [
+          company.id,
+          company.name,
+          company.rut
+        ]
+      end
+    end
+    if file_name.present?
+      f = File.open(file_name, 'w')
+      f.write(csv_obj)
+      f.close
+    end
+    csv_obj
+  end
+
+  def self.from_csv(file_name, current_user)
+
+    upload = BatchUpload.create! user: current_user, uploaded_file: file_name,
+      uploaded_resource_type: "Empresas"
+    csv_text = CsvUtils.read_file(file_name)
+
+    headers = %w{rut name}
+    resources = []
+    row_number = 2
+
+    begin
+      csv = CSV.parse(csv_text, { headers: true, encoding: "UTF-8", col_sep: current_user.organization.csv_separator })
+    rescue => exception
+      raise exception.message
+    end
+
+    csv.each do |row|
+
+      errors = {}
+      company = Company.find_by_rut(row["rut"])
+
+      if company.nil?
+        company = Company.new(rut: row["rut"], organization: current_user.organization)
+      end
+      company.name = row["name"]
+
+      begin
+        company.save!
+      rescue => e
+        errors = company.errors.as_json
+      end
+
+      created = false
+      changed = false
+      success = true
+      if not errors.empty?
+        success = false
+      elsif company.previous_changes[:id].present?
+        created = true
+      elsif company.previous_changes.any?
+        changed = true
+      end
+
+      csv_resource = CsvUpload.new id: company.id, success: success,
+        errors: errors,
+        row_number: row_number, row_data: row.to_h,
+        created: created, changed: changed
+      row_number = row_number + 1
+      resources << csv_resource
+    end
+
+    resources
+  end
 end

@@ -84,6 +84,10 @@ Rails.application.routes.draw do
       jsonapi_resources :companies, only: [ :index, :create, :update, :destroy, :show ] do
         jsonapi_resources :constructions, only: [ :index ] do
         end
+        collection do
+          get :csv, to: "companies#get_csv"
+          post :csv, to: "companies#create_csv"
+        end
       end
 
       jsonapi_resources :constructions, only: [ :index, :create, :update, :destroy, :show ] do
