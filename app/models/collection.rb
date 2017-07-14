@@ -24,7 +24,7 @@ class Collection < ApplicationRecord
   def to_csv(file_name=nil)
     attributes = %w{code parent_code name}
     csv_obj = CSV.generate(headers: true,
-    encoding: "UTF-8", col_sep: '|') do |csv|
+    encoding: "UTF-8", col_sep: self.organization.csv_separator) do |csv|
       csv << attributes
       collection_items.each do |item|
         csv << item.to_csv(attributes)
@@ -49,7 +49,7 @@ class Collection < ApplicationRecord
     row_number = 2
 
     begin
-      csv = CSV.parse(csv_text, { headers: true, encoding: "UTF-8", col_sep: '|' })
+      csv = CSV.parse(csv_text, { headers: true, encoding: "UTF-8", col_sep: self.organization.csv_separator })
     rescue => exception
       raise exception.message
     end
