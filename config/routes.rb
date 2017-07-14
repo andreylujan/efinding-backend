@@ -46,6 +46,13 @@ Rails.application.routes.draw do
       jsonapi_resources :checklist_reports, only: [ :create, :index, :show ] do
       end
 
+      jsonapi_resources :contractors, only: [ :index, :create, :update, :destroy, :show ] do
+        collection do
+          get :csv, to: "contractors#get_csv"
+          post :csv, to: "contractors#create_csv"
+        end
+      end
+
       jsonapi_resources :checklists, only: [ :index, :create, :update, :destroy, :show ] do
       end
 
