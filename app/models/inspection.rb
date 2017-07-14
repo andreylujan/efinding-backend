@@ -210,13 +210,7 @@ class Inspection < ApplicationRecord
 
 
 
-  def state_name
-    if state == "final_signature_pending" || state == "finished"
-      "Resuelto"
-    else
-      "Pendiente"
-    end
-  end
+  
 
   state_machine :state, initial: :reports_pending do
 
