@@ -42,9 +42,8 @@ class Contractor < ApplicationRecord
       csv << attributes
       current_user.organization.contractors.each do |contractor|
         csv << [
-          contractor.id,
-          contractor.name,
-          contractor.rut
+          contractor.rut,
+          contractor.name
         ]
       end
     end
