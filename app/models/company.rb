@@ -43,9 +43,9 @@ class Company < ApplicationRecord
       csv << attributes
       current_user.organization.companies.each do |company|
         csv << [
-          company.id,
-          company.name,
-          company.rut
+          company.rut,
+          company.name
+          
         ]
       end
     end
