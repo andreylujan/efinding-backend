@@ -154,9 +154,9 @@ class Construction < ApplicationRecord
           construction.company.rut,
           construction.code,
           construction.name,
-          construction.administrator.email,
-          construction.expert.email,
-          construction.supervisor.email
+          construction.administrator.present? ? construction.administrator.email : "SIN ADMINISTRADOR",
+          construction.expert.present? ? construction.expert.email : "SIN EXPERTO",
+          construction.supervisor.present? ? construction.supervisor.email : "SIN SUPERVISOR"
         ]
       end
     end
