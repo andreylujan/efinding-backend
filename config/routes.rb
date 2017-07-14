@@ -101,6 +101,8 @@ Rails.application.routes.draw do
         collection do
           post :construction_personnel, to: "constructions#create_personnel"
           get :construction_personnel, to: "constructions#get_personnel"
+          get :csv, to: "constructions#get_csv"
+          post :csv, to: "constructions#create_csv"
         end
       end
 
