@@ -244,9 +244,9 @@ class Api::V1::InspectionResource < ApplicationResource
 
   def num_reports
     if @model.respond_to? :num_reports
-      @model.num_reports
+      "<h3 style='color: #239934;'>#{@model.num_reports}</h3>"
     else
-      0
+      "<h3 style='color: #239934;'>0</h3>"
     end
   end
 
