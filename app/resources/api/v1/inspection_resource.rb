@@ -28,9 +28,9 @@ class Api::V1::InspectionResource < ApplicationResource
 
   def state_name
     if @model.state == "final_signature_pending" || @model.state == "finished"
-      '<i class="fa fa-check" style="color: #239934;"></i>'
+      '<i class="fa fa-check" style="color: #239934; font-size: 2.0em"></i>'
     else
-      '<i class="fa fa-clock-o" style="color: #F99000;"></i>'
+      '<i class="fa fa-clock-o" style="color: #F99000; font-size: 2.0em"></i>'
     end
   end
 
