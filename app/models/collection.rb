@@ -12,18 +12,22 @@
 #
 
 class Collection < ApplicationRecord
+
+  require 'csv_utils'
   belongs_to :parent_collection,
     class_name: :Collection, foreign_key: :parent_collection_id
   has_many :children, class_name: :Collection, foreign_key: :parent_collection_id, dependent: :destroy
   belongs_to :organization
   has_many :collection_items, -> { order(position: :asc) }, dependent: :destroy
+  has_many :menu_items, dependent: :destroy
   validates :organization, presence: true
   validates :name, presence: true, uniqueness: { scope: :organization }
+  has_many :children, class_name: :Collection, foreign_key: :parent_collection_id
 
   def to_csv(file_name=nil)
     attributes = %w{code parent_code name}
     csv_obj = CSV.generate(headers: true,
-    encoding: "UTF-8", col_sep: '|') do |csv|
+    encoding: "UTF-8", col_sep: self.organization.csv_separator) do |csv|
       csv << attributes
       collection_items.each do |item|
         csv << item.to_csv(attributes)
@@ -48,7 +52,7 @@ class Collection < ApplicationRecord
     row_number = 2
 
     begin
-      csv = CSV.parse(csv_text, { headers: true, encoding: "UTF-8", col_sep: '|' })
+      csv = CSV.parse(csv_text, { headers: true, encoding: "UTF-8", col_sep: self.organization.csv_separator })
     rescue => exception
       raise exception.message
     end

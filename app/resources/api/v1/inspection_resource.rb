@@ -26,8 +26,28 @@ class Api::V1::InspectionResource < ApplicationResource
 
   add_foreign_keys :construction_id
 
+  def state_name
+    if @model.state == "finished"
+      '<i class="fa fa-check" style="color: #239934; font-size: 2.0em"></i>'
+    elsif @model.state == "reports_pending"
+      '<i class="fa fa-ban" style="color: #ACAEAF; font-size: 2.0em"></i>'
+    else
+      '<i class="fa fa-clock-o" style="color: #F99000; font-size: 2.0em"></i>'
+    end
+  end
+
   def pdf
     @model.pdf.url
+  end
+
+  def self.column_mapping
+    {
+      formatted_created_at: "created_at"
+    }
+  end
+
+  def formatted_created_at
+    "#{@model.created_at.strftime("%d/%m/%Y")}"
   end
 
   filter :num_pending_reports, apply: ->(records, value, _options) {
@@ -130,6 +150,7 @@ class Api::V1::InspectionResource < ApplicationResource
     end
   }
 
+
   filter :construction, apply: ->(records, value, _options) {
     if not value.empty?
       if value[0].is_a? ActionController::Parameters
@@ -225,9 +246,9 @@ class Api::V1::InspectionResource < ApplicationResource
 
   def num_reports
     if @model.respond_to? :num_reports
-      @model.num_reports
+      "<h3 style='color: #239934;'>#{@model.num_reports}</h3>"
     else
-      0
+      "<h3 style='color: #239934;'>0</h3>"
     end
   end
 
@@ -245,6 +266,40 @@ class Api::V1::InspectionResource < ApplicationResource
     else
       0
     end
+  end
+
+  def self.sortable_fields(context)
+    super + [:"construction.name", :"company.name" ]
+  end
+
+  def self.apply_sort(records, order_options, _context = {})
+    new_options = {}
+    order_options.each do |key, value|
+      if column_mapping.has_key? key.to_sym
+        new_options[column_mapping[key.to_sym]] = value
+      else
+        new_options[key] = value
+      end
+    end
+    order_options = new_options
+    if order_options.any?
+      order_options.each_pair do |field, direction|
+        if field.to_s.include?(".")
+          *model_names, column_name = field.split(".")
+
+          associations = _lookup_association_chain([records.model.to_s, *model_names])
+          joins_query = _build_joins([records.model, *associations])
+
+          # _sorting is appended to avoid name clashes with manual joins eg. overriden filters
+          order_by_query = "#{associations.last.name}_sorting.#{column_name} #{direction}"
+          records = records.joins(joins_query).order(order_by_query)
+        else
+          records = records.order(field => direction)
+        end
+      end
+    end
+
+    records
   end
 
   def self.records(options = {})
@@ -269,7 +324,7 @@ class Api::V1::InspectionResource < ApplicationResource
         inspections = inspections.joins(:construction)
         .where(constructions: { administrator_id: current_user.id })
       end
-      inspections.order("inspections.created_at DESC")
+      inspections
     else
       Inspection.where("1 = 0")
     end

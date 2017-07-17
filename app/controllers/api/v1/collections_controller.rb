@@ -1,7 +1,8 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::CollectionsController < Api::V1::JsonApiController
   before_action :doorkeeper_authorize!
-
+  require 'csv_upload_serializer'
+  
   def show
     if params[:format] == "csv"
       collection = Collection.find(params.require(:id))

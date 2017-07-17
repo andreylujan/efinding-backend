@@ -16,7 +16,7 @@
 class Api::V1::TableColumnResource < ApplicationResource
 
   attributes :field_name, :column_name, :data_type, :position, :relationship_name,
-  	:collection_name
+  	:collection_name, :headers
 
   filters :collection_name
   

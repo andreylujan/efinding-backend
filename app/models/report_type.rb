@@ -18,5 +18,6 @@ class ReportType < ApplicationRecord
   has_many :sections, -> { order(position: :asc) }, dependent: :destroy
   has_many :reports, dependent: :destroy
   has_many :checklist_reports, dependent: :destroy
+
   validates :organization, presence: true
 end

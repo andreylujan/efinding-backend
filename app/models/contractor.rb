@@ -34,4 +34,78 @@ class Contractor < ApplicationRecord
       self.rut = RUT::formatear(RUT::quitarFormato(self.rut).gsub(/^0+|$/, ''))
     end
   end
+
+  def self.to_csv(current_user, file_name=nil)
+    attributes = %w{rut name}
+    csv_obj = CSV.generate(headers: true,
+    encoding: "UTF-8", col_sep: current_user.organization.csv_separator) do |csv|
+      csv << attributes
+      current_user.organization.contractors.each do |contractor|
+        csv << [
+          contractor.rut,
+          contractor.name
+        ]
+      end
+    end
+    if file_name.present?
+      f = File.open(file_name, 'w')
+      f.write(csv_obj)
+      f.close
+    end
+    csv_obj
+  end
+
+  def self.from_csv(file_name, current_user)
+
+    upload = BatchUpload.create! user: current_user, uploaded_file: file_name,
+      uploaded_resource_type: "Contratistas"
+    csv_text = CsvUtils.read_file(file_name)
+
+    headers = %w{rut name}
+    resources = []
+    row_number = 2
+
+    begin
+      csv = CSV.parse(csv_text, { headers: true, encoding: "UTF-8", col_sep: current_user.organization.csv_separator })
+    rescue => exception
+      raise exception.message
+    end
+
+    csv.each do |row|
+
+      errors = {}
+      contractor = Contractor.find_by_rut(row["rut"])
+
+      if contractor.nil?
+        contractor = Contractor.new(rut: row["rut"], organization: current_user.organization)
+      end
+      contractor.name = row["name"]
+
+      begin
+        contractor.save!
+      rescue => e
+        errors = contractor.errors.as_json
+      end
+
+      created = false
+      changed = false
+      success = true
+      if not errors.empty?
+        success = false
+      elsif contractor.previous_changes[:id].present?
+        created = true
+      elsif contractor.previous_changes.any?
+        changed = true
+      end
+
+      csv_resource = CsvUpload.new id: contractor.id, success: success,
+        errors: errors,
+        row_number: row_number, row_data: row.to_h,
+        created: created, changed: changed
+      row_number = row_number + 1
+      resources << csv_resource
+    end
+
+    resources
+  end
 end

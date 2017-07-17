@@ -10,10 +10,10 @@
 
 server '50.16.161.152', port: 60, user: 'ubuntu', roles: [:web, :app, :db]
 
-set :branch, 'staging'
+set :branch, 'pitagora'
 
 # Default deploy_to directory is /var/www/my_app
-set :deploy_to, '/srv/http/www/efinding/staging/api'
+set :deploy_to, '/srv/http/www/efinding/pitagora/api'
 
 # role-based syntax
 # ==================

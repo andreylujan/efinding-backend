@@ -25,14 +25,34 @@ class Api::V1::ConstructionsController < Api::V1::JsonApiController
     super
   end
 
+  def get_csv
+    send_data Construction.to_csv(current_user, nil), filename: "obras.csv",
+      disposition: "attachment", type: "text/csv"
+  end
+
+  def create_csv
+    begin
+      resources = Construction.from_csv(params.require(:csv), current_user)
+    rescue => exception
+      render json: {
+        errors: [
+          status: '400',
+          detail: exception.class.to_s + ": " + exception.message
+        ]
+      }, status: :bad_request
+      return
+    end
+    render json: CsvUploadSerializer.serialize(resources, is_collection: true)
+  end
+
   def get_personnel
-    send_data Construction.to_csv, filename: "personal_de_obra.csv",
+    send_data Construction.personnel_to_csv, filename: "personal_de_obra.csv",
       disposition: "attachment", type: "text/csv"
   end
 
   def create_personnel
     begin
-      resources = Construction.from_csv(params.require(:csv), current_user)
+      resources = Construction.personnel_from_csv(params.require(:csv), current_user)
     rescue => exception
       render json: {
         errors: [

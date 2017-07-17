@@ -25,6 +25,7 @@ class Construction < ApplicationRecord
   belongs_to :administrator, class_name: :User, foreign_key: :administrator_id
   belongs_to :expert, class_name: :User, foreign_key: :expert_id
   belongs_to :supervisor, class_name: :User, foreign_key: :supervisor_id
+  belongs_to :inspector, class_name: :User, foreign_key: :inspector_id
   # belongs_to :visitor, class_name: :Person, foreign_key: :visitor_id
   has_and_belongs_to_many :contractors
   has_many :construction_personnel, dependent: :destroy
@@ -45,7 +46,7 @@ class Construction < ApplicationRecord
     super
   end
 
-  def self.to_csv(file_name=nil)
+  def self.personnel_to_csv(file_name=nil)
     attributes = %w{code personnel_type_id personnel_id}
     csv_obj = CSV.generate(headers: true,
     encoding: "UTF-8", col_sep: '|') do |csv|
@@ -68,7 +69,7 @@ class Construction < ApplicationRecord
     csv_obj
   end
 
-  def self.from_csv(file_name, current_user)
+  def self.personnel_from_csv(file_name, current_user)
 
     upload = BatchUpload.create! user: current_user, uploaded_file: file_name,
       uploaded_resource_type: "Obras"
@@ -95,11 +96,11 @@ class Construction < ApplicationRecord
 
       if construction.present?
 
-        
+
 
         new_personnel = []
         item = ConstructionPersonnel.find_or_initialize_by(construction_id: construction.id,
-          personnel_type_id: row["personnel_type_id"]).tap do |cp|
+        personnel_type_id: row["personnel_type_id"]).tap do |cp|
           cp.personnel_id = row["personnel_id"]
         end
 
@@ -139,8 +140,111 @@ class Construction < ApplicationRecord
       end
       resources << csv_resource
     end
-    
+
     ConstructionPersonnel.where.not(id: ids).destroy_all
+    resources
+  end
+
+  def self.to_csv(current_user, file_name=nil)
+    attributes = %w{company_rut code name administrator_email expert_email supervisor_email}
+    csv_obj = CSV.generate(headers: true,
+    encoding: "UTF-8", col_sep: current_user.organization.csv_separator) do |csv|
+      csv << attributes
+      Construction.joins(:company).where(companies: { organization_id: current_user.organization_id }).each do |construction|
+        csv << [
+          construction.company.rut,
+          construction.code,
+          construction.name,
+          construction.administrator.present? ? construction.administrator.email : "SIN ADMINISTRADOR",
+          construction.expert.present? ? construction.expert.email : "SIN EXPERTO",
+          construction.supervisor.present? ? construction.supervisor.email : "SIN SUPERVISOR"
+        ]
+      end
+    end
+    if file_name.present?
+      f = File.open(file_name, 'w')
+      f.write(csv_obj)
+      f.close
+    end
+    csv_obj
+  end
+
+  def self.from_csv(file_name, current_user)
+
+    upload = BatchUpload.create! user: current_user, uploaded_file: file_name,
+      uploaded_resource_type: "Obras"
+    csv_text = CsvUtils.read_file(file_name)
+
+    headers = %w{company_rut code name administrator_email expert_email supervisor_email}
+    resources = []
+    row_number = 2
+
+    begin
+      csv = CSV.parse(csv_text, { headers: true, encoding: "UTF-8", col_sep: current_user.organization.csv_separator })
+    rescue => exception
+      raise exception.message
+    end
+
+    csv.each do |row|
+
+      errors = {}
+      cons = Construction.find_or_initialize_by(code: row["code"]).tap do |construction|
+        construction.name = row["name"]
+        has_errors = false
+        begin
+          construction.company = Company.find_by_rut!(row["company_rut"])
+        rescue => e
+          errors = {
+            company_rut: [ e.message ]
+          }
+          has_errors = true
+        end
+        begin
+          construction.administrator = User.find_by_email!(row["administrator_email"])
+        rescue => e
+          errors[:administrator_email] = [ e.message ]
+          has_errors = true
+        end
+        begin
+          construction.expert = User.find_by_email!(row["expert_email"])
+        rescue => e
+          errors[:expert_email] = [ e.message ]
+          has_errors = true
+        end
+        begin
+          construction.supervisor = User.find_by_email!(row["supervisor_email"])
+        rescue => e
+          errors[:supervisor_email] = [ e.message ]
+          has_errors = true
+        end
+        if not has_errors
+          begin
+            construction.save!
+          rescue => e
+            errors = construction.errors.as_json
+          end
+        end
+      end
+
+      created = false
+      changed = false
+      success = true
+      if not errors.empty?
+        success = false
+      elsif cons.previous_changes[:id].present?
+        created = true
+      elsif cons.previous_changes.any?
+        changed = true
+      end
+
+      csv_resource = CsvUpload.new id: cons.id, success: success,
+        errors: errors,
+        row_number: row_number, row_data: row.to_h,
+        created: created, changed: changed
+      row_number = row_number + 1
+      resources << csv_resource
+    end
+
     resources
   end
 end
