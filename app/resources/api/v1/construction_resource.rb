@@ -7,6 +7,7 @@ class Api::V1::ConstructionResource < ApplicationResource
     has_one :administrator 
     has_one :expert
     has_one :supervisor
+    has_one :inspector
     has_many :construction_personnel
     has_many :contractors
     

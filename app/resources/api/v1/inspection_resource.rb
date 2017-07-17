@@ -27,8 +27,10 @@ class Api::V1::InspectionResource < ApplicationResource
   add_foreign_keys :construction_id
 
   def state_name
-    if @model.state == "final_signature_pending" || @model.state == "finished"
+    if @model.state == "finished"
       '<i class="fa fa-check" style="color: #239934; font-size: 2.0em"></i>'
+    elsif @model.state == "reports_pending"
+      '<i class="fa fa-ban" style="color: #ACAEAF; font-size: 2.0em"></i>'
     else
       '<i class="fa fa-clock-o" style="color: #F99000; font-size: 2.0em"></i>'
     end
@@ -45,7 +47,7 @@ class Api::V1::InspectionResource < ApplicationResource
   end
 
   def formatted_created_at
-    "#{@model.created_at.strftime("%d/%m/%Y")}<h4 style='color: red'>Holi test</h4>"
+    "#{@model.created_at.strftime("%d/%m/%Y")}"
   end
 
   filter :num_pending_reports, apply: ->(records, value, _options) {
