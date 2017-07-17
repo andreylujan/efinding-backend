@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::ConstructionResource < ApplicationResource
-	attributes :name, :company_id, :contractors, :code, :construction_personnel_attributes
+	attributes :name, :company_id, :code, :construction_personnel_attributes
 	has_one :company
     add_foreign_keys :company_id, :administrator_id, :expert_id, :supervisor_id
 
@@ -13,9 +13,7 @@ class Api::V1::ConstructionResource < ApplicationResource
     
     filter :company_id
 
-    def contractors
-        @model.contractors.order("name ASC").map { |u| { name: u.name, rut: u.rut, id: u.id } }
-    end
+ 
 
 	def self.records(options = {})
     context = options[:context]
