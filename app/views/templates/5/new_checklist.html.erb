@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+		.logo {
+			width: 200px;
+			margin-bottom: 15px;
+			margin-top: 10px;
+			height: 
+		}
+
+		.inspeccion {
+			color: #3F5B71 !important;
+			font-size: 1.1em !important;
+		}
+
+		h3 {
+			margin-left: 20px !important;
+			margin-right: 20px !important;
+			font-size: 1.17em !important;
+			font-weight: bold !important;
+		}
+		h2 {
+			color: #f19122 !important;
+			margin-left: 20px !important;
+			margin-right: 20px !important;
+			font-size: 1.5em !important;
+			font-weight: bold !important;
+		}
+		h4 {
+			color: #3F5B71 !important;
+			margin-left: 20px !important;
+			margin-right: 20px !important;
+		}
+
+		.checklist {
+			display: inline-block;
+			margin-bottom: 15px;
+			margin-top: 10px;
+			vertical-align: top;
+			width: 99%;
+		}
+
+		table {
+			border-collapse: collapse;
+			width: 100%;
+			margin: 20px 0px;
+		}
+		table td, th {
+			padding: 10px;
+			max-width: 100px;
+		}
+		table td, table th {
+			border: 1px solid #E7E7E8;
+		}
+		table th, td {
+			text-align:center; 
+			vertical-align:middle;
+		}
+
+		.check {
+			width: 17px;
+		}
+
+		.info-label {
+			display: inline-block;
+			font-weight: bold;
+			/*text-align: justify;*/
+			vertical-align: middle;
+		}
+
+		body {
+			font-family: 'Helvetica' !important;
+			font-size: 14px !important;
+			color: #3F5B71 !important;
+		}
+
+		#location-info {
+			margin-top: 15px;
+		}
+
+		.location-field {
+			/*margin-left: 20px;*/
+			margin: 10px 0 !important;
+			width: 100% !important;
+		}
+
+		.picsField {
+			width: 400px;
+			margin-top: 5px;
+			height: 250px;
+		}
+
+		.center-cropped {
+
+		  background-position: left center;
+		  background-repeat: no-repeat;
+		}
+
+		.standalone-container {
+			page-break-inside: avoid;
+		}
+
+		.map {
+			margin-top: 5px;
+			height: 250px;
+			width: 400px;
+		}
+
+	</style>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<img src="http://ddejhenv4m3e3.cloudfront.net/logos/moller.png" alt="logo_moller" class="logo">
+			</div>
+		</div>
+		<hr />
+		<h2>INFORMACIÓN GENERAL</h2>
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Empresa:
+					</div>
+					<div class="col-xs-8">
+						<%= checklist.construction.company.name %>
+					</div>
+				</div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Obra:
+					</div>
+					<div class="col-xs-8">
+						<%= checklist.construction.name %>
+					</div>
+				</div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Usuarios involucrados:
+					</div>
+					<div class="col-xs-8">
+						<%= checklist.users.order("first_name || ' ' || last_name ASC").map { |u| u.full_name }.join(", ") %>
+					</div>
+				</div>
+				<div class="row location-field">
+					<div class="col-xs-4 info-label">
+						Indicador total:
+					</div>
+					<div class="col-xs-8">
+						<%= checklist.total_indicator %>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr />
+	
+		<div class="row">
+			<div class="col-xs-12">
+				<h2>GEOLOCALIZACIÓN</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-6">
+				<div class="center-cropped map" style="background-image: url('<%= report.initial_location_image %>');">
+				</div>
+			</div>
+			<div class="col-xs-6">
+				<div class="row location-field">
+						<span class="label-text info-label">Dirección: </span>
+						<span class="value"><%= checklist.location.address %></span>
+					</div>
+					<div class="row location-field">
+						<span class="label-text info-label">Región: </span>
+						<span class="value"><%= checklist.location.commune %></span>
+					</div>
+					<div class="row location-field">
+						<span class="label-text info-label">Comuna: </span>
+						<span class="value"><%= checklist.location.region %></span>
+					</div>
+					<div class="row location-field">
+						<span class="label-text info-label">Referencia: </span>
+						<span class="value"><%= checklist.location.reference %></span>
+					</div>
+			</div>
+		</div>
+
+		<hr />
+
+		<div class="row">
+			<div class="col-xs-12">
+				<h2>CHECKLIST</h2>
+			</div>
+		</div>
+		<div class="row standalone-container" id="location-info">
+			<div class="col-xs-12">
+				<% checklist.checklist_data.each do |section| %>
+					<% if section["items"].inject(0) { |sum, x| if x["value"].present? and x["value"] != 0 then sum + 1 else sum end  } > 0 %>
+						<h3><%= section["name"] %></h3>
+						<table>
+							<tbody>
+								<% section["items"].each do |item| %>
+									<% if item["value"].present? and item["value"] != 0 %>
+										<tr>
+											<td>
+												<% if item["value"] == 1 %>
+													<img class="check" src="http://d21zid65ggdxzg.cloudfront.net/801C65B140A965F51FD49B476D9219F4.png" alt="check_v" />
+												<% elsif item["value"] == 2 %>
+													<img class="check" src="http://d21zid65ggdxzg.cloudfront.net/768AF9B25098A450CD52CD5B6339D3E8.png" alt="check_x" />
+												<% end %>
+											</td>
+											<td>
+												<%= item["name"] %>
+											</td>
+											<td>
+												<% if item["comment"] %>
+													<%= simple_format(item["comment"]) %>
+												<% else %>
+													Sin comentarios
+												<% end %>
+											</td>
+										</tr>
+									<% end %>
+								<% end %>
+							</tbody>
+						</table>
+					<% end %>
+				<% end %>
+			</div>
+		</div>
+
+	</div>
+
+
+	
+</body>
+</html>
