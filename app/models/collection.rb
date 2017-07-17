@@ -17,9 +17,11 @@ class Collection < ApplicationRecord
   belongs_to :parent_collection,
     class_name: :Collection, foreign_key: :parent_collection_id
   belongs_to :organization
-  has_many :collection_items, -> { order(position: :asc) }
+  has_many :collection_items, -> { order(position: :asc) }, dependent: :destroy
+  has_many :menu_items, dependent: :destroy
   validates :organization, presence: true
   validates :name, presence: true, uniqueness: { scope: :organization }
+  has_many :children, class_name: :Collection, foreign_key: :parent_collection_id
 
   def to_csv(file_name=nil)
     attributes = %w{code parent_code name}
