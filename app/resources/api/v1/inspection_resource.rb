@@ -21,6 +21,7 @@ class Api::V1::InspectionResource < ApplicationResource
     :num_expired_reports,
     :state_name,
     :cached_data,
+    :num_reports_html,
     :field_chief_name
 
 
@@ -68,6 +69,13 @@ class Api::V1::InspectionResource < ApplicationResource
     end
   }
 
+  filter :num_reports_html, apply: ->(records, value, _options) {
+    if not value.empty?
+      records = records.having('count(reports.id) = ?', value[0])
+    else
+      records
+    end
+  }
   filter :num_reports, apply: ->(records, value, _options) {
     if not value.empty?
       records = records.having('count(reports.id) = ?', value[0])
@@ -245,6 +253,14 @@ class Api::V1::InspectionResource < ApplicationResource
   }
 
   def num_reports
+    if @model.respond_to? :num_reports
+      @model.num_reports
+    else
+      0
+    end
+  end
+
+  def num_reports_html
     if @model.respond_to? :num_reports
       "<h3 style='color: #239934;'>#{@model.num_reports}</h3>"
     else
