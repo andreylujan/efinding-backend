@@ -74,12 +74,20 @@ class Contractor < ApplicationRecord
     csv.each do |row|
 
       errors = {}
-      contractor = Contractor.find_by_rut(row["rut"])
+      contractor = nil
+
+      if row["rut"].present?
+        contractor = Contractor.find_by_rut(row["rut"])
+      end
 
       if contractor.nil?
-        contractor = Contractor.new(rut: row["rut"], organization: current_user.organization)
+        contractor = Contractor.new(organization: current_user.organization)
       end
+      
       contractor.name = row["name"]
+      if row["rut"].present?
+        contractor.rut = row["rut"]
+      end
 
       begin
         contractor.save!
