@@ -183,6 +183,10 @@ class Inspection < ApplicationRecord
     end
   end
 
+  def formatted_created_at
+    created_at.strftime("%d/%m/%Y")
+  end
+
   def formatted_final_signed_at
     final_signed_at.strftime("%d/%m/%Y") if final_signed_at.present?
   end

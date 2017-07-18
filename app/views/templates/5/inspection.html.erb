@@ -14,7 +14,7 @@
 			<div class="row">
 				<div class="col-xs-4"><img src="https://ddejhenv4m3e3.cloudfront.net/logos/pitagora-v2.jpg" class="brand"></div>
 				<div class="col-xs-8">
-					<h1 class="text-right">{{ Nombre Inspección }}<br><small>{{ Nombre de la obra }}</small></h1>
+					<h1 class="text-right"><%= inspection.construction.company.name %><br><small><%= inspection.construction.name %></small></h1>
 				</div>
 				<div class="col-xs-12"><hr></div>
 
@@ -24,325 +24,277 @@
 					<table class="table">
 						<tr>
 							<td>Responsable:</td>
-							<td><strong>{{ Nombre inspector }}</strong></td>
+							<td><strong><%= if inspection.construction.inspector.present? then inspector.construction.inspector.name else "Obra sin inspector" end %></strong></td>
 							<td rowspan="5" class="highlight">
-								<h1>{{ 6 }}<br><small>Hallazgos</small></h1>
+								<h1><%= inspection.reports.count %><br><small>Hallazgos</small></h1>
 							</td>
 						</tr>
 						<tr>
 							<td>Obra:</td>
-							<td><strong>{{ Nombre Obra }}</strong></td>
+							<td><strong><%= inspection.construction.name %></strong></td>
 						</tr>
 						<tr>
 							<td>Fecha inspección:</td>
-							<td><strong>{{ Fecha de inspección }}</strong></td>
+							<td><strong><%= inspection.formatted_created_at %></strong></td>
 						</tr>
 						<tr>
 							<td>Dirección:</td>
-							<td><strong>{{ Dirección de obra }}</strong></td>
+							<td><strong>Obra sin dirección</strong></td>
 						</tr>
 						<tr>
 							<td>Administrador Obra:</td>
-							<td><strong>{{ Nombre administrador }}</strong></td>
+							<td><strong><%= if inspection.construction.administrator.present? then inspector.construction.administrator.name else "Obra sin administrador" end %></strong></td>
 						</tr>
 					</table>
 
 					<h2>Hallazgos encontrados</h2>
 
 					<table class="table">
-						<tr>
-							<td><h3>{{ Nombre del hallazgo }}</h3></td>
-							<td class="text-center">
-								<h2><small>Gravedad</small><br>{{ Alto }}</h2>								
-							</td>
-							<td class="text-center">
-								<h2><small>Riesgo</small><br>{{ B }}</h2>
-							</td>
-							<td class="highlight">
-								<i class="fa fa-check fa-2x success"></i><!-- Estado -->
-							</td>
-						</tr>
-
-						<tr>
-							<td><h3>{{ Nombre del hallazgo }}</h3></td>
-							<td class="text-center">
-								<h2><small>Gravedad</small><br>{{ Alto }}</h2>								
-							</td>
-							<td class="text-center">
-								<h2><small>Riesgo</small><br>{{ B }}</h2>
-							</td>
-							<td class="highlight">
-								<i class="fa fa-clock-o fa-2x pending"></i>
-							</td>
-						</tr>
-
-						<tr>
-							<td><h3>{{ Nombre del hallazgo }}</h3></td>
-							<td class="text-center">
-								<h2><small>Gravedad</small><br>{{ Alto }}</h2>								
-							</td>
-							<td class="text-center">
-								<h2><small>Riesgo</small><br>{{ A }}</h2>
-							</td>
-							<td class="highlight">
-								<i class="fa fa-check fa-2x success"></i>
-							</td>
-						</tr>
-
-						<tr>
-							<td><h3>{{ Nombre del hallazgo }}</h3></td>
-							<td class="text-center">
-								<h2><small>Gravedad</small><br>{{ Medio }}</h2>								
-							</td>
-							<td class="text-center">
-								<h2><small>Riesgo</small><br>{{ C }}</h2>
-							</td>
-							<td class="highlight">
-								<i class="fa fa-clock-o fa-2x pending"></i>
-							</td>
-						</tr>
-
-						<tr>
-							<td><h3>{{ Nombre del hallazgo }}</h3></td>
-							<td class="text-center">
-								<h2><small>Gravedad</small><br>{{ Alto }}</h2>								
-							</td>
-							<td class="text-center">
-								<h2><small>Riesgo</small><br>{{ A }}</h2>
-							</td>
-							<td class="highlight">
-								<i class="fa fa-check fa-2x success"></i>
-							</td>
-						</tr>
-
-						<tr>
-							<td><h3>{{ Nombre del hallazgo }}</h3></td>
-							<td class="text-center">
-								<h2><small>Gravedad</small><br>{{ Medio }}</h2>								
-							</td>
-							<td class="text-center">
-								<h2><small>Riesgo</small><br>{{ C }}</h2>
-							</td>
-							<td class="highlight">
-								<i class="fa fa-clock-o fa-2x pending"></i>
-							</td>
-						</tr>
+						<% inspection.reports.each do |report| %>
+							<tr>
+								<td><h3><%= report.dynamic_attributes.dig("67", "text") %></h3></td>
+								<td class="text-center">
+									<h2><small>Gravedad</small><br><%= report.dynamic_attributes.dig("52", "text") %></h2>								
+								</td>
+								<td class="text-center">
+									<h2><small>Riesgo</small><br><%= report.dynamic_attributes.dig("53", "text") %></h2>
+								</td>
+								<td class="highlight">
+									<i class="fa fa-check fa-2x success"></i><!-- Estado -->
+								</td>
+							</tr>
+						<% end %>
 					</table>
 				</div>
 			</div>
 
+			<div class="row">
+				<div class="col-xs-12">
+					<h2>Ubicaciones</h2>
+				</div>
+
+				<div class="col-xs-12">
+					<img src="http://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=900x300&maptype=roadmap
+&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318
+&markers=color:red%7Clabel:C%7C40.718217,-73.998284
+&key=AIzaSyAxdoh8VjK53CCCYNmGx0RGuompeK-ejzc">
+				</div>
+			</div>
 			
 		</div>
 		<!-- BRAKE PAGE ALWAYS IN CONTAINER DIV -->
 
-		<div class="container page-break">
-			<div class="row">
-					<div class="col-xs-12">
-						<h2>Ubicaciones</h2>
-					</div>
-
-					<div class="col-xs-12">
-						<img src="http://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap
-	&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318
-	&markers=color:red%7Clabel:C%7C40.718217,-73.998284
-	&key=AIzaSyAxdoh8VjK53CCCYNmGx0RGuompeK-ejzc">
-					</div>
-				</div>
-			<div class="row">
-				<div class="col-xs-12">
-					<table class="table">
-						<tr>
-							<td><h2>Hallazgo 1<br><small>{{ Nombre del hallazgo}}</small></h2></td>
-							<td class="text-center">
-								<h2><small>Gravedad</small><br>{{ Alto }}</h2>								
-							</td>
-							<td class="text-center">
-								<h2><small>Riesgo</small><br>{{ B }}</h2>
-							</td>
-							<td class="highlight">
-								<i class="fa fa-check fa-2x success"></i>
-							</td>
-						</tr>
-					</table>
-
-					<table class="table-two">
-						<tr>
-							<td width="50%">
-								<label>Grupo de actividad</label>
-								{{ Nombre grupo de actividad }}
-							</td>
-
-							<td>
-								<label>Contratista</label>
-								{{ Nombre empresa }}
-							</td>
-						</tr>
-
-						<tr>
-							<td>
-								<label>Detalle de actividad</label>
-								{{ Nombre detalle de actividad }}
-							</td>
-
-							<td>
-								<label>Frente de trabajo</label>
-								{{ Nombre frente de trabajo }}
-							</td>
-						</tr>
-
-						<tr>
-							<td>
-								<label>Causa directa</label>
-								{{ Nombre causa directa }}
-							</td>
-
-							<td>
-								<label>Acción/Condición detectada</label>
-								{{ Nombre acción/condición detectada }}
-							</td>
-						</tr>
-
-						<tr>
-							<td>
-								<label>DESCRIPCIÓN CAUSA DIRECTA</label>
-								{{ Nombre - definición }}
-							</td>
-
-							<td>
-								<label>CLASIFICACIÓN DE POSIBLE INCIDENTE</label>
-								{{ Nombre - definición }}
-							</td>
-						</tr>
-
-						<tr>
-							<td>
-								<label>DETALLE DE CADA CAUSA DIRECTA</label>
-								{{ Nombre - definición }}
-							</td>
-
-							<td>
-								<label>SUPERVISOR RESPONSABLE</label>
-								{{ Nombre - definición }}
-							</td>
-						</tr>
-
-						<tr>
-							<td>
-								<label>CAUSA BÁSICA</label>
-								{{ Nombre - definición }}
-							</td>
-
-							<td>
-								<label>JEFE DE TERRENO</label>
-								{{ Nombre - definición }}
-							</td>
-						</tr>
-
-						<tr>
-							<td>
-								<label>DESCRIPCIÓN CAUSA BÁSICA</label>
-								{{ Nombre - definición }}
-							</td>
-
-							<td>
-								<label>PLAZO DE CUMPLIMIENTO</label>
-								{{ Nombre - definición }}
-							</td>
-						</tr>
-
-						<tr>
-							<td>
-								<label>DETALLE DE CADA CAUSA BÁSICA</label>
-								{{ Nombre - definición }}
-							</td>
-
-							<td>
-								<label>FECHA DE CUMPLIMIENTO</label>
-								{{ Nombre - definición }}
-							</td>
-						</tr>
-					</table>
-				</div>
-			</div>
-
-		</div>
 		<div class="container">
-		<div class="row">
-				<div class="col-xs-6">
-					<h2>Hallazgo<br><small>{{ Dirección del hallazgo }}</small></h2>
+			<% inspection.reports.each_with_index do |report, idx| %>
+				<div class="row" style="page-break-before: always;">
+					<div class="col-xs-12">
+						<table class="table">
+							<tr>
+								<td><h2>Hallazgo <%= idx + 1 %><br><small><%= report.dynamic_attributes.dig("67", "text") %></small></h2></td>
+								<td class="text-center">
+									<h2><small>Gravedad</small><br><%= report.dynamic_attributes.dig("52", "text") %></h2>								
+								</td>
+								<td class="text-center">
+									<h2><small>Riesgo</small><br><%= report.dynamic_attributes.dig("53", "text") %></h2>
+								</td>
+								<td class="highlight">
+									<i class="fa fa-check fa-2x success"></i>
+								</td>
+							</tr>
+						</table>
 
-					<img src="https://ddejhenv4m3e3.cloudfront.net/8499caeb-c5f0-4442-acb2-03ee78bb743e.jpg" class="img-responsive">
-					<p>
-						<strong>Comentario hallazgo</strong><br>
-						{{ Comentario del hallazgo }}
-					</p>
+						<table class="table-two">
+							<tr>
+								<td width="50%">
+									<label>Grupo de actividad</label>
+									<%= report.dynamic_attributes.dig("69", "text") %>
+								</td>
+
+								<td>
+									<label>Contratista</label>
+									<%= report.dynamic_attributes.dig("68", "text") %>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<label>Detalle de actividad</label>
+									<%= report.dynamic_attributes.dig("70", "text") %>
+								</td>
+
+								<td>
+									<label>Frente de trabajo</label>
+									<%= report.dynamic_attributes.dig("71", "text") %>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<label>Causa directa</label>
+									<%= report.dynamic_attributes.dig("55", "text") %>
+								</td>
+
+								<td>
+									<label>Acción/Condición detectada</label>
+									<%= report.dynamic_attributes.dig("72", "text") %>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<label>DESCRIPCIÓN CAUSA DIRECTA</label>
+									<%= report.dynamic_attributes.dig("56", "text") %>
+								</td>
+
+								<td>
+									<label>CLASIFICACIÓN DE POSIBLE INCIDENTE</label>
+									<%= report.dynamic_attributes.dig("54", "text") %>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<label>DETALLE DE CADA CAUSA DIRECTA</label>
+									<%= report.dynamic_attributes.dig("57", "text") %>
+								</td>
+
+								<td>
+									<label>SUPERVISOR RESPONSABLE</label>
+									<%= if inspection.construction.supervisor.present? then inspection.construction.supervisor.name else "Obra sin supervisor" end %>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<label>CAUSA BÁSICA</label>
+									<%= report.dynamic_attributes.dig("58", "text") %>
+								</td>
+
+								<td>
+									<label>JEFE DE TERRENO</label>
+									<%= if inspection.construction.expert.present? then inspector.construction.expert.name else "Obra sin Jefe de Terreno" end %>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<label>DESCRIPCIÓN CAUSA BÁSICA</label>
+									<%= report.dynamic_attributes.dig("59", "text") %>
+								</td>
+
+								<td>
+									<label>PLAZO DE CUMPLIMIENTO</label>
+									<%= report.dynamic_attributes.dig("65", "text") %>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<label>DETALLE DE CADA CAUSA BÁSICA</label>
+									<%= report.dynamic_attributes.dig("60", "text") %>
+								</td>
+
+								<td>
+									<label>FECHA DE CUMPLIMIENTO</label>
+									<%= report.dynamic_attributes.dig("66", "text") %>
+								</td>
+							</tr>
+						</table>
+					</div>
 				</div>
 
-				<div class="col-xs-6">
-					<h2>Resolución hallazgo<br><small>{{ Dirección de la resolución de hallazgo }}</small></h2>
-
-					<img src="https://ddejhenv4m3e3.cloudfront.net/8499caeb-c5f0-4442-acb2-03ee78bb743e.jpg" class="img-responsive">
-					<p>
-						<strong>Comentario resolución de hallazgo</strong><br>
-						{{ Comentario de resolución de hallazgo }}
-					</p>
-				</div>
 			</div>
-
+			<div class="container">
 			<div class="row">
-				<div class="col-xs-12">
-					<hr>
-					<h2>Firmas</h2>
+					<div class="col-xs-6">
+						<h2>Hallazgo<br><small><%= if report.initial_location.present? then report.initial_location.address else "Sin dirección" end %></small></h2>
+
+						<img src="<%= report.images.where(is_initial: true).first.url %>" class="img-responsive" style="height: 300px;">
+						<p>
+							<strong>Comentario hallazgo</strong><br>
+							<%= report.images.where(is_initial: true).first.comment %>
+						</p>
+					</div>
+
+					<div class="col-xs-6">
+						<% if report.state != "unchecked" %>
+							<h2>Resolución hallazgo<br><small><%= if report.final_location.present? then report.final_location.address else "Sin dirección" end %></small></h2>
+
+							<img src="<%= report.images.where(is_initial: false).first.url %>" class="img-responsive" style="height: 300px;">
+							<p>
+								<strong>Comentario resolución de hallazgo</strong><br>
+								<%= report.resolution_comment %>
+							</p>
+						<% end %>
+					</div>
 				</div>
-				
-				<div class="col-xs-12">
-					<table class="table">
-						<tr>
-							<td class="highlight">
-								<small>Jefe Ssoma</small><br>
-								<hr>
-								<i class="fa fa-check fa-2x success"></i><!-- Estado -->
-								<p>
-									{{ Nombre encargado }}<br>
-									<small>{{ Fecha firma }}</small>
-								</p>
-							</td>
 
-							<td class="highlight">
-								<small>Adm. de obra</small><br>
-								<hr>
-								<i class="fa fa-clock-o fa-2x pending"></i>
-								<p>
-									{{ Nombre encargado }}<br>
-									<small>{{ Fecha firma }}</small>
-								</p>
-							</td>
+				<div class="row" style="page-break-inside: avoid">
+					<div class="col-xs-12">
+						<hr>
+						<h2>Firmas</h2>
+					</div>
+					
+					<div class="col-xs-12">
+						<table class="table" >
+							<tr>
+								<td class="highlight">
+									<small>Jefe Ssoma</small><br>
+									<hr>
+									<i class="fa fa-check fa-2x success"></i><!-- Estado -->
+									<p>
+										<%= report.creator.name %><br>
+										<small><%= report.formatted_created_at %></small>
+									</p>
+								</td>
 
-							<td class="highlight">
-								<small>Experto SSOMA</small><br>
-								<hr>
-								<i class="fa fa-check fa-2x success"></i>
-								<p>
-									{{ Nombre encargado }}<br>
-									<small>{{ Fecha firma }}</small>
-								</p>
-							</td>
+								<td class="highlight">
+									<small>Adm. de obra</small><br>
+									<hr>
+									<% if report.inspection.state != "reports_pending" and report.inspection.state != "first_signature_pending" %>
+										<i class="fa fa-check fa-2x success"></i><!-- Estado -->
+									<% else %>
+										<i class="fa fa-clock-o fa-2x pending"></i>
+									<% end %>
+									<p>
+										<%= if inspection.construction.administrator.present? then inspector.construction.administrator.name else "Obra sin administrador" end %><br>
+										<small><%= inspection.initial_signed_at.strftime("%d/%m/%Y %R") unless inspection.initial_signed_at.nil? %></small>
+									</p>
+								</td>
 
-							<td class="highlight">
-								<small>Adm. de obra firma final</small><br>
-								<hr>
-								<i class="fa fa-clock-o fa-2x pending"></i>
-								<p>
-									{{ Nombre encargado }}<br>
-									<small>{{ Fecha firma }}</small>
-								</p>
-							</td>
-						</tr>
-					</table>
+								<td class="highlight">
+									<small>Jefe de Terreno</small><br>
+									<hr>
+									<% if report.state != "unchecked" %>
+										<i class="fa fa-check fa-2x success"></i><!-- Estado -->
+									<% else %>
+										<i class="fa fa-clock-o fa-2x pending"></i>
+									<% end %>
+									<p>
+										<%= if inspection.construction.expert.present? then inspector.expert.administrator.name else "Obra sin Jefe de Terreno" end %><br>
+										<small><%= report.formatted_resolved_at %></small>
+									</p>
+								</td>
+
+								<td class="highlight">
+									<small>Adm. de obra firma final</small><br>
+									<hr>
+									<% if report.inspection.state == "finished" %>
+										<i class="fa fa-check fa-2x success"></i><!-- Estado -->
+									<% else %>
+										<i class="fa fa-clock-o fa-2x pending"></i>
+									<% end %>
+									<p>
+										<%= if inspection.construction.administrator.present? then inspector.construction.administrator.name else "Obra sin administrador" end %><br>
+										<small><%= inspection.final_signed_at.strftime("%d/%m/%Y %R") unless inspection.final_signed_at.nil? %></small>
+									</p>
+								</td>
+							</tr>
+						</table>
+					</div>
 				</div>
 			</div>
-		</div>
-
+		<% end %>
 		
 	</body>
 </html>

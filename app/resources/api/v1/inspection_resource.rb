@@ -46,11 +46,7 @@ class Api::V1::InspectionResource < ApplicationResource
       formatted_created_at: "created_at"
     }
   end
-
-  def formatted_created_at
-    "#{@model.created_at.strftime("%d/%m/%Y")}"
-  end
-
+  
   filter :num_pending_reports, apply: ->(records, value, _options) {
     if not value.empty?
       records = records
