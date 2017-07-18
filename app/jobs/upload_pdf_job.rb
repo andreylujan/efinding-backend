@@ -15,8 +15,8 @@ class UploadPdfJob < ApplicationJob
     ac = ActionController::Base.new()
     # html = ac.render_to_string('templates/report.html.erb',
     # html = ac.render_to_string('templates/report2.html.erb',
-    html = nil
-
+    html_pdf_text = nil
+    html_file_text = nil
     report.ignore_pdf = true
 
     map_type = "road_map"
@@ -56,9 +56,13 @@ class UploadPdfJob < ApplicationJob
     report.ignore_pdf = false
     
     begin
-      html = (ac.render_to_string('templates/' + report.creator.organization_id.to_s + '/report.html.erb',
+      html_file_text = (ac.render_to_string('templates/' + report.creator.organization_id.to_s + '/report_html.html.erb',
                                   locals: { report: report })).force_encoding("UTF-8")
-      pdf = WickedPdf.new.pdf_from_string(html, zoom: 0.75)
+
+      html_pdf_text = (ac.render_to_string('templates/' + report.creator.organization_id.to_s + '/report.html.erb',
+                                  locals: { report: report })).force_encoding("UTF-8")
+
+      pdf = WickedPdf.new.pdf_from_string(html_pdf_text, zoom: 0.75)
       file = Tempfile.new('pdf', encoding: 'ascii-8bit')
       html_file = Tempfile.new('html', encoding: 'UTF-8')
     rescue ActionView::MissingTemplate => e
@@ -70,7 +74,7 @@ class UploadPdfJob < ApplicationJob
 
       report.pdf = file
       report.pdf_uploaded = true
-      html_file.write(html)
+      html_file.write(html_file_text)
       report.save!
       report.html = html_file
       report.save!
