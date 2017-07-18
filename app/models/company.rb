@@ -43,7 +43,7 @@ class Company < ApplicationRecord
       csv << attributes
       current_user.organization.companies.each do |company|
         csv << [
-          company.rut,
+          company.id,
           company.name
           
         ]
