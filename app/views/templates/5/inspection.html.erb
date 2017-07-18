@@ -24,7 +24,7 @@
 					<table class="table">
 						<tr>
 							<td>Responsable:</td>
-							<td><strong><%= if inspection.construction.inspector.present? then inspector.construction.inspector.name else "Obra sin inspector" end %></strong></td>
+							<td><strong><%= if inspection.construction.inspector.present? then inspection.construction.inspector.name else "Obra sin inspector" end %></strong></td>
 							<td rowspan="5" class="highlight">
 								<h1><%= inspection.reports.count %><br><small>Hallazgos</small></h1>
 							</td>
@@ -43,7 +43,7 @@
 						</tr>
 						<tr>
 							<td>Administrador Obra:</td>
-							<td><strong><%= if inspection.construction.administrator.present? then inspector.construction.administrator.name else "Obra sin administrador" end %></strong></td>
+							<td><strong><%= if inspection.construction.administrator.present? then inspection.construction.administrator.name else "Obra sin administrador" end %></strong></td>
 						</tr>
 					</table>
 
