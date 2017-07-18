@@ -10,7 +10,7 @@ require "action_controller/railtie"
 require "action_mailer/railtie"
 require "action_view/railtie"
 require "action_cable/engine"
-# require "sprockets/railtie"
+require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 require 'dotenv'
 
@@ -34,6 +34,7 @@ module Efinding
     config.autoload_paths += Dir[Rails.root.join('app', 'models', 'data_parts')]
     config.autoload_paths += Dir[Rails.root.join('app', 'serializers', 'data_parts')]
     config.autoload_paths += Dir[Rails.root.join('lib')]
+    config.assets.paths << Rails.root.join("app", "assets")
 
     config.active_job.queue_adapter = :sidekiq
     

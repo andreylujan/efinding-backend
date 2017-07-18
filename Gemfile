@@ -70,6 +70,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.2'
   gem 'capistrano-rails', '~> 1.2', '>= 1.2.1'
   gem 'capistrano-rbenv', '~> 2.1'
   gem 'capistrano-passenger', '~> 0.2.0'
