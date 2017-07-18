@@ -172,7 +172,7 @@
 
 								<td>
 									<label>JEFE DE TERRENO</label>
-									<%= if inspection.construction.expert.present? then inspector.construction.expert.name else "Obra sin Jefe de Terreno" end %>
+									<%= if inspection.construction.expert.present? then inspection.construction.expert.name else "Obra sin Jefe de Terreno" end %>
 								</td>
 							</tr>
 
@@ -257,7 +257,7 @@
 										<i class="fa fa-clock-o fa-2x pending"></i>
 									<% end %>
 									<p>
-										<%= if inspection.construction.administrator.present? then inspector.construction.administrator.name else "Obra sin administrador" end %><br>
+										<%= if inspection.construction.administrator.present? then inspection.construction.administrator.name else "Obra sin administrador" end %><br>
 										<small><%= inspection.initial_signed_at.strftime("%d/%m/%Y %R") unless inspection.initial_signed_at.nil? %></small>
 									</p>
 								</td>
@@ -271,7 +271,7 @@
 										<i class="fa fa-clock-o fa-2x pending"></i>
 									<% end %>
 									<p>
-										<%= if inspection.construction.expert.present? then inspector.expert.administrator.name else "Obra sin Jefe de Terreno" end %><br>
+										<%= if inspection.construction.expert.present? then inspection.expert.administrator.name else "Obra sin Jefe de Terreno" end %><br>
 										<small><%= report.formatted_resolved_at %></small>
 									</p>
 								</td>
@@ -285,7 +285,7 @@
 										<i class="fa fa-clock-o fa-2x pending"></i>
 									<% end %>
 									<p>
-										<%= if inspection.construction.administrator.present? then inspector.construction.administrator.name else "Obra sin administrador" end %><br>
+										<%= if inspection.construction.administrator.present? then inspection.construction.administrator.name else "Obra sin administrador" end %><br>
 										<small><%= inspection.final_signed_at.strftime("%d/%m/%Y %R") unless inspection.final_signed_at.nil? %></small>
 									</p>
 								</td>
