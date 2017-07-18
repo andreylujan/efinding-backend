@@ -46,10 +46,10 @@ class Construction < ApplicationRecord
     super
   end
 
-  def self.personnel_to_csv(file_name=nil)
+  def self.personnel_to_csv(file_name, current_user)
     attributes = %w{code personnel_type_id personnel_id}
     csv_obj = CSV.generate(headers: true,
-    encoding: "UTF-8", col_sep: '|') do |csv|
+    encoding: "UTF-8", col_sep: current_user.organization.csv_separator) do |csv|
       csv << attributes
       Construction.includes(:construction_personnel).each do |construction|
         construction.construction_personnel.each do |personnel|
@@ -82,7 +82,7 @@ class Construction < ApplicationRecord
     row_number = 2
 
     begin
-      csv = CSV.parse(csv_text, { headers: true, encoding: "UTF-8", col_sep: '|' })
+      csv = CSV.parse(csv_text, { headers: true, encoding: "UTF-8", col_sep: current_user.organization.csv_separator })
     rescue => exception
       raise exception.message
     end
