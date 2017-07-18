@@ -271,7 +271,7 @@
 										<i class="fa fa-clock-o fa-2x pending"></i>
 									<% end %>
 									<p>
-										<%= if inspection.construction.expert.present? then inspection.expert.administrator.name else "Obra sin Jefe de Terreno" end %><br>
+										<%= if inspection.construction.expert.present? then inspection.construction.expert.name else "Obra sin Jefe de Terreno" end %><br>
 										<small><%= report.formatted_resolved_at %></small>
 									</p>
 								</td>
