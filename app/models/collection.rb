@@ -61,7 +61,7 @@ class Collection < ApplicationRecord
       CollectionItem.find_or_initialize_by(code: row["code"], collection_id: self.id).tap do |item|
         item.name = row["name"]
         if row["parent_code"].present?
-          parent_item = CollectionItem.find_by_code!(row["parent_code"])
+          parent_item = CollectionItem.find_by_code_and_collection_id!(row["parent_code"], self.parent_collection_id)
           item.parent_item = parent_item
           item.parent_code = parent_item.code
         end
