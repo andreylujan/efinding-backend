@@ -37,7 +37,7 @@ class Company < ApplicationRecord
   end
 
   def self.to_csv(current_user, file_name=nil)
-    attributes = %w{rut name}
+    attributes = %w{id name}
     csv_obj = CSV.generate(headers: true,
     encoding: "UTF-8", col_sep: current_user.organization.csv_separator) do |csv|
       csv << attributes
@@ -63,7 +63,7 @@ class Company < ApplicationRecord
       uploaded_resource_type: "Empresas"
     csv_text = CsvUtils.read_file(file_name)
 
-    headers = %w{rut name}
+    headers = %w{id name}
     resources = []
     row_number = 2
 
@@ -76,10 +76,13 @@ class Company < ApplicationRecord
     csv.each do |row|
 
       errors = {}
-      company = Company.find_by_rut(row["rut"])
+      company = nil
+      if row["id"].present?
+        company = Company.find_by_id(row["id"])
+      end
 
       if company.nil?
-        company = Company.new(rut: row["rut"], organization: current_user.organization)
+        company = Company.new(organization: current_user.organization)
       end
       company.name = row["name"]
 

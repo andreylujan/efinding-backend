@@ -146,13 +146,13 @@ class Construction < ApplicationRecord
   end
 
   def self.to_csv(current_user, file_name=nil)
-    attributes = %w{company_rut code name administrator_email expert_email supervisor_email}
+    attributes = %w{company_id code name administrator_email expert_email supervisor_email}
     csv_obj = CSV.generate(headers: true,
     encoding: "UTF-8", col_sep: current_user.organization.csv_separator) do |csv|
       csv << attributes
       Construction.joins(:company).where(companies: { organization_id: current_user.organization_id }).each do |construction|
         csv << [
-          construction.company.rut,
+          construction.company.id,
           construction.code,
           construction.name,
           construction.administrator.present? ? construction.administrator.email : "SIN ADMINISTRADOR",
@@ -175,7 +175,7 @@ class Construction < ApplicationRecord
       uploaded_resource_type: "Obras"
     csv_text = CsvUtils.read_file(file_name)
 
-    headers = %w{company_rut code name administrator_email expert_email supervisor_email}
+    headers = %w{company_id code name administrator_email expert_email supervisor_email}
     resources = []
     row_number = 2
 
@@ -192,10 +192,10 @@ class Construction < ApplicationRecord
         construction.name = row["name"]
         has_errors = false
         begin
-          construction.company = Company.find_by_rut!(row["company_rut"])
+          construction.company = Company.find(row["company_id"])
         rescue => e
           errors = {
-            company_rut: [ e.message ]
+            company_id: [ e.message ]
           }
           has_errors = true
         end
