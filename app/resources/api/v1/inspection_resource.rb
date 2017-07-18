@@ -262,9 +262,9 @@ class Api::V1::InspectionResource < ApplicationResource
 
   def num_reports_html
     if @model.respond_to? :num_reports
-      "<h3 style='color: #239934;'>#{@model.num_reports}</h3>"
+      "<strong style='color: #239934; font-size: 1.5em;'>#{@model.num_reports}</strong>"
     else
-      "<h3 style='color: #239934;'>0</h3>"
+      "<strong style='color: #239934; font-size: 1.5em;'>0</strong>"
     end
   end
 
