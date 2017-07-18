@@ -71,13 +71,16 @@
 			<div class="row">
 				<div class="col-xs-12">
 					<h2>Ubicaciones</h2>
+					<br />
 				</div>
-
+				<% colors = [ 'green', 'brown', 'black', 'purple', 'yellow', 'blue', 'gray', 'orange', 'red', 'white' ] %>
+				<% map_url = "http://maps.googleapis.com/maps/api/staticmap?center=Italia%20850%2C%20Providencia&zoom=13&size=900x300&maptype=roadmap" %>
+				<% inspection.reports.each_with_index do |report, i| %>
+					<% map_url += "&markers=color:#{colors[i % colors.length]}%7Clabel:#{(i + 1)}%7C#{report.initial_location.lonlat.y},#{report.initial_location.lonlat.x}" %>
+				<% end %>
+				<% map_url += "&key=AIzaSyAxdoh8VjK53CCCYNmGx0RGuompeK-ejzc" %>
 				<div class="col-xs-12">
-					<img src="http://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=900x300&maptype=roadmap
-&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318
-&markers=color:red%7Clabel:C%7C40.718217,-73.998284
-&key=AIzaSyAxdoh8VjK53CCCYNmGx0RGuompeK-ejzc">
+					<img src="<%= map_url %>">
 				</div>
 			</div>
 			
