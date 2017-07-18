@@ -13,8 +13,8 @@
 
 class Contractor < ApplicationRecord
   belongs_to :organization
-  validates :name, presence: true
-  validates :rut, presence: true, uniqueness: { scope: :organization }
+  validates :name, presence: true, uniqueness: { scope: :organization }
+  validates :rut, uniqueness: { scope: :organization, allow_nil: true }
   validates :organization, presence: true
   has_and_belongs_to_many :constructions
 
