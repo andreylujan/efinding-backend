@@ -2,7 +2,98 @@
 
 
 
+
 */
+
+
+body{
+	padding: 30px;
+	font-size: helvetica;
+	color: #3C4858;
+}
+.page-break{
+	page-break-after: always;
+}
+hr{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+h1{
+	font-size: 26px;
+	margin: 0;
+	padding: 10px 0;
+}
+h2{
+	font-size: 22px;
+	margin: 0;
+	padding: 0;
+}
+h3{
+	font-size: 20px;
+	margin: 0;
+	padding: 0;
+}
+.brand{
+	padding: 10px 0;
+	width:100% !important;
+    display:block;
+}
+
+// TABLAS
+table{
+	width: 100%;
+}
+td{
+	padding: 5px 15px;
+	border-bottom: 1px solid #eee;
+}
+td label{
+	text-transform: uppercase;
+	font-size: 8pt;
+	font-weight: 900;
+	display: block;
+}
+
+.success{
+	color: #13CE66;
+}
+.pending{
+	color: #F8B700;
+}
+
+.table{
+	width: 100%;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+	border-left: 1px solid #eee;
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+.table-two{
+	border: 1px solid #eee;
+	margin-top: 10px;
+	margin-bottom: 20px;
+	width: 100%;
+}
+
+.table-two td{
+	padding: 10px 15px;
+}
+.highlight{
+	background-color: #F9F9FA;
+	text-align: center;
+	border-left: 1px solid #eee;
+	border-right: 1px solid #eee;
+}
+.highlight h1{
+	font-size: 40px;
+	font-weight: 900;
+	line-height: 18px;
+}
+.highlight h1 small{
+	font-size: 12px;
+	font-weight: 400;
+}
 /*!
  *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
