@@ -21,8 +21,12 @@ class Api::V1::InspectionResource < ApplicationResource
     :num_expired_reports,
     :state_name,
     :cached_data,
-    :field_chief_name
+    :field_chief_name,
+    :inspection_id
 
+  def inspection_id
+    @model.id.to_s
+  end
 
   add_foreign_keys :construction_id
 
@@ -30,7 +34,7 @@ class Api::V1::InspectionResource < ApplicationResource
     @model.pdf.url
   end
 
-  filter :id, apply: ->(records, value, _options) {
+  filter :inspection_id, apply: ->(records, value, _options) {
     if not value.empty? and value[0].present?
       records = records
       .where("inspections.id = ?", value[0])
