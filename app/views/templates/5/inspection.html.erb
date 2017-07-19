@@ -271,7 +271,7 @@
 									<% end %>
 									<p>
 										<%= if inspection.construction.expert.present? then inspection.construction.expert.name else "Obra sin Jefe de Terreno" end %><br>
-										<small><%= report.resolved_at.in_time_zone("Chile/Continental").strftime("%d/%m/%Y %R") %></small>
+										<small><%= report.resolved_at.in_time_zone("Chile/Continental").strftime("%d/%m/%Y %R") unless report.resolved_at.nil? %></small>
 									</p>
 								</td>
 
