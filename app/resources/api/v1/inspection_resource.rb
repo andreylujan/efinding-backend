@@ -288,6 +288,7 @@ class Api::V1::InspectionResource < ApplicationResource
     if not order_options.empty?
       order = order_options.first
       order_str = ""
+      has_order = true
       if order[0] == "construction.name"
         records = records.joins(:construction).group("constructions.name")
         order_str = "constructions.name"
@@ -296,13 +297,25 @@ class Api::V1::InspectionResource < ApplicationResource
         order_str = "companies.name"
       elsif order[0] == "num_reports"
         order_str = "count(reports.id)"
-      end
-      if order[1] == :desc
-        order_str += " DESC"
+      elsif order[0] == "formatted_created_at"
+        order_str = "inspections.created_at"
+      elsif order[0] == "construction.inspector.full_name"
+        has_order = false
+      elsif order[0] == "formatted_final_signed_at"
+        order_str = "inspections.final_signed_at"
+      elsif order[0] == "state_name"
+        order_str = "inspections.state"
       else
-        order_str += " ASC"
+        has_order = false
       end
-      records = records.order(order_str)
+      if has_order
+        if order[1] == :desc
+          order_str += " DESC"
+        else
+          order_str += " ASC"
+        end
+        records = records.order(order_str)
+      end
     end
     records
     # order_options.each do |key, value|
