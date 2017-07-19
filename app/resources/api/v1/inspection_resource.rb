@@ -31,7 +31,7 @@ class Api::V1::InspectionResource < ApplicationResource
   end
 
   filter :id, apply: ->(records, value, _options) {
-    if not value.empty?
+    if not value.empty? and value[0].present?
       records = records
       .where("inspections.id = ?", value[0])
     else
