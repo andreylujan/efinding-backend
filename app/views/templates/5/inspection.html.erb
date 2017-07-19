@@ -38,10 +38,6 @@
 							<td><strong><%= inspection.formatted_created_at %></strong></td>
 						</tr>
 						<tr>
-							<td>Dirección:</td>
-							<td><strong>Obra sin dirección</strong></td>
-						</tr>
-						<tr>
 							<td>Administrador Obra:</td>
 							<td><strong><%= if inspection.construction.administrator.present? then inspection.construction.administrator.name else "Obra sin administrador" end %></strong></td>
 						</tr>
@@ -74,7 +70,7 @@
 					<br />
 				</div>
 				<% colors = [ 'green', 'brown', 'black', 'purple', 'yellow', 'blue', 'gray', 'orange', 'red', 'white' ] %>
-				<% map_url = "http://maps.googleapis.com/maps/api/staticmap?center=Italia%20850%2C%20Providencia&zoom=13&size=900x300&maptype=roadmap" %>
+				<% map_url = "http://maps.googleapis.com/maps/api/staticmap?center=Italia%20850%2C%20Providencia&zoom=15&size=900x300&maptype=roadmap" %>
 				<% inspection.reports.each_with_index do |report, i| %>
 					<% map_url += "&markers=color:#{colors[i % colors.length]}%7Clabel:#{(i + 1)}%7C#{report.initial_location.lonlat.y},#{report.initial_location.lonlat.x}" %>
 				<% end %>
@@ -162,7 +158,7 @@
 								</td>
 
 								<td>
-									<label>SUPERVISOR RESPONSABLE</label>
+									<label>APR RESPONSABLE</label>
 									<%= if inspection.construction.supervisor.present? then inspection.construction.supervisor.name else "Obra sin supervisor" end %>
 								</td>
 							</tr>
@@ -242,12 +238,12 @@
 						<table class="table" >
 							<tr>
 								<td class="highlight">
-									<small>Jefe Ssoma</small><br>
+									<small>APR</small><br>
 									<hr>
 									<i class="fa fa-check fa-2x success"></i><!-- Estado -->
 									<p>
 										<%= report.creator.name %><br>
-										<small><%= report.formatted_created_at %></small>
+										<small><%= report.created_at.in_time_zone("Chile/Continental").strftime("%d/%m/%Y %R") %></small>
 									</p>
 								</td>
 
@@ -261,7 +257,7 @@
 									<% end %>
 									<p>
 										<%= if inspection.construction.administrator.present? then inspection.construction.administrator.name else "Obra sin administrador" end %><br>
-										<small><%= inspection.initial_signed_at.strftime("%d/%m/%Y %R") unless inspection.initial_signed_at.nil? %></small>
+										<small><%= inspection.initial_signed_at.in_time_zone("Chile/Continental").strftime("%d/%m/%Y %R") unless inspection.initial_signed_at.nil? %></small>
 									</p>
 								</td>
 
@@ -275,7 +271,7 @@
 									<% end %>
 									<p>
 										<%= if inspection.construction.expert.present? then inspection.construction.expert.name else "Obra sin Jefe de Terreno" end %><br>
-										<small><%= report.formatted_resolved_at %></small>
+										<small><%= report.resolved_at.in_time_zone("Chile/Continental").strftime("%d/%m/%Y %R") %></small>
 									</p>
 								</td>
 
@@ -289,7 +285,7 @@
 									<% end %>
 									<p>
 										<%= if inspection.construction.administrator.present? then inspection.construction.administrator.name else "Obra sin administrador" end %><br>
-										<small><%= inspection.final_signed_at.strftime("%d/%m/%Y %R") unless inspection.final_signed_at.nil? %></small>
+										<small><%= inspection.final_signed_at.in_time_zone("Chile/Continental").strftime("%d/%m/%Y %R") unless inspection.final_signed_at.nil? %></small>
 									</p>
 								</td>
 							</tr>
