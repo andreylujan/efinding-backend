@@ -31,13 +31,12 @@ class Api::V1::InspectionResource < ApplicationResource
   end
 
   filter :id, apply: ->(records, value, _options) {
-    # if not value.empty? and value[0].present?
-    #   records = records
-    #   .where("inspections.id = ?", value[0])
-    # else
-    #   records
-    # end
-    records
+    if not value.empty? and value[0].present?
+      records = records
+      .where("inspections.id = ?", value[0])
+    else
+      records
+    end
   }
 
   filter :num_pending_reports, apply: ->(records, value, _options) {
