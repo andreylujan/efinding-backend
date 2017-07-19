@@ -30,6 +30,15 @@ class Api::V1::InspectionResource < ApplicationResource
     @model.pdf.url
   end
 
+  filter :id, apply: ->(records, value, _options) {
+    if not value.empty?
+      records = records
+      .where("inspections.id = ?", value[0])
+    else
+      records
+    end
+  }
+
   filter :num_pending_reports, apply: ->(records, value, _options) {
     if not value.empty?
       records = records
