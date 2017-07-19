@@ -126,7 +126,6 @@ class Api::V1::InspectionResource < ApplicationResource
   filter :field_chief, apply: ->(records, value, _options) {
     if not value.empty?
       if value[0].is_a? ActionController::Parameters and value[0]["full_name"].present?
-        byebug
         records.joins("LEFT OUTER JOIN users as field_chiefs ON field_chiefs.id = inspections.expert_id")
         .where("field_chiefs.first_name || ' ' || field_chiefs.last_name ilike '%" + value[0]["full_name"] + "%'")
       else
@@ -281,37 +280,57 @@ class Api::V1::InspectionResource < ApplicationResource
   end
 
   def self.sortable_fields(context)
-    super + [:"construction.name", :"company.name" ]
+    super + [:"construction.name", :"company.name", :"construction.company.name", "num_reports" ]
   end
 
   def self.apply_sort(records, order_options, _context = {})
     new_options = {}
-    order_options.each do |key, value|
-      if column_mapping.has_key? key.to_sym
-        new_options[column_mapping[key.to_sym]] = value
+    if not order_options.empty?
+      order = order_options.first
+      order_str = ""
+      if order[0] == "construction.name"
+        records = records.joins(:construction).group("constructions.name")
+        order_str = "constructions.name"
+      elsif order[0] == "construction.company.name"
+        records = records.joins(construction: :company).group("companies.name")
+        order_str = "companies.name"
+      elsif order[0] == "num_reports"
+        order_str = "count(reports.id)"
+      end
+      if order[1] == :desc
+        order_str += " DESC"
       else
-        new_options[key] = value
+        order_str += " ASC"
       end
+      records = records.order(order_str)
     end
-    order_options = new_options
-    if order_options.any?
-      order_options.each_pair do |field, direction|
-        if field.to_s.include?(".")
-          *model_names, column_name = field.split(".")
-
-          associations = _lookup_association_chain([records.model.to_s, *model_names])
-          joins_query = _build_joins([records.model, *associations])
-
-          # _sorting is appended to avoid name clashes with manual joins eg. overriden filters
-          order_by_query = "#{associations.last.name}_sorting.#{column_name} #{direction}"
-          records = records.joins(joins_query).order(order_by_query)
-        else
-          records = records.order(field => direction)
-        end
-      end
-    end
-
     records
+    # order_options.each do |key, value|
+    #   if column_mapping.has_key? key.to_sym
+    #     new_options[column_mapping[key.to_sym]] = value
+    #   else
+    #     new_options[key] = value
+    #   end
+    # end
+    # order_options = new_options
+    # if order_options.any?
+    #   order_options.each_pair do |field, direction|
+    #     if field.to_s.include?(".")
+    #       *model_names, column_name = field.split(".")
+
+    #       associations = _lookup_association_chain([records.model.to_s, *model_names])
+    #       joins_query = _build_joins([records.model, *associations])
+
+    #       # _sorting is appended to avoid name clashes with manual joins eg. overriden filters
+    #       order_by_query = "#{associations.last.name}_sorting.#{column_name} #{direction}"
+    #       records = records.joins(joins_query).order(order_by_query)
+    #     else
+    #       records = records.order(field => direction)
+    #     end
+    #   end
+    # end
+
+    # records
   end
 
   def self.records(options = {})
