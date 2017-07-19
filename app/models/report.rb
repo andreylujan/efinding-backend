@@ -130,6 +130,7 @@ class Report < ApplicationRecord
   before_save :default_values
   before_save :check_limit_date
   before_create :assign_user
+  before_create :assign_labels
   after_commit :update_inspection, on: [ :create, :update ]
 
   acts_as_xlsx columns: [
@@ -147,6 +148,12 @@ class Report < ApplicationRecord
     :resolution_comment,
     :report_fields
   ]
+
+  def assign_labels
+    self.dynamic_attributes["55"] = {
+      value: "6%"
+    }
+  end
 
   def check_state_changed
     if self.state_id_changed?
