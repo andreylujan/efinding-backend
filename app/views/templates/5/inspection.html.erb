@@ -70,7 +70,7 @@
 					<br />
 				</div>
 				<% colors = [ 'green', 'brown', 'black', 'purple', 'yellow', 'blue', 'gray', 'orange', 'red', 'white' ] %>
-				<% map_url = "http://maps.googleapis.com/maps/api/staticmap?center=Italia%20850%2C%20Providencia&zoom=15&size=900x300&maptype=roadmap" %>
+				<% map_url = "http://maps.googleapis.com/maps/api/staticmap?center=Avenida%20kenedy%207160%2C%20Vitacura&zoom=15&size=900x300&maptype=roadmap" %>
 				<% inspection.reports.each_with_index do |report, i| %>
 					<% map_url += "&markers=color:#{colors[i % colors.length]}%7Clabel:#{(i + 1)}%7C#{report.initial_location.lonlat.y},#{report.initial_location.lonlat.x}" %>
 				<% end %>
