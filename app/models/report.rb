@@ -122,6 +122,8 @@ class Report < ApplicationRecord
   acts_as_list scope: :inspection
 
   before_save :check_state_changed, on: [ :update ]
+  before_save :check_dynamic_changes, on: [ :update ]
+
   after_commit :generate_pdf # , on: [ :create ]
   after_commit :send_task_job, on: [ :create ]
   
@@ -148,6 +150,31 @@ class Report < ApplicationRecord
     :resolution_comment,
     :report_fields
   ]
+
+  def check_dynamic_changes
+    if changes["dynamic_attributes"].present?
+      new_attrs = changes["dynamic_attributes"][1]
+      old_attrs = changes["dynamic_attributes"][0]
+      new_attrs.each do |data_part_id, data_part_value|
+        if data_part_value.is_a? Hash
+          if old_attrs.has_key? data_part_id and old_attrs[data_part_id] != data_part_value
+            update_field_data(data_part_value)
+            dynamic_attributes[data_part_id] = data_part_value
+          else
+            update_field_data(data_part_value)
+            dynamic_attributes[data_part_id] = data_part_value
+          end
+        else
+          data_part_value.select { |el| not el.has_key? "updated_at" }.each { |el| update_field_data(el) }
+          dynamic_attributes[data_part_id] = data_part_value
+        end
+      end
+    end
+  end
+
+  def update_field_data(field_hash)
+    field_hash["updated_at"] = DateTime.now.to_time.iso8601
+  end
 
   def assign_labels
     self.dynamic_attributes["55"] = {
@@ -185,6 +212,18 @@ class Report < ApplicationRecord
           }
         end
       end
+    end
+  end
+
+  def formatted_date_for(field)
+    if field.present? and field.is_a? Hash and field["updated_at"].present?
+      begin
+        DateTime.parse(field["updated_at"]).strftime("%d/%m/%Y %R")
+      rescue => exception
+        "Fecha inválida"
+      end
+    else
+      "Sin fecha"
     end
   end
 

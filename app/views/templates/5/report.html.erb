@@ -318,6 +318,7 @@
 							<tr>
 								<th>Detalle del evento</th>
 								<th>Comentario</th>
+								<th>Fecha</th>
 							</tr>
 						</thead>
 						<% if report.dynamic_attributes.dig('75') %>	
@@ -329,6 +330,9 @@
 										</td>
 										<td>
 											<%= cot.dig('77', 'value') %>
+										</td>
+										<td>
+											<%= report.formatted_date_for(cot) %>
 										</td>
 									</tr>
 								<% end %>
@@ -349,6 +353,7 @@
 								<th>Monto de oferta</th>
 								<th>Propuesta entregada</th>
 								<th>Comentario</th>
+								<th>Fecha</th>
 							</tr>
 						</thead>
 						<% if report.dynamic_attributes.dig('58') %>	
@@ -367,6 +372,9 @@
 										</td>
 										<td>
 											<%= cot.dig('56', 'value') %>
+										</td>
+										<td>
+											<%= report.formatted_date_for(cot) %>
 										</td>
 									</tr>
 								<% end %>
@@ -388,6 +396,7 @@
 								<th>Monto de cierre</th>
 								<th>Motivo de pérdida</th>
 								<th>Comentario</th>
+								<th>Fecha</th>
 							</tr>
 						</thead>	
 						<tbody>
@@ -407,6 +416,9 @@
 								</td>
 								<td>
 									<%= report.dynamic_attributes.dig('62', 'value') %>
+								</td>
+								<td>
+									<%= report.formatted_date_for(dynamic_attributes.dig('63')) %>
 								</td>
 							</tr>
 						</tbody>
