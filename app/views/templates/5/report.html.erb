@@ -478,7 +478,7 @@
 						<tbody>
 							<tr>
 								<td>
-									<%= report.formatted_created_at %>
+									<%= report.created_at.in_time_zone("Chile/Continental").strftime("%d/%m/%Y %R") %>
 								</td>
 								<td>
 									<%= report.state.name %>
