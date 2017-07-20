@@ -157,9 +157,11 @@ class Report < ApplicationRecord
       old_attrs = changes["dynamic_attributes"][0]
       new_attrs.each do |data_part_id, data_part_value|
         if data_part_value.is_a? Hash
-          if old_attrs.has_key? data_part_id and old_attrs[data_part_id] != data_part_value
-            update_field_data(data_part_value)
-            dynamic_attributes[data_part_id] = data_part_value
+          if old_attrs.has_key? data_part_id
+            if old_attrs[data_part_id] != data_part_value
+              update_field_data(data_part_value)
+              dynamic_attributes[data_part_id] = data_part_value
+            end
           else
             update_field_data(data_part_value)
             dynamic_attributes[data_part_id] = data_part_value
