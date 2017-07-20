@@ -57,10 +57,10 @@ class UploadPdfJob < ApplicationJob
     
     begin
       html_file_text = (ac.render_to_string('templates/' + report.creator.organization_id.to_s + '/report_html.html.erb',
-                                  locals: { report: report })).force_encoding("UTF-8")
+                                  locals: { report: report, inspection: report.inspection })).force_encoding("UTF-8")
 
       html_pdf_text = (ac.render_to_string('templates/' + report.creator.organization_id.to_s + '/report.html.erb',
-                                  locals: { report: report })).force_encoding("UTF-8")
+                                  locals: { report: report, inspection: report.inspection })).force_encoding("UTF-8")
 
       pdf = WickedPdf.new.pdf_from_string(html_pdf_text, zoom: 0.75)
       file = Tempfile.new('pdf', encoding: 'ascii-8bit')
