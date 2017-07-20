@@ -158,7 +158,7 @@
 								Fecha de creación:
 							</div>
 							<div class="col-xs-8">
-								<%= report.formatted_created_at %>
+								<%= report.created_at.in_time_zone("Chile/Continental").strftime("%d/%m/%Y %R") %>
 							</div>
 						</div>
 						<div class="row location-field">
