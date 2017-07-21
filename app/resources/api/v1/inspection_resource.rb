@@ -280,7 +280,7 @@ class Api::V1::InspectionResource < ApplicationResource
   end
 
   def self.sortable_fields(context)
-    super + [:"construction.name", :"company.name", :"construction.company.name", "num_reports" ]
+    super + [:"construction.name", :"company.name", :"construction.company.name", :"num_reports", :"creator.full_name" ]
   end
 
   def self.apply_sort(records, order_options, _context = {})
@@ -299,8 +299,9 @@ class Api::V1::InspectionResource < ApplicationResource
         order_str = "count(reports.id)"
       elsif order[0] == "formatted_created_at"
         order_str = "inspections.created_at"
-      elsif order[0] == "construction.inspector.full_name"
-        has_order = false
+      elsif order[0] == "creator.full_name"
+        records = records.group("creators.first_name || ' ' || creators.last_name")
+        order_str = "creators.first_name || ' ' || creators.last_name"
       elsif order[0] == "formatted_final_signed_at"
         order_str = "inspections.final_signed_at"
       elsif order[0] == "state_name"
@@ -350,8 +351,9 @@ class Api::V1::InspectionResource < ApplicationResource
     if options[:context] and current_user = options[:context][:current_user]
       inspections = Inspection
       .joins("LEFT OUTER JOIN reports ON reports.inspection_id = inspections.id")
-      .joins(creator: :role)
-      .where(roles: { organization_id: current_user.organization_id })
+      .joins("INNER JOIN users creators ON creators.id = inspections.creator_id")
+      .joins("INNER JOIN roles ON creators.role_id = roles.id")
+      .where("roles.organization_id = ?", current_user.organization_id)
       .select("inspections.*, count(reports.id) as num_reports, count(case when reports.state = 'unchecked' THEN 1 END) as num_pending_reports, count(case when reports.state = 'unchecked' AND reports.limit_date <= '" +
               DateTime.now.to_s + "' THEN 1 END) as num_expired_reports")
       .group("inspections.id")
