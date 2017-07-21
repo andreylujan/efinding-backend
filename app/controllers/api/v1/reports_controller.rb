@@ -14,8 +14,8 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
   def mine
     params["action"] = "index"
     params["filter"] ||= {}
-    params["filter"]["creator_id"] = current_user.id
-    params["filter"].delete "creator"
+    params["filter"]["assigned_user_id"] = current_user.id
+    params["filter"].delete "assigned_user"
     index
   end
 
