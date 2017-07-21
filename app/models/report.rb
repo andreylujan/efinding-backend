@@ -405,6 +405,9 @@ class Report < ApplicationRecord
     if self.finished.nil?
       self.finished = false
     end
+    if self.assigned_user.nil?
+      self.assigned_user = self.creator
+    end
   end
 
   def user_email=(val)
