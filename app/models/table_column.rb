@@ -14,6 +14,7 @@
 #  collection_name   :text
 #  collection_source :integer
 #  organization_id   :integer
+#  headers           :json             not null
 #
 
 class TableColumn < ApplicationRecord

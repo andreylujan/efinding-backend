@@ -10,12 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170718193743) do
+ActiveRecord::Schema.define(version: 20170721150847) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
   enable_extension "uuid-ossp"
+
+  create_table "accident_rates", force: :cascade do |t|
+    t.integer  "construction_id", null: false
+    t.date     "month",           null: false
+    t.float    "man_hours"
+    t.float    "worker_average"
+    t.integer  "num_accidents"
+    t.integer  "num_days_lost"
+    t.float    "accident_rate"
+    t.float    "casualty_rate"
+    t.float    "frequency_index"
+    t.float    "gravity_index"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["construction_id"], name: "index_accident_rates_on_construction_id", using: :btree
+  end
 
   create_table "batch_uploads", force: :cascade do |t|
     t.integer  "user_id",                    null: false
@@ -540,6 +556,7 @@ ActiveRecord::Schema.define(version: 20170718193743) do
     t.index ["rut"], name: "index_users_on_rut", unique: true, using: :btree
   end
 
+  add_foreign_key "accident_rates", "constructions"
   add_foreign_key "batch_uploads", "users"
   add_foreign_key "categories", "organizations"
   add_foreign_key "checkins", "users"
