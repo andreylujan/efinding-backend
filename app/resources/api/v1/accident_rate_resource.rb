@@ -8,8 +8,6 @@ class Api::V1::AccidentRateResource < ApplicationResource
     :accident_rate,
     :casualty_rate,
     :frequency_index,
-    :gravity_index,
-    :frequency_index,
     :gravity_index
     
   has_one :construction

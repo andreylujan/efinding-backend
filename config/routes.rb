@@ -15,6 +15,14 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
 
+      namespace :pitagora do
+        resources :dashboards, only: [] do
+          collection do
+            get :inspections
+          end
+        end
+      end
+
       namespace :delivery do
         resources :orders, only: [ :create ]
       end
