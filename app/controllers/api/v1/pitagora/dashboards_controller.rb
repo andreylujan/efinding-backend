@@ -8,15 +8,14 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
     risks = Collection.find(28).collection_items.map do |item|
       item.name
     end
-    activity_groups = Collection.find(26).collection_items.map do |item|
-      item.name
-    end
+    activity_groups = []
     reportes_por_grupo = Report.joins(creator: :role).where(roles: { organization_id: 5 })
       .group("dynamic_attributes->'69'->>'text', dynamic_attributes->'52'->>'text'")
       .select("count(*) as count_all, dynamic_attributes->'69'->>'text' as activity_group, dynamic_attributes->'52'->>'text' as risk")
     .group_by do |group|
       group.activity_group
     end.map do |activity_group, reports|
+      activity_groups << activity_group
       subgroup = {}
       risks.each do |ag|
         subgroup[ag] = 0
