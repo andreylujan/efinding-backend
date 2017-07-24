@@ -1,34 +1,37 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::ConstructionResource < ApplicationResource
-	attributes :name, :company_id, :code, :construction_personnel_attributes
-	has_one :company
-    add_foreign_keys :company_id, :administrator_id, :expert_id, :supervisor_id
+  attributes :name, :company_id, :code, :construction_personnel_attributes, :contractors_array
+  has_one :company
+  add_foreign_keys :company_id, :administrator_id, :expert_id, :supervisor_id
 
-    has_one :administrator 
-    has_one :expert
-    has_one :supervisor
-    has_one :inspector
-    has_many :construction_personnel
-    has_many :contractors
-    
-    filter :company_id
+  has_one :administrator
+  has_one :expert
+  has_one :supervisor
+  has_one :inspector
+  has_many :construction_personnel
+  has_many :contractors
 
- 
+  filter :company_id
 
-	def self.records(options = {})
+  def contractors_array
+    @model.contractors.order("name ASC").map { |u| { name: u.name, rut: u.rut, id: u.id } }
+  end
+
+
+  def self.records(options = {})
     context = options[:context]
     current_user = context[:current_user]
     if context[:company_id]
-    	constructions = Company.find(context[:company_id]).constructions
+      constructions = Company.find(context[:company_id]).constructions
     else
-    	constructions = Construction.joins(company: :organization)
-    		.where(organizations: { id: context[:current_user].organization.id })
+      constructions = Construction.joins(company: :organization)
+      .where(organizations: { id: context[:current_user].organization.id })
     end
-    
+
     if current_user.role.supervisor?
-        constructions = constructions.where(supervisor_id: current_user.id)
+      constructions = constructions.where(supervisor_id: current_user.id)
     elsif current_user.role.expert?
-        constructions = constructions.where(expert_id: current_user.id)
+      constructions = constructions.where(expert_id: current_user.id)
     end
     constructions.distinct
   end
