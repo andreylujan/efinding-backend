@@ -12,9 +12,11 @@ class Api::V1::AccidentRateResource < ApplicationResource
   has_one :construction
 
   def year
+    @model.rate_period.year
   end
 
   def month
+    @model.rate_period.month
   end
 
   def self.updatable_fields(context)

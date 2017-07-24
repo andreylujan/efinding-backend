@@ -29,9 +29,10 @@ class AccidentRate < ApplicationRecord
   validates :accident_rate, presence: true
   validates :casualty_rate, presence: true
   validates :construction, presence: true
+  validates :rate_period, uniqueness: { scope: :construction }
 
   before_validation :set_period
-  
+
   private
   def set_period
     if year.present? and month.present?
