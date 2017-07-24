@@ -32,11 +32,17 @@ class AccidentRate < ApplicationRecord
   validates :rate_period, uniqueness: { scope: :construction }
 
   before_validation :set_period
+  before_save :calculate_indexes
 
   private
   def set_period
     if year.present? and month.present?
       self.rate_period = Date.new(year.to_i, month.to_i)
     end
+  end
+
+  def calculate_indexes
+  	self.gravity_index = 1.5
+  	self.frequency_index = 2.1
   end
 end
