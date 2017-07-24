@@ -27,7 +27,7 @@ Rails.application.routes.draw do
       jsonapi_resources :checkins, only: [ :create ] do
       end
 
-      jsonapi_resources :accident_rates, only: [ :index, :create, :update, :destroy ] do
+      jsonapi_resources :accident_rates, only: [ :index, :create, :update, :destroy, :show ] do
       end
       
       jsonapi_resources :collections, only: [ :index, :show, :create, :update, :destroy ] do
