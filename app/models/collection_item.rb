@@ -22,7 +22,8 @@ class CollectionItem < ApplicationRecord
   belongs_to :parent_item, class_name: :CollectionItem,
   	foreign_key: :parent_item_id
   has_many :children, class_name: :CollectionItem, foreign_key: :parent_item_id, dependent: :destroy
-
+  has_many :data_part_values, dependent: :destroy
+  
   belongs_to :resource_owner, polymorphic: true
   validates :collection, presence: true
   validates :name, presence: true

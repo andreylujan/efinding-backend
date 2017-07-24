@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170724165309) do
+ActiveRecord::Schema.define(version: 20170724185949) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -208,6 +208,18 @@ ActiveRecord::Schema.define(version: 20170724165309) do
     t.datetime "updated_at",      null: false
     t.index ["organization_id", "rut"], name: "index_contractors_on_organization_id_and_rut", unique: true, using: :btree
     t.index ["organization_id"], name: "index_contractors_on_organization_id", using: :btree
+  end
+
+  create_table "data_part_values", force: :cascade do |t|
+    t.integer  "collection_item_id"
+    t.integer  "data_part_id",       null: false
+    t.uuid     "report_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.index ["collection_item_id"], name: "index_data_part_values_on_collection_item_id", using: :btree
+    t.index ["data_part_id", "report_id"], name: "index_data_part_values_on_data_part_id_and_report_id", unique: true, using: :btree
+    t.index ["data_part_id"], name: "index_data_part_values_on_data_part_id", using: :btree
+    t.index ["report_id"], name: "index_data_part_values_on_report_id", using: :btree
   end
 
   create_table "data_parts", force: :cascade do |t|
@@ -582,6 +594,9 @@ ActiveRecord::Schema.define(version: 20170724165309) do
   add_foreign_key "constructions", "users", column: "expert_id"
   add_foreign_key "constructions", "users", column: "supervisor_id"
   add_foreign_key "contractors", "organizations"
+  add_foreign_key "data_part_values", "collection_items"
+  add_foreign_key "data_part_values", "data_parts"
+  add_foreign_key "data_part_values", "reports"
   add_foreign_key "data_parts", "collections"
   add_foreign_key "data_parts", "sections"
   add_foreign_key "devices", "users"
