@@ -105,6 +105,7 @@ class User < ApplicationRecord
     inv = Invitation.find_by_email(self.email)
     if inv.present?
       self.role_id = inv.role_id
+      self.is_superuser = inv.is_superuser
     end
 
     if self.role_id.nil?

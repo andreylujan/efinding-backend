@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170724143729) do
+ActiveRecord::Schema.define(version: 20170724145113) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -300,6 +300,7 @@ ActiveRecord::Schema.define(version: 20170724143729) do
     t.text     "first_name"
     t.text     "last_name"
     t.text     "internal_id"
+    t.boolean  "is_superuser",       default: false, null: false
     t.index ["email"], name: "index_invitations_on_email", unique: true, using: :btree
     t.index ["internal_id"], name: "index_invitations_on_internal_id", unique: true, using: :btree
     t.index ["role_id"], name: "index_invitations_on_role_id", using: :btree
