@@ -22,16 +22,23 @@ class Checklist < ApplicationRecord
   def formatted_created_at
     created_at.strftime("%d/%m/%Y %R")
   end
-  
+
   private
+
+  def assign_section_ids(section)
+    section["items"].each do |item|
+      if not item["id"].present?
+        item["id"] = SecureRandom.uuid.to_s
+        if item["items"].present?
+          assign_section_ids(item)
+        end
+      end
+    end
+  end
 
   def assign_ids
     sections.each do |section|
-      section["items"].each do |item|
-        if not item["id"].present?
-          item["id"] = SecureRandom.uuid.to_s
-        end
-      end
+      assign_section_ids(section)
     end
   end
 
