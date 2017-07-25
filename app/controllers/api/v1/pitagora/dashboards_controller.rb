@@ -59,6 +59,10 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
     end
   end
 
+  def reports_by_month
+
+  end
+
   def porcentaje_parcial(reports)
     num_total_reports = reports.count.to_f
     if num_total_reports == 0
@@ -117,7 +121,8 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
       id: SecureRandom.uuid,
       reportes_por_grupo: reports_by_group,
       cumplimiento_hallazgos: cumplimiento_hallazgos,
-      porcentaje_cumplimiento: porcentaje_cumplimiento
+      porcentaje_cumplimiento: porcentaje_cumplimiento,
+      indices_por_mes: reports_by_month
     }
     dashboard = ::Pitagora::InspectionDashboard.new dashboard_info
 

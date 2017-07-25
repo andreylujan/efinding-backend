@@ -2,5 +2,5 @@
 class Pitagora::InspectionDashboard
   include ActiveModel::Model
   attr_accessor :id, :reportes_por_grupo, :cumplimiento_hallazgos,
-  :porcentaje_cumplimiento
+  :porcentaje_cumplimiento, :indices_por_mes
 end

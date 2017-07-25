@@ -21,4 +21,10 @@ class Api::V1::CompaniesController < Api::V1::JsonApiController
     end
     render json: CsvUploadSerializer.serialize(resources, is_collection: true)
   end
+
+  def context
+    super.merge({
+      all: params[:all]
+    })
+  end
 end
