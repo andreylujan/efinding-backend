@@ -155,6 +155,16 @@ class Inspection < ApplicationRecord
     end
   end
 
+  def reports_centroid
+    result = ActiveRecord::Base.connection.execute("select ST_AsGeoJSON(st_centroid(st_union(locations.lonlat))) from locations INNER JOIN " +
+      "reports ON reports.initial_location_id = locations.id INNER JOIN " +
+      "inspections ON inspections.id = reports.inspection_id WHERE inspections.id = #{self.id}").first
+    if result.present?
+      coords = JSON.parse(result["st_asgeojson"])["coordinates"]
+      "#{coords[1]}%2C#{coords[0]}"
+    end
+  end
+
   def cache_data
     if not cached_data
       self.cached_data = {}

@@ -9,6 +9,8 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
       item.name
     end
     activity_groups = []
+
+    num_total_reports = Report.joins(creator: :role).where(roles: { organization_id: 5 }).count
     reportes_por_grupo = Report.joins(creator: :role).where(roles: { organization_id: 5 })
       .group("dynamic_attributes->'69'->>'text', dynamic_attributes->'52'->>'text'")
       .select("count(*) as count_all, dynamic_attributes->'69'->>'text' as activity_group, dynamic_attributes->'52'->>'text' as risk")
@@ -47,10 +49,16 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
         riesgos[idx][:data] << riesgo[:num_reports]
       end
     end
+
+    reportes_por_riesgo = Report.joins(creator: :role).where(roles: { organization_id: 5 })
+       .group("dynamic_attributes->'52'->>'text'")
+
+
     dashboard_info = {
       id: SecureRandom.uuid,
       reportes_por_grupo:  {
         grupos_actividad: categories,
+        num_total_reports: num_total_reports,
         grados_riesgo: riesgos
       }
 
