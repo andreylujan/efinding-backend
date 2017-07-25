@@ -97,7 +97,7 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
     months.each do |month|
       indexes_by_construction = filtered_reports.joins(inspection: { construction: :accident_rates })
       .group("constructions.id").select("constructions.name as construction_name, " +
-                                        "CASE WHEN(count(worker_average) > 0) THEN count(reports.id)/count(worker_average) ELSE 0 END as index")
+                                        "CASE WHEN(sum(worker_average) > 0) THEN count(reports.id)/sum(worker_average) ELSE 0 END as index")
       .where("accident_rates.rate_period = date(?)", month)
       .where("reports.created_at >= ? AND reports.created_at <= ?",
              month,
@@ -105,19 +105,19 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
       .map do |group|
         {
           name: group.construction_name,
-          index: group.index
+          index: group.index.round(2)
         }
       end
 
       all_indexes = filtered_reports.joins(inspection: { construction: :accident_rates })
-      .select("CASE WHEN(count(worker_average) > 0) THEN count(reports.id)/count(worker_average) ELSE 0 END as index")
+      .select("CASE WHEN(sum(worker_average) > 0) THEN count(reports.id)/sum(worker_average) ELSE 0 END as index")
       .where("accident_rates.rate_period = date(?)", month)
       .where("reports.created_at >= ? AND reports.created_at <= ?",
              month,
              month.end_of_month)
       .map do |group|
         {
-          index: group.index
+          index: group.index.round(2)
         }
       end
       data << {
@@ -287,6 +287,9 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
                                                           current_user: current_user                                                        },
                                                           order: false
     })
+    .joins(:construction)
+    .order("constructions.name ASC")
+
     params.permit!
     params_hash = params.to_h
     params_hash[:filter] ||= {}
@@ -319,6 +322,7 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
   end
 
   def checklists
+  
     cumplimiento_por_periodo = filtered_checklists.group_by do |checklist|
       Date.new(checklist.created_at.year, checklist.created_at.month)
     end.map do |key, group|
@@ -328,7 +332,7 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
       }
     end
 
-    cumplimiento_por_obra = filtered_checklists.group_by do |checklist|
+    obras_bajo_meta = filtered_checklists.group_by do |checklist|
       checklist.construction
     end.map do |key, group|
       {
@@ -345,11 +349,26 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
       }
     end
 
+    cumplimiento_por_obra = filtered_checklists.group_by do |checklist|
+      checklist.construction
+    end.map do |key, group|
+      {
+        obra: key.name,
+        cumplimiento: fullfillment(group)
+      }
+    end.map do |cump|
+      {
+        obra: cump[:obra],
+        cumplimiento: cump[:cumplimiento].to_s + "%"
+      }
+    end
+
     dashboard_info = {
       id: SecureRandom.uuid,
       cumplimiento_minimo: "68%",
       cumplimiento_por_periodo: cumplimiento_por_periodo,
-      cumplimiento_por_obra: cumplimiento_por_obra
+      cumplimiento_por_obra: cumplimiento_por_obra,
+      obras_bajo_meta: obras_bajo_meta
     }
     dashboard = ::Pitagora::ChecklistDashboard.new dashboard_info
 
