@@ -36,6 +36,10 @@ Rails.application.routes.draw do
       end
 
       jsonapi_resources :accident_rates, only: [ :index, :create, :update, :destroy, :show ] do
+        collection do
+          get :csv, to: "accident_rates#index_csv"
+          post :csv, to: "accident_rates#create_csv"
+        end
       end
       
       jsonapi_resources :collections, only: [ :index, :show, :create, :update, :destroy ] do

@@ -12,6 +12,10 @@ class Api::V1::AccidentRateResource < ApplicationResource
     
   has_one :construction
 
+  before_save do
+    @model.organizatiion = context[:current_user].organizatiion if @model.new_record?
+  end
+
   def year
     @model.rate_period.year
   end

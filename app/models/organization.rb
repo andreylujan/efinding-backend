@@ -29,6 +29,7 @@ class Organization < ApplicationRecord
     has_many :personnel_types, dependent: :destroy
     has_many :contractors, dependent: :destroy
     has_many :personnel, dependent: :destroy
+    has_many :accident_rates, dependent: :destroy
 
     validates :default_admin_path, presence: true
     
