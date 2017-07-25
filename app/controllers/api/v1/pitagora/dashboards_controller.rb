@@ -3,6 +3,34 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
 
   before_action :doorkeeper_authorize!
 
+  def causas_directas
+    # 55
+    reports = filtered_reports
+    .group("dynamic_attributes->'55'->>'text'")
+    .select("count(reports.id) as num_reports, dynamic_attributes->'55'->>'text' as causa_directa")
+    .order("count(reports.id) DESC")
+    .map do |group|
+      {
+        causa_directa: group.causa_directa,
+        num_reports: group.num_reports
+      }
+    end
+  end
+
+  def causas_basicas
+    # 58
+    reports = filtered_reports
+    .group("dynamic_attributes->'58'->>'text'")
+    .select("count(reports.id) as num_reports, dynamic_attributes->'58'->>'text' as causas_basica")
+    .order("count(reports.id) DESC")
+    .map do |group|
+      {
+        causas_basica: group.causas_basica,
+        num_reports: group.num_reports
+      }
+    end
+  end
+
   def reports_by_group
     activity_groups = []
 
@@ -60,7 +88,54 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
   end
 
   def reports_by_month
-    # filtered_reports.group()
+    data = []
+    months = [
+      DateTime.now.beginning_of_month - 3.months,
+      DateTime.now.beginning_of_month - 2.months,
+      DateTime.now.beginning_of_month - 1.month
+    ]
+    months.each do |month|
+      indexes_by_construction = filtered_reports.joins(inspection: { construction: :accident_rates })
+      .group("constructions.id").select("constructions.name as construction_name, " +
+                                        "CASE WHEN(count(worker_average) > 0) THEN count(reports.id)/count(worker_average) ELSE 0 END as index")
+      .where("accident_rates.rate_period = date(?)", month)
+      .where("reports.created_at >= ? AND reports.created_at <= ?",
+             month,
+             month.end_of_month)
+      .map do |group|
+        {
+          name: group.construction_name,
+          index: group.index
+        }
+      end
+
+      all_indexes = filtered_reports.joins(inspection: { construction: :accident_rates })
+      .select("CASE WHEN(count(worker_average) > 0) THEN count(reports.id)/count(worker_average) ELSE 0 END as index")
+      .where("accident_rates.rate_period = date(?)", month)
+      .where("reports.created_at >= ? AND reports.created_at <= ?",
+             month,
+             month.end_of_month)
+      .map do |group|
+        {
+          index: group.index
+        }
+      end
+      data << {
+        mes: month.strftime("%B"),
+        indices_por_obra: indexes_by_construction,
+        indices_totales: all_indexes
+      }
+    end
+    data
+
+    # asdasd = Construction.joins("LEFT OUTER JOIN inspections ON inspections.construction_id =
+    #   constructions.id")
+    #   .joins("LEFT OUTER join reports ON reports.inspection_id = inspections.id")
+    #   .joins("LEFT OUTER JOIN accident_rates ON accident_rates.construction_id = constructions.id")
+    #   .distinct
+    #   .select("count(reports.id)/count(worker_average) as index")
+    #   byebug
+
   end
 
   def porcentaje_parcial(reports)
@@ -122,7 +197,9 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
       reportes_por_grupo: reports_by_group,
       cumplimiento_hallazgos: cumplimiento_hallazgos,
       porcentaje_cumplimiento: porcentaje_cumplimiento,
-      indices_por_mes: reports_by_month
+      indice_de_hallazgos: reports_by_month,
+      causas_directas: causas_directas,
+      causas_basicas: causas_basicas
     }
     dashboard = ::Pitagora::InspectionDashboard.new dashboard_info
 
