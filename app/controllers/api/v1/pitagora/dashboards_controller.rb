@@ -191,6 +191,58 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
     end
   end
 
+  def global_accident_rates
+    rates = filtered_accident_rates.group("rate_period")
+      .select("rate_period, avg(accident_rate) as accident_rate, avg(casualty_rate) as casualty_rate")
+      .order("rate_period ASC")
+      .map do |group|
+        {
+          mes: group.rate_period.strftime("%B-%Y"),
+          tasa_accidentabilidad: group.accident_rate,
+          tasa_siniestralidad: group.casualty_rate
+        }
+      end
+    rates.each_with_index do |rate, idx|
+      if idx == 0
+        rate[:tasa_accidentabilidad_acumulada] = rate[:tasa_accidentabilidad]
+        rate[:tasa_siniestralidad_acumulada] = rate[:tasa_siniestralidad]
+      else
+        rate[:tasa_accidentabilidad_acumulada] = 
+          rates[idx-1][:tasa_accidentabilidad_acumulada]*(rate[:tasa_accidentabilidad] + 1.0)
+        rate[:tasa_siniestralidad_acumulada] = 
+          rates[idx-1][:tasa_siniestralidad_acumulada]*(rate[:tasa_siniestralidad] + 1.0)
+      end
+    end
+    rates
+  end
+
+  def global_casualty_rates
+    filtered_accident_rates.group("rate_period")
+      .select("rate_period, avg(accident_rate) as accident_rate")
+      .order("rate_period ASC")
+      .map do |group|
+        {
+          mes: group.rate_period.strftime("%B-%Y"),
+          tasa_accidentabilidad: group.accident_rate
+        }
+      end
+  end
+
+  def filtered_accident_rates
+    AccidentRate.where(organization: current_user.organization)
+  end
+
+  def accident_rates
+    dashboard_info = {
+      id: SecureRandom.uuid,
+      tasa_accidentabilidad: global_accident_rates
+    }
+    dashboard = ::Pitagora::AccidentRatesDashboard.new dashboard_info
+
+    render json: JSONAPI::ResourceSerializer.new(Api::V1::Pitagora::AccidentRatesDashboardResource)
+    .serialize_to_hash(Api::V1::Pitagora::AccidentRatesDashboardResource.new(dashboard, nil))
+  end
+
   def inspections
     dashboard_info = {
       id: SecureRandom.uuid,

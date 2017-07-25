@@ -19,6 +19,7 @@ Rails.application.routes.draw do
         resources :dashboards, only: [] do
           collection do
             get :inspections
+            get :accident_rates
           end
         end
       end
