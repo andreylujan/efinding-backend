@@ -48,6 +48,20 @@ class Api::V1::ReportResource < ApplicationResource
     end
   }
 
+  filter :inspection, apply: ->(records, value, _options) {
+    if not value.empty?
+      if value[0].is_a? Hash and value[0]["construction_id"].present?
+        records.joins(:inspection)
+          .where(inspections: { construction_id: value[0]["construction_id"] })
+      else
+        records
+      end
+    else
+      records
+    end
+  }
+
+
   filter :state_name, apply: ->(records, value, _options) {
     records
   }
@@ -252,7 +266,9 @@ class Api::V1::ReportResource < ApplicationResource
       records = Report.joins(creator: { role: :organization }).where(organizations: { id: current_user.organization.id })
     end
     if options.has_key? :order
-      records = records.order(options[:order])
+      if options[:order]
+        records = records.order(options[:order])
+      end
     else
       records = records.order("reports.created_at DESC")
     end

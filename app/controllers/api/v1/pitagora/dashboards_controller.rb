@@ -167,7 +167,18 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
   end
 
   def filtered_reports
-    Report.joins(creator: :role).where(roles: { organization_id: 5 })
+    reports = Api::V1::ReportResource.records({
+                                                        context: {
+                                                          current_user: current_user                                                        },
+                                                          order: false
+    })
+    params.permit!
+    params_hash = params.to_h
+    params_hash[:filter] ||= {}
+    filters = Api::V1::ReportResource.verify_filters(params_hash[:filter])
+
+    reports = Api::V1::ReportResource.apply_filters(reports,
+                                                            filters)
   end
 
   def cumplimiento_hallazgos
@@ -191,7 +202,35 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
     end
   end
 
-  def global_accident_rates
+
+  def global_casualty_rates
+    filtered_accident_rates.group("rate_period")
+      .select("rate_period, avg(accident_rate) as accident_rate")
+      .order("rate_period ASC")
+      .map do |group|
+        {
+          mes: group.rate_period.strftime("%B-%Y"),
+          tasa_accidentabilidad: group.accident_rate
+        }
+      end
+  end
+
+  def filtered_accident_rates
+    accident_rates = Api::V1::AccidentRateResource.records({
+                                                        context: {
+                                                          current_user: current_user                                                        },
+    })
+    params.permit!
+    params_hash = params.to_h
+    params_hash[:filter] ||= {}
+    filters = Api::V1::AccidentRateResource.verify_filters(params_hash[:filter])
+
+    accident_rates = Api::V1::AccidentRateResource.apply_filters(accident_rates,
+                                                            filters)
+  end
+
+  def accident_rates
+
     rates = filtered_accident_rates.group("rate_period")
       .select("rate_period, avg(accident_rate) as accident_rate, avg(casualty_rate) as casualty_rate")
       .order("rate_period ASC")
@@ -213,29 +252,10 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
           rates[idx-1][:tasa_siniestralidad_acumulada]*(rate[:tasa_siniestralidad] + 1.0)
       end
     end
-    rates
-  end
 
-  def global_casualty_rates
-    filtered_accident_rates.group("rate_period")
-      .select("rate_period, avg(accident_rate) as accident_rate")
-      .order("rate_period ASC")
-      .map do |group|
-        {
-          mes: group.rate_period.strftime("%B-%Y"),
-          tasa_accidentabilidad: group.accident_rate
-        }
-      end
-  end
-
-  def filtered_accident_rates
-    AccidentRate.where(organization: current_user.organization)
-  end
-
-  def accident_rates
     dashboard_info = {
       id: SecureRandom.uuid,
-      tasa_accidentabilidad: global_accident_rates
+      tasas_accidentabilidad: rates
     }
     dashboard = ::Pitagora::AccidentRatesDashboard.new dashboard_info
 

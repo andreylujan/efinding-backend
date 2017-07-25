@@ -31,4 +31,10 @@ class Api::V1::AccidentRateResource < ApplicationResource
   def self.creatable_fields(context)
     super - [ :frequency_index, :gravity_index ]
   end
+
+  def self.records(options = {})
+    context = options[:context]
+    current_user = context[:current_user]
+    AccidentRate.where(organization_id: current_user.organization_id)
+  end
 end

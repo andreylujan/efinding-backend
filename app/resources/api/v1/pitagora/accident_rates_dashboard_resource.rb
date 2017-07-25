@@ -1,3 +1,3 @@
 class Api::V1::Pitagora::AccidentRatesDashboardResource < ApplicationResource
-  attributes :tasa_accidentabilidad
+  attributes :tasas_accidentabilidad
 end

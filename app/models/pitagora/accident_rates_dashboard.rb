@@ -1,5 +1,5 @@
 # -*- encoding : utf-8 -*-
 class Pitagora::AccidentRatesDashboard
   include ActiveModel::Model
-  attr_accessor :id, :tasa_accidentabilidad
+  attr_accessor :id, :tasas_accidentabilidad
 end
