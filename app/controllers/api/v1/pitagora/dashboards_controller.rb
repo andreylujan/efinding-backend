@@ -60,7 +60,7 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
   end
 
   def reports_by_month
-
+    # filtered_reports.group()
   end
 
   def porcentaje_parcial(reports)
