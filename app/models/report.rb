@@ -75,7 +75,7 @@ class Report < ApplicationRecord
   validate :limit_date_cannot_be_in_the_past, on: :create
   before_save :default_values
   before_save :check_limit_date
-  before_save :save_data_parts
+  # before_save :save_data_parts
   before_create :assign_user
   after_commit :update_inspection, on: [ :create, :update ]
   after_save :change_state, on: [ :update ]
@@ -111,26 +111,32 @@ class Report < ApplicationRecord
     end
   end
 
-  def save_data_parts
-    dynamic_attributes.each do |key, value|
-      is_num = (key =~ /\A\d+\z/ ? true : false)
-      if is_num
-        data_part = DataPart.find(key)
-        DataPartValue.find_or_initialize_by(
-          data_part: data_part,
-          report_id: self.id
-        ).tap do | data_part_value |
-          if data_part.collection.present?
-            item_id = value["id"]
-            if CollectionItem.exists? item_id
-              data_part_value.collection_item_id = item_id
-            end
-          end
-          data_part_value.save!
-        end
-      end
+  def url_location_string
+    if initial_location.present?
+      "#{initial_location.lonlat.y}%2C#{initial_location.lonlat.x}"
     end
   end
+
+  # def save_data_parts
+  #   dynamic_attributes.each do |key, value|
+  #     is_num = (key =~ /\A\d+\z/ ? true : false)
+  #     if is_num
+  #       data_part = DataPart.find(key)
+  #       DataPartValue.find_or_initialize_by(
+  #         data_part: data_part,
+  #         report_id: self.id
+  #       ).tap do | data_part_value |
+  #         if data_part.collection.present?
+  #           item_id = value["id"]
+  #           if CollectionItem.exists? item_id
+  #             data_part_value.collection_item_id = item_id
+  #           end
+  #         end
+  #         data_part_value.save!
+  #       end
+  #     end
+  #   end
+  # end
 
   def assign_user
     if creator.present? and creator.organization_id == 3
