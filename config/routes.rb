@@ -20,6 +20,7 @@ Rails.application.routes.draw do
           collection do
             get :inspections
             get :accident_rates
+            get :checklists
           end
         end
       end

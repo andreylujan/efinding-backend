@@ -281,4 +281,81 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
     .serialize_to_hash(Api::V1::Pitagora::InspectionDashboardResource.new(dashboard, nil))
   end
 
+  def filtered_checklists
+    reports = Api::V1::ChecklistReportResource.records({
+                                                        context: {
+                                                          current_user: current_user                                                        },
+                                                          order: false
+    })
+    params.permit!
+    params_hash = params.to_h
+    params_hash[:filter] ||= {}
+    filters = Api::V1::ChecklistReportResource.verify_filters(params_hash[:filter])
+
+    reports = Api::V1::ChecklistReportResource.apply_filters(reports,
+                                                            filters)
+  end
+
+  def fullfillment(checklists)
+    num_items = 0
+    num_fullfilled = 0
+    checklists.each do |checklist|
+      checklist.checklist_data.each do |section|
+        section["items"].each do |item|
+          if item["value"] != 0 and item["value"].present?
+            if item["value"] == 1
+              num_fullfilled += 1
+            end
+            num_items += 1
+          end
+        end
+      end
+    end
+    if num_items > 0
+      ((num_fullfilled.to_f/num_items.to_f).round(2)*100).to_i
+    else
+      0
+    end
+  end
+
+  def checklists
+    cumplimiento_por_periodo = filtered_checklists.group_by do |checklist|
+      Date.new(checklist.created_at.year, checklist.created_at.month)
+    end.map do |key, group|
+      {
+        date: key,
+        cumplimiento: fullfillment(group).to_s + "%"
+      }
+    end
+
+    cumplimiento_por_obra = filtered_checklists.group_by do |checklist|
+      checklist.construction
+    end.map do |key, group|
+      {
+        obra: key.name,
+        cumplimiento: fullfillment(group)
+      }
+    end
+    .select do |cump|
+      cump[:cumplimiento] >= 68
+    end.map do |cump|
+      {
+        obra: cump[:obra],
+        cumplimiento: cump[:cumplimiento].to_s + "%"
+      }
+    end
+
+    dashboard_info = {
+      id: SecureRandom.uuid,
+      cumplimiento_minimo: "68%",
+      cumplimiento_por_periodo: cumplimiento_por_periodo,
+      cumplimiento_por_obra: cumplimiento_por_obra
+    }
+    dashboard = ::Pitagora::ChecklistDashboard.new dashboard_info
+
+    render json: JSONAPI::ResourceSerializer.new(Api::V1::Pitagora::ChecklistDashboardResource)
+    .serialize_to_hash(Api::V1::Pitagora::ChecklistDashboardResource.new(dashboard, nil))
+  end
+
+
 end

@@ -149,7 +149,10 @@ class Api::V1::ChecklistReportResource < ApplicationResource
       end
 
     end
-    checklists.order("checklist_reports.created_at DESC")
+    unless options[:order] == false
+      checklists = checklists.order("checklist_reports.created_at DESC")
+    end
+    checklists
   end
 
   def fetchable_fields
