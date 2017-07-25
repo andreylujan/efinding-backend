@@ -255,7 +255,9 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
 
     dashboard_info = {
       id: SecureRandom.uuid,
-      tasas_accidentabilidad: rates
+      tasas_accidentabilidad: rates,
+      meta_accidentabilidad: 15,
+      meta_siniestralidad: 10
     }
     dashboard = ::Pitagora::AccidentRatesDashboard.new dashboard_info
 
