@@ -139,7 +139,7 @@
 					<h2>Ubicación</h2>
 				</div>
 
-				<% map_url = "http://maps.googleapis.com/maps/api/staticmap?center=#{report.url_location_string}&size=350x&maptype=roadmap" %>
+				<% map_url = "http://maps.googleapis.com/maps/api/staticmap?center=#{report.url_location_string}&size=350x200&maptype=roadmap" %>
 				<% map_url += "&markers=color:red%7Clabel:H%7C#{report.initial_location.lonlat.y},#{report.initial_location.lonlat.x}" %>
 				<% map_url += "&key=AIzaSyAxdoh8VjK53CCCYNmGx0RGuompeK-ejzc" %>
 
