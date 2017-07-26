@@ -319,7 +319,7 @@ class Api::V1::InspectionResource < ApplicationResource
         order_str = "inspections.final_signed_at"
       elsif order[0] == "state_name"
         order_str = "inspections.state"
-      elsif order[0] == "id"
+      elsif order[0] == "inspection_id"
         order_str = "inspections.id"
       else
         has_order = false
