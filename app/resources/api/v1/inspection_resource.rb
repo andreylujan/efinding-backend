@@ -385,7 +385,7 @@ class Api::V1::InspectionResource < ApplicationResource
         inspections = inspections.joins(:construction)
         .where(constructions: { administrator_id: current_user.id })
       end
-      inspections
+      inspections.order("inspections.created_at DESC")
     else
       Inspection.where("1 = 0")
     end
