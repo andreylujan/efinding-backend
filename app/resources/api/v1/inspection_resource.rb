@@ -27,6 +27,19 @@ class Api::V1::InspectionResource < ApplicationResource
 
   add_foreign_keys :construction_id
 
+  def inspection_id
+    @model.id.to_s
+  end
+
+  filter :inspection_id, apply: ->(records, value, _options) {
+    if not value.empty? and value[0].present?
+      records = records
+      .where("inspections.id = ?", value[0])
+    else
+      records
+    end
+  }
+
   def state_name
     if @model.state == "finished"
       '<i class="fa fa-check" style="color: #239934; font-size: 2.0em"></i>'
