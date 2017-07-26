@@ -32,4 +32,11 @@ class Image < ApplicationRecord
   # before_create :write_image_identifier
   # skip_callback :save, :before, :write_image_identifier
 
+  def formatted_comment
+    if comment.present? and comment.strip.present?
+      comment
+    else
+      "Sin comentario"
+    end
+  end
 end
