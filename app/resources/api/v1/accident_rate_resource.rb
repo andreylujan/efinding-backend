@@ -13,7 +13,7 @@ class Api::V1::AccidentRateResource < ApplicationResource
   has_one :construction
 
   before_save do
-    @model.organizatiion = context[:current_user].organizatiion if @model.new_record?
+    @model.organization = context[:current_user].organization if @model.new_record?
   end
 
   def year
