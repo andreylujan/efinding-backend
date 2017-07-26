@@ -143,16 +143,32 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
     if num_total_reports == 0
       '0%'
     else
-      percentage = (reports.where("reports.state != ?", "unchecked").count.to_f)/num_total_reports
+      percentage = (reports.where("reports.state = ?", "resolved").count.to_f)/num_total_reports
       (100 * percentage.round(2)).to_i.to_s + '%'
     end
   end
+
+  def resolved_reports
+    filtered_reports.where("reports.state = ?", "resolved")
+  end
   
   def porcentaje_cumplimiento
+    resolved = resolved_reports
+    internal = resolved.where("dynamic_attributes->'52'->>'id' = ?", "777")
+    other = resolved.where("dynamic_attributes->'52'->>'id' != ?", "777")
+    num_total = internal.count + other.count
+    interno = 0
+    contratistas = 0
+    if num_total > 0
+      interno = internal.count.to_f/num_total.to_f
+    end
+    interno = (interno.round(2)*100).to_i
+    contratistas = 100 - interno
+
     {
       global: porcentaje_parcial(filtered_reports),
-      interno: porcentaje_parcial(filtered_internal),
-      contratistas: porcentaje_parcial(filtered_other_contractors)
+      interno: interno.to_s + "%",
+      contratistas: contratistas.to_s + "%"
     }
   end
 
@@ -183,16 +199,20 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
 
   def cumplimiento_hallazgos
     reportes_por_riesgo = filtered_reports
-    .group("dynamic_attributes->'52'->>'text'")
-    .where("reports.state != ?", "unchecked")
-    .select("count(*) as num_reports, dynamic_attributes->'52'->>'text' as risk")
-
+    .group("reports.state")
+    .select("count(*) as num_reports, reports.state as state")
+    states = [ "unchecked", "pending", "resolved" ]
+    states_hash = {
+      "unchecked" => "En proceso",
+      "pending" => "Pendiente",
+      "resolved" => "Resuelto"
+    }
     subgroup = {}
-    risks.each do |ag|
-      subgroup[ag] = 0
+    states_hash.each do |ag, val|
+      subgroup[val] = 0
     end
     reportes_por_riesgo.each do |group|
-      subgroup[group.risk] = group.num_reports
+      subgroup[states_hash[group.state]] = group.num_reports
     end
     subgroup.map do |key, value|
       {
