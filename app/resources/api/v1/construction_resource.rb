@@ -36,7 +36,7 @@ class Api::V1::ConstructionResource < ApplicationResource
         constructions.where(inspector_id: current_user.id)
       end
     end
-    constructions.distinct
+    constructions
   end
 
   def fetchable_fields
