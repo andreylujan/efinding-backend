@@ -202,9 +202,9 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
     .group("reports.state")
     .select("count(*) as num_reports, reports.state as state")
     states_hash = {
-      "unchecked" => "En proceso",
+      "resolved" => "Resuelto",
       "pending" => "Pendiente",
-      "resolved" => "Resuelto"      
+      "unchecked" => "En proceso"
     }
     subgroup = {}
     states_hash.each do |ag, val|
