@@ -373,17 +373,22 @@ class Api::V1::InspectionResource < ApplicationResource
               DateTime.now.to_s + "' THEN 1 END) as num_expired_reports")
       .group("inspections.id")
 
-      if current_user.role_id == 2
+      if current_user.role.supervisor?
         inspections = inspections.joins(:construction)
         .where(constructions: { supervisor_id: current_user.id })
-      elsif current_user.role_id == 3
+      elsif current_user.role.expert?
         inspections = inspections.joins(:construction)
         .where(constructions: { expert_id: current_user.id })
         .where.not(state: "reports_pending")
         .where.not(state: "first_signature_pending")
-      elsif current_user.role_id == 4
+      elsif current_user.role.administrator?
         inspections = inspections.joins(:construction)
         .where(constructions: { administrator_id: current_user.id })
+      elsif current_user.role.inspector?
+        inspections = inspections.joins(:construction)
+        .where(constructions: { inspector_id: current_user.id })
+      elsif not current_user.is_superuser?
+        inspections = Inspection.where("1 = 0") 
       end
       inspections.order("inspections.created_at DESC")
     else
