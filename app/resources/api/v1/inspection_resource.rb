@@ -8,7 +8,7 @@ class Api::V1::InspectionResource < ApplicationResource
   has_one :final_signer
   has_one :company
   has_one :field_chief
-  has_one :expe
+  has_one :expert
 
   attributes :created_at, :resolved_at,
     :state,
@@ -22,7 +22,8 @@ class Api::V1::InspectionResource < ApplicationResource
     :state_name,
     :cached_data,
     :num_reports_html,
-    :field_chief_name
+    :field_chief_name,
+    :inspection_id
 
 
   add_foreign_keys :construction_id
