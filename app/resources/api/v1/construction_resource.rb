@@ -27,11 +27,12 @@ class Api::V1::ConstructionResource < ApplicationResource
       constructions = Construction.joins(company: :organization)
       .where(organizations: { id: context[:current_user].organization.id })
     end
-
-    if current_user.role.supervisor?
-      constructions = constructions.where(supervisor_id: current_user.id)
-    elsif current_user.role.expert?
-      constructions = constructions.where(expert_id: current_user.id)
+    if context[:all] != "true"
+      if current_user.role.supervisor?
+        constructions = constructions.where(supervisor_id: current_user.id)
+      elsif current_user.role.expert?
+        constructions = constructions.where(expert_id: current_user.id)
+      end
     end
     constructions.distinct
   end
