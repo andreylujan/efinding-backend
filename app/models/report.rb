@@ -129,7 +129,8 @@ class Report < ApplicationRecord
   before_save :check_limit_date
 
   after_commit :generate_pdf # , on: [ :create ]
-  after_commit :send_task_job # , on: [ :update ]
+  after_commit :send_task_job_create, on: [ :create ]
+  after_commit :send_task_job_update, on: [ :update ]
   
   validate :limit_date_cannot_be_in_the_past, on: :create
   validate :valid_state_transition, on: [ :update ]
@@ -451,8 +452,13 @@ class Report < ApplicationRecord
     true
   end
 
-  
-  def send_task_job
+  def send_task_job_create
+    if self.assigned_user.present?
+      SendTaskJob.set(wait: 1.second, queue: ENV['PUSH_QUEUE'] || 'efinding_push').perform_later(self.id.to_s)
+    end
+  end
+
+  def send_task_job_update
     if changes["assigned_user_id"].present? and self.assigned_user.present?
       SendTaskJob.set(wait: 1.second, queue: ENV['PUSH_QUEUE'] || 'efinding_push').perform_later(self.id.to_s)
     end
