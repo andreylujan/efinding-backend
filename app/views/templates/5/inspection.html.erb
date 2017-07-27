@@ -220,7 +220,7 @@
 							<img src="<%= report.images.where(is_initial: true).first.url %>" class="img-responsive" style="height: 300px;">
 							<p>
 								<strong>Comentario hallazgo</strong><br>
-								<%= report.images.where(is_initial: true).first.comment %>
+								<%= report.images.where(is_initial: true).first.formatted_comment %>
 							</p>
 						<% else %>
 							Hallazgo sin imágenes
