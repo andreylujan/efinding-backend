@@ -126,6 +126,10 @@
 						<td><strong><%= if inspection.construction.administrator.present? then inspection.construction.administrator.name else "Obra sin Administrador" end %></strong></td>
 					</tr>
 					<tr>
+						<td>Supervisor Responsable:</td>
+						<td><strong><%= report.dynamic_attributes.dig("62", "text") %></strong></td>
+					</tr>
+					<tr>
 						<td>Obra:</td>
 						<td><strong><%= inspection.construction.name %></strong></td>
 					</tr>
