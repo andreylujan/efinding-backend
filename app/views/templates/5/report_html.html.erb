@@ -111,11 +111,19 @@
 
 				<table class="table">
 					<tr>
-						<td>Responsable:</td>
-						<td><strong><%= report.creator.name %></strong></td>
+						<td>APR:</td>
+						<td><strong><%= if inspection.construction.supervisor.present? then inspection.construction.supervisor.name else "Obra sin APR" end %></strong></td>
 						<td rowspan="5" class="highlight">
 							<h1><%= inspection.reports.count %><br><small>Hallazgos</small></h1>
 						</td>
+					</tr>
+					<tr>
+						<td>Jefe de Terreno:</td>
+						<td><strong><%= if inspection.construction.expert.present? then inspection.construction.expert.name else "Obra sin Jefe de Terreno" end %></strong></td>
+					</tr>
+					<tr>
+						<td>Administrador de Obra:</td>
+						<td><strong><%= if inspection.construction.administrator.present? then inspection.construction.administrator.name else "Obra sin Administrador" end %></strong></td>
 					</tr>
 					<tr>
 						<td>Obra:</td>
