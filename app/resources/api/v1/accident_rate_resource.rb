@@ -16,6 +16,23 @@ class Api::V1::AccidentRateResource < ApplicationResource
     @model.organization = context[:current_user].organization if @model.new_record?
   end
 
+  filter :construction_id, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.where(construction_id: value[0])
+    else
+      records
+    end
+  }
+
+  filter :company_id, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.joins(:construction)
+          .where(constructions: { company_id: value[0] })
+    else
+      records
+    end
+  }
+
   def year
     @model.rate_period.year
   end

@@ -36,6 +36,23 @@ class Api::V1::ChecklistReportResource < ApplicationResource
     @model.html.url
   end
 
+  filter :construction_id, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.where(construction_id: value[0])
+    else
+      records
+    end
+  }
+
+  filter :company_id, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.joins(:construction)
+          .where(constructions: { company_id: value[0] })
+    else
+      records
+    end
+  }
+
   filter :code, apply: ->(records, value, _options) {
     if not value.empty?
       records = records

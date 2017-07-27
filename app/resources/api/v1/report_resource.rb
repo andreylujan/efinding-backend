@@ -62,8 +62,28 @@ class Api::V1::ReportResource < ApplicationResource
   }
 
 
+
+
   filter :state_name, apply: ->(records, value, _options) {
     records
+  }
+
+  filter :construction_id, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.joins(:inspection)
+          .where(inspections: { construction_id: value[0] })
+    else
+      records
+    end
+  }
+
+  filter :company_id, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.joins(inspection: :construction)
+          .where(constructions: { company_id: value[0] })
+    else
+      records
+    end
   }
 
   filter :station_id, apply: ->(records, value, _options) {
