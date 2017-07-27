@@ -18,6 +18,7 @@
 class Api::V1::ImageResource < ApplicationResource
   
   has_one :category
+  add_foreign_keys :report_id
   # has_one :report
 
   attributes :url, :comment, :report_id, :synced, :is_initial
