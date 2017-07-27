@@ -36,6 +36,18 @@ class Api::V1::ChecklistReportResource < ApplicationResource
     @model.html.url
   end
 
+  filter :period, apply: ->(records, value, _options) {
+    if not value.empty?
+      date_str = value[0].split("/")
+      year = date_str[1].to_i
+      month = date_str[0].to_i
+      rate_period = Date.new(year, month)
+      records.where("checklist_reports.created_at >= ? AND checklist_reports.created_at <= ?", rate_period - 3.months, rate_period.end_of_month - 1.month)
+    else
+      records
+    end
+  }
+
   filter :construction_id, apply: ->(records, value, _options) {
     if not value.empty?
       records.where(construction_id: value[0])

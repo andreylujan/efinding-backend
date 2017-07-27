@@ -33,6 +33,17 @@ class Api::V1::ReportResource < ApplicationResource
   filters :pdf_uploaded,
     :report_type_id, :state_name, :creator_id, :assigned_user_id
 
+  filter :period, apply: ->(records, value, _options) {
+    if not value.empty?
+      date_str = value[0].split("/")
+      year = date_str[1].to_i
+      month = date_str[0].to_i
+      rate_period = Date.new(year, month)
+      records.where("reports.created_at >= ? AND reports.created_at <= ?", rate_period - 3.months, rate_period.end_of_month - 1.month)
+    else
+      records
+    end
+  }
 
   filter :creator, apply: ->(records, value, _options) {
     if not value.empty?

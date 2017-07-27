@@ -30,7 +30,7 @@ class Api::V1::AccidentRateResource < ApplicationResource
       year = date_str[1].to_i
       month = date_str[0].to_i
       rate_period = Date.new(year, month)
-      records.where(rate_period: rate_period)
+      records.where("rate_period >= ? AND rate_period <= ?", rate_period - 3.months, rate_period - 1.month)
     else
       records
     end
