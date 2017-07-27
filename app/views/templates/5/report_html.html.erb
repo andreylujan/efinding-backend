@@ -282,7 +282,11 @@
 			<div class="col-xs-12">
 				<h2>Hallazgo<br><small><%= if report.initial_location.present? then report.initial_location.address else "Sin dirección" end %></small></h2>
 				<br>
+				<% if report.images.where(is_initial: true).first.present? %>
 				<img src="<%= report.images.where(is_initial: true).first.url %>" class="img-responsive" style="height: 300px;">
+					<p>Hallazgo sin imágenes</p>
+				<% else %>
+				<% end %>
 				<p>
 					<strong>Comentario hallazgo</strong><br>
 							<%= report.images.where(is_initial: true).first.formatted_comment %>
