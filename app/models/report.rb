@@ -87,7 +87,7 @@ class Report < ApplicationRecord
   # end
 
   before_validation :check_state
-  # before_validation :generate_id
+  before_validation :generate_id
   acts_as_paranoid
   attr_accessor :ignore_pdf
   belongs_to :creator, class_name: :User, foreign_key: :creator_id
