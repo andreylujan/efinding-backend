@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::ReportTypeResource < ApplicationResource
-  attributes :name, :title_field, :subtitle_field
+  attributes :name, :title_field, :subtitle_field, :default_title, :default_subtitle
   has_many :sections
   has_many :states
   has_one :initial_state

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170712191800) do
+ActiveRecord::Schema.define(version: 20170727192312) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -408,13 +408,15 @@ ActiveRecord::Schema.define(version: 20170712191800) do
   create_table "report_types", force: :cascade do |t|
     t.text     "name"
     t.integer  "organization_id"
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
+    t.datetime "created_at",                                           null: false
+    t.datetime "updated_at",                                           null: false
     t.text     "title_field"
     t.text     "subtitle_field"
-    t.boolean  "has_pdf",                    default: true, null: false
+    t.boolean  "has_pdf",                    default: true,            null: false
     t.integer  "initial_state_id"
-    t.json     "default_dynamic_attributes", default: {},   null: false
+    t.json     "default_dynamic_attributes", default: {},              null: false
+    t.text     "default_title",              default: "Sin título",    null: false
+    t.text     "default_subtitle",           default: "Sin subtítulo", null: false
     t.index ["initial_state_id"], name: "index_report_types_on_initial_state_id", using: :btree
     t.index ["organization_id"], name: "index_report_types_on_organization_id", using: :btree
   end
