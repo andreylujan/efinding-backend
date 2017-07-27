@@ -108,7 +108,7 @@ class Report < ApplicationRecord
   mount_uploader :final_location_image, ImageUploader
 
   has_many :images, dependent: :destroy
-  before_save :cache_data
+  
 
   belongs_to :initial_location, class_name: :Location
   belongs_to :final_location, class_name: :Location
@@ -121,16 +121,19 @@ class Report < ApplicationRecord
   belongs_to :inspection
   acts_as_list scope: :inspection
 
+  before_save :cache_data
+  before_save :check_assigned_user
   before_save :check_state_changed, on: [ :update ]
   before_save :check_dynamic_changes, on: [ :update ]
+  before_save :default_values
+  before_save :check_limit_date
 
   after_commit :generate_pdf # , on: [ :create ]
   after_commit :send_task_job, on: [ :update ]
   
   validate :limit_date_cannot_be_in_the_past, on: :create
   validate :valid_state_transition, on: [ :update ]
-  before_save :default_values
-  before_save :check_limit_date
+  
   before_create :assign_user
   before_create :assign_labels
   after_commit :update_inspection, on: [ :create, :update ]
@@ -150,6 +153,12 @@ class Report < ApplicationRecord
     :resolution_comment,
     :report_fields
   ]
+
+  def check_assigned_user
+    if self.assigned_user.nil?
+      self.assigned_user = self.creator
+    end
+  end
 
   def check_dynamic_changes
     if changes["dynamic_attributes"].present?
