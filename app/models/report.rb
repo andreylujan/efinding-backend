@@ -129,7 +129,7 @@ class Report < ApplicationRecord
   before_save :check_limit_date
 
   after_commit :generate_pdf # , on: [ :create ]
-  after_commit :send_task_job, on: [ :update ]
+  after_commit :send_task_job # , on: [ :update ]
   
   validate :limit_date_cannot_be_in_the_past, on: :create
   validate :valid_state_transition, on: [ :update ]
