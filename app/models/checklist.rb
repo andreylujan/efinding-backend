@@ -38,6 +38,9 @@ class Checklist < ApplicationRecord
 
   def assign_ids
     sections.each do |section|
+      if not section["id"].present?
+        section["id"] = SecureRandom.uuid.to_s
+      end
       assign_section_ids(section)
     end
   end

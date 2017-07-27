@@ -24,6 +24,18 @@ class Api::V1::AccidentRateResource < ApplicationResource
     end
   }
 
+  filter :period, apply: ->(records, value, _options) {
+    if not value.empty?
+      date_str = value[0].split("/")
+      year = date_str[1].to_i
+      month = date_str[0].to_i
+      rate_period = Date.new(year, month)
+      records.where(rate_period: rate_period)
+    else
+      records
+    end
+  }
+
   filter :company_id, apply: ->(records, value, _options) {
     if not value.empty?
       records.joins(:construction)
