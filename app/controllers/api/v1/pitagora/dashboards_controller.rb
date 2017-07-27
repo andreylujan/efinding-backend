@@ -301,6 +301,11 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
   end
 
   def filtered_checklists
+    if params[:checklist_id]
+      checklist_id = params[:checklist_id]
+    else
+      checklist_id = current_user.organization.checklist_id
+    end
     reports = Api::V1::ChecklistReportResource.records({
                                                         context: {
                                                           current_user: current_user                                                        },

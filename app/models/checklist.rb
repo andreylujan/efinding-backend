@@ -35,7 +35,7 @@ class Checklist < ApplicationRecord
       end
     end
   end
-
+  
   def assign_ids
     sections.each do |section|
       if not section["id"].present?
