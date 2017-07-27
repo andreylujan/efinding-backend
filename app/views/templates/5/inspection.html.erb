@@ -223,7 +223,7 @@
 								<%= report.images.where(is_initial: true).first.formatted_comment %>
 							</p>
 						<% else %>
-							<p>Hallazgo sin imágenes</p>
+							<p>Hallazgo sin imagen</p>
 						<% end %>
 					</div>
 
@@ -234,7 +234,7 @@
 							<% if report.images.where(is_initial: false).first.present? %>
 								<img src="<%= report.images.where(is_initial: false).first.url %>" class="img-responsive" style="height: 300px;">
 							<% else %>
-							<p>Hallazgo sin imágenes
+							<p>Hallazgo sin imagen de resolución
 							<% end %>
 							<p>
 								<strong>Comentario resolución de hallazgo</strong><br>
