@@ -216,19 +216,26 @@
 					<div class="col-xs-6">
 						<h2>Hallazgo<br><small><%= if report.initial_location.present? then report.initial_location.address else "Sin dirección" end %></small></h2>
 						<br>
-						<img src="<%= report.images.where(is_initial: true).first.url %>" class="img-responsive" style="height: 300px;">
-						<p>
-							<strong>Comentario hallazgo</strong><br>
-							<%= report.images.where(is_initial: true).first.comment %>
-						</p>
+						<% if report.images.where(is_initial: true).first.present? %>
+							<img src="<%= report.images.where(is_initial: true).first.url %>" class="img-responsive" style="height: 300px;">
+							<p>
+								<strong>Comentario hallazgo</strong><br>
+								<%= report.images.where(is_initial: true).first.comment %>
+							</p>
+						<% else %>
+							Hallazgo sin imágenes
+						<% end %>
 					</div>
 
 					<div class="col-xs-6">
 						<% if report.state != "unchecked" %>
 							<h2>Resolución hallazgo<br><small><%= if report.final_location.present? then report.final_location.address else "Sin dirección" end %></small></h2>
 							<br>
-
-							<img src="<%= report.images.where(is_initial: false).first.url %>" class="img-responsive" style="height: 300px;">
+							<% if report.images.where(is_initial: false).first.present? %>
+								<img src="<%= report.images.where(is_initial: false).first.url %>" class="img-responsive" style="height: 300px;">
+							<% else %>
+							<p>Hallazgo sin imágenes
+							<% end %>
 							<p>
 								<strong>Comentario resolución de hallazgo</strong><br>
 								<%= report.resolution_comment %>
