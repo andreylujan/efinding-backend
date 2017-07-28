@@ -48,6 +48,14 @@ class Api::V1::ChecklistReportResource < ApplicationResource
     end
   }
 
+  filter :checklist_id, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.where(checklist_id: value[0])
+    else
+      records
+    end
+  }
+
   filter :construction_id, apply: ->(records, value, _options) {
     if not value.empty?
       records.where(construction_id: value[0])
