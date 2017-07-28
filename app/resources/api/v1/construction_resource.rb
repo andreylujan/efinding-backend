@@ -11,11 +11,17 @@ class Api::V1::ConstructionResource < ApplicationResource
   has_many :construction_personnel
   has_many :contractors
 
-  filter :company_id
-
   def contractors_array
     @model.contractors.order("name ASC").map { |u| { name: u.name, rut: u.rut, id: u.id } }
   end
+
+  filter :company_id, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.where(company_id: value[0])
+    else
+      records
+    end
+  }
 
 
   def self.records(options = {})
