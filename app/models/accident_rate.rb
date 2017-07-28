@@ -152,7 +152,7 @@ class AccidentRate < ApplicationRecord
   end
 
   def calculate_indexes
-    self.gravity_index = 1.5
-    self.frequency_index = 2.1
+    self.frequency_index = man_hours > 0 ? (1000000*num_accidents).to_f/man_hours.to_f : -1
+    self.gravity_index = man_hours > 0 ? (1000000*num_days_lost).to_f/man_hours.to_f : -1
   end
 end
