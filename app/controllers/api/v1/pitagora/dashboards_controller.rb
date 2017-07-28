@@ -38,18 +38,29 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
     reportes_por_grupo = filtered_reports
     .group("dynamic_attributes->'69'->>'text', dynamic_attributes->'52'->>'text'")
     .select("count(*) as count_all, dynamic_attributes->'69'->>'text' as activity_group, dynamic_attributes->'52'->>'text' as risk")
+    .map do |group|
+      {
+        count_all: group.count_all,
+        activity_group: group.activity_group,
+        risk: group.risk
+      }
+    end
     .group_by do |group|
-      group.activity_group
-    end.map do |activity_group, reports|
+      group[:activity_group]
+    end
+
+
+    reportes_por_grupo = reportes_por_grupo.map do |activity_group, reports|
       activity_groups << activity_group
       subgroup = {}
       risks.each do |ag|
         subgroup[ag] = 0
       end
-      reports.group_by { |r| r.risk }
+      reports.group_by { |r| r[:risk] }
       .each do |risk, subreports|
-        subgroup[risk] = reports.length
+        subgroup[risk] = subreports.inject(0) { |sum, x| sum + x[:count_all] }
       end
+
       {
         grupo_actividad: activity_group,
         por_riesgo: subgroup.map do |risk, risk_val|
