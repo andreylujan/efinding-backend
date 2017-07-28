@@ -166,8 +166,8 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
   
   def porcentaje_cumplimiento
     resolved = resolved_reports
-    internal = resolved.where("dynamic_attributes->'52'->>'id' = ?", "777")
-    other = resolved.where("dynamic_attributes->'52'->>'id' != ?", "777")
+    internal = resolved.where("dynamic_attributes->'68'->>'id' = ?", "777")
+    other = resolved.where("dynamic_attributes->'68'->>'id' != ?", "777")
     num_total = internal.count + other.count
     interno = 0
     contratistas = 0
@@ -186,12 +186,12 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
 
   def filtered_internal
     filtered_reports
-      .where("dynamic_attributes->'52'->>'id' = ?", "777")
+      .where("dynamic_attributes->'68'->>'id' = ?", "777")
   end
 
   def filtered_other_contractors
     filtered_reports
-      .where("dynamic_attributes->'52'->>'id' != ?", "777")
+      .where("dynamic_attributes->'68'->>'id' != ?", "777")
   end
 
   def filtered_reports
