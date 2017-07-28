@@ -38,6 +38,7 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
     reportes_por_grupo = filtered_reports
     .group("dynamic_attributes->'69'->>'text', dynamic_attributes->'52'->>'text'")
     .select("count(*) as count_all, dynamic_attributes->'69'->>'text' as activity_group, dynamic_attributes->'52'->>'text' as risk")
+    .order("dynamic_attributes->'69'->>'text' ASC")
     .map do |group|
       {
         count_all: group.count_all,
