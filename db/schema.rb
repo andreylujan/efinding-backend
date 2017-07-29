@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170727192312) do
+ActiveRecord::Schema.define(version: 20170729043838) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,7 +57,7 @@ ActiveRecord::Schema.define(version: 20170727192312) do
     t.datetime "deleted_at"
     t.text     "html"
     t.text     "location_image"
-    t.json     "checklist_data",  default: [],    null: false
+    t.jsonb    "checklist_data",  default: [],    null: false
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
     t.integer  "code",                            null: false
@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 20170727192312) do
 
   create_table "checklists", force: :cascade do |t|
     t.text     "name"
-    t.json     "sections",        default: [], null: false
+    t.jsonb    "sections",        default: [], null: false
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
     t.integer  "organization_id",              null: false
@@ -189,7 +189,7 @@ ActiveRecord::Schema.define(version: 20170727192312) do
     t.boolean  "required",      default: true, null: false
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
-    t.json     "config",        default: {},   null: false
+    t.jsonb    "config",        default: {},   null: false
     t.integer  "position",      default: 0,    null: false
     t.integer  "detail_id"
     t.integer  "collection_id"
@@ -422,7 +422,7 @@ ActiveRecord::Schema.define(version: 20170727192312) do
   end
 
   create_table "reports", id: :uuid, default: nil, force: :cascade do |t|
-    t.json     "dynamic_attributes",     default: {},    null: false
+    t.jsonb    "dynamic_attributes",     default: {},    null: false
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
     t.integer  "creator_id",                             null: false
@@ -499,7 +499,7 @@ ActiveRecord::Schema.define(version: 20170727192312) do
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
     t.integer  "section_type"
-    t.json     "config",       default: {}, null: false
+    t.jsonb    "config",       default: {}, null: false
     t.integer  "state_id"
     t.index ["state_id"], name: "index_sections_on_state_id", using: :btree
   end

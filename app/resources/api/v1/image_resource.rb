@@ -21,7 +21,7 @@ class Api::V1::ImageResource < ApplicationResource
   add_foreign_keys :report_id
   # has_one :report
 
-  attributes :url, :comment, :report_id, :synced, :is_initial
+  attributes :url, :comment, :synced, :is_initial
   
   def synced
   	1
