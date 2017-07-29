@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170725162438) do
+ActiveRecord::Schema.define(version: 20170729041943) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -458,7 +458,7 @@ ActiveRecord::Schema.define(version: 20170725162438) do
 
   create_table "reports", id: :uuid, default: nil, force: :cascade do |t|
     t.integer  "report_type_id",                               null: false
-    t.json     "dynamic_attributes",     default: {},          null: false
+    t.jsonb    "dynamic_attributes",     default: {},          null: false
     t.datetime "created_at",                                   null: false
     t.datetime "updated_at",                                   null: false
     t.integer  "creator_id",                                   null: false
