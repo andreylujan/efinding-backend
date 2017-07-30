@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class ChangeJsonTypesInOtherTables < ActiveRecord::Migration[5.0]
   def change
   	change_column :sections, :config, :jsonb

@@ -10,7 +10,7 @@
 #  required      :boolean          default(TRUE), not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  config        :json             not null
+#  config        :jsonb            not null
 #  position      :integer          default(0), not null
 #  detail_id     :integer
 #  collection_id :integer

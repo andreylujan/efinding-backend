@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 
 require 'digest'
 old_md5sum = nil

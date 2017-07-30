@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::StateResource < ApplicationResource
-	attributes :name, :color
+	attributes :name, :color, :show_pdf
 	has_many :previous_states
 	has_many :next_states
 	has_many :sections

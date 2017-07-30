@@ -9,7 +9,7 @@
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  section_type :integer
-#  config       :json             not null
+#  config       :jsonb            not null
 #  state_id     :integer
 #
 

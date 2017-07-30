@@ -13,7 +13,7 @@
 #  deleted_at      :datetime
 #  html            :text
 #  location_image  :text
-#  checklist_data  :json             not null
+#  checklist_data  :jsonb            not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  code            :integer          not null

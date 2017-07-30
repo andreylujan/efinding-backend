@@ -13,6 +13,7 @@
 #  default_admin_path     :text
 #  default_report_type_id :integer
 #  map_type               :integer          default("roadmap"), not null
+#  app_name               :integer          default("echeckit"), not null
 #
 
 class Organization < ApplicationRecord

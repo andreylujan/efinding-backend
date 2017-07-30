@@ -4,7 +4,7 @@
 # Table name: reports
 #
 #  id                     :uuid             not null, primary key
-#  dynamic_attributes     :json             not null
+#  dynamic_attributes     :jsonb            not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  creator_id             :integer          not null

@@ -9,6 +9,7 @@
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  color          :text
+#  show_pdf       :boolean          default(TRUE), not null
 #
 
 class State < ApplicationRecord

@@ -13,6 +13,8 @@
 #  has_pdf                    :boolean          default(TRUE), not null
 #  initial_state_id           :integer
 #  default_dynamic_attributes :json             not null
+#  default_title              :text             default("Sin título"), not null
+#  default_subtitle           :text             default("Sin subtítulo"), not null
 #
 
 class ReportType < ApplicationRecord
