@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170729041943) do
+ActiveRecord::Schema.define(version: 20170731155747) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -564,12 +564,14 @@ ActiveRecord::Schema.define(version: 20170729041943) do
     t.integer  "role_id",                                null: false
     t.datetime "deleted_at"
     t.boolean  "is_superuser",           default: false, null: false
+    t.integer  "store_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
     t.index ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
     t.index ["role_id"], name: "index_users_on_role_id", using: :btree
     t.index ["rut"], name: "index_users_on_rut", unique: true, using: :btree
+    t.index ["store_id"], name: "index_users_on_store_id", using: :btree
   end
 
   add_foreign_key "accident_rates", "constructions"
