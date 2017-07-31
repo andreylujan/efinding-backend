@@ -46,6 +46,9 @@ class Api::V1::Delivery::OrdersController < ApplicationController
         state = "unchecked"
       elsif order_state == "pedido pagado"
         state = "awaiting_delivery"
+        SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
+        "Pedido pagado",
+        "Se ha pagado exitosamente el pedido #{order_id}")
       elsif order_state == "pedido cancelado"
         state = "canceled"
       elsif order_state == "pedido aceptado"

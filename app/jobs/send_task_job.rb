@@ -2,7 +2,7 @@
 class SendTaskJob < ApplicationJob
   queue_as :efinding_push
 
-  def perform(report_id)
+  def perform(report_id, title, message)
 
     report = Report.find_by_id(report_id)
     if report.nil?
@@ -20,10 +20,10 @@ class SendTaskJob < ApplicationJob
 
     conn = Faraday.new(:url => ENV["PUSH_ENGINE_HOST"])
     params = {
-      alert: "Tarea asignada",
+      alert: title,
       data: {
-        message: "Se le ha asignado una tarea",
-        title: "Tarea asignada",
+        message: message,
+        title: title,
         report_id: report.id.to_s
       },
       gcm_app_name: gcm_app_name,
