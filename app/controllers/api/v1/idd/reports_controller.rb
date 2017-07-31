@@ -5,22 +5,16 @@ class Api::V1::Idd::ReportsController < Api::V1::JsonApiController
   def summaries
     reports = Report.joins(creator: :role)
       .where(roles: { organization_id: current_user.organization_id })
-      .group("dynamic_attributes -> '81' ->> 'value',
-        dynamic_attributes -> '82' ->> 'value',
-        dynamic_attributes -> '80' ->> 'value'")
+      .group("dynamic_attributes -> '81' ->> 'value'")
       .select("count(reports.id) as num_reports,
-        dynamic_attributes -> '80' ->> 'value' as name,
-          dynamic_attributes -> '81' ->> 'value' as email,
-          dynamic_attributes -> '82' ->> 'value' as phone")
+          dynamic_attributes -> '81' ->> 'value' as email")
       .order("dynamic_attributes -> '81' ->> 'value'  ASC")
-      .map do |group|
+      reports = reports.map do |group|
         Api::V1::Idd::ReportSummaryResource.new(
           ::Idd::ReportSummary.new({
             id: group.email,
             email: group.email,
-            num_reports: group.num_reports,
-            name: group.name,
-            phone: group.phone
+            num_reports: group.num_reports
           }), nil
         )
       end

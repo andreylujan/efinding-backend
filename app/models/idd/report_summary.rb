@@ -16,5 +16,5 @@
 
 class Idd::ReportSummary
   include ActiveModel::Model
-  attr_accessor :id, :email, :name, :phone, :num_reports
+  attr_accessor :id, :email, :num_reports
 end
