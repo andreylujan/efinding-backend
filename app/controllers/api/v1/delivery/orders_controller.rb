@@ -8,6 +8,10 @@ class Api::V1::Delivery::OrdersController < ApplicationController
     address_info = params.require(:address_info)
 
     coord_str = address_info["address_coordinates"][1...-1].split(',')
+    store_info = params.require(:store)
+    store_id = store_info["store_id"]
+
+    creator = User.find_by_store_id!(store_id)
 
     address = {
       street: address_info["address_street"],
@@ -30,7 +34,8 @@ class Api::V1::Delivery::OrdersController < ApplicationController
     user = params.require(:user_info)
     if report.nil?
       report = Report.new id: SecureRandom.uuid,
-        creator_id: 68,
+        creator: creator,
+        assigned_user: creator,
         state: "unchecked",
         finished: true,
         report_type_id: 6

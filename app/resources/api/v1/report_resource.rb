@@ -17,7 +17,8 @@ class Api::V1::ReportResource < ApplicationResource
     :state,
     :resolved_at,
     :resolution_comment,
-    :scheduled_at
+    :scheduled_at,
+    :is_schedule_due
 
   add_foreign_keys :inspection_id, :creator_id, :assigned_user_id, :report_type_id
 
@@ -30,6 +31,13 @@ class Api::V1::ReportResource < ApplicationResource
 
   key_type :uuid
 
+  def is_schedule_due
+    if @model.respond_to? :is_schedule_due
+      @model.send :is_schedule_due
+    else
+      false
+    end
+  end
 
   filters :pdf_uploaded,
     :report_type_id, :state_name, :creator_id, :assigned_user_id
@@ -311,7 +319,7 @@ class Api::V1::ReportResource < ApplicationResource
           "reports.state = 'delivering' OR reports.state = 'delivered'")
       end
     end
-    records # .where("reports.scheduled_at IS NULL OR reports.scheduled_at <= ?", DateTime.now)
+    records.select("reports.*, CASE WHEN(scheduled_at IS NOT NULL AND scheduled_at <= '#{DateTime.now}') THEN true ELSE false END as is_schedule_due")
 
   end
 
