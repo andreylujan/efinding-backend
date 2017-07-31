@@ -318,6 +318,9 @@ class Api::V1::ReportResource < ApplicationResource
         records = records.where("reports.state = 'awaiting_delivery' OR " +
           "reports.state = 'delivering' OR reports.state = 'delivered'")
       end
+      if current_user.store_id.present?
+        records = records.where("dynamic_attributes -> 'store' ->> 'store_id' = ?", current_user.store_id.to_s)
+      end
       records = records.select("reports.*, CASE WHEN(scheduled_at IS NOT NULL AND scheduled_at <= '#{DateTime.now}') THEN true ELSE false END as is_schedule_due")
     end
     records
