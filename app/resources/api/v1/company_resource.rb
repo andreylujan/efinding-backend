@@ -18,11 +18,11 @@ class Api::V1::CompanyResource < ApplicationResource
         companies = companies.joins(:constructions)
         .where(constructions: { supervisor_id: current_user.id })
       elsif current_user.role.expert?
-        companies = companies.joins(:constructions)
-        .where(constructions: { expert_id: current_user.id })
+        companies = companies.joins(constructions: :users)
+        .where(users: { id: current_user.id })
       elsif current_user.role.inspector?
-        companies = companies.joins(:constructions)
-        .where(constructions: { inspector_id: current_user.id })
+        companies = companies.joins(constructions: :users)
+        .where(users: { id: current_user.id })
       end
       companies.distinct
     else

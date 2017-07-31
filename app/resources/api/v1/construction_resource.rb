@@ -36,9 +36,9 @@ class Api::V1::ConstructionResource < ApplicationResource
       if current_user.role.supervisor?
         constructions = constructions.where(supervisor_id: current_user.id)
       elsif current_user.role.expert?
-        constructions = constructions.where(expert_id: current_user.id)
+        constructions = constructions.joins(:users).where(users: { id: current_user.id })
       elsif current_user.role.inspector?
-        constructions.where(inspector_id: current_user.id)
+        constructions = constructions.joins(:users).where(users: { id: current_user.id })
       end
     end
     constructions
