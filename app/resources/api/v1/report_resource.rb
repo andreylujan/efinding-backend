@@ -318,8 +318,10 @@ class Api::V1::ReportResource < ApplicationResource
         records = records.where("reports.state = 'awaiting_delivery' OR " +
           "reports.state = 'delivering' OR reports.state = 'delivered'")
       end
+      records = records.select("reports.*, CASE WHEN(scheduled_at IS NOT NULL AND scheduled_at <= '#{DateTime.now}') THEN true ELSE false END as is_schedule_due")
     end
-    records.select("reports.*, CASE WHEN(scheduled_at IS NOT NULL AND scheduled_at <= '#{DateTime.now}') THEN true ELSE false END as is_schedule_due")
+    records
+    
 
   end
 
