@@ -70,6 +70,8 @@ class Api::V1::Delivery::OrdersController < ApplicationController
         }
       end
       report.dynamic_attributes["address"] = address
+      report.dynamic_attributes["store"] = store_info
+      
       is_scheduled = params[:order_is_scheduled]
       scheduled_at = nil
       if is_scheduled
