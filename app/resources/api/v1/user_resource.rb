@@ -18,6 +18,12 @@ class Api::V1::UserResource < ApplicationResource
     return context[:current_user]
   end
 
+  before_save do
+    if context[:role_id].present?
+      @model.role_id = context[:role_id]
+    end
+  end
+
 
   def fetchable_fields
     super - [ :password, :password_confirmation ]

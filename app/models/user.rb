@@ -34,8 +34,9 @@ class User < ApplicationRecord
   validates :email, uniqueness: true, presence: true
   validates :rut, uniqueness: true, allow_nil: true
   validates :first_name, presence: true
+  validates :role, presence: true
   # validates :last_name, presence: true
-  validates :phone_number, uniqueness: true, allow_nil: true
+  # validates :phone_number, uniqueness: true, allow_nil: true
   belongs_to :role
   before_create :assign_role_id
   has_many :access_tokens, foreign_key: :resource_owner_id, class_name: 'Doorkeeper::AccessToken'
@@ -106,10 +107,6 @@ class User < ApplicationRecord
     if inv.present?
       self.role_id = inv.role_id
       self.is_superuser = inv.is_superuser
-    end
-
-    if self.role_id.nil?
-      self.role = Role.first
     end
   end
 

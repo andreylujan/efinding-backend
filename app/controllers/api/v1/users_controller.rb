@@ -144,18 +144,35 @@ class Api::V1::UsersController < Api::V1::JsonApiController
   def user_params
   end
 
+  def context
+    super.merge({
+        role_id: @role_id
+      })
+  end
+
   def verify_invitation
-    token = params.require(:confirmation_token)
-    inv = Invitation.find_by_confirmation_token_and_accepted(token, true)
-    if inv.nil? or not inv.accepted?
-      render json: {
-        errors: [
-          {
-            title: 'Invitación no fue aceptada',
-            detail: 'La invitación no fue aceptada a través del link del correo'
-          }
-        ]
-      }, status: :unauthorized
+    api_token = params[:api_token]
+    if api_token.present? and api_token == "c5152d8ac998168b79cb84add2bdfa12568c045c9e4326bad2ad5ad838b6dbce28954a011353db28725a39321a2763e06564fc781bf5e95249e9073ded995f63"
+      user_type = params.require(:role_type)
+      if user_type == "comercio"
+        @role_id = 10
+      elsif user_type == "transportista"
+        @role_id = 11
+      end
+      return
+    else
+      token = params.require(:confirmation_token)
+      inv = Invitation.find_by_confirmation_token_and_accepted(token, true)
+      if inv.nil? or not inv.accepted?
+        render json: {
+          errors: [
+            {
+              title: 'Invitación no fue aceptada',
+              detail: 'La invitación no fue aceptada a través del link del correo'
+            }
+          ]
+        }, status: :unauthorized
+      end
     end
   end
 
