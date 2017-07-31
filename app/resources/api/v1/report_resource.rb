@@ -16,7 +16,8 @@ class Api::V1::ReportResource < ApplicationResource
     :html,
     :state,
     :resolved_at,
-    :resolution_comment
+    :resolution_comment,
+    :scheduled_at
 
   add_foreign_keys :inspection_id, :creator_id, :assigned_user_id, :report_type_id
 
@@ -310,7 +311,7 @@ class Api::V1::ReportResource < ApplicationResource
           "reports.state = 'delivering' OR reports.state = 'delivered'")
       end
     end
-    records.where("reports.scheduled_at IS NULL OR reports.scheduled_at <= ?", DateTime.now)
+    records # .where("reports.scheduled_at IS NULL OR reports.scheduled_at <= ?", DateTime.now)
 
   end
 
