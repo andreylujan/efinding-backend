@@ -9,7 +9,6 @@ class RemoveInspectorIdAndExpertIdFromConstructions < ActiveRecord::Migration[5.
   			user_ids << construction.expert_id
   		end
   		construction.user_ids = user_ids
-  		construction.save!
   	end
     remove_column :constructions, :inspector_id, :integer
     remove_column :constructions, :expert_id, :integer
