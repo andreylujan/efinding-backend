@@ -34,7 +34,18 @@ class Construction < ApplicationRecord
   accepts_nested_attributes_for :construction_personnel
   has_many :personnel, through: :construction_personnel
   has_many :checklist_reports, dependent: :destroy
+  has_many :construction_users
+  has_many :users, through: :construction_users
+  validate :has_expert
+
+
   before_create :upcase_code
+
+  def has_expert
+    if not users.any? { |u| u.role.expert? }
+      errors.add("Jefe de terreno", "Debe existir al menos un jefe de terreno")
+    end
+  end
 
   def upcase_code
     if self.code.present?

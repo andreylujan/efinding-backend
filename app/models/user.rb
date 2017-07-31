@@ -52,6 +52,10 @@ class User < ApplicationRecord
   has_and_belongs_to_many :checklist_reports
   validate :correct_rut
   before_save :format_rut
+  scope :experts, -> { joins("INNER JOIN roles role_experts ON role_experts.id = users.role_id").where("role_experts.role_type = ?", 
+      Role.role_types["expert"]) }
+  scope :inspectors, -> { joins("INNER JOIN roles role_inspectors ON role_inspectors.id = users.role_id").where("role_inspectors.role_type = ?", 
+      Role.role_types["inspector"]) }
 
   has_many :created_inspections, class_name: :Inspection, foreign_key: :creator_id, dependent: :destroy
   has_many :initially_signed_inspections, class_name: :Inspection, foreign_key: :initial_signer_id, dependent: :destroy
