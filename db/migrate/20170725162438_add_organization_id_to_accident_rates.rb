@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddOrganizationIdToAccidentRates < ActiveRecord::Migration[5.0]
   def change
     add_reference :accident_rates, :organization, foreign_key: true

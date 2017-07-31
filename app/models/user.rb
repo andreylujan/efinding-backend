@@ -23,6 +23,8 @@
 #  image                  :text
 #  role_id                :integer          not null
 #  deleted_at             :datetime
+#  is_superuser           :boolean          default(FALSE), not null
+#  store_id               :integer
 #
 
 class User < ApplicationRecord
@@ -60,8 +62,6 @@ class User < ApplicationRecord
   has_many :created_inspections, class_name: :Inspection, foreign_key: :creator_id, dependent: :destroy
   has_many :initially_signed_inspections, class_name: :Inspection, foreign_key: :initial_signer_id, dependent: :destroy
   has_many :finally_signed_inspections, class_name: :Inspection, foreign_key: :final_signer_id, dependent: :destroy
-  has_many :chiefed_inspections, class_name: :Inspection, foreign_key: :field_chief_id, dependent: :destroy
-  has_many :experted_inspections, class_name: :Inspection, foreign_key: :expert_id, dependent: :destroy
 
   def correct_rut
     if rut.present?

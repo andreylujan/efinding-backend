@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class RemoveInspectorIdAndExpertIdFromConstructions < ActiveRecord::Migration[5.0]
   def change
   	Construction.all.each do |construction|

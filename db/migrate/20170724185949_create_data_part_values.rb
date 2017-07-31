@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreateDataPartValues < ActiveRecord::Migration[5.0]
   def change
     create_table :data_part_values do |t|

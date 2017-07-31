@@ -13,6 +13,7 @@
 #  first_name         :text
 #  last_name          :text
 #  internal_id        :text
+#  is_superuser       :boolean          default(FALSE), not null
 #
 
 class Invitation < ApplicationRecord

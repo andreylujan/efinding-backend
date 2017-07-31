@@ -18,8 +18,6 @@
 #  final_signer_id   :integer
 #  initial_signed_at :datetime
 #  final_signed_at   :datetime
-#  field_chief_id    :integer
-#  expert_id         :integer
 #  cached_data       :json
 #  code              :integer
 #
@@ -35,9 +33,6 @@ class Inspection < ApplicationRecord
   belongs_to :creator, class_name: :User, foreign_key: :creator_id
   belongs_to :initial_signer, class_name: :User, foreign_key: :initial_signer_id
   belongs_to :final_signer, class_name: :User, foreign_key: :final_signer_id
-
-  belongs_to :field_chief, class_name: :User, foreign_key: :field_chief_id
-  belongs_to :expert, class_name: :User, foreign_key: :expert_id
 
   validates :construction, presence: true
   validates :creator, presence: true

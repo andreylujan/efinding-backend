@@ -110,9 +110,6 @@ GEM
     airbrussh (1.1.2)
       sshkit (>= 1.6.1, != 1.7.0)
     arel (7.1.4)
-    audited (4.3.0)
-      activerecord (>= 4.0, < 5.1)
-      rails-observers (~> 0.1.2)
     awesome_print (1.7.0)
     aws-sdk (2.8.0)
       aws-sdk-resources (= 2.8.0)
@@ -474,7 +471,6 @@ DEPENDENCIES
   acts_as_list (~> 0.8.2)
   acts_as_xlsx!
   annotate!
-  audited (~> 4.3)
   awesome_print (~> 1.7)
   aws-sdk (~> 2.6, >= 2.6.44)
   axlsx (~> 2.0, >= 2.0.1)
@@ -519,4 +515,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.3.1)
 
 BUNDLED WITH
-   1.14.6
+   1.15.2

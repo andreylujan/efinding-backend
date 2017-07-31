@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class ChangeStateTypeInReports < ActiveRecord::Migration[5.0]
   def change
   	add_column :reports, :state_text, :text, null: false, default: "unchecked"

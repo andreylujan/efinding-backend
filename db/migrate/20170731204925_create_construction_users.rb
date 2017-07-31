@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreateConstructionUsers < ActiveRecord::Migration[5.0]
   def change
     create_table :construction_users do |t|

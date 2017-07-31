@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170731213320) do
+ActiveRecord::Schema.define(version: 20170731221204) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -301,8 +302,6 @@ ActiveRecord::Schema.define(version: 20170731213320) do
     t.integer  "final_signer_id"
     t.datetime "initial_signed_at"
     t.datetime "final_signed_at"
-    t.integer  "field_chief_id"
-    t.integer  "expert_id"
     t.json     "cached_data",       default: {}
     t.integer  "code"
     t.index ["code"], name: "index_inspections_on_code", using: :btree
@@ -617,8 +616,6 @@ ActiveRecord::Schema.define(version: 20170731213320) do
   add_foreign_key "images", "reports"
   add_foreign_key "inspections", "constructions"
   add_foreign_key "inspections", "users", column: "creator_id"
-  add_foreign_key "inspections", "users", column: "expert_id"
-  add_foreign_key "inspections", "users", column: "field_chief_id"
   add_foreign_key "inspections", "users", column: "final_signer_id"
   add_foreign_key "inspections", "users", column: "initial_signer_id"
   add_foreign_key "invitations", "roles"

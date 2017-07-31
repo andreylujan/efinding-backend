@@ -23,8 +23,9 @@
 #  image                  :text
 #  role_id                :integer          not null
 #  deleted_at             :datetime
+#  is_superuser           :boolean          default(FALSE), not null
+#  store_id               :integer
 #
-
 
 class UserSerializer < ActiveModel::Serializer
   attributes :id, :email, :first_name, :last_name, :full_name, 
