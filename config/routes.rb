@@ -19,6 +19,14 @@ Rails.application.routes.draw do
         end
       end
 
+      namespace :idd do
+        jsonapi_resources :reports, only: [] do
+          collection do
+            get :summaries
+          end
+        end
+      end
+
       jsonapi_resources :checkins, only: [ :create ] do
       end
 
