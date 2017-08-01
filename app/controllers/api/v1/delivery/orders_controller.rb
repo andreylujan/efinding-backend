@@ -62,7 +62,7 @@ class Api::V1::Delivery::OrdersController < ApplicationController
       report.state = state
     end
 
-    if report.state == "unchecked"
+    if report.state == "unchecked" or report.state == "modified"
       items = []
       products.each do |product|
         desc = product[:quantity].to_s + " " + product[:name]
