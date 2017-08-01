@@ -53,6 +53,8 @@ class Api::V1::Delivery::OrdersController < ApplicationController
         state = "canceled"
       elsif order_state == "pedido aceptado"
         state = "accepted"
+      elsif order_state == "pedido modificado"
+        state = "modified"
       end
       report.state = state
     end
