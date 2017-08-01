@@ -180,7 +180,7 @@
 						Jefe de Terreno:
 					</div>
 					<div class="col-xs-8">
-						<%= if checklist.construction.expert.present? then checklist.construction.expert.name else "Obra sin Jefe de Terreno" end %>
+						<%= if checklist.construction.has_expert then checklist.construction.expert_names.joins("\n") else "Obra sin Jefes de Terreno" end %>
 					</div>
 				</div>
 				<div class="row location-field">
@@ -255,7 +255,7 @@
 							<table>
 								<tbody>
 									<% section["items"].each do |item| %>
-										<% if item["value"].present? and item["value"] != 0 %>
+										<% if (item["value"].present? and item["value"] != 0) or item["items"].present? %>
 											<tr class="standalone-container">
 												<td width="100" colspan="2">
 													<% if item["items"].blank? %>
@@ -277,8 +277,8 @@
 													<% end %>
 												</td>
 											</tr>
-											<% if item["items"].present? %>
-												<% item["items"].each do |subitem| %>
+											<% if item["items"].select { |i| i["value"].present? and i["value"] != 0 }.present? %>
+												<% item["items"].select { |i| i["value"].present? and i["value"] != 0 }.each do |subitem| %>
 													<tr>
 														<td width="50">
 															<i class="fa fa-long-arrow-right"></i>
@@ -305,6 +305,7 @@
 														</td>
 													</tr>
 												<% end %>
+											<% end %>
 										<% end %>
 									<% end %>
 								</tbody>

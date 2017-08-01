@@ -37,6 +37,10 @@ class Construction < ApplicationRecord
 
   before_create :upcase_code
 
+  def expert_names
+    users.experts.map { |u| u.name }
+  end
+
   def has_expert
     if not users.any? { |u| u.role.expert? }
       errors.add("Jefe de terreno", "Debe existir al menos un jefe de terreno")
