@@ -169,7 +169,7 @@ class Inspection < ApplicationRecord
       self.cached_data[type_id.to_s] = personnel.personnel.name
     end
     if construction.expert.present?
-      self.cached_data["expert"] = construction.expert.name
+      self.cached_data["expert"] = construction.users.experts.map { |u| u.name }.join("\n")
     end
   end
 
