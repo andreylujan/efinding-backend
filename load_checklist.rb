@@ -36,6 +36,7 @@ csv.each do |row|
     end
   end
 end
+sections << current_section
 Checklist.find_or_initialize_by(organization_id: 5, name: "Checklist Seremí").tap do |checklist|
   checklist.sections = sections
   checklist.save!
