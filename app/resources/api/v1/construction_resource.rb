@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::ConstructionResource < ApplicationResource
-  attributes :name, :company_id, :code, :construction_personnel_attributes, :contractors_array
+  attributes :name, :company_id, :code, :construction_personnel_attributes, :contractors_array,
+    :experts_array
   has_one :company
   add_foreign_keys :company_id, :administrator_id, :supervisor_id
 
@@ -22,6 +23,9 @@ class Api::V1::ConstructionResource < ApplicationResource
     end
   }
 
+  def experts_array
+    @model.users.experts.order("name ASC").map { |u| { name: u.name, rut: u.rut, id: u.id } }
+  end
 
   def self.records(options = {})
     context = options[:context]
