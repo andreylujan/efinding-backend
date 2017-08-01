@@ -40,6 +40,7 @@ gem 'wicked_pdf', '~> 1.1'
 gem 'wkhtmltopdf-binary', '~> 0.12.3.1'
 gem 'charlock_holmes', '~> 0.7.3'
 gem 'rut_chileno', git: 'https://github.com/Numerico/rut-chileno', ref: '157d9d4aacfe9cac7f001007acaf9664ba20567f'
+gem 'geocoder', '~> 1.4', '>= 1.4.4'
 
 gem 'devise', '~> 4.2'
 gem 'doorkeeper', '~> 4.2'
