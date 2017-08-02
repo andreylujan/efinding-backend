@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::ChecklistReportResource < ApplicationResource
-  
+
   attributes :checklist_data, :formatted_created_at, :pdf, :pdf_uploaded,
     :code, :user_names, :location_attributes, :total_indicator, :user_ids,
     :finished, :started_at, :created_at, :html
@@ -13,7 +13,7 @@ class Api::V1::ChecklistReportResource < ApplicationResource
   has_one :construction
 
   key_type :uuid
-  
+
   def finished
     true
   end
@@ -67,7 +67,7 @@ class Api::V1::ChecklistReportResource < ApplicationResource
   filter :company_id, apply: ->(records, value, _options) {
     if not value.empty?
       records.joins(:construction)
-          .where(constructions: { company_id: value[0] })
+      .where(constructions: { company_id: value[0] })
     else
       records
     end
@@ -76,8 +76,8 @@ class Api::V1::ChecklistReportResource < ApplicationResource
   filter :code, apply: ->(records, value, _options) {
     if not value.empty?
       records = records
-        .joins(:construction)
-        .where("constructions.code || '-' || checklist_reports.code::text ilike '%" + value[0].to_s + "%'")
+      .joins(:construction)
+      .where("constructions.code || '-' || checklist_reports.code::text ilike '%" + value[0].to_s + "%'")
     end
     records
   }
@@ -94,7 +94,7 @@ class Api::V1::ChecklistReportResource < ApplicationResource
     # if not value.empty?
     #   names = value.join(",")
     #   records = records
-    #   .having("string_agg(checklist_users.first_name || ' ' || checklist_users.last_name, ', ' ORDER BY " + 
+    #   .having("string_agg(checklist_users.first_name || ' ' || checklist_users.last_name, ', ' ORDER BY " +
     #     "checklist_users.first_name || ' ' || checklist_users.last_name) ILIKE '%" +
     #     names + "%'")
     # end
@@ -173,16 +173,21 @@ class Api::V1::ChecklistReportResource < ApplicationResource
       checklists = ChecklistReport.joins(creator: { role: :organization })
       .joins(:construction)
       .where(organizations: { id: current_user.organization.id })
-      
-      if current_user.role_id == 2
-        checklists = checklists.joins(:construction)
+
+      if not current_user.is_superuser?
+        if current_user.role.supervisor?
+          checklists = checklists.joins(:construction)
           .where(constructions: { supervisor_id: current_user.id })
-      elsif current_user.role_id == 3
-        checklists = checklists.joins(:construction)
-          .where(constructions: { expert_id: current_user.id })
-      elsif current_user.role_id == 4
-        checklists = checklists.joins(:construction)
+        elsif current_user.role.expert?
+          checklists = checklists.joins(construction: :users)
+          .where(users: { id: current_user.id })
+        elsif current_user.role.administrator?
+          checklists = checklists.joins(:construction)
           .where(constructions: { administrator_id: current_user.id })
+        elsif current_user.role.inspector?
+          checklists = checklists.joins(construction: :users)
+          .where(users: { id: current_user.id })
+        end
       end
 
     end
