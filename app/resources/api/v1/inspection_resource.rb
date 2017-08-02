@@ -392,9 +392,9 @@ class Api::V1::InspectionResource < ApplicationResource
         elsif not current_user.is_superuser?
           inspections = Inspection.where("1 = 0")
         end
-        if not options.has_key? :sort_criteria or options[:sort_criteria].blank?
-          inspections = inspections.order("inspections.created_at DESC")
-        end
+      end
+      if not options.has_key? :sort_criteria or options[:sort_criteria].blank?
+        inspections = inspections.order("inspections.created_at DESC")
       end
       inspections
     else
