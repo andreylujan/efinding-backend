@@ -19,7 +19,7 @@ ActiveAdmin.register MenuSection do
   	column :menu_items do |menu_section|
   		links = []
   		menu_section.menu_items.each do |menu_item|
-  			links << (link_to menu_item.name, admin_menu_item_path(menu_item))
+  			links << (link_to menu_item.name, besito_menu_item_path(menu_item))
   		end
   		raw(links.join("<br>"))
   	end

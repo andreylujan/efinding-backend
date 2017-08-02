@@ -23,14 +23,14 @@ ActiveAdmin.register State do
     column :incoming_transitions do |state|
       links = []
       state.incoming_transitions.each do |transition|
-        links << (link_to transition.name, admin_state_transition_path(transition))
+        links << (link_to transition.name, besito_state_transition_path(transition))
       end
       raw(links.join("<br>"))
     end
     column :outgoing_transitions do |state|
       links = []
       state.outgoing_transitions.each do |transition|
-        links << (link_to transition.name, admin_state_transition_path(transition))
+        links << (link_to transition.name, besito_state_transition_path(transition))
       end
       raw(links.join("<br>"))
     end
