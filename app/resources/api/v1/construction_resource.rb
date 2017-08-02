@@ -36,13 +36,19 @@ class Api::V1::ConstructionResource < ApplicationResource
       constructions = Construction.joins(company: :organization)
       .where(organizations: { id: context[:current_user].organization.id })
     end
-    if context[:all] != "true"
-      if current_user.role.supervisor?
-        constructions = constructions.where(supervisor_id: current_user.id)
-      elsif current_user.role.expert?
-        constructions = constructions.joins(:users).where(users: { id: current_user.id })
-      elsif current_user.role.inspector?
-        constructions = constructions.joins(:users).where(users: { id: current_user.id })
+    if not current_user.is_superuser?
+      if context[:all] != "true"
+        if current_user.role.supervisor?
+          constructions = constructions.where(supervisor_id: current_user.id)
+        elsif current_user.role.expert?
+          constructions = constructions.joins(:users).where(users: { id: current_user.id })
+        elsif current_user.role.inspector?
+          constructions = constructions.joins(:users).where(users: { id: current_user.id })
+        elsif current_user.role.administrator?
+          constructions = constructions.where(administrator_id: current_user.id)
+        else
+          constructions = Construction.none
+        end
       end
     end
     constructions
