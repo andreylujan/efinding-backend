@@ -13,21 +13,26 @@ class Api::V1::CompanyResource < ApplicationResource
     context = options[:context]
     current_user = context[:current_user]
     companies = Company.where(organization_id: current_user.organization_id)
-    if context[:all] != "true"
-      if current_user.role.supervisor?
-        companies = companies.joins(:constructions)
-        .where(constructions: { supervisor_id: current_user.id })
-      elsif current_user.role.expert?
-        companies = companies.joins(constructions: :users)
-        .where(users: { id: current_user.id })
-      elsif current_user.role.inspector?
-        companies = companies.joins(constructions: :users)
-        .where(users: { id: current_user.id })
+    if not current_user.is_superuser?
+      if context[:all] != "true"
+        if current_user.role.supervisor?
+          companies = companies.joins(:constructions)
+          .where(constructions: { supervisor_id: current_user.id })
+        elsif current_user.role.expert?
+          companies = companies.joins(constructions: :users)
+          .where(users: { id: current_user.id })
+        elsif current_user.role.inspector?
+          companies = companies.joins(constructions: :users)
+          .where(users: { id: current_user.id })
+        elsif current_user.role.administrator?
+          companies = companies.joins(:constructions)
+          .where(constructions: { administrator_id: current_user.id })
+        else
+          companies = Company.none
+        end
       end
-      companies.distinct
-    else
-      companies
     end
+    companies
   end
 
 end

@@ -30,6 +30,7 @@ class Organization < ApplicationRecord
     has_many :contractors, dependent: :destroy
     has_many :personnel, dependent: :destroy
     has_many :accident_rates, dependent: :destroy
+    belongs_to :checklist_report_type, class_name: :ReportType, foreign_key: :checklist_report_type_id
 
     validates :default_admin_path, presence: true
     
