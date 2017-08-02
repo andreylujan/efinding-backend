@@ -57,6 +57,7 @@ class Api::V1::UsersController < Api::V1::JsonApiController
     all_users.each do |user|
       attributes = UserIndexSerializer.new(user).as_json
       attributes[:active] = user.persisted?
+      attributes[:role_type] = user.role.role_type
       user_data = {
         "id": user.id ? user.id.to_s : "",
         "type": "users",
