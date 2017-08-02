@@ -376,9 +376,9 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
         cumplimiento: fullfillment(group)
       }
     end
-    .select do |cump|
-      cump[:cumplimiento] <= 50
-    end.map do |cump|
+    .sort do |c1, c2|
+      c1[:cumplimiento] <=> c2[:cumplimiento]
+    end[0...10].map do |cump|
       {
         obra: cump[:obra],
         cumplimiento: cump[:cumplimiento].to_s + "%"
