@@ -43,6 +43,7 @@ gem 'rut_chileno', git: 'https://github.com/Numerico/rut-chileno', ref: '157d9d4
 gem 'activeadmin', git: 'https://github.com/activeadmin/activeadmin'
 gem 'jsoneditor-rails', '~> 1.0', '>= 1.0.1'
 gem 'turbolinks', '~> 5.0', '>= 5.0.1'
+gem 'geocoder', '~> 1.4', '>= 1.4.4'
 
 gem 'devise', '~> 4.2'
 gem 'doorkeeper', '~> 4.2'
