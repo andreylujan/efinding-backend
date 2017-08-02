@@ -377,7 +377,7 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
       }
     end
     .select do |cump|
-      cump[:cumplimiento] >= 50
+      cump[:cumplimiento] < 50
     end.map do |cump|
       {
         obra: cump[:obra],
