@@ -286,7 +286,7 @@
 				<img src="<%= report.images.where(is_initial: true).first.url %>" class="img-responsive" style="height: 300px;">
 				<p>
 					<strong>Comentario hallazgo</strong><br>
-						<%= report.images.where(is_initial: true).first.formatted_comment %>
+						<%= report.dynamic_attributes.dig("61", "text") %>
 				</p>
 				<% else %>
 					<p>Hallazgo sin imagen</p>
