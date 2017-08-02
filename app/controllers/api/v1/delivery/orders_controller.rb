@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Api::V1::Delivery::OrdersController < ApplicationController
   def create
     order_id = params.require(:order_id)

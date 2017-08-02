@@ -53,13 +53,14 @@ class ChecklistReport < ApplicationRecord
 
   def user_names
     names = []
-    if construction.expert.present?
-      names << construction.expert.name
+    if construction.users.experts.count > 0
+      experts = construction.users.experts.map { |u| u.name }
+      names = names + experts
     end
     if construction.administrator.present?
       names << construction.administrator.name
     end
-    names.sort.join(', ')
+    names.uniq.sort.join(', ')
   end
 
   def generate_pdf

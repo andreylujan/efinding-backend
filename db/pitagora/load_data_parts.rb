@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 Organization.find(1).collections.where(parent_collection: nil).each do |collection|
 new_collection = collection.dup
 new_collection.organization = Organization.last

@@ -1,10 +1,11 @@
+# -*- encoding : utf-8 -*-
 # == Schema Information
 #
 # Table name: accident_rates
 #
 #  id              :integer          not null, primary key
 #  construction_id :integer          not null
-#  month           :date             not null
+#  rate_period     :date             not null
 #  man_hours       :float
 #  worker_average  :float
 #  num_accidents   :integer
@@ -15,6 +16,7 @@
 #  gravity_index   :float
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  organization_id :integer
 #
 
 class AccidentRate < ApplicationRecord

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreateAccidentRates < ActiveRecord::Migration[5.0]
   def change
     create_table :accident_rates do |t|

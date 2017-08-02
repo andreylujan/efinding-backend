@@ -60,7 +60,7 @@ class Api::V1::InspectionResource < ApplicationResource
       formatted_created_at: "created_at"
     }
   end
-  
+
   filter :num_pending_reports, apply: ->(records, value, _options) {
     if not value.empty?
       records = records
@@ -373,25 +373,28 @@ class Api::V1::InspectionResource < ApplicationResource
               DateTime.now.to_s + "' THEN 1 END) as num_expired_reports")
       .group("inspections.id")
 
-      if current_user.role.supervisor?
-        inspections = inspections.joins(:construction)
-        .where(constructions: { supervisor_id: current_user.id })
-      elsif current_user.role.expert?
-        inspections = inspections.joins(:construction)
-        .where(constructions: { expert_id: current_user.id })
-        .where.not(state: "reports_pending")
-        .where.not(state: "first_signature_pending")
-      elsif current_user.role.administrator?
-        inspections = inspections.joins(:construction)
-        .where(constructions: { administrator_id: current_user.id })
-      elsif current_user.role.inspector?
-        inspections = inspections.joins(:construction)
-        .where(constructions: { inspector_id: current_user.id })
-      elsif not current_user.is_superuser?
-        inspections = Inspection.where("1 = 0") 
-      end
-      if not options.has_key? :sort_criteria or options[:sort_criteria].blank?
-        inspections = inspections.order("inspections.created_at DESC")
+      if not current_user.is_superuser?
+        if current_user.role.supervisor?
+          inspections = inspections.joins(:construction)
+          .where(constructions: { supervisor_id: current_user.id })
+        elsif current_user.role.expert?
+          inspections = inspections.joins(construction: :users)
+          .where(users: { id: current_user.id })
+          .where.not(state: "reports_pending")
+          .where.not(state: "first_signature_pending")
+        elsif current_user.role.administrator?
+          inspections = inspections.joins(:construction)
+          .where(constructions: { administrator_id: current_user.id })
+        elsif current_user.role.inspector?
+          inspections = inspections.joins(construction: :users)
+          .where(users: { id: current_user.id })
+          .where(constructions: { inspector_id: current_user.id })
+        elsif not current_user.is_superuser?
+          inspections = Inspection.where("1 = 0")
+        end
+        if not options.has_key? :sort_criteria or options[:sort_criteria].blank?
+          inspections = inspections.order("inspections.created_at DESC")
+        end
       end
       inspections
     else

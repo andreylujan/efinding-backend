@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class FixReportStates < ActiveRecord::Migration[5.0]
   def change
   	Report.all.each do |report|

@@ -19,7 +19,7 @@ class Api::V1::ConstructionsController < Api::V1::JsonApiController
       if params[:fields].present?
         fields = params[:fields]
       end
-      fields[:constructions] = "name,company_id,code,administrator_id,expert_id,supervisor_id,expert,administrator,contractors"
+      fields[:constructions] = "name,company_id,code,administrator_id,supervisor_id,users,administrator,contractors_array,experts_array"
       params[:fields] = fields
     end
     super

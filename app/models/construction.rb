@@ -10,10 +10,8 @@
 #  company_id       :integer
 #  administrator_id :integer
 #  code             :text
-#  expert_id        :integer
 #  deleted_at       :datetime
 #  supervisor_id    :integer
-#  inspector_id     :integer
 #
 
 class Construction < ApplicationRecord
@@ -25,16 +23,29 @@ class Construction < ApplicationRecord
   validates :name, presence: true
   validates :code, presence: true, uniqueness: { scope: :company }
   belongs_to :administrator, class_name: :User, foreign_key: :administrator_id
-  belongs_to :expert, class_name: :User, foreign_key: :expert_id
   belongs_to :supervisor, class_name: :User, foreign_key: :supervisor_id
-  belongs_to :inspector, class_name: :User, foreign_key: :inspector_id
   # belongs_to :visitor, class_name: :Person, foreign_key: :visitor_id
   has_and_belongs_to_many :contractors
   has_many :construction_personnel, dependent: :destroy
   accepts_nested_attributes_for :construction_personnel
   has_many :personnel, through: :construction_personnel
   has_many :checklist_reports, dependent: :destroy
+  has_many :construction_users
+  has_many :users, through: :construction_users
+  validate :has_expert
+
+
   before_create :upcase_code
+
+  def expert_names
+    users.experts.map { |u| u.name }
+  end
+
+  def has_expert
+    if not users.any? { |u| u.role.expert? }
+      errors.add("Jefe de terreno", "Debe existir al menos un jefe de terreno")
+    end
+  end
 
   def upcase_code
     if self.code.present?

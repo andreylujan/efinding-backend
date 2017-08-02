@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170731155747) do
+ActiveRecord::Schema.define(version: 20170802013608) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
   enable_extension "postgis"
   enable_extension "uuid-ossp"
 
@@ -178,6 +179,16 @@ ActiveRecord::Schema.define(version: 20170731155747) do
     t.index ["personnel_type_id"], name: "index_construction_personnel_on_personnel_type_id", using: :btree
   end
 
+  create_table "construction_users", force: :cascade do |t|
+    t.integer  "construction_id", null: false
+    t.integer  "user_id",         null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["construction_id", "user_id"], name: "index_construction_users_on_construction_id_and_user_id", unique: true, using: :btree
+    t.index ["construction_id"], name: "index_construction_users_on_construction_id", using: :btree
+    t.index ["user_id"], name: "index_construction_users_on_user_id", using: :btree
+  end
+
   create_table "constructions", force: :cascade do |t|
     t.text     "name",             null: false
     t.datetime "created_at",       null: false
@@ -185,14 +196,11 @@ ActiveRecord::Schema.define(version: 20170731155747) do
     t.integer  "company_id"
     t.integer  "administrator_id"
     t.text     "code"
-    t.integer  "expert_id"
     t.datetime "deleted_at"
     t.integer  "supervisor_id"
-    t.integer  "inspector_id"
     t.index ["company_id", "code"], name: "index_constructions_on_company_id_and_code", unique: true, using: :btree
     t.index ["company_id"], name: "index_constructions_on_company_id", using: :btree
     t.index ["deleted_at"], name: "index_constructions_on_deleted_at", using: :btree
-    t.index ["inspector_id"], name: "index_constructions_on_inspector_id", using: :btree
     t.index ["name", "company_id"], name: "index_constructions_on_name_and_company_id", unique: true, using: :btree
     t.index ["supervisor_id"], name: "index_constructions_on_supervisor_id", using: :btree
   end
@@ -294,8 +302,6 @@ ActiveRecord::Schema.define(version: 20170731155747) do
     t.integer  "final_signer_id"
     t.datetime "initial_signed_at"
     t.datetime "final_signed_at"
-    t.integer  "field_chief_id"
-    t.integer  "expert_id"
     t.json     "cached_data",       default: {}
     t.integer  "code"
     t.index ["code"], name: "index_inspections_on_code", using: :btree
@@ -404,13 +410,14 @@ ActiveRecord::Schema.define(version: 20170731155747) do
   end
 
   create_table "organizations", force: :cascade do |t|
-    t.text     "name",                             null: false
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.text     "name",                                   null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.text     "logo"
-    t.text     "csv_separator",      default: "|", null: false
+    t.text     "csv_separator",            default: "|", null: false
     t.integer  "checklist_id"
     t.text     "default_admin_path"
+    t.integer  "checklist_report_type_id"
     t.index ["checklist_id"], name: "index_organizations_on_checklist_id", using: :btree
     t.index ["name"], name: "index_organizations_on_name", unique: true, using: :btree
   end
@@ -594,9 +601,10 @@ ActiveRecord::Schema.define(version: 20170731155747) do
   add_foreign_key "construction_personnel", "constructions"
   add_foreign_key "construction_personnel", "personnel"
   add_foreign_key "construction_personnel", "personnel_types"
+  add_foreign_key "construction_users", "constructions"
+  add_foreign_key "construction_users", "users"
   add_foreign_key "constructions", "companies"
   add_foreign_key "constructions", "users", column: "administrator_id"
-  add_foreign_key "constructions", "users", column: "expert_id"
   add_foreign_key "constructions", "users", column: "supervisor_id"
   add_foreign_key "contractors", "organizations"
   add_foreign_key "data_part_values", "collection_items"
@@ -609,8 +617,6 @@ ActiveRecord::Schema.define(version: 20170731155747) do
   add_foreign_key "images", "reports"
   add_foreign_key "inspections", "constructions"
   add_foreign_key "inspections", "users", column: "creator_id"
-  add_foreign_key "inspections", "users", column: "expert_id"
-  add_foreign_key "inspections", "users", column: "field_chief_id"
   add_foreign_key "inspections", "users", column: "final_signer_id"
   add_foreign_key "inspections", "users", column: "initial_signer_id"
   add_foreign_key "invitations", "roles"
@@ -618,6 +624,7 @@ ActiveRecord::Schema.define(version: 20170731155747) do
   add_foreign_key "menu_items", "menu_sections"
   add_foreign_key "menu_sections", "organizations"
   add_foreign_key "organizations", "checklists"
+  add_foreign_key "organizations", "report_types", column: "checklist_report_type_id"
   add_foreign_key "personnel", "organizations"
   add_foreign_key "personnel_types", "organizations"
   add_foreign_key "report_types", "organizations"

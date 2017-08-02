@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddScheduledAtToReports < ActiveRecord::Migration[5.0]
   def change
     add_column :reports, :scheduled_at, :datetime
