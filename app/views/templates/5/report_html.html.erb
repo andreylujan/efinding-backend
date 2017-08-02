@@ -119,7 +119,7 @@
 					</tr>
 					<tr>
 						<td>Jefe de Terreno:</td>
-						<td><strong><%= if inspection.construction.has_expert then inspection.construction.formatted_expert_names else "Obra sin Jefes de Terreno" end %></strong></td>
+						<td><strong><%= if inspection.construction.has_expert? then inspection.construction.formatted_expert_names else "Obra sin Jefes de Terreno" end %></strong></td>
 					</tr>
 					<tr>
 						<td>Administrador de Obra:</td>

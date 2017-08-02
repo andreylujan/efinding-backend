@@ -32,7 +32,7 @@ class Construction < ApplicationRecord
   has_many :checklist_reports, dependent: :destroy
   has_many :construction_users
   has_many :users, through: :construction_users
-  validate :has_expert
+  validate :check_expert
 
 
   before_create :upcase_code
@@ -45,7 +45,11 @@ class Construction < ApplicationRecord
     expert_names.join(", ")
   end
 
-  def has_expert
+  def has_expert?
+    users.any? { |u| u.role.expert? }
+  end
+
+  def check_expert
     if not users.any? { |u| u.role.expert? }
       errors.add("Jefe de terreno", "Debe existir al menos un jefe de terreno")
     end
