@@ -133,7 +133,7 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
         }
       end
       data << {
-        mes: month.strftime("%B"),
+        mes: I18n.l(month, format: "%B"),
         indices_por_obra: indexes_by_construction,
         indices_totales: all_indexes
       }
@@ -240,7 +240,7 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
       .order("rate_period ASC")
       .map do |group|
         {
-          mes: group.rate_period.strftime("%B-%Y"),
+          mes: I18n.l(group.rate_period, format: "%B-%Y"),
           tasa_accidentabilidad: group.accident_rate
         }
       end
@@ -267,7 +267,7 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
       .order("rate_period ASC")
       .map do |group|
         {
-          mes: group.rate_period.strftime("%B-%Y"),
+          mes: I18n.l(group.rate_period, format: "%B-%Y"),
           tasa_accidentabilidad: group.accident_rate,
           tasa_siniestralidad: group.casualty_rate
         }
