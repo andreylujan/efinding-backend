@@ -146,7 +146,7 @@ class Api::V1::ChecklistReportResource < ApplicationResource
 
   before_save do
     @model.creator_id = context[:current_user].id if @model.new_record?
-    @model.report_type_id = 2 if @model.new_record?
+    @model.report_type_id = context[:current_user].organization.checklist_report_type_id if @model.new_record?
   end
 
   filter :formatted_created_at, apply: ->(records, value, _options) {
