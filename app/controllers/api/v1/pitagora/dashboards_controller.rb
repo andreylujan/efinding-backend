@@ -377,7 +377,7 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
       }
     end
     .select do |cump|
-      cump[:cumplimiento] >= 68
+      cump[:cumplimiento] >= 50
     end.map do |cump|
       {
         obra: cump[:obra],
@@ -401,7 +401,7 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
 
     dashboard_info = {
       id: SecureRandom.uuid,
-      cumplimiento_minimo: "68%",
+      cumplimiento_minimo: "50%",
       cumplimiento_por_periodo: cumplimiento_por_periodo,
       cumplimiento_por_obra: cumplimiento_por_obra,
       obras_bajo_meta: obras_bajo_meta
