@@ -197,8 +197,10 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
   def filtered_reports
     reports = Api::V1::ReportResource.records({
                                                         context: {
-                                                          current_user: current_user                                                        },
-                                                          order: false
+                                                          current_user: current_user                                                        
+                                                        },
+                                                        order: false,
+                                                        dashboard: true
     })
     params.permit!
     params_hash = params.to_h

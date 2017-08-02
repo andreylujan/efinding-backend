@@ -331,7 +331,7 @@ class Api::V1::ReportResource < ApplicationResource
         records = records.where("dynamic_attributes -> 'store' ->> 'store_id' = ?", current_user.store_id.to_s)
       end
       records = records.select("reports.*, CASE WHEN(scheduled_at IS NOT NULL AND scheduled_at <= '#{DateTime.now}') THEN true ELSE false END as is_schedule_due")
-    else
+    elsif not options[:dashboard]
       records = records.select("reports.*, CASE WHEN(limit_date IS NOT NULL AND limit_date <= '#{DateTime.now}') THEN true ELSE false END as is_expired")
     end
     records
