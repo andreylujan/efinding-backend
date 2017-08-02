@@ -18,7 +18,8 @@ class Api::V1::ReportResource < ApplicationResource
     :resolved_at,
     :resolution_comment,
     :scheduled_at,
-    :is_schedule_due
+    :is_schedule_due,
+    :is_expired
 
   add_foreign_keys :inspection_id, :creator_id, :assigned_user_id, :report_type_id
 
@@ -34,6 +35,14 @@ class Api::V1::ReportResource < ApplicationResource
   def is_schedule_due
     if @model.respond_to? :is_schedule_due
       @model.send :is_schedule_due
+    else
+      false
+    end
+  end
+
+  def is_expired
+    if @model.respond_to? :is_expired
+      @model.send :is_expired
     else
       false
     end
@@ -72,7 +81,7 @@ class Api::V1::ReportResource < ApplicationResource
     if not value.empty?
       if value[0].is_a? Hash and value[0]["construction_id"].present?
         records.joins(:inspection)
-          .where(inspections: { construction_id: value[0]["construction_id"] })
+        .where(inspections: { construction_id: value[0]["construction_id"] })
       else
         records
       end
@@ -91,7 +100,7 @@ class Api::V1::ReportResource < ApplicationResource
   filter :construction_id, apply: ->(records, value, _options) {
     if not value.empty?
       records.joins(:inspection)
-          .where(inspections: { construction_id: value[0] })
+      .where(inspections: { construction_id: value[0] })
     else
       records
     end
@@ -100,7 +109,7 @@ class Api::V1::ReportResource < ApplicationResource
   filter :company_id, apply: ->(records, value, _options) {
     if not value.empty?
       records.joins(inspection: :construction)
-          .where(constructions: { company_id: value[0] })
+      .where(constructions: { company_id: value[0] })
     else
       records
     end
@@ -316,15 +325,17 @@ class Api::V1::ReportResource < ApplicationResource
     if current_user.organization_id == 4
       if current_user.role.name == "Transportista"
         records = records.where("reports.state = 'awaiting_delivery' OR " +
-          "reports.state = 'delivering' OR reports.state = 'delivered'")
+                                "reports.state = 'delivering' OR reports.state = 'delivered'")
       end
       if current_user.store_id.present?
         records = records.where("dynamic_attributes -> 'store' ->> 'store_id' = ?", current_user.store_id.to_s)
       end
       records = records.select("reports.*, CASE WHEN(scheduled_at IS NOT NULL AND scheduled_at <= '#{DateTime.now}') THEN true ELSE false END as is_schedule_due")
+    else
+      records = records.select("reports.*, CASE WHEN(limit_date IS NOT NULL AND limit_date <= '#{DateTime.now}') THEN true ELSE false END as is_expired")
     end
     records
-    
+
 
   end
 
