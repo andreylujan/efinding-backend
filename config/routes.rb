@@ -1,10 +1,14 @@
 # -*- encoding : utf-8 -*-
 Rails.application.routes.draw do
 
+  devise_for :users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
   match '/*path', to: 'application#cors_preflight_check', via: :options
   require 'sidekiq/web'
 
   mount Sidekiq::Web => '/sidekiq'
+  
+  
 
   use_doorkeeper do
     skip_controllers :sessions, :authorizations, :applications,
@@ -20,7 +24,7 @@ Rails.application.routes.draw do
       end
 
       namespace :idd do
-        jsonapi_resources :reports, only: [] do
+        resources :reports, only: [] do
           collection do
             get :summaries
           end

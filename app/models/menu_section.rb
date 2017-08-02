@@ -17,4 +17,5 @@ class MenuSection < ApplicationRecord
   belongs_to :organization
   acts_as_list scope: :organization
   has_many :menu_items, -> { order(position: :asc) }
+  accepts_nested_attributes_for :menu_items
 end

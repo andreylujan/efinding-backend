@@ -1,5 +1,5 @@
 # -*- encoding : utf-8 -*-
-class ApplicationController < ActionController::API
+class ApplicationController < ActionController::Base
 
   
   
