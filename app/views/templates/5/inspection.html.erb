@@ -30,8 +30,8 @@
 							</td>
 						</tr>
 						<tr>
-							<td>Jefe de Terreno:</td>
-							<td><strong><%= if inspection.construction.expert.present? then inspection.construction.expert.name else "Obra sin Jefe de Terreno" end %></strong></td>
+							<td>Jefes de Terreno:</td>
+							<td><strong><%= if inspection.construction.has_expert then inspection.construction.formatted_expert_names else "Obra sin Jefes de Terreno" end %></strong></td>
 						</tr>
 						<tr>
 							<td>Administrador de Obra:</td>
@@ -179,7 +179,7 @@
 
 								<td>
 									<label>JEFE DE TERRENO</label>
-									<%= if inspection.construction.expert.present? then inspection.construction.expert.name else "Obra sin Jefe de Terreno" end %>
+									<%= if report.dynamic_attributes.dig("64", "text").present? then report.dynamic_attributes.dig("64", "text") else "Obra sin Jefe de Terreno" end %>
 								</td>
 							</tr>
 
@@ -286,7 +286,7 @@
 										<i class="fa fa-clock-o fa-2x pending"></i>
 									<% end %>
 									<p>
-										<%= if inspection.construction.expert.present? then inspection.construction.expert.name else "Obra sin Jefe de Terreno" end %><br>
+										<%= if report.dynamic_attributes.dig("64", "text").present? then report.dynamic_attributes.dig("64", "text") else "Obra sin Jefe de Terreno" end %><br>
 										<small><%= report.resolved_at.in_time_zone("Chile/Continental").strftime("%d/%m/%Y %R") unless report.resolved_at.nil? %></small>
 									</p>
 								</td>

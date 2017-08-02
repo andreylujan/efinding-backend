@@ -41,6 +41,10 @@ class Construction < ApplicationRecord
     users.experts.map { |u| u.name }
   end
 
+  def formatted_expert_names
+    expert_names.join(", ")
+  end
+
   def has_expert
     if not users.any? { |u| u.role.expert? }
       errors.add("Jefe de terreno", "Debe existir al menos un jefe de terreno")
