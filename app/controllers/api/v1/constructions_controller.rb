@@ -25,6 +25,11 @@ class Api::V1::ConstructionsController < Api::V1::JsonApiController
     super
   end
 
+  def show
+    @from = :show
+    super
+  end
+
   def get_csv
     send_data Construction.to_csv(current_user, nil), filename: "obras.csv",
       disposition: "attachment", type: "text/csv"
@@ -69,7 +74,8 @@ class Api::V1::ConstructionsController < Api::V1::JsonApiController
     {
       current_user: current_user,
       company_id: params[:company_id],
-      all: params[:all]
+      all: params[:all],
+      from: @from
     }
   end
 
