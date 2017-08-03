@@ -164,6 +164,7 @@ class Api::V1::UsersController < Api::V1::JsonApiController
     else
       token = params.require(:confirmation_token)
       inv = Invitation.find_by_confirmation_token_and_accepted(token, true)
+      @role_id = inv.role_id
       if inv.nil? or not inv.accepted?
         render json: {
           errors: [
