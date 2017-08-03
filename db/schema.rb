@@ -10,11 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170802013608) do
+ActiveRecord::Schema.define(version: 20170803155646) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "hstore"
   enable_extension "postgis"
   enable_extension "uuid-ossp"
 
@@ -510,11 +509,12 @@ ActiveRecord::Schema.define(version: 20170802013608) do
   end
 
   create_table "roles", force: :cascade do |t|
-    t.integer  "organization_id", null: false
-    t.text     "name",            null: false
+    t.integer  "organization_id",                 null: false
+    t.text     "name",                            null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "role_type"
+    t.boolean  "can_view_all",    default: false, null: false
     t.index ["organization_id", "name"], name: "index_roles_on_organization_id_and_name", unique: true, using: :btree
     t.index ["organization_id"], name: "index_roles_on_organization_id", using: :btree
   end

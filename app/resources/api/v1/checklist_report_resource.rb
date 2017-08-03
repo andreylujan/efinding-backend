@@ -174,7 +174,7 @@ class Api::V1::ChecklistReportResource < ApplicationResource
       .joins(:construction)
       .where(organizations: { id: current_user.organization.id })
 
-      if not current_user.is_superuser?
+      if not current_user.is_superuser? and not current_user.can_view_all?
         if current_user.role.supervisor?
           checklists = checklists.joins(:construction)
           .where(constructions: { supervisor_id: current_user.id })

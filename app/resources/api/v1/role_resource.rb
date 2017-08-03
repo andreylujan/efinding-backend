@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::RoleResource < ApplicationResource
-  attributes :name
+  attributes :name, :role_type, :can_view_all
   has_one :organization
   def fetchable_fields
     super
