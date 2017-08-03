@@ -350,6 +350,13 @@ class Report < ApplicationRecord
   end
 
   def images_attributes=(val)
+    val = val.map do |v|
+      if v["attributes"].present?
+        v["attributes"]
+      else
+        v
+      end
+    end
     val.each do |attrs|
       if not Image.find_by_id(attrs[:id])
         self.images << Image.new(attrs)
