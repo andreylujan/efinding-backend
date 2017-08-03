@@ -112,7 +112,7 @@
 				<table class="table">
 					<tr>
 						<td>APR:</td>
-						<td><strong><%= if inspection.construction.supervisor.present? then inspection.construction.supervisor.name else "Obra sin APR" end %></strong></td>
+						<td><strong><%= inspection.creator.name %></strong></td>
 						<td rowspan="5" class="highlight">
 							<h1><%= inspection.reports.count %><br><small>Hallazgos</small></h1>
 						</td>
@@ -233,7 +233,7 @@
 
 						<td>
 							<label>APR RESPONSABLE</label>
-							<%= if inspection.construction.supervisor.present? then inspection.construction.supervisor.name else "Obra sin supervisor" end %>
+							<%= report.creator.name %>
 						</td>
 					</tr>
 
