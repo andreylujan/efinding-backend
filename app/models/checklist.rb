@@ -12,12 +12,15 @@
 #
 
 class Checklist < ApplicationRecord
+
+  SECTIONS_JSON_SCHEMA = Rails.root.join('config', 'schemas', 'checklists', 'sections.json_schema').to_s
   belongs_to :organization
   validates :organization, presence: true
   validates :sections, presence: true
   has_many :checklist_reports
   before_save :assign_ids
   validate :sections_is_array
+  validates :sections, json: { schema: SECTIONS_JSON_SCHEMA }
 
   def formatted_created_at
     created_at.strftime("%d/%m/%Y %R")

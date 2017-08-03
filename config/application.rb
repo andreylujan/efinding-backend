@@ -13,6 +13,7 @@ require "action_cable/engine"
 require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 require 'dotenv'
+require "i18n/backend/fallbacks"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -36,7 +37,7 @@ module Efinding
     config.autoload_paths += Dir[Rails.root.join('lib')]
 
     config.active_job.queue_adapter = :sidekiq
-    
+
     # ActiveModelSerializers.config.adapter = :json_api
     # ActiveModelSerializers.config.key_transform = :underscore
     config.middleware.insert_before 0, "Rack::Cors" do
@@ -50,13 +51,23 @@ module Efinding
 
     config.action_mailer.smtp_settings = {
       :address        => 'smtp.office365.com',
-        :port           => '587',
-        :authentication => :login,
-        :user_name      => ENV['EMAIL_USERNAME'],
-        :password       => ENV['EMAIL_PASSWORD'],
-        :domain         => 'ewin.cl',
-        :enable_starttls_auto => true
+      :port           => '587',
+      :authentication => :login,
+      :user_name      => ENV['EMAIL_USERNAME'],
+      :password       => ENV['EMAIL_PASSWORD'],
+      :domain         => 'ewin.cl',
+      :enable_starttls_auto => true
     }
+    config.i18n.fallbacks = true
+
+    # Whitelist locales available for the application
+    I18n.available_locales = [:"es-CL", :en]
+
+    # Set default locale to something other than :en
+    I18n.default_locale = :"es-CL"
+    I18n.locale = :"es-CL"
+
+    I18n.fallbacks.map(:"es-CL" => :en)
 
   end
 end

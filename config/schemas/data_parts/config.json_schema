@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "properties": {
+    "hint": { "type": "string" },
+    "type": { "type": "string" },
+    "multiline": { "type": "boolean" },
+    "allow_multiple": { "type": "boolean" },
+    "other_text": { "type": "string" },
+    "other_enabled": { "type": "boolean" },
+    "max_length": { "type": "number", "minimum": 1 }
+  },
+  "additionalProperties": false
+}

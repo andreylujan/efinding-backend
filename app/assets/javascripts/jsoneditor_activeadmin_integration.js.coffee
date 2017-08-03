@@ -10,11 +10,10 @@ $ ->
     editor = new JSONEditor container[0],
       modes: ['code', 'form', 'text', 'tree', 'view']
       change: ->
-        target.val editor.get()
+        target.val JSON.stringify(editor.get())
 
     editor.set(
       try
         JSON.parse target.val()
     )
 
-    target.hide()

@@ -2,7 +2,11 @@
   "type": "object",
   "$schema": "http://json-schema.org/draft-04/schema",
   "properties": {
-    "min_images": { "type": "number" }
+    "min_images": { "type": "number", "minimum": 1 },
+    "max_images": { "type": "number", "minimum": 1 },
+    "has_bottom_bar": { "type": "boolean" },
+    "gallery_enabled": { "type": "boolean" },
+    "comment_required": { "type": "boolean" }
   },
-  "required": ["min_images"]
+  "additionalProperties": false
 }

@@ -11,7 +11,7 @@ ActiveAdmin.register Section do
   form do |f|
     f.inputs do
       f.input :name
-      f.input :config, as: :text, input_html: { class: 'jsoneditor-target' }
+      f.input :config, as: :text, input_html: { value: controller.instance_variable_get(:@section).config.to_json, class: 'jsoneditor-target' }
     end
     f.actions
   end
