@@ -7,6 +7,12 @@ class Api::V1::CompaniesController < Api::V1::JsonApiController
       disposition: "attachment", type: "text/csv"
   end
 
+  def show
+    @from = :show
+    super
+  end
+
+
   def create_csv
     begin
       resources = Company.from_csv(params.require(:csv), current_user)
