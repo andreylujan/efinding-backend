@@ -41,12 +41,17 @@ class Api::V1::ConstructionResource < ApplicationResource
         if current_user.role.supervisor?
           constructions = constructions.where(supervisor_id: current_user.id)
         elsif current_user.role.expert?
-          constructions = constructions.joins(:users).where(users: { id: current_user.id })
+          constructions = constructions.joins("INNER JOIN construction_users expert_construction_users ON constructions.id = expert_construction_users.construction_id")
+          .joins("INNER JOIN users inspector_users ON inspector_users.id = expert_construction_users.user_id")
+          .where("inspector_users.id = ?", current_user.id)
         elsif current_user.role.inspector?
-          constructions = constructions.joins(:users).where(users: { id: current_user.id })
+          constructions = constructions.joins("INNER JOIN construction_users inspection_construction_users ON constructions.id = inspection_construction_users.construction_id")
+          .joins("INNER JOIN users inspector_users ON inspector_users.id = inspection_construction_users.user_id")
+          .where("inspector_users.id = ?", current_user.id)
         elsif current_user.role.administrator?
           constructions = constructions.where(administrator_id: current_user.id)
         else
+          byebug
           constructions = Construction.none
         end
       end
