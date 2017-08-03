@@ -44,7 +44,7 @@ gem 'activeadmin', git: 'https://github.com/activeadmin/activeadmin'
 gem 'jsoneditor-rails', '~> 1.0', '>= 1.0.1'
 gem 'turbolinks', '~> 5.0', '>= 5.0.1'
 gem 'geocoder', '~> 1.4', '>= 1.4.4'
-
+gem 'activerecord_json_validator', '~> 1.2'
 gem 'devise', '~> 4.2'
 gem 'doorkeeper', '~> 4.2'
 gem 'ruby_kml', git: 'https://github.com/pelluch/ruby_kml'
