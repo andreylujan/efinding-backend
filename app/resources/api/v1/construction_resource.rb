@@ -36,7 +36,7 @@ class Api::V1::ConstructionResource < ApplicationResource
       constructions = Construction.joins(company: :organization)
       .where(organizations: { id: context[:current_user].organization.id })
     end
-    if not current_user.is_superuser? and not current_user.can_view_all?
+    if not current_user.is_superuser? and not current_user.role.can_view_all?
       if context[:all] != "true"
         if current_user.role.supervisor?
           constructions = constructions.where(supervisor_id: current_user.id)

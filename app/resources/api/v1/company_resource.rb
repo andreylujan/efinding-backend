@@ -13,7 +13,7 @@ class Api::V1::CompanyResource < ApplicationResource
     context = options[:context]
     current_user = context[:current_user]
     companies = Company.where(organization_id: current_user.organization_id)
-    if not current_user.is_superuser? and not current_user.can_view_all?
+    if not current_user.is_superuser? and not current_user.role.can_view_all?
       if context[:all] != "true"
         if current_user.role.supervisor?
           companies = companies.joins(:constructions)

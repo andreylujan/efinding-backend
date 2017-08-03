@@ -373,7 +373,7 @@ class Api::V1::InspectionResource < ApplicationResource
               DateTime.now.to_s + "' THEN 1 END) as num_expired_reports")
       .group("inspections.id")
 
-      if not current_user.is_superuser? and not current_user.can_view_all?
+      if not current_user.is_superuser? and not current_user.role.can_view_all?
         if current_user.role.supervisor?
           inspections = inspections.joins(:construction)
           .where(constructions: { supervisor_id: current_user.id })
