@@ -167,7 +167,7 @@ class Construction < ApplicationRecord
   end
 
   def self.to_csv(current_user, file_name=nil)
-    attributes = %w{company_id code name administrator_email expert_email supervisor_email}
+    attributes = %w{company_id code name administrator_email expert_emails inspector_emails supervisor_email}
     csv_obj = CSV.generate(headers: true,
     encoding: "UTF-8", col_sep: current_user.organization.csv_separator) do |csv|
       csv << attributes
@@ -177,7 +177,8 @@ class Construction < ApplicationRecord
           construction.code,
           construction.name,
           construction.administrator.present? ? construction.administrator.email : "SIN ADMINISTRADOR",
-          construction.expert.present? ? construction.expert.email : "SIN EXPERTO",
+          construction.users.experts.map { |u| u.email }.join(","),
+          construction.users.inspectors.map { |u| u.email }.join(","),
           construction.supervisor.present? ? construction.supervisor.email : "SIN SUPERVISOR"
         ]
       end
@@ -196,7 +197,7 @@ class Construction < ApplicationRecord
       uploaded_resource_type: "Obras"
     csv_text = CsvUtils.read_file(file_name)
 
-    headers = %w{company_id code name administrator_email expert_email supervisor_email}
+    headers = %w{company_id code name administrator_email expert_emails inspector_emails supervisor_email}
     resources = []
     row_number = 2
 
@@ -212,6 +213,8 @@ class Construction < ApplicationRecord
       cons = Construction.find_or_initialize_by(code: row["code"]).tap do |construction|
         construction.name = row["name"]
         has_errors = false
+        expert_ids = construction.user_ids.dup
+        inspector_ids = construction.user_ids.dup
         begin
           construction.company = Company.find(row["company_id"])
         rescue => e
@@ -227,9 +230,29 @@ class Construction < ApplicationRecord
           has_errors = true
         end
         begin
-          construction.expert = User.find_by_email!(row["expert_email"])
+          if row["expert_emails"].present?
+            row["expert_emails"].strip.split(",").each do |email|
+              user = User.find_by_email!(email)
+              if user.organization_id == current_user.organization_id
+                expert_ids << user.id
+              end
+            end
+          end
         rescue => e
-          errors[:expert_email] = [ e.message ]
+          errors[:expert_emails] << e.message
+          has_errors = true
+        end
+        begin
+          if row["inspector_emails"].present?
+            row["inspector_emails"].strip.split(",").each do |email|
+              user = User.find_by_email!(email)
+              if user.organization_id == current_user.organization_id
+                inspector_ids << user.id
+              end
+            end
+          end
+        rescue => e
+          errors[:expert_emails] << e.message
           has_errors = true
         end
         begin
@@ -240,7 +263,10 @@ class Construction < ApplicationRecord
         end
         if not has_errors
           begin
-            construction.save!
+            Construction.transaction do
+              construction.user_ids = inspector_ids | expert_ids
+              construction.save!
+            end
           rescue => e
             errors = construction.errors.as_json
           end
