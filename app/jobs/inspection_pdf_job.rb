@@ -4,7 +4,13 @@ class InspectionPdfJob < ApplicationJob
   queue_as :efinding_report
 
   def perform(inspection_id)
+    if not Inspection.exists? inspection_id
+      return
+    end
     inspection = Inspection.find(inspection_id)
+    if inspection.reports.count == 0
+      return
+    end
     
     ac = ActionController::Base.new()
     
