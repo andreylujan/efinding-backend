@@ -5,6 +5,9 @@ class UploadPdfJob < ApplicationJob
   require('open-uri')
 
   def perform(report_id)
+    if not Report.exists? report_id
+      return
+    end
     report = Report.find(report_id)
     if report.initial_location_id
       report.initial_location = Location.find(report.initial_location_id)
