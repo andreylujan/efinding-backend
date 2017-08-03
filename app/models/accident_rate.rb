@@ -126,6 +126,8 @@ class AccidentRate < ApplicationRecord
       csv << attributes
       current_user.organization.accident_rates.each do |item|
         csv << attributes.map do |column_name|
+          item.month = item.rate_period.month
+          item.year = item.rate_period.year
           item.send column_name
         end
       end
