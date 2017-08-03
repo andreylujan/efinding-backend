@@ -42,14 +42,6 @@ class AccidentRate < ApplicationRecord
     construction.code
   end
 
-  def month
-    rate_period.month
-  end
-
-  def year
-    rate_period.year
-  end
-
   def self.from_csv(file_name, current_user)
 
     upload = BatchUpload.create! user: current_user, uploaded_file: file_name,
