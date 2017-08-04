@@ -27,6 +27,8 @@ class Image < ApplicationRecord
   belongs_to :resource, polymorphic: true
   belongs_to :state
 
+  before_save :assign_state
+
   def http_url
   	self.url.gsub 'https', 'http' if self.url.present?
   end
@@ -39,5 +41,10 @@ class Image < ApplicationRecord
   
   # before_create :write_image_identifier
   # skip_callback :save, :before, :write_image_identifier
-
+  private
+  def assign_state
+    if report.present? and state.nil?
+      self.state = report.state
+    end
+  end
 end
