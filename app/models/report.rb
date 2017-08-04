@@ -354,7 +354,7 @@ class Report < ApplicationRecord
       if v["attributes"].present?
         state_id = v["attributes"]["state"]["id"]
         v["attributes"].delete("state")
-        v
+        v["attributes"]
       else
         v
       end
