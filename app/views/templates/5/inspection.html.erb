@@ -25,13 +25,13 @@
 						<tr>
 							<td>ID inspección:</td>
 							<td><strong><%= inspection.id %></strong></td>
+							<td rowspan="7" class="highlight">
+								<h1><%= inspection.reports.count %><br><small>Hallazgos</small></h1>
+							</td>
 						</tr>
 						<tr>
 							<td>APR:</td>
 							<td><strong><%= inspection.creator.name %></strong></td>
-							<td rowspan="5" class="highlight">
-								<h1><%= inspection.reports.count %><br><small>Hallazgos</small></h1>
-							</td>
 						</tr>
 						<tr>
 							<td>Jefes de Terreno:</td>
