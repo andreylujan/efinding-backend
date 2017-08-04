@@ -1,257 +1,329 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Hallazgo - eFinding</title>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+		.logo {
+			width: 117px;
+			margin-bottom: 15px;
+			margin-top: 10px;
+			height: 
+		}
+
+		.inspeccion {
+			color: #3F5B71 !important;
+			font-size: 1.1em !important;
+		}
+
+		h3 {
+			color: #f19122 !important;
+			font-size: 1.1em !important;
+			font-weight: bold !important;
+		}
+
+		@media not print {
+			.container {
+				width: 100% !important;				
+				padding-left: 20px !important;
+				padding-right: 20px !important;
+			}
+		}
+
+		.checklist {
+			display: inline-block;
+			margin-bottom: 15px;
+			margin-top: 10px;
+			vertical-align: top;
+			width: 99%;
+		}
+
+		table {
+			border-collapse: collapse;
+			width: 100%;
+			margin: 20px 0px;
+		}
+		table td, th {
+			padding: 10px;
+			max-width: 100px;
+		}
+		table td, table th {
+			border: 1px dashed;
+		}
+		table tr:first-child th {
+			border-top: 0;
+		}
+		table tr:last-child td {
+			border-bottom: 0;
+		}
+		table tr td:first-child,
+		table tr th:first-child {
+			border-left: 0;
+		}
+		table tr td:last-child,
+		table tr th:last-child {
+			border-right: 0;
+		}
+		table th, td {
+			text-align:center; 
+			vertical-align:middle;
+		}
+
+		.check {
+			width: 17px;
+		}
+
+		.info-label {
+			display: inline-block;
+			font-weight: bold;
+			/*text-align: justify;*/
+			vertical-align: middle;
+		}
+
+		body {
+			font-family: 'Helvetica' !important;
+			font-size: 14px !important;
+			color: #3F5B71 !important;
+		}
+
+		#location-info {
+			margin-top: 15px;
+		}
+
+		.location-field {
+			/*margin-left: 20px;*/
+			margin: 10px 0 !important;
+			width: 100% !important;
+		}
+
+		.picsField {
+			margin-top: 5px;
+			height: 250px;
+		}
+
+		.center-cropped {
+
+			background-position: left center;
+			background-repeat: no-repeat;
+		}
+
+		@media print {
+			.picsField {
+				width: 400px;
+			}
+
+			.always-break {
+				page-break-before: always !important;
+			}
+		}
+
+		.standalone-container {
+			page-break-inside: avoid;
+		}
+
+		.map {
+			margin-top: 5px;
+			height: 250px;
+		}
+
+		
+
+	</style>
+	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<%= stylesheet_link_tag "application", media: "all" %>
 </head>
 <body>
-	<div class="container page-break">
-		<div class="row">
-			<div class="col-xs-4"><img src="https://ddejhenv4m3e3.cloudfront.net/logos/pitagora-v2.jpg" class="brand"></div>
-			<div class="col-xs-8">
-				<h1 class="text-right">{{ Nombre Inspección }}<br><small>{{ Nombre de la obra }}</small></h1>
-			</div>
-			<div class="col-xs-12"><hr></div>
-
-			<div class="col-xs-12">
-				<h2>Resumen inspección</h2>
-
-				<table class="table">
-					<tr>
-						<td>Responsable:</td>
-						<td><strong>{{ Nombre inspector }}</strong></td>
-						<td rowspan="5" class="highlight">
-							<h1>{{ 6 }}<br><small>Hallazgos</small></h1>
-						</td>
-					</tr>
-					<tr>
-						<td>Obra:</td>
-						<td><strong>{{ Nombre Obra }}</strong></td>
-					</tr>
-					<tr>
-						<td>Fecha inspección:</td>
-						<td><strong>{{ Fecha de inspección }}</strong></td>
-					</tr>
-					<tr>
-						<td>Dirección:</td>
-						<td><strong>{{ Dirección de obra }}</strong></td>
-					</tr>
-					<tr>
-						<td>Administrador Obra:</td>
-						<td><strong>{{ Nombre administrador }}</strong></td>
-					</tr>
-				</table>
-			</div>
-		</div>	
-	</div>
-	<div class="container page-break">
-		<div class="row">
-				<div class="col-xs-12">
-					<h2>Ubicación</h2>
-				</div>
-
-				<div class="col-xs-12">
-					<img src="http://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap
-&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318
-&markers=color:red%7Clabel:C%7C40.718217,-73.998284
-&key=AIzaSyAxdoh8VjK53CCCYNmGx0RGuompeK-ejzc">
-				</div>
-			</div>
-		<div class="row">
-			<div class="col-xs-12">
-				<table class="table">
-					<tr>
-						<td><h2>Hallazgo 1<br><small>{{ Nombre del hallazgo}}</small></h2></td>
-						<td class="text-center">
-							<h2><small>Gravedad</small><br>{{ Alto }}</h2>								
-						</td>
-						<td class="text-center">
-							<h2><small>Riesgo</small><br>{{ B }}</h2>
-						</td>
-						<td class="highlight">
-							<i class="fa fa-check fa-2x success"></i>
-						</td>
-					</tr>
-				</table>
-
-				<table class="table-two">
-					<tr>
-						<td width="50%">
-							<label>Grupo de actividad</label>
-							{{ Nombre grupo de actividad }}
-						</td>
-
-						<td>
-							<label>Contratista</label>
-							{{ Nombre empresa }}
-						</td>
-					</tr>
-
-					<tr>
-						<td>
-							<label>Detalle de actividad</label>
-							{{ Nombre detalle de actividad }}
-						</td>
-
-						<td>
-							<label>Frente de trabajo</label>
-							{{ Nombre frente de trabajo }}
-						</td>
-					</tr>
-
-					<tr>
-						<td>
-							<label>Causa directa</label>
-							{{ Nombre causa directa }}
-						</td>
-
-						<td>
-							<label>Acción/Condición detectada</label>
-							{{ Nombre acción/condición detectada }}
-						</td>
-					</tr>
-
-					<tr>
-						<td>
-							<label>DESCRIPCIÓN CAUSA DIRECTA</label>
-							{{ Nombre - definición }}
-						</td>
-
-						<td>
-							<label>CLASIFICACIÓN DE POSIBLE INCIDENTE</label>
-							{{ Nombre - definición }}
-						</td>
-					</tr>
-
-					<tr>
-						<td>
-							<label>DETALLE DE CADA CAUSA DIRECTA</label>
-							{{ Nombre - definición }}
-						</td>
-
-						<td>
-							<label>SUPERVISOR RESPONSABLE</label>
-							{{ Nombre - definición }}
-						</td>
-					</tr>
-
-					<tr>
-						<td>
-							<label>CAUSA BÁSICA</label>
-							{{ Nombre - definición }}
-						</td>
-
-						<td>
-							<label>JEFE DE TERRENO</label>
-							{{ Nombre - definición }}
-						</td>
-					</tr>
-
-					<tr>
-						<td>
-							<label>DESCRIPCIÓN CAUSA BÁSICA</label>
-							{{ Nombre - definición }}
-						</td>
-
-						<td>
-							<label>PLAZO DE CUMPLIMIENTO</label>
-							{{ Nombre - definición }}
-						</td>
-					</tr>
-
-					<tr>
-						<td>
-							<label>DETALLE DE CADA CAUSA BÁSICA</label>
-							{{ Nombre - definición }}
-						</td>
-
-						<td>
-							<label>FECHA DE CUMPLIMIENTO</label>
-							{{ Nombre - definición }}
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-
-	</div>
 	<div class="container">
-	<div class="row">
-			<div class="col-xs-6">
-				<h2>Hallazgo<br><small>{{ Dirección del hallazgo }}</small></h2>
-
-				<img src="https://ddejhenv4m3e3.cloudfront.net/8499caeb-c5f0-4442-acb2-03ee78bb743e.jpg" class="img-responsive">
-				<p>
-					<strong>Comentario hallazgo</strong><br>
-					{{ Comentario del hallazgo }}
-				</p>
-			</div>
-
-			<div class="col-xs-6">
-				<h2>Resolución hallazgo<br><small>{{ Dirección de la resolución de hallazgo }}</small></h2>
-
-				<img src="https://ddejhenv4m3e3.cloudfront.net/8499caeb-c5f0-4442-acb2-03ee78bb743e.jpg" class="img-responsive">
-				<p>
-					<strong>Comentario resolución de hallazgo</strong><br>
-					{{ Comentario de resolución de hallazgo }}
-				</p>
-			</div>
-		</div>
-
 		<div class="row">
 			<div class="col-xs-12">
-				<hr>
-				<h2>Firmas</h2>
-			</div>
-			
-			<div class="col-xs-12">
-				<table class="table">
-					<tr>
-						<td class="highlight">
-							<small>Jefe Ssoma</small><br>
-							<hr>
-							<i class="fa fa-check fa-2x success"></i><!-- Estado -->
-							<p>
-								{{ Nombre encargado }}<br>
-								<small>{{ Fecha firma }}</small>
-							</p>
-						</td>
-
-						<td class="highlight">
-							<small>Adm. de obra</small><br>
-							<hr>
-							<i class="fa fa-clock-o fa-2x pending"></i>
-							<p>
-								{{ Nombre encargado }}<br>
-								<small>{{ Fecha firma }}</small>
-							</p>
-						</td>
-
-						<td class="highlight">
-							<small>Experto SSOMA</small><br>
-							<hr>
-							<i class="fa fa-check fa-2x success"></i>
-							<p>
-								{{ Nombre encargado }}<br>
-								<small>{{ Fecha firma }}</small>
-							</p>
-						</td>
-
-						<td class="highlight">
-							<small>Adm. de obra firma final</small><br>
-							<hr>
-							<i class="fa fa-clock-o fa-2x pending"></i>
-							<p>
-								{{ Nombre encargado }}<br>
-								<small>{{ Fecha firma }}</small>
-							</p>
-						</td>
-					</tr>
-				</table>
+				<img src="http://ddejhenv4m3e3.cloudfront.net/logos/36eb8ec7-df93-4476-bf4f-a31f54c8e8e9.png" alt="logo_manflas" class="logo">
 			</div>
 		</div>
+		<hr />
+		<div>
+			<div>
+				<h3>HALLAZGO</h3>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="row location-field">
+							<div class="col-xs-4 info-label">
+								Nombre hallazgo:
+							</div>
+							<div class="col-xs-8">
+								<%= "#{report.station.name} - #{report.station.sector}" %>
+							</div>
+						</div>
+						<div class="row location-field">
+							<div class="col-xs-4 info-label">
+								Área:
+							</div>
+							<div class="col-xs-8">
+								<%= report.dynamic_attributes.dig('43', 'text') %>
+							</div>
+						</div>
+						<div class="row location-field">
+							<div class="col-xs-4 info-label">
+								Categoría:
+							</div>
+							<div class="col-xs-8">
+								<%= report.dynamic_attributes.dig('44', 'text') %>
+							</div>
+						</div>
+						<div class="row location-field">
+							<div class="col-xs-4 info-label">
+								Comentario:
+							</div>
+							<div class="col-xs-8">
+								<%= report.dynamic_attributes.dig('46', 'text')  %>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="row location-field">
+							<div class="col-xs-4 info-label">
+								Estado:
+							</div>
+							<div class="col-xs-8">
+								<%= report.state_name %>
+							</div>
+						</div>
+						<div class="row location-field">
+							<div class="col-xs-4 info-label">
+								Fecha de creación:
+							</div>
+							<div class="col-xs-8">
+								<%= report.formatted_created_at %>
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr />
+				<div class="row standalone-container">
+					<div class="col-xs-6">
+						<div class="row">
+							<div class="col-xs-12">
+								<h3>GEOLOCALIZACIÓN</h3>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12"> 
+								<div class="center-cropped map" style="background-image: url('<%= report.initial_location_image %>');">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="row">
+							<div class="col-xs-12">
+								<h3>FOTOS</h3>
+							</div>
+						</div>
+						<% report.images.where(is_initial: true).each do |image| %>
+						<div class="picsField center-cropped"
+						style="background-image: url('<%= image.url.gsub('https', 'http') %>');">
+						</div>
+						<%= image.comment.present? ? image.comment : "Imagen sin comentario" %>
+						<% end %>
+				</div>
+			</div>
+			<hr />
+			<!-- DATA KMZ -->
+			<div class="row">
+				<div class="col-xs-6">
+					<div class="row location-field">
+						<div class="col-xs-4 info-label">
+							Sector:
+						</div>
+						<div class="col-xs-8">
+							<%= report.station.sector %>
+						</div>
+					</div>
+					<div class="row location-field">
+						<div class="col-xs-4 info-label">
+							Cuartel:
+						</div>
+						<div class="col-xs-8">
+							<%= report.station.name %>
+						</div>
+					</div>
+					<div class="row location-field">
+						<div class="col-xs-4 info-label">
+							Variedad:
+						</div>
+						<div class="col-xs-8">
+							<%= report.station.variety %>
+						</div>
+					</div>
+					<div class="row location-field">
+						<div class="col-xs-4 info-label">
+							Año de plantación:
+						</div>
+						<div class="col-xs-8">
+							<%= report.station.plantation_year %>
+						</div>
+					</div>			
+				</div>
+				<div class="col-xs-6">
+					<div class="row location-field">
+						<div class="col-xs-4 info-label">
+							Densidad de la plantación:
+						</div>
+						<div class="col-xs-8">
+							<%= report.station.plantation_density %>
+						</div>
+					</div>
+					<div class="row location-field">
+						<div class="col-xs-4 info-label">
+							Producción del año anterior:
+						</div>
+						<div class="col-xs-8">
+							<%= report.station.last_year_production %>
+						</div>
+					</div>
+					<div class="row location-field">
+						<div class="col-xs-4 info-label">
+							Precipitación de riego:
+						</div>
+						<div class="col-xs-8">
+							<%= report.station.water_precipitation  %>
+						</div>
+					</div>
+				</div>
+				<hr />
+				<% if report.state != "unchecked" %>
+				<div class="col-xs-12">
+					<h3>Resolución Hallazgo</h3>
+				</div>
+				<div class="col-xs-12">
+					<div class="row location-field">
+						<div class="col-xs-4 info-label">
+							Estado:
+						</div>
+						<div class="col-xs-8">
+							<%= report.state_name %>
+						</div>
+					</div>
+					<div class="row location-field">
+						<div class="col-xs-4 info-label">
+							Usuario Asignado:
+						</div>
+						<div class="col-xs-8">
+							<%= report.assigned_user.present? ? report.assigned_user.name : report.creator.name %>
+						</div>
+					</div>
+					<div class="row location-field">
+						<div class="col-xs-4 info-label">
+							Fecha Resolución:
+						</div>
+						<div class="col-xs-8">
+							<%= report.formatted_resolved_at %>
+						</div>
+					</div>	
+				</div>
+				<% end %>
+			</div>
+		</div>
+	</div>
+</div>
 </body>
 </html>
