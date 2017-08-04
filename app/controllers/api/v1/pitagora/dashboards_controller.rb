@@ -325,8 +325,6 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
                                                           current_user: current_user                                                        },
                                                           order: false
     })
-    .joins(:construction)
-    .order("constructions.name ASC")
 
     params.permit!
     params_hash = params.to_h
@@ -361,7 +359,8 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
 
   def checklists
   
-    cumplimiento_por_periodo = filtered_checklists.group_by do |checklist|
+    cumplimiento_por_periodo = filtered_checklists
+      .order("checklist_reports.created_at ASC").group_by do |checklist|
       Date.new(checklist.created_at.year, checklist.created_at.month)
     end.map do |key, group|
       {
@@ -370,7 +369,8 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
       }
     end
 
-    obras_bajo_meta = filtered_checklists.group_by do |checklist|
+    obras_bajo_meta = filtered_checklists
+    .group_by do |checklist|
       checklist.construction
     end.map do |key, group|
       {
@@ -387,7 +387,10 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
       }
     end
 
-    cumplimiento_por_obra = filtered_checklists.group_by do |checklist|
+    cumplimiento_por_obra = filtered_checklists
+    .joins(:construction)
+    .order("constructions.name ASC")
+    .group_by do |checklist|
       checklist.construction
     end.map do |key, group|
       {
