@@ -143,8 +143,8 @@ class Inspection < ApplicationRecord
   end
 
   def expert_name
-    if construction.expert.present?
-      construction.expert.name
+    if construction.has_expert?
+      construction.users.experts.map { |u| u.name }.join(", ")
     else
       "Sin Experto SSOMA"
     end
@@ -242,13 +242,13 @@ class Inspection < ApplicationRecord
       UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
       .inspection_email(inspection.id, inspection.construction.administrator,
                         "Solicitud de firma final - #{inspection.construction.name}",
-                        "#{inspection.construction.expert.name} ha cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}. " +
+                        "Se han cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}. " +
                         "Para realizar la firma final, puedes ingresar a #{ENV['ADMIN_URL']}/#/efinding/inspecciones/lista")
 
       UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
       .inspection_email(inspection.id, inspection.construction.supervisor,
                         "Aviso de levantamiento - #{inspection.construction.name}",
-                        "Se informa que #{inspection.construction.expert.name} ha cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}. " +
+                        "Se informa que se han cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}. " +
                         "Se ha enviado una solicitud de firma al Administrador de Obra #{inspection.construction.administrator.name}.")
     end
 
