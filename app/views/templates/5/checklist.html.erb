@@ -180,7 +180,7 @@
 						Jefe de Terreno:
 					</div>
 					<div class="col-xs-8">
-						<%= if checklist.construction.has_expert? then checklist.construction.expert_names.joins("\n") else "Obra sin Jefes de Terreno" end %>
+						<%= if checklist.construction.has_expert? then checklist.construction.expert_names.join("\n") else "Obra sin Jefes de Terreno" end %>
 					</div>
 				</div>
 				<div class="row location-field">
