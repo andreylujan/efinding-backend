@@ -44,6 +44,7 @@ ActiveAdmin.register State do
       f.input :report_type
       f.input :name
       f.input :color
+      f.input :show_pdf
       f.has_many :incoming_transitions do |transition|
         transition.inputs
       end
