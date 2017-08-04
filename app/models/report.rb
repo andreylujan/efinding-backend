@@ -352,8 +352,9 @@ class Report < ApplicationRecord
   def images_attributes=(val)
     val = val.map do |v|
       if v["attributes"].present?
-        state = v["attributes"].delete "state"
-        v["attributes"]["state_id"] = state["id"]
+        state_id = v["attributes"]["state"]["id"]
+        v["attributes"].delete("state")
+        v
       else
         v
       end
