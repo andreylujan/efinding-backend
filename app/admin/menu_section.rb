@@ -8,9 +8,6 @@ ActiveAdmin.register MenuSection do
   # filter :sign_in_count
   filter :created_at
 
-  show do
-    field :name
-  end
 
   index do
     column :name
