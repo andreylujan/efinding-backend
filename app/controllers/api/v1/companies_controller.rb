@@ -12,6 +12,10 @@ class Api::V1::CompaniesController < Api::V1::JsonApiController
     super
   end
 
+  def update
+    @from = :show
+    super
+  end
 
   def create_csv
     begin

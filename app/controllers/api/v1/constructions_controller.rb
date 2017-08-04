@@ -25,6 +25,11 @@ class Api::V1::ConstructionsController < Api::V1::JsonApiController
     super
   end
 
+  def update
+    @from = :show
+    super
+  end
+
   def show
     @from = :show
     super
