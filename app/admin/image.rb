@@ -1,5 +1,5 @@
 ActiveAdmin.register Image do
-  
+    
 
   # filter :email
   # filter :current_sign_in_at
@@ -11,6 +11,7 @@ ActiveAdmin.register Image do
     selectable_column
     id_column
     column :url
+    column :state
     column :image do |image|
       image_tag image.url
     end

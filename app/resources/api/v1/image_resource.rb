@@ -18,10 +18,11 @@
 class Api::V1::ImageResource < ApplicationResource
   
   has_one :category
-  add_foreign_keys :report_id
+  add_foreign_keys :report_id, :state_id
   # has_one :report
 
   attributes :url, :comment, :synced, :is_initial
+  has_one :state
   
   def synced
   	1

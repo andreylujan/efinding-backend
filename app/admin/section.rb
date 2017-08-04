@@ -1,5 +1,5 @@
 ActiveAdmin.register Section do
-  permit_params :name, :config
+  permit_params :name, :config, :state_id
 
 
   # filter :email

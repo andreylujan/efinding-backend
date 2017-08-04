@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170804194620) do
+ActiveRecord::Schema.define(version: 20170804220636) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -243,10 +243,12 @@ ActiveRecord::Schema.define(version: 20170804194620) do
     t.text     "comment"
     t.boolean  "is_initial",    default: true, null: false
     t.datetime "deleted_at"
+    t.integer  "state_id"
     t.index ["deleted_at"], name: "index_images_on_deleted_at", using: :btree
     t.index ["report_id"], name: "index_images_on_report_id", using: :btree
     t.index ["resource_id"], name: "index_images_on_resource_id", using: :btree
     t.index ["resource_type"], name: "index_images_on_resource_type", using: :btree
+    t.index ["state_id"], name: "index_images_on_state_id", using: :btree
   end
 
   create_table "inspections", force: :cascade do |t|
@@ -606,6 +608,7 @@ ActiveRecord::Schema.define(version: 20170804194620) do
   add_foreign_key "data_parts", "collections"
   add_foreign_key "devices", "users"
   add_foreign_key "images", "reports"
+  add_foreign_key "images", "states"
   add_foreign_key "inspections", "constructions"
   add_foreign_key "inspections", "users", column: "creator_id"
   add_foreign_key "inspections", "users", column: "expert_id"

@@ -13,6 +13,7 @@
 #  comment       :text
 #  is_initial    :boolean          default(TRUE), not null
 #  deleted_at    :datetime
+#  state_id      :integer
 #
 
 class Image < ApplicationRecord
@@ -24,6 +25,7 @@ class Image < ApplicationRecord
   # validates_presence_of :image
   validates_presence_of :url
   belongs_to :resource, polymorphic: true
+  belongs_to :state
 
   def http_url
   	self.url.gsub 'https', 'http' if self.url.present?
