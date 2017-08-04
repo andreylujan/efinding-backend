@@ -1,5 +1,7 @@
 ActiveAdmin.register State do
-  permit_params :name
+  permit_params :name, :report_type_id,
+    :color,
+    :show_pdf
 
 
   # filter :email

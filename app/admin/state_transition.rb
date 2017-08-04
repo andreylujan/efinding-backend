@@ -1,5 +1,5 @@
 ActiveAdmin.register StateTransition do
-  permit_params :name
+  permit_params :name, :previous_state_id, :next_state_id
 
 
   # filter :email
