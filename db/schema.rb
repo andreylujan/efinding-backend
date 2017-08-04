@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170802194012) do
+ActiveRecord::Schema.define(version: 20170804194620) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,14 +48,14 @@ ActiveRecord::Schema.define(version: 20170802194012) do
   end
 
   create_table "checkins", force: :cascade do |t|
-    t.integer  "user_id",                                                        null: false
-    t.datetime "arrival_time",                                                   null: false
+    t.integer  "user_id",                                                           null: false
+    t.datetime "arrival_time",                                                      null: false
     t.datetime "exit_time"
-    t.datetime "created_at",                                                     null: false
-    t.datetime "updated_at",                                                     null: false
-    t.json     "data",                                              default: {}, null: false
-    t.geometry "arrival_lonlat", limit: {:srid=>0, :type=>"point"}
-    t.geometry "exit_lonlat",    limit: {:srid=>0, :type=>"point"}
+    t.datetime "created_at",                                                        null: false
+    t.datetime "updated_at",                                                        null: false
+    t.json     "data",                                                 default: {}, null: false
+    t.geometry "arrival_lonlat", limit: {:srid=>0, :type=>"st_point"}
+    t.geometry "exit_lonlat",    limit: {:srid=>0, :type=>"st_point"}
     t.index ["arrival_lonlat"], name: "index_checkins_on_arrival_lonlat", using: :gist
     t.index ["exit_lonlat"], name: "index_checkins_on_exit_lonlat", using: :gist
     t.index ["user_id"], name: "index_checkins_on_user_id", using: :btree
@@ -290,12 +290,12 @@ ActiveRecord::Schema.define(version: 20170802194012) do
   end
 
   create_table "locations", force: :cascade do |t|
-    t.geometry "lonlat",     limit: {:srid=>0, :type=>"point"}, null: false
+    t.geometry "lonlat",     limit: {:srid=>0, :type=>"st_point"}, null: false
     t.float    "accuracy"
     t.bigint   "timestamp"
     t.text     "provider"
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
     t.text     "address"
     t.text     "region"
     t.text     "commune"
@@ -428,7 +428,7 @@ ActiveRecord::Schema.define(version: 20170802194012) do
     t.text     "subtitle_field"
     t.boolean  "has_pdf",                    default: true,            null: false
     t.integer  "initial_state_id"
-    t.json     "default_dynamic_attributes", default: {},              null: false
+    t.jsonb    "default_dynamic_attributes", default: {},              null: false
     t.text     "default_title",              default: "Sin título",    null: false
     t.text     "default_subtitle",           default: "Sin subtítulo", null: false
     t.index ["initial_state_id"], name: "index_report_types_on_initial_state_id", using: :btree

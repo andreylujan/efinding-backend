@@ -1,5 +1,5 @@
 ActiveAdmin.register SectionDataPart do
-  permit_params :name
+  permit_params :name, :section_id, :data_part_id
 
 
   # filter :email

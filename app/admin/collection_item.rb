@@ -1,5 +1,8 @@
 ActiveAdmin.register CollectionItem do
-  permit_params :name
+  permit_params :name,
+  	:collection_id,
+  	:parent_item_id,
+  	:position
 
 
   # filter :email
@@ -7,6 +10,6 @@ ActiveAdmin.register CollectionItem do
   # filter :sign_in_count
   filter :created_at
 
-
+  
 
 end

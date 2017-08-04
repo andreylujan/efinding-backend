@@ -39,11 +39,14 @@ ActiveAdmin.register State do
 
   form do |f|
     f.inputs do
-      f.input :organization
+      f.input :report_type
       f.input :name
-      f.input :position
-      f.has_many :menu_items do |menu_item|
-        menu_item.inputs
+      f.input :color
+      f.has_many :incoming_transitions do |transition|
+        transition.inputs
+      end
+      f.has_many :outgoing_transitions do |transition|
+        transition.inputs
       end
     end
     f.actions

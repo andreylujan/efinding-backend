@@ -22,4 +22,6 @@ class State < ApplicationRecord
   has_many :next_states, through: :outgoing_transitions
   has_many :sections
   has_many :reports
+  accepts_nested_attributes_for :incoming_transitions
+  accepts_nested_attributes_for :outgoing_transitions
 end

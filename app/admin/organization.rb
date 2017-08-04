@@ -1,5 +1,6 @@
 ActiveAdmin.register Organization do
-  permit_params :name
+  permit_params :name, :default_admin_path,
+  	:csv_separator, :app_name, :default_report_type
 
   
 

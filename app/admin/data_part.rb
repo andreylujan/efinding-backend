@@ -1,5 +1,8 @@
 ActiveAdmin.register DataPart do
-  permit_params :name
+  permit_params :name, :icon, :required, :position, :collection_id,
+    :list_id,
+    :config,
+    :type
 
 
   # filter :email
@@ -9,6 +12,7 @@ ActiveAdmin.register DataPart do
 
   form do |f|
     f.inputs do
+      f.input :type
       f.input :name
       f.input :icon
       f.input :required

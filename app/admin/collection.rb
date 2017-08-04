@@ -1,5 +1,6 @@
 ActiveAdmin.register Collection do
-  permit_params :name
+  permit_params :name, :organization_id,
+  	:parent_collection_id
 
 
   # filter :email

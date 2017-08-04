@@ -17,3 +17,4 @@ $ ->
         JSON.parse target.val()
     )
 
+    target.hide()
