@@ -194,6 +194,9 @@ class Report < ApplicationRecord
     }
   end
 
+  def is_expired=(val)
+  end
+
   def self.setup_xlsx(organization_id)
     data_parts = DataPart.joins(section: :report_type).where(report_types: { organization_id: organization_id})
     .order("sections.position ASC, data_parts.position ASC")
