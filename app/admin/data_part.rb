@@ -1,14 +1,14 @@
 ActiveAdmin.register DataPart do
-  permit_params :name, :icon, :required, :position, :collection_id,
-    :list_id,
-    :config,
-    :type
+  controller do
+    define_method :permitted_params do
+      params.permit!
+    end
+  end
 
 
   # filter :email
   # filter :current_sign_in_at
   # filter :sign_in_count
-  filter :created_at
 
   form do |f|
     f.inputs do

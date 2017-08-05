@@ -1,12 +1,15 @@
 ActiveAdmin.register MenuSection do
-  permit_params :organization_id, :name, :position, :admin_path, :icon
 
 
+  controller do
+    define_method :permitted_params do
+      params.permit!
+    end
+  end
 
   # filter :email
   # filter :current_sign_in_at
   # filter :sign_in_count
-  filter :created_at
 
 
   index do
@@ -27,6 +30,7 @@ ActiveAdmin.register MenuSection do
       f.input :organization
       f.input :name
       f.input :position
+      f.input :icon
       f.has_many :menu_items do |menu_item|
         menu_item.inputs
       end

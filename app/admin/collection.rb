@@ -1,12 +1,9 @@
 ActiveAdmin.register Collection do
-  permit_params :name, :organization_id,
-  	:parent_collection_id
-
-
-  # filter :email
-  # filter :current_sign_in_at
-  # filter :sign_in_count
-  filter :created_at
+  controller do
+    define_method :permitted_params do
+      params.permit!
+    end
+  end
 
 
 

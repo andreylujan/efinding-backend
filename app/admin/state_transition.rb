@@ -1,11 +1,14 @@
 ActiveAdmin.register StateTransition do
-  permit_params :name, :previous_state_id, :next_state_id
+  controller do
+    define_method :permitted_params do
+      params.permit!
+    end
+  end
 
 
   # filter :email
   # filter :current_sign_in_at
   # filter :sign_in_count
-  filter :created_at
 
 
 

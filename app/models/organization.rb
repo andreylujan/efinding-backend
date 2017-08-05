@@ -19,7 +19,6 @@
 class Organization < ApplicationRecord
 
     has_many :roles
-    has_many :categories
     has_many :report_types
     has_many :table_columns, -> { order(position: :asc) }
     has_many :menu_sections, -> { order(position: :asc) }

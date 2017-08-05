@@ -89,6 +89,10 @@ class Inspection < ApplicationRecord
     }
   end
 
+  def name
+    "#{id} - #{construction.company.name} - #{construction.name}"
+  end
+
   def self.setup_xlsx
     cols = []
     column_translations.each do |key, value|

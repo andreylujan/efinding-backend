@@ -1,26 +1,23 @@
 ActiveAdmin.register State do
-  permit_params :name, :report_type_id,
-    :color,
-    :show_pdf
+  controller do
+    define_method :permitted_params do
+      params.permit!
+    end
+  end
 
 
   # filter :email
   # filter :current_sign_in_at
   # filter :sign_in_count
-  filter :created_at
-  form do |f|
-    f.inputs do
-      f.input :name
-      f.input :color
-    end
-    f.actions
-  end
+ 
 
   index do
     column :id
     column :name
     column :report_type
-    column :color
+    column :color do |state|
+      raw("<span style='color: #{state.color};'>#{state.color}</span>")
+    end
     column :show_pdf
     column :incoming_transitions do |state|
       links = []

@@ -1,10 +1,11 @@
 ActiveAdmin.register Image do
     
 
-  # filter :email
-  # filter :current_sign_in_at
-  # filter :sign_in_count
-  filter :created_at
+  controller do
+    define_method :permitted_params do
+      params.permit!
+    end
+  end
 
   
   index do
@@ -13,7 +14,7 @@ ActiveAdmin.register Image do
     column :url
     column :state
     column :image do |image|
-      image_tag image.url
+      image_tag image.url, { class: "img-thumbnail" }
     end
     column :created_at
     actions

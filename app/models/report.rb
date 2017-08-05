@@ -155,9 +155,19 @@ class Report < ApplicationRecord
     :report_fields
   ]
 
+  def name
+    self.id.to_s
+  end
+
   def check_assigned_user
     if self.assigned_user.nil?
       self.assigned_user = self.creator
+    end
+  end
+
+  def dynamic_attributes=(val)
+    if val.present? and val.is_a? String
+      self.dynamic_attributes = JSON.parse(val)
     end
   end
 

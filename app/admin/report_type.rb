@@ -1,10 +1,9 @@
 ActiveAdmin.register ReportType do
-  permit_params :name, :title_field, :subtitle_field,
-  	:has_pdf, :initial_state_id, :default_dynamic_attributes, 
-  	:default_title,
-  	:default_subtitle,
-  	:organization_id,
-  	:initial_state_id
+  controller do
+    define_method :permitted_params do
+      params.permit!
+    end
+  end
 
   form do |f|
     f.inputs do
@@ -29,7 +28,6 @@ ActiveAdmin.register ReportType do
   # filter :email
   # filter :current_sign_in_at
   # filter :sign_in_count
-  filter :created_at
 
 
 
