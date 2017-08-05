@@ -30,7 +30,7 @@ class Construction < ApplicationRecord
   accepts_nested_attributes_for :construction_personnel
   has_many :personnel, through: :construction_personnel
   has_many :checklist_reports, dependent: :destroy
-  has_many :construction_users
+  has_many :construction_users, dependent: :destroy
   has_many :users, through: :construction_users
   validate :check_expert
 

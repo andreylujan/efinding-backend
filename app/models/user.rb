@@ -62,7 +62,8 @@ class User < ApplicationRecord
   has_many :created_inspections, class_name: :Inspection, foreign_key: :creator_id, dependent: :destroy
   has_many :initially_signed_inspections, class_name: :Inspection, foreign_key: :initial_signer_id, dependent: :destroy
   has_many :finally_signed_inspections, class_name: :Inspection, foreign_key: :final_signer_id, dependent: :destroy
-
+  has_many :construction_users, dependent: :destroy
+  
   def correct_rut
     if rut.present?
       unless RUT::validar(self.rut)
