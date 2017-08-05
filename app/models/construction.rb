@@ -17,7 +17,7 @@
 class Construction < ApplicationRecord
   acts_as_paranoid
   belongs_to :company
-  has_many :accident_rates
+  has_many :accident_rates, dependent: :destroy
   has_many :inspections, dependent: :destroy
   validates :company, presence: true
   validates :name, presence: true
