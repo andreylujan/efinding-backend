@@ -210,7 +210,7 @@ class Construction < ApplicationRecord
     csv.each do |row|
 
       errors = {}
-      cons = Construction.find_or_initialize_by(code: row["code"]).tap do |construction|
+      cons = Construction.find_or_initialize_by(company_id: row["company_id"], code: row["code"]).tap do |construction|
         construction.name = row["name"]
         has_errors = false
         expert_ids = construction.user_ids.dup
