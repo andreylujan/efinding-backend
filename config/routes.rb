@@ -1,6 +1,8 @@
 # -*- encoding : utf-8 -*-
 Rails.application.routes.draw do
 
+  devise_for :users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
   match '/*path', to: 'application#cors_preflight_check', via: :options
   require 'sidekiq/web'
 

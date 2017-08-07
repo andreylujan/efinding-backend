@@ -42,6 +42,11 @@ gem 'wkhtmltopdf-binary', '~> 0.12.3.1'
 gem 'charlock_holmes', '~> 0.7.3'
 gem 'rut_chileno', git: 'https://github.com/Numerico/rut-chileno', ref: '157d9d4aacfe9cac7f001007acaf9664ba20567f'
 
+gem 'activeadmin', git: 'https://github.com/activeadmin/activeadmin'
+gem 'jsoneditor-rails', '~> 1.0', '>= 1.0.1'
+gem 'turbolinks', '~> 5.0', '>= 5.0.1'
+gem 'sass', '~> 3.5', '>= 3.5.1'
+
 gem 'devise', '~> 4.2'
 gem 'doorkeeper', '~> 4.2'
 gem 'ruby_kml', git: 'https://github.com/pelluch/ruby_kml'

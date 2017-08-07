@@ -6,6 +6,23 @@ GIT
     rut_chileno (0.5)
 
 GIT
+  remote: https://github.com/activeadmin/activeadmin
+  revision: 5084cddb6e2db764f4498266609c3ef179614876
+  specs:
+    activeadmin (1.1.0)
+      arbre (>= 1.1.1)
+      formtastic (~> 3.1)
+      formtastic_i18n
+      inherited_resources (~> 1.7)
+      jquery-rails
+      kaminari (>= 1.0.1)
+      railties (>= 4.2, < 5.2)
+      ransack (~> 1.3)
+      sass (~> 3.4)
+      sprockets (>= 3.0, < 4.1)
+      sprockets-es6 (>= 0.9.2)
+
+GIT
   remote: https://github.com/cerebris/jsonapi-resources
   revision: d9fdcb3fcdd2b5c39722e6d772ca7f4bf6272702
   ref: d9fdcb3fcdd2b5c39722e6d772ca7f4bf6272702
@@ -109,6 +126,8 @@ GEM
       activerecord (>= 3.0)
     airbrussh (1.1.2)
       sshkit (>= 1.6.1, != 1.7.0)
+    arbre (1.1.1)
+      activesupport (>= 3.0.0)
     arel (7.1.4)
     awesome_print (1.7.0)
     aws-sdk (2.8.0)
@@ -123,6 +142,10 @@ GEM
       htmlentities (~> 4.3.1)
       nokogiri (>= 1.4.1)
       rubyzip (~> 1.0.0)
+    babel-source (5.8.35)
+    babel-transpiler (0.7.0)
+      babel-source (>= 4.0, < 6)
+      execjs (~> 2.0)
     bcrypt (3.1.11)
     bson (4.2.1)
     builder (3.2.3)
@@ -173,6 +196,7 @@ GEM
       railties (>= 3.2, < 5.1)
     erubis (2.7.0)
     excon (0.55.0)
+    execjs (2.7.0)
     faraday (0.12.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.17)
@@ -306,13 +330,28 @@ GEM
     font-awesome-rails (4.7.0.2)
       railties (>= 3.2, < 5.2)
     formatador (0.2.5)
+    formtastic (3.1.5)
+      actionpack (>= 3.2.13)
+    formtastic_i18n (0.6.0)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
+    has_scope (0.7.1)
+      actionpack (>= 4.1, < 5.2)
+      activesupport (>= 4.1, < 5.2)
     htmlentities (4.3.4)
     i18n (0.8.1)
     inflecto (0.0.2)
+    inherited_resources (1.7.2)
+      actionpack (>= 3.2, < 5.2.x)
+      has_scope (~> 0.6)
+      railties (>= 3.2, < 5.2.x)
+      responders
     ipaddress (0.8.3)
     jmespath (1.3.1)
+    jquery-rails (4.3.1)
+      rails-dom-testing (>= 1, < 3)
+      railties (>= 4.2.0)
+      thor (>= 0.14, < 2.0)
     json (2.0.3)
     jsonapi (0.1.1.beta6)
       jsonapi-parser (= 0.1.1.beta3)
@@ -321,6 +360,20 @@ GEM
     jsonapi-renderer (0.1.1.beta1)
     jsonapi-serializers (0.16.1)
       activesupport
+    jsoneditor-rails (1.0.1)
+      sass-rails
+    kaminari (1.0.1)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.0.1)
+      kaminari-activerecord (= 1.0.1)
+      kaminari-core (= 1.0.1)
+    kaminari-actionview (1.0.1)
+      actionview
+      kaminari-core (= 1.0.1)
+    kaminari-activerecord (1.0.1)
+      activerecord
+      kaminari-core (= 1.0.1)
+    kaminari-core (1.0.1)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -360,6 +413,8 @@ GEM
     paranoia (2.2.1)
       activerecord (>= 4.0, < 5.1)
     pg (0.19.0)
+    polyamorous (1.3.1)
+      activerecord (>= 3.0)
     puma (3.7.1)
     rack (2.0.1)
     rack-cors (0.4.1)
@@ -396,6 +451,12 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (12.0.0)
+    ransack (1.8.3)
+      actionpack (>= 3.0)
+      activerecord (>= 3.0)
+      activesupport (>= 3.0)
+      i18n
+      polyamorous (~> 1.3)
     rb-fsevent (0.9.8)
     rb-inotify (0.9.8)
       ffi (>= 0.5.0)
@@ -414,6 +475,17 @@ GEM
     ruby-graphviz (1.2.2)
     ruby_dep (1.5.0)
     rubyzip (1.0.0)
+    sass (3.5.1)
+      sass-listen (~> 4.0.0)
+    sass-listen (4.0.0)
+      rb-fsevent (~> 0.9, >= 0.9.4)
+      rb-inotify (~> 0.9, >= 0.9.7)
+    sass-rails (5.0.6)
+      railties (>= 4.0.0, < 6)
+      sass (~> 3.1)
+      sprockets (>= 2.8, < 4.0)
+      sprockets-rails (>= 2.0, < 4.0)
+      tilt (>= 1.1, < 3)
     sidekiq (4.2.9)
       concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
@@ -427,6 +499,10 @@ GEM
     sprockets (3.7.1)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
+    sprockets-es6 (0.9.2)
+      babel-source (>= 5.8.11)
+      babel-transpiler
+      sprockets (>= 3.0.0)
     sprockets-rails (3.2.0)
       actionpack (>= 4.0)
       activesupport (>= 4.0)
@@ -443,7 +519,11 @@ GEM
       state_machines-activemodel (>= 0.3.0)
     thor (0.19.4)
     thread_safe (0.3.6)
+    tilt (2.0.8)
     trollop (2.1.2)
+    turbolinks (5.0.1)
+      turbolinks-source (~> 5)
+    turbolinks-source (5.0.3)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     versionist (1.5.0)
@@ -467,6 +547,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers (~> 0.10.4)
+  activeadmin!
   activerecord-postgis-adapter (~> 4.0, >= 4.0.2)
   acts_as_list (~> 0.8.2)
   acts_as_xlsx!
@@ -490,6 +571,7 @@ DEPENDENCIES
   font-awesome-rails (~> 4.7, >= 4.7.0.2)
   jsonapi-resources!
   jsonapi-serializers (~> 0.16.1)
+  jsoneditor-rails (~> 1.0, >= 1.0.1)
   listen (~> 3.1, >= 3.1.5)
   mongoid
   openssl
@@ -505,14 +587,16 @@ DEPENDENCIES
   rgeo (~> 0.6.0)
   ruby_kml!
   rut_chileno!
+  sass (~> 3.5, >= 3.5.1)
   sidekiq (~> 4.2, >= 4.2.7)
   spring (~> 2.0)
   spring-watcher-listen (~> 2.0, >= 2.0.1)
   state_machines-activerecord
+  turbolinks (~> 5.0, >= 5.0.1)
   versionist (~> 1.5)
   whenever (~> 0.9.7)
   wicked_pdf (~> 1.1)
   wkhtmltopdf-binary (~> 0.12.3.1)
 
 BUNDLED WITH
-   1.15.2
+   1.15.3
