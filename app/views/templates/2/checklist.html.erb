@@ -179,7 +179,7 @@
 						Experto SSOMA:
 					</div>
 					<div class="col-xs-8">
-						<%= if checklist.construction.expert.present? then checklist.construction.expert.name else "Obra sin Experto SSOMA" end %>
+						<%= if checklist.construction.has_expert? ? then checklist.construction.expert_names else "Obra sin Expertos SSOMA" end %>
 					</div>
 				</div>
 				<div class="row location-field">
