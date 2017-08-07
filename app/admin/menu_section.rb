@@ -1,26 +1,39 @@
-ActiveAdmin.register User do
-  permit_params :email, :password, :password_confirmation
+ActiveAdmin.register MenuSection do
+
+
+  controller do
+    define_method :permitted_params do
+      params.permit!
+    end
+  end
+
+  # filter :email
+  # filter :current_sign_in_at
+  # filter :sign_in_count
+
 
   index do
-    selectable_column
-    id_column
-    column :email
-    column :current_sign_in_at
-    column :sign_in_count
-    column :created_at
+    column :name
+    column :organization
+    column :menu_items do |menu_section|
+      links = []
+      menu_section.menu_items.each do |menu_item|
+        links << (link_to menu_item.name, besito_menu_item_path(menu_item))
+      end
+      raw(links.join("<br>"))
+    end
     actions
   end
 
-  filter :email
-  filter :current_sign_in_at
-  filter :sign_in_count
-  filter :created_at
-
   form do |f|
     f.inputs do
-      f.input :email
-      f.input :password
-      f.input :password_confirmation
+      f.input :organization
+      f.input :name
+      f.input :position
+      f.input :icon
+      f.has_many :menu_items do |menu_item|
+        menu_item.inputs
+      end
     end
     f.actions
   end
