@@ -12,7 +12,7 @@ gem 'rails', '~> 5.0.2'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.19.0'
 # Use Puma as the app server
-gem 'puma', '~> 3.7', '>= 3.7.1'
+gem 'unicorn', '~> 5.3'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
@@ -72,7 +72,6 @@ end
 group :development do
   gem 'capistrano-rails', '~> 1.2', '>= 1.2.1'
   gem 'capistrano-rbenv', '~> 2.1'
-  gem 'capistrano-passenger', '~> 0.2.0'
   gem 'capistrano-sidekiq', git: 'https://github.com/pelluch/capistrano-sidekiq'
   gem 'rails-erd', '~> 1.5', require: false
   gem 'annotate', git: 'https://github.com/ctran/annotate_models.git', branch: 'develop'
