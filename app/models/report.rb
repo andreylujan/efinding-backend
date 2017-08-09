@@ -299,19 +299,19 @@ class Report < ApplicationRecord
   end
 
   def formatted_finished_at
-    finished_at.strftime("%d/%m/%Y %R") if finished_at.present?
+    finished_at.in_time_zone("Chile/Continental").strftime("%d/%m/%Y %R") if finished_at.present?
   end
 
   def formatted_created_at
-    created_at.strftime("%d/%m/%Y %R")
+    created_at.in_time_zone("Chile/Continental").strftime("%d/%m/%Y %R")
   end
 
   def formatted_limit_date
-    limit_date.strftime("%d/%m/%Y %R") if limit_date.present?
+    limit_date.in_time_zone("Chile/Continental").strftime("%d/%m/%Y %R") if limit_date.present?
   end
 
   def formatted_resolved_at
-    resolved_at.strftime("%d/%m/%Y %R") if resolved_at.present?
+    resolved_at.in_time_zone("Chile/Continental").strftime("%d/%m/%Y %R") if resolved_at.present?
   end
 
   def execution_time
