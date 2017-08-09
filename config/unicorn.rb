@@ -1,5 +1,5 @@
 # set path to the application
-app_dir git File.expand_path("../..", __FILE__)
+app_dir = "/srv/http/www/efinding/production/api/current"
 shared_dir = "#{app_dir}/shared"
 working_directory app_dir
 
