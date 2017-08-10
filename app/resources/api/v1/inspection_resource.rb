@@ -269,10 +269,11 @@ class Api::V1::InspectionResource < ApplicationResource
       .select("inspections.*, count(reports.id) as num_reports, count(case when reports.state = 'unchecked' THEN 1 END) as num_pending_reports, count(case when reports.state = 'unchecked' AND reports.limit_date <= '" +
               DateTime.now.to_s + "' THEN 1 END) as num_expired_reports")
       .group("inspections.id")
-
+      
       if current_user.role_id == 2
         inspections = inspections.joins(:construction)
-        .where(constructions: { supervisor_id: current_user.id })
+        .where("constructions.supervisor_id = ? OR inspections.creator_id = ?",
+          current_user.id, current_user.id)
       elsif current_user.role_id == 3
         inspections = inspections.joins(:construction)
         .where(constructions: { expert_id: current_user.id })
