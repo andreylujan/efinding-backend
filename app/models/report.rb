@@ -166,9 +166,12 @@ class Report < ApplicationRecord
   end
 
   def dynamic_attributes=(val)
-    if val.present? and val.is_a? String
-      self.dynamic_attributes = JSON.parse(val)
+    if val.present?
+      if val.is_a? String
+        val = JSON.parse(val)
+      end
     end
+    super(val)
   end
 
   def check_dynamic_changes
