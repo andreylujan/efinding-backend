@@ -273,7 +273,7 @@ class Api::V1::ReportResource < ApplicationResource
       records = records.order("reports.created_at DESC")
     end
 
-    records.where("reports.scheduled_at IS NULL OR reports.scheduled_at <= ?", DateTime.now)
+    records.includes(:initial_location).where("reports.scheduled_at IS NULL OR reports.scheduled_at <= ?", DateTime.now)
 
   end
 
