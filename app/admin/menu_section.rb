@@ -31,6 +31,7 @@ ActiveAdmin.register MenuSection do
     f.inputs do
       f.input :organization
       f.input :name
+      f.input :admin_path
       f.input :position
       f.input :icon
       f.has_many :menu_items do |menu_item|
