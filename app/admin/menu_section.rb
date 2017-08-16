@@ -15,6 +15,8 @@ ActiveAdmin.register MenuSection do
   index do
     column :name
     column :organization
+    column :admin_path
+    column :icon
     column :menu_items do |menu_section|
       links = []
       menu_section.menu_items.each do |menu_item|
