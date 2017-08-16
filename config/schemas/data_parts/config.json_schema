@@ -8,7 +8,8 @@
     "allow_multiple": { "type": "boolean" },
     "other_text": { "type": "string" },
     "other_enabled": { "type": "boolean" },
-    "max_length": { "type": "number", "minimum": 1 }
+    "max_length": { "type": "number", "minimum": 1 },
+    "is_user_selector": { "type": "boolean" }
   },
   "additionalProperties": false
 }
