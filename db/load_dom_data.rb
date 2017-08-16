@@ -62,15 +62,15 @@ CollectionItem.transaction do
       client_data[:contact_name] = titleize(client_data[:contact_name]) if client_data[:contact_name].present?
       
       collection = Collection.find(27)
-      construction = collection.collection_items.find_by_code(client_data[:construction_id])
+      construction = collection.collection_items.find_by_code(client_data[:rut])
       if construction.present?
         if construction.parent_item.nil?
           construction.parent_item_id = 834
         end
-        construction.name = "#{client_data[:name]} - #{client_data[:construction_name]}"
+        construction.name = "#{client_data[:name]}"
         construction.save!
       else
-        collection.collection_items.create!(code: client_data[:construction_id], name: client_data[:construction_name], parent_item_id: 834)
+        collection.collection_items.create!(code: client_data[:rut], name: client_data[:name], parent_item_id: 834)
       end
     end
   end
