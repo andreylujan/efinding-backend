@@ -7,7 +7,7 @@ class Api::V1::ReportResource < ApplicationResource
     :final_location_attributes,
     :started_at,
     :finished_at,
-    :images_attributes, :uploaded, :is_draft,
+    :images_attributes, :synced, :is_draft,
     :formatted_finished_at,
     :formatted_created_at,
     :formatted_limit_date,
