@@ -3,7 +3,7 @@
 IP=50.16.161.152
 # IP=52.201.182.66
 PORT=60
-KEY=echeckit_production.pem
+KEY=plluch_rsa
 echo 'Backing up to file...'
 echo "ssh -p $PORT -i $HOME/.ssh/$KEY "ubuntu@$IP" 'pg_dump -Z9 -Fc -U efinding -d efinding_staging > ~/dump.sql'"
 ssh -p $PORT -i $HOME/.ssh/$KEY "ubuntu@$IP" 'pg_dump -Z9 -Fc -U efinding -d efinding_staging > ~/dump.sql'
