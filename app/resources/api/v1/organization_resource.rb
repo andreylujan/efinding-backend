@@ -6,7 +6,6 @@ class Api::V1::OrganizationResource < ApplicationResource
   has_many :table_columns
   has_many :collections
   has_many :users
-  has_many :pdfs
   has_one :checklist
 
   def custom_links(options)

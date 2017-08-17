@@ -26,7 +26,6 @@ class Organization < ApplicationRecord
     has_many :reports, through: :report_types
     has_many :users, through: :roles
     has_many :collections
-    has_many :pdfs
     belongs_to :checklist
     has_many :checklists
     has_many :personnel_types

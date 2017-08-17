@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170817173628) do
+ActiveRecord::Schema.define(version: 20170817205534) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -391,12 +391,13 @@ ActiveRecord::Schema.define(version: 20170817173628) do
   end
 
   create_table "pdfs", force: :cascade do |t|
-    t.integer  "organization_id", null: false
     t.text     "pdf"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
     t.text     "title"
-    t.index ["organization_id"], name: "index_pdfs_on_organization_id", using: :btree
+    t.integer  "report_type_id", null: false
+    t.text     "html"
+    t.index ["report_type_id"], name: "index_pdfs_on_report_type_id", using: :btree
   end
 
   create_table "personnel", force: :cascade do |t|
@@ -629,7 +630,7 @@ ActiveRecord::Schema.define(version: 20170817173628) do
   add_foreign_key "menu_sections", "organizations"
   add_foreign_key "organizations", "checklists"
   add_foreign_key "organizations", "report_types", column: "default_report_type_id"
-  add_foreign_key "pdfs", "organizations"
+  add_foreign_key "pdfs", "report_types"
   add_foreign_key "personnel", "organizations"
   add_foreign_key "personnel_types", "organizations"
   add_foreign_key "report_types", "organizations"
