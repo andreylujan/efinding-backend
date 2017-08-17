@@ -18,7 +18,7 @@ class Api::V1::Idd::ReportsController < Api::V1::JsonApiController
       end_date = params[:end_date]
       parts = end_date.split("/").map { |s| s.to_i }
       end_date = DateTime.new(parts[2], parts[1], parts[0])
-      reports = reports.where("reports.created_at <= ?", end_date)
+      reports = reports.where("reports.created_at <= ?", end_date.end_of_day)
     end
 
     by_email = {}
