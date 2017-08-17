@@ -24,8 +24,8 @@ class Api::V1::ImageResource < ApplicationResource
   attributes :url, :comment, :synced, :is_initial
   has_one :state
   
-  def synced
-  	1
+  def uploaded
+  	true
   end
   
   def fetchable_fields
