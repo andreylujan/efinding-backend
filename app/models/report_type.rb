@@ -15,10 +15,12 @@
 #  default_dynamic_attributes :jsonb            not null
 #  default_title              :text             default("Sin título"), not null
 #  default_subtitle           :text             default("Sin subtítulo"), not null
+#  default_pdf_template_id    :integer
 #
 
 class ReportType < ApplicationRecord
   belongs_to :organization
+  belongs_to :default_pdf_template, class_name: :PdfTemplate, foreign_key: :default_pdf_template_id
   has_many :reports
   has_many :checklist_reports
   validates :organization, presence: true

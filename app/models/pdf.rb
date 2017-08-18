@@ -14,4 +14,5 @@ class Pdf < ApplicationRecord
   belongs_to :pdf_template
   belongs_to :report
   mount_uploader :pdf, PdfUploader
+  validates :report, presence: true, uniqueness: { scope: :pdf_template_id }
 end

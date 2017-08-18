@@ -202,6 +202,16 @@ class Report < ApplicationRecord
     field_hash["updated_at"] = DateTime.now.to_time.iso8601
   end
 
+  def default_pdf
+    if pdf_uploaded?
+      the_pdf = pdfs.where(pdf_template: report_type.default_pdf_template).first
+      if the_pdf.present?
+        the_pdf.pdf_url
+      else 
+        nil
+      end
+  end
+
   def assign_labels
     self.dynamic_attributes["55"] = {
       value: "6%"

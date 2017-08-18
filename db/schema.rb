@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170818000830) do
+ActiveRecord::Schema.define(version: 20170818124238) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -235,15 +235,16 @@ ActiveRecord::Schema.define(version: 20170818000830) do
 
   create_table "images", id: :uuid, default: nil, force: :cascade do |t|
     t.text     "url"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
     t.uuid     "report_id"
     t.integer  "resource_id"
     t.text     "resource_type"
     t.text     "comment"
-    t.boolean  "is_initial",    default: true, null: false
+    t.boolean  "is_initial",    default: true,  null: false
     t.datetime "deleted_at"
     t.integer  "state_id"
+    t.boolean  "selected",      default: false, null: false
     t.index ["deleted_at"], name: "index_images_on_deleted_at", using: :btree
     t.index ["report_id"], name: "index_images_on_report_id", using: :btree
     t.index ["resource_id"], name: "index_images_on_resource_id", using: :btree
@@ -394,9 +395,8 @@ ActiveRecord::Schema.define(version: 20170818000830) do
     t.text     "template"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
-    t.text     "title"
+    t.text     "name"
     t.integer  "report_type_id", null: false
-    t.text     "html"
     t.index ["report_type_id"], name: "index_pdf_templates_on_report_type_id", using: :btree
   end
 
@@ -451,6 +451,8 @@ ActiveRecord::Schema.define(version: 20170818000830) do
     t.jsonb    "default_dynamic_attributes", default: {},              null: false
     t.text     "default_title",              default: "Sin título",    null: false
     t.text     "default_subtitle",           default: "Sin subtítulo", null: false
+    t.integer  "default_pdf_template_id"
+    t.index ["default_pdf_template_id"], name: "index_report_types_on_default_pdf_template_id", using: :btree
     t.index ["initial_state_id"], name: "index_report_types_on_initial_state_id", using: :btree
     t.index ["organization_id"], name: "index_report_types_on_organization_id", using: :btree
   end
@@ -645,6 +647,7 @@ ActiveRecord::Schema.define(version: 20170818000830) do
   add_foreign_key "personnel", "organizations"
   add_foreign_key "personnel_types", "organizations"
   add_foreign_key "report_types", "organizations"
+  add_foreign_key "report_types", "pdf_templates", column: "default_pdf_template_id"
   add_foreign_key "report_types", "states", column: "initial_state_id"
   add_foreign_key "reports", "inspections"
   add_foreign_key "reports", "locations", column: "final_location_id"

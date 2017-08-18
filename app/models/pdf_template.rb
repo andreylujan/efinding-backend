@@ -6,11 +6,11 @@
 #  template       :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  title          :text
+#  name           :text
 #  report_type_id :integer          not null
-#  html           :text
 #
 
 class PdfTemplate < ApplicationRecord
   belongs_to :report_type
+  has_many :report_types, foreign_key: :default_pdf_template_id, dependent: :nullify
 end

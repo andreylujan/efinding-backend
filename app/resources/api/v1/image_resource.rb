@@ -21,7 +21,7 @@ class Api::V1::ImageResource < ApplicationResource
   add_foreign_keys :report_id, :state_id
   # has_one :report
 
-  attributes :url, :comment, :uploaded, :is_initial
+  attributes :url, :comment, :uploaded, :is_initial, :selected
   has_one :state
   
   def uploaded

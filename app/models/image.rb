@@ -14,6 +14,7 @@
 #  is_initial    :boolean          default(TRUE), not null
 #  deleted_at    :datetime
 #  state_id      :integer
+#  selected      :boolean          default(FALSE), not null
 #
 
 class Image < ApplicationRecord
