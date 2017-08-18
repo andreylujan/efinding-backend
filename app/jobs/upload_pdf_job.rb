@@ -36,7 +36,7 @@ class UploadPdfJob < ApplicationJob
 
       begin
         file.write(pdf)
-        report.pdfs.destroy_all
+        # report.pdfs.destroy_all
         pdf = Pdf.find_or_initialize_by(report_id: report.id, pdf_template_id: template.id)
         report.pdf_uploaded = true
         pdf.uploaded = true
