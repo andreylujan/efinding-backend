@@ -27,6 +27,7 @@ class CollectionItem < ApplicationRecord
   validates :name, presence: true
   validates :code, presence: true
   validates_uniqueness_of :code, scope: :collection
+  before_validation :generate_code
   # validates_uniqueness_of :name, scope: :collection
 
 
@@ -34,5 +35,11 @@ class CollectionItem < ApplicationRecord
   	csv_columns.map do |column_name|
   		self.send column_name
   	end
+  end
+
+  def generate_code
+    if code.nil?
+      self.code = SecureRandom.uuid
+    end
   end
 end
