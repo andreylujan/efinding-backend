@@ -134,6 +134,7 @@ class Report < ApplicationRecord
   
   validate :limit_date_cannot_be_in_the_past, on: :create
   validate :valid_state_transition, on: [ :update ]
+  has_many :pdfs
   
   before_create :assign_user
   before_create :assign_labels

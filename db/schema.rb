@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170817205534) do
+ActiveRecord::Schema.define(version: 20170818000830) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -390,14 +390,23 @@ ActiveRecord::Schema.define(version: 20170817205534) do
     t.index ["name"], name: "index_organizations_on_name", unique: true, using: :btree
   end
 
-  create_table "pdfs", force: :cascade do |t|
-    t.text     "pdf"
+  create_table "pdf_templates", force: :cascade do |t|
+    t.text     "template"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.text     "title"
     t.integer  "report_type_id", null: false
     t.text     "html"
-    t.index ["report_type_id"], name: "index_pdfs_on_report_type_id", using: :btree
+    t.index ["report_type_id"], name: "index_pdf_templates_on_report_type_id", using: :btree
+  end
+
+  create_table "pdfs", force: :cascade do |t|
+    t.text     "pdf"
+    t.integer  "pdf_template_id", null: false
+    t.uuid     "report_id",       null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["pdf_template_id"], name: "index_pdfs_on_pdf_template_id", using: :btree
   end
 
   create_table "personnel", force: :cascade do |t|
@@ -630,7 +639,9 @@ ActiveRecord::Schema.define(version: 20170817205534) do
   add_foreign_key "menu_sections", "organizations"
   add_foreign_key "organizations", "checklists"
   add_foreign_key "organizations", "report_types", column: "default_report_type_id"
-  add_foreign_key "pdfs", "report_types"
+  add_foreign_key "pdf_templates", "report_types"
+  add_foreign_key "pdfs", "pdf_templates"
+  add_foreign_key "pdfs", "reports"
   add_foreign_key "personnel", "organizations"
   add_foreign_key "personnel_types", "organizations"
   add_foreign_key "report_types", "organizations"

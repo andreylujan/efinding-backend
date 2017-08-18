@@ -25,6 +25,8 @@ class Api::V1::ReportResource < ApplicationResource
   has_one :resolver
   has_one :state
 
+  has_many :pdfs
+
   key_type :uuid
 
 

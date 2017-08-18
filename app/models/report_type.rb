@@ -26,5 +26,5 @@ class ReportType < ApplicationRecord
   # validates :initial_state, presence: true
   has_many :states
   accepts_nested_attributes_for :states
-  has_many :pdfs
+  has_many :pdf_templates
 end
