@@ -406,6 +406,7 @@ ActiveRecord::Schema.define(version: 20170818124238) do
     t.uuid     "report_id",       null: false
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.text     "html"
     t.index ["pdf_template_id"], name: "index_pdfs_on_pdf_template_id", using: :btree
   end
 

@@ -235,11 +235,11 @@ class Api::V1::ReportResource < ApplicationResource
   end
 
   def pdf
-    @model.pdf.url
+    @model.default_pdf
   end
 
   def html
-    @model.html.url
+    @model.default_html
   end
 
   # before_save do

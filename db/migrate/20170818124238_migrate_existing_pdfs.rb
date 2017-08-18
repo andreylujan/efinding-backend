@@ -1,5 +1,6 @@
 class MigrateExistingPdfs < ActiveRecord::Migration[5.0]
   def change
+    add_column :pdfs, :html, :text
   	Organization.all.each do |organization|
   	  if File.exists? "app/views/templates/#{organization.id}/report.html.erb"
   	  	report_type = organization.default_report_type.present? ? organization.default_report_type : organization.report_types.first
@@ -14,6 +15,7 @@ class MigrateExistingPdfs < ActiveRecord::Migration[5.0]
   	  	  	pdf = Pdf.new report: report, pdf_template: pdf_template
   	  	  	pdf.save!
             pdf.update_column :pdf, report[:pdf]
+            pdf.update_column :html, report[:html]
   	  	  end
   	  	end
   	  end

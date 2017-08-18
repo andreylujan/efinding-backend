@@ -108,7 +108,7 @@ class Report < ApplicationRecord
   mount_uploader :final_location_image, ImageUploader
 
   has_many :images, dependent: :destroy
-  
+
 
   belongs_to :initial_location, class_name: :Location
   belongs_to :final_location, class_name: :Location
@@ -131,11 +131,11 @@ class Report < ApplicationRecord
   after_commit :generate_pdf # , on: [ :create ]
   after_commit :send_task_job_create, on: [ :create ]
   after_commit :send_task_job_update, on: [ :update ]
-  
+
   validate :limit_date_cannot_be_in_the_past, on: :create
   validate :valid_state_transition, on: [ :update ]
   has_many :pdfs
-  
+
   before_create :assign_user
   before_create :assign_labels
   after_commit :update_inspection, on: [ :create, :update ]
@@ -207,9 +207,21 @@ class Report < ApplicationRecord
       the_pdf = pdfs.where(pdf_template: report_type.default_pdf_template).first
       if the_pdf.present?
         the_pdf.pdf_url
-      else 
+      else
         nil
       end
+    end
+  end
+
+  def default_html
+    if pdf_uploaded?
+      the_pdf = pdfs.where(pdf_template: report_type.default_pdf_template).first
+      if the_pdf.present?
+        the_pdf.html_url
+      else
+        nil
+      end
+    end
   end
 
   def assign_labels
@@ -606,4 +618,4 @@ class Report < ApplicationRecord
   
 
 
-       end
+end
