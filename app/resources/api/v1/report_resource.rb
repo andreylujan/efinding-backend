@@ -104,6 +104,10 @@ class Api::V1::ReportResource < ApplicationResource
     end
   }
 
+  filter :pdfs, apply: ->(records, value, _options) {
+    records
+  }
+
 
   filter :created_at, apply: ->(records, value, _options) {
     if not value.empty?
