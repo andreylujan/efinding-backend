@@ -25,9 +25,9 @@ class CollectionItem < ApplicationRecord
   belongs_to :resource_owner, polymorphic: true
   validates :collection, presence: true
   validates :name, presence: true
-  validates :code, presence: true
+  # validates :code, presence: true
   validates_uniqueness_of :code, scope: :collection
-  before_validation :generate_code
+  before_save :generate_code
   # validates_uniqueness_of :name, scope: :collection
 
 
@@ -38,7 +38,7 @@ class CollectionItem < ApplicationRecord
   end
 
   def generate_code
-    if code.nil?
+    if code.blank?
       self.code = SecureRandom.uuid
     end
   end
