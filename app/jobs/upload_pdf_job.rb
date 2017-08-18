@@ -9,12 +9,12 @@ class UploadPdfJob < ApplicationJob
       return
     end
     report = Report.find(report_id)
-    if report.initial_location_id
-      report.initial_location = Location.find(report.initial_location_id)
-    end
-    if report.final_location_id
-      report.final_location = Location.find(report.final_location_id)
-    end
+    # if report.initial_location_id
+    #   report.initial_location = Location.find(report.initial_location_id)
+    # end
+    # if report.final_location_id
+    #   report.final_location = Location.find(report.final_location_id)
+    # end
     ac = ActionController::Base.new()
     # html = ac.render_to_string('templates/report.html.erb',
     # html = ac.render_to_string('templates/report2.html.erb',
