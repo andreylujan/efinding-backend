@@ -4,7 +4,7 @@ class Api::V1::ReportTypeResource < ApplicationResource
   has_many :sections
   has_many :states
   has_one :initial_state
-  has_many :pdfs
+  has_many :pdf_templates
   add_foreign_keys :organization_id, :initial_state_id
 
   def custom_links(options)
