@@ -40,6 +40,7 @@ class UploadPdfJob < ApplicationJob
         report.pdf_uploaded = true
         pdf.uploaded = true
         html_file.write(html)
+        pdf.update_columns pdf: nil, html: nil
         pdf.pdf = file
         pdf.html = html_file
         pdf.save!
