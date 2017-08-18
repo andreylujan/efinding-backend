@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170818124238) do
+ActiveRecord::Schema.define(version: 20170818143024) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -197,17 +197,18 @@ ActiveRecord::Schema.define(version: 20170818124238) do
   end
 
   create_table "data_parts", force: :cascade do |t|
-    t.text     "type",                         null: false
-    t.text     "name",                         null: false
+    t.text     "type",                          null: false
+    t.text     "name",                          null: false
     t.text     "icon"
-    t.boolean  "required",      default: true, null: false
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.jsonb    "config",        default: {},   null: false
-    t.integer  "position",      default: 0,    null: false
+    t.boolean  "required",      default: true,  null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.jsonb    "config",        default: {},    null: false
+    t.integer  "position",      default: 0,     null: false
     t.integer  "detail_id"
     t.integer  "collection_id"
     t.integer  "list_id"
+    t.boolean  "assigns_user",  default: false, null: false
     t.index ["collection_id"], name: "index_data_parts_on_collection_id", using: :btree
     t.index ["detail_id"], name: "index_data_parts_on_detail_id", using: :btree
     t.index ["list_id"], name: "index_data_parts_on_list_id", using: :btree
