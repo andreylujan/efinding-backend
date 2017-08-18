@@ -127,6 +127,7 @@ class Report < ApplicationRecord
   before_save :check_dynamic_changes, on: [ :update ]
   before_save :default_values
   before_save :check_limit_date
+  after_commit :generate_pdf_instances
 
   after_commit :generate_pdf # , on: [ :create ]
   after_commit :send_task_job_create, on: [ :create ]
@@ -317,6 +318,13 @@ class Report < ApplicationRecord
       resolved_at: "Fecha de resolución",
       resolution_comment: "Comentario de resolución"
     }
+  end
+
+  def generate_pdf_instances
+    report_type.pdf_templates.each do |template|
+      pdf_instance = Pdf.find_or_initialize_by(pdf_template: template, report: self)
+      pdf_instance.save!
+    end
   end
 
   def self.setup_xlsx(organization_id)

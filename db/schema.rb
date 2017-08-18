@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170818143024) do
+ActiveRecord::Schema.define(version: 20170818184456) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -403,11 +403,12 @@ ActiveRecord::Schema.define(version: 20170818143024) do
 
   create_table "pdfs", force: :cascade do |t|
     t.text     "pdf"
-    t.integer  "pdf_template_id", null: false
-    t.uuid     "report_id",       null: false
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.integer  "pdf_template_id",                 null: false
+    t.uuid     "report_id",                       null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.text     "html"
+    t.boolean  "uploaded",        default: false, null: false
     t.index ["pdf_template_id"], name: "index_pdfs_on_pdf_template_id", using: :btree
   end
 

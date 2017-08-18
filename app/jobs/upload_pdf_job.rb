@@ -38,6 +38,7 @@ class UploadPdfJob < ApplicationJob
         file.write(pdf)
         pdf = Pdf.find_or_initialize_by(report_id: report.id, pdf_template_id: template.id)
         report.pdf_uploaded = true
+        pdf.uploaded = true
         html_file.write(html)
         pdf.pdf = file
         pdf.html = html_file
