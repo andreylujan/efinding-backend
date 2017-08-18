@@ -27,15 +27,12 @@ class UploadPdfJob < ApplicationJob
 
     report.ignore_pdf = false
     report.report_type.pdf_templates.each do |template|
-      begin
-        html = (ac.render_to_string(inline: template.template,
-                                    locals: { report: report })).force_encoding("UTF-8")
-        pdf = WickedPdf.new.pdf_from_string(html, zoom: 0.75)
-        file = Tempfile.new('pdf', encoding: 'ascii-8bit')
-        html_file = Tempfile.new('html', encoding: 'UTF-8')
-      rescue => e
-        return
-      end
+      html = (ac.render_to_string(inline: template.template,
+                                  locals: { report: report })).force_encoding("UTF-8")
+      pdf = WickedPdf.new.pdf_from_string(html, zoom: 0.75)
+      file = Tempfile.new('pdf', encoding: 'ascii-8bit')
+      html_file = Tempfile.new('html', encoding: 'UTF-8')
+      
 
       begin
         file.write(pdf)
