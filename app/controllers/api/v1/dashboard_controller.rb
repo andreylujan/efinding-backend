@@ -93,9 +93,9 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
 
     images = []
 
-    reports.where("state_id = ?", 16).order("reports.created_at DESC").each do |report|
-      before_image = report.images.where(state_id: 12, selected: true).first
-      after_image = report.images.where(state_id: 13, selected: true).first
+    reports.where("state_id = ?", 16).includes(:images).order("reports.created_at DESC").each do |report|
+      before_image = report.images.find { |i| i.state_id == 12 and i.selected? }
+      after_image = report.images.find { |i| i.state_id == 13 and i.selected? }
       if before_image.present? and after_image.present?
         images << {
           image: before_image.url,
