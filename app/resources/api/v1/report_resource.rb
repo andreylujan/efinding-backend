@@ -266,6 +266,7 @@ class Api::V1::ReportResource < ApplicationResource
     context = options[:context]
     current_user = context[:current_user]
     records = Report.none
+
     if context[:inspection_id]
       records = Inspection.find(context[:inspection_id]).reports
     elsif context[:state_id]
@@ -278,6 +279,7 @@ class Api::V1::ReportResource < ApplicationResource
     else
       records = records.order("reports.created_at DESC")
     end
+
 
     records.includes(:initial_location).where("reports.scheduled_at IS NULL OR reports.scheduled_at <= ?", DateTime.now)
 

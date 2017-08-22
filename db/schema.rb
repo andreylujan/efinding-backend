@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170818184456) do
+ActiveRecord::Schema.define(version: 20170822000433) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -455,6 +455,7 @@ ActiveRecord::Schema.define(version: 20170818184456) do
     t.text     "default_title",              default: "Sin título",    null: false
     t.text     "default_subtitle",           default: "Sin subtítulo", null: false
     t.integer  "default_pdf_template_id"
+    t.boolean  "can_create_reports",         default: true,            null: false
     t.index ["default_pdf_template_id"], name: "index_report_types_on_default_pdf_template_id", using: :btree
     t.index ["initial_state_id"], name: "index_report_types_on_initial_state_id", using: :btree
     t.index ["organization_id"], name: "index_report_types_on_organization_id", using: :btree
