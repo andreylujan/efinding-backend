@@ -61,7 +61,7 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
         end
         json
       rescue => e
-        
+
       end
       json
     end.select { |f| not f.empty? }
@@ -78,6 +78,83 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
     .serialize_to_hash(Api::V1::DashboardResource.new(dashboard, nil))
 
 
+  end
+
+  def idd_public
+    year = params.require(:year).to_i
+    month = params.require(:month).to_i
+    date = DateTime.new(year, month)
+    reports = Report.joins(creator: :role)
+    .where(roles: { organization_id: current_user.organization_id })
+    .where("reports.created_at >= ? AND reports.created_at <= ?",
+           date.beginning_of_month,
+           date.end_of_month
+           )
+    num_total = reports.count
+    num_resolved = reports.where("reports.state_id = ?", 16).count
+
+
+  end
+
+  def idd_internal
+    year = params.require(:year).to_i
+    month = params.require(:month).to_i
+    date = DateTime.new(year, month)
+    reports = Report.joins(creator: :role)
+    .where(roles: { organization_id: current_user.organization_id })
+    .where("reports.created_at >= ? AND reports.created_at <= ?",
+           date.beginning_of_month,
+           date.end_of_month
+           )
+    num_received = reports.count
+    num_resolved = reports.where("reports.state_id = ?", 16).count
+
+    by_category = reports.group("dynamic_attributes->'84'->>'value'")
+    .where("dynamic_attributes->'84'->>'value' IS NOT NULL")
+    .order("dynamic_attributes->'84'->>'value' ASC")
+    .select("dynamic_attributes->'84'->>'value' AS category, count(reports.id) as num_reports")
+    .map do |group|
+      {
+        name: group.category,
+        num_reports: group.num_reports
+      }
+    end
+
+    by_department = reports.group("dynamic_attributes->'83'->>'value'")
+    .where("dynamic_attributes->'83'->>'value' IS NOT NULL")
+    .order("dynamic_attributes->'83'->>'value' ASC")
+    .select("dynamic_attributes->'83'->>'value' AS department, count(reports.id) as num_reports")
+    .map do |group|
+      {
+        name: group.department,
+        num_reports: group.num_reports
+      }
+    end
+
+    report_locations = []
+    reports.includes(:initial_location).each do |report|
+      report_locations << {
+        id: report.id.to_s,
+        name: report.dynamic_attributes.dig("78", "value"),
+        position: [ report.initial_location.lonlat.y, report.initial_location.lonlat.x ],
+        type: report.state_id == 16 ? 'resuelto' : 'recibido',
+        color: report.state_id == 16 ? 'green' : 'orange'
+      }
+    end
+
+    render json: {
+      data: {
+        id: "#{month}/#{year}",
+        type: "dashboards",
+        attributes: {
+          num_received: num_received,
+          num_resolved: num_resolved,
+          by_category: by_category,
+          by_department: by_department,
+          report_locations: report_locations
+        }
+      }
+    }
   end
 
   def show

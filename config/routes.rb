@@ -133,7 +133,16 @@ Rails.application.routes.draw do
       jsonapi_resources :menu_sections, only: [ :index ] do
       end
 
-      jsonapi_resource :dashboard, only: [ :show ]
+      jsonapi_resource :dashboard, only: [ :show ] do
+        collection do
+          resource :idd, only: [] do
+            collection do
+              get :public, to: "dashboard#idd_public"
+              get :internal, to: "dashboard#idd_internal"
+            end
+          end
+        end
+      end
 
       post :csv, to: 'csv#create'
 
