@@ -409,8 +409,10 @@ class Report < ApplicationRecord
       end
     end
     val.each do |attrs|
-      if not Image.find_by_id(attrs[:id])
+      if not image = Image.find_by_id(attrs[:id])
         self.images << Image.new(attrs)
+      else
+        image.update_attributes attrs
       end
     end
   end

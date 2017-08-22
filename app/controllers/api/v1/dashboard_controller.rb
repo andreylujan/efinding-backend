@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::DashboardController < Api::V1::JsonApiController
 
-  before_action :doorkeeper_authorize!
+  before_action :doorkeeper_authorize!, except: [ :idd_public ]
 
   def show_manflas
     reports = Api::V1::ReportResource.records({
@@ -81,25 +81,69 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
   end
 
   def idd_public
-    year = params.require(:year).to_i
-    month = params.require(:month).to_i
-    date = DateTime.new(year, month)
+    date = DateTime.now
     reports = Report.joins(creator: :role)
-    .where(roles: { organization_id: current_user.organization_id })
+    .where(roles: { organization_id: 6 })
     .where("reports.created_at >= ? AND reports.created_at <= ?",
            date.beginning_of_month,
            date.end_of_month
            )
-    num_total = reports.count
+    num_received = reports.count
     num_resolved = reports.where("reports.state_id = ?", 16).count
 
+    images = []
+
+    reports.where("state_id = ?", 16).order("reports.created_at DESC").each do |report|
+      before_image = report.images.where(state_id: 12, selected: true).first
+      after_image = report.images.where(state_id: 13, selected: true).first
+      if before_image.present? and after_image.present?
+        images << {
+          image: before_image.url,
+          type: "before",
+          usuario: report.dynamic_attributes.dig("80", "value")
+        }
+        images << {
+          image: after_image.url,
+          type: "after",
+          usuario: report.dynamic_attributes.dig("80", "value")
+        }
+      end
+    end
+
+    report_locations = []
+    reports.includes(:initial_location).each do |report|
+      report_locations << {
+        id: report.id.to_s,
+        name: report.dynamic_attributes.dig("78", "value"),
+        position: [ report.initial_location.lonlat.y, report.initial_location.lonlat.x ],
+        type: report.state_id == 16 ? 'resuelto' : 'recibido',
+        color: report.state_id == 16 ? 'green' : 'orange'
+      }
+    end
+
+    render json: {
+      data: {
+        id: "#{date.month}/#{date.year}",
+        type: "dashboards",
+        attributes: {
+          num_received: num_received,
+          num_resolved: num_resolved,
+          images: images,
+          report_locations: report_locations
+        }
+      }
+    }
 
   end
 
   def idd_internal
-    year = params.require(:year).to_i
-    month = params.require(:month).to_i
-    date = DateTime.new(year, month)
+    date = DateTime.now
+    if params[:year].present? and params[:month].present?
+      year = params.require(:year).to_i
+      month = params.require(:month).to_i
+      date = DateTime.new(year, month)
+    end
+
     reports = Report.joins(creator: :role)
     .where(roles: { organization_id: current_user.organization_id })
     .where("reports.created_at >= ? AND reports.created_at <= ?",
@@ -144,7 +188,7 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
 
     render json: {
       data: {
-        id: "#{month}/#{year}",
+        id: "#{date.month}/#{date.year}",
         type: "dashboards",
         attributes: {
           num_received: num_received,
