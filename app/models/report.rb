@@ -130,7 +130,6 @@ class Report < ApplicationRecord
   before_save :check_limit_date
   after_commit :generate_pdf_instances, on: [ :create, :update ]
 
-  before_commit :clear_pdfs, on: [ :create, :update ]
   after_commit :generate_pdf, on: [ :create, :update ]
   after_commit :send_task_job_create, on: [ :create ]
   after_commit :send_task_job_update, on: [ :update ]
@@ -552,15 +551,10 @@ class Report < ApplicationRecord
     end
   end
 
-  def clear_pdfs
-    if not @ignore_pdf
+  def generate_pdf
+    if not @ignore_pdf and self.finished?
       pdfs.destroy_all
       self.pdf_uploaded = false
-    end
-  end
-
-  def generate_pdf
-    if not @ignore_pdf and self.finished? and not self.pdf_uploaded?
       regenerate_pdf(true)
     end
   end
