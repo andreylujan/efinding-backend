@@ -25,6 +25,7 @@ gem 'puma', '~> 3.7', '>= 3.7.1'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
+gem 'sequenced'
 gem 'dotenv-rails', '~> 2.2'
 gem "rails-observers", github: 'rails/rails-observers'
 gem 'mongoid'

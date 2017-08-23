@@ -14,7 +14,8 @@ class Api::V1::ReportResource < ApplicationResource
     :formatted_resolved_at,
     :html,
     :resolved_at,
-    :resolution_comment
+    :resolution_comment,
+    :sequential_id
 
   add_foreign_keys :inspection_id, :creator_id, :assigned_user_id, :state_id
 

@@ -4,6 +4,18 @@ ActiveAdmin.register PdfTemplate do
       params.permit!
     end
   end
+
+  index do
+  	column :id
+  	column :name
+  	column :report_type
+  	actions
+  end
+
+  show do |pdf_template|
+  	raw(pdf_template.template)
+
+  end
   
   
 

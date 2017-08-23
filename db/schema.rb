@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170822000433) do
+ActiveRecord::Schema.define(version: 20170823163332) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -486,11 +486,14 @@ ActiveRecord::Schema.define(version: 20170822000433) do
     t.text     "final_location_image"
     t.datetime "scheduled_at"
     t.integer  "state_id",                               null: false
+    t.integer  "sequential_id",                          null: false
+    t.integer  "organization_id",                        null: false
     t.index ["assigned_user_id"], name: "index_reports_on_assigned_user_id", using: :btree
     t.index ["creator_id"], name: "index_reports_on_creator_id", using: :btree
     t.index ["deleted_at"], name: "index_reports_on_deleted_at", using: :btree
     t.index ["id"], name: "index_reports_on_id", using: :btree
     t.index ["inspection_id"], name: "index_reports_on_inspection_id", using: :btree
+    t.index ["organization_id"], name: "index_reports_on_organization_id", using: :btree
     t.index ["scheduled_at"], name: "index_reports_on_scheduled_at", using: :btree
     t.index ["state_id"], name: "index_reports_on_state_id", using: :btree
   end
@@ -656,6 +659,7 @@ ActiveRecord::Schema.define(version: 20170822000433) do
   add_foreign_key "reports", "inspections"
   add_foreign_key "reports", "locations", column: "final_location_id"
   add_foreign_key "reports", "locations", column: "initial_location_id"
+  add_foreign_key "reports", "organizations"
   add_foreign_key "reports", "states"
   add_foreign_key "reports", "users", column: "resolver_id"
   add_foreign_key "request_logs", "organizations"
