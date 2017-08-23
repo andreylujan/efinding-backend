@@ -128,7 +128,7 @@ class Report < ApplicationRecord
   before_save :check_dynamic_changes, on: [ :update ]
   before_save :default_values
   before_save :check_limit_date
-  after_commit :generate_pdf_instances
+  after_commit :generate_pdf_instances, on: [ :create, :update ]
 
   after_commit :generate_pdf # , on: [ :create ]
   after_commit :send_task_job_create, on: [ :create ]
