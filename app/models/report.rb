@@ -130,7 +130,8 @@ class Report < ApplicationRecord
   before_save :check_limit_date
   after_commit :generate_pdf_instances, on: [ :create, :update ]
 
-  after_commit :generate_pdf # , on: [ :create ]
+  before_commit :clear_pdfs, on: [ :create, :update ]
+  after_commit :generate_pdf, on: [ :create, :update ]
   after_commit :send_task_job_create, on: [ :create ]
   after_commit :send_task_job_update, on: [ :update ]
 
@@ -548,6 +549,13 @@ class Report < ApplicationRecord
   def final_location_attributes
     if final_location.present?      
       location_attributes(final_location)      
+    end
+  end
+
+  def clear_pdfs
+    if not @ignore_pdf
+      pdfs.destroy_all
+      self.pdf_uploaded = false
     end
   end
 
