@@ -22,7 +22,6 @@ class UploadPdfJob < ApplicationJob
 
     report.ignore_pdf = true
     report.pdfs.destroy_all
-    report.ignore_pdf = false
     report.report_type.pdf_templates.each do |template|
       html = (ac.render_to_string(inline: template.template,
                                   locals: { report: report })).force_encoding("UTF-8")
@@ -34,7 +33,7 @@ class UploadPdfJob < ApplicationJob
       begin
         file.write(pdf)
         # report.pdfs.destroy_all
-        pdf = Pdf.find_or_initialize_by(report_id: report.id, pdf_template_id: template.id)
+        pdf = Pdf.create! report_id: report.id, pdf_template_id: template.id
         report.pdf_uploaded = true
         pdf.uploaded = true
         html_file.write(html)
@@ -47,12 +46,7 @@ class UploadPdfJob < ApplicationJob
         file.unlink   # deletes the temp file
       end
     end
-
-
-
-    begin
-      report.inspection.regenerate_pdf(true)
-    rescue => e
-    end
+    
+    report.ignore_pdf = false
   end
 end
