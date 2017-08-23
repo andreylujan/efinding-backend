@@ -212,7 +212,7 @@ class Report < ApplicationRecord
 
   def default_pdf
     if pdf_uploaded?
-      the_pdf = pdfs.where(pdf_template: report_type.default_pdf_template).first
+      the_pdf = pdfs.find { |pdf| pdf.pdf_template_id == report_type.default_pdf_template_id }
       if the_pdf.present?
         the_pdf.pdf_url
       else
@@ -223,7 +223,7 @@ class Report < ApplicationRecord
 
   def default_html
     if pdf_uploaded?
-      the_pdf = pdfs.where(pdf_template: report_type.default_pdf_template).first
+      the_pdf = pdfs.find { |pdf| pdf.pdf_template_id == report_type.default_pdf_template_id }
       if the_pdf.present?
         the_pdf.html_url
       else

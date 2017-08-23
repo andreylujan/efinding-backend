@@ -25,6 +25,7 @@ class Api::V1::ReportResource < ApplicationResource
   has_one :inspection
   has_one :resolver
   has_one :state
+  has_one :organization
 
   has_many :pdfs
 
@@ -52,7 +53,7 @@ class Api::V1::ReportResource < ApplicationResource
 
   filter :creator, apply: ->(records, value, _options) {
     if not value.empty?
-      if value[0].is_a? Hash and value[0]["full_name"].present?
+      if (value[0].is_a? Hash or value[0].is_a? ActionController::Parameters) and value[0]["full_name"].present?
         records.includes(:assigned_user, :creator).where("creators_reports.first_name || ' ' || creators_reports.last_name ilike '%" + value[0]["full_name"] + "%'")
         .where.not(creator_id: nil).references(:users)
 
@@ -75,8 +76,13 @@ class Api::V1::ReportResource < ApplicationResource
 
   filter :state, apply: ->(records, value, _options) {
     if not value.empty?
-      if value[0].is_a? Hash and value[0]["id"].present?
-        records = records.where(state_id: value[0]["id"])
+      if value[0].is_a? Hash or value[0].is_a? ActionController::Parameters
+        if value[0]["id"].present?
+          records = records.joins(:state).where(state_id: value[0]["id"])
+        end
+        if value[0]["name"].present?
+          records = records.joins(:state).where("states.name ilike ?", "%#{value[0]['name']}%")
+        end
       end
     end
     records
@@ -84,7 +90,7 @@ class Api::V1::ReportResource < ApplicationResource
 
   filter :assigned_user, apply: ->(records, value, _options) {
     if not value.empty?
-      if value[0].is_a? Hash and value[0]["full_name"].present?
+      if (value[0].is_a? Hash or value[0].is_a? ActionController::Parameters) and value[0]["full_name"].present?
         records.includes(:assigned_user, :creator).where("users.first_name || ' ' || users.last_name ilike '%" + value[0]["full_name"] + "%'")
         .where.not(assigned_user_id: nil).references(:users)
       else
@@ -189,7 +195,7 @@ class Api::V1::ReportResource < ApplicationResource
     if not value.empty?
       records = records.includes(:initial_location)
     end
-    if value.first.is_a? Hash
+    if (value.first.is_a? Hash or value.first.is_a? ActionController::Parameters)
       value.first.each do |key, key_value|
         if not key_value.blank?
           records = records.where("locations.#{key} ILIKE ?", "%#{key_value}%")
