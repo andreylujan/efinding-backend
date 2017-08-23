@@ -38,8 +38,34 @@ class AccidentRate < ApplicationRecord
   before_validation :set_period
   before_save :calculate_indexes
 
+  def self.column_translations
+    @column_translations ||= {
+      construction_code: "Código de obra",
+      month: "Mes",
+      year: "Año",
+      man_hours: "Horas hombre",
+      worker_average: "Promedio de trabajadores",
+      num_accidents: "Número de accidentes",
+      num_days_lost: "Número de días perdidos",
+      accident_rate: "Tasa de accidentabilidad",
+      casualty_rate: "Tasa de siniestralidad",
+      frequency_index: "Índice de frequency",
+      gravity_index: "Índice de gravedad"
+    }
+  end
+
   def construction_code
     construction.code
+  end
+
+  def self.row_to_hash(headers, row)
+    hash = {
+
+    }
+    headers.each_with_index do |header, index|
+      hash[column_translations[header.to_sym]]  = row[index]
+    end
+    hash
   end
 
   def self.from_csv(file_name, current_user)
@@ -54,65 +80,67 @@ class AccidentRate < ApplicationRecord
     row_number = 2
 
     begin
-      csv = CSV.parse(csv_text, { headers: true, encoding: "UTF-8", col_sep: current_user.organization.csv_separator })
+      csv = CSV.parse(csv_text, { headers: false, encoding: "UTF-8", col_sep: current_user.organization.csv_separator })
     rescue => exception
       raise exception.message
     end
 
-    csv.each do |row|
-      construction_code = row["construction_code"]
-      construction = Construction.find_by_code(construction_code)
-      if construction.present?
-        AccidentRate.find_or_initialize_by(construction_id: construction.id,
-        rate_period: Date.new(row["year"].to_i, row["month"].to_i)).tap do |item|
+    csv.each_with_index do |row, index|
+      if index > 0
+        construction_code = row[0]
+        construction = Construction.find_by_code(construction_code)
+        if construction.present?
+          AccidentRate.find_or_initialize_by(construction_id: construction.id,
+          rate_period: Date.new(row[2].to_i, row[1].to_i)).tap do |item|
 
-          item.man_hours = row["man_hours"].to_f
-          item.worker_average = row["worker_average"].to_f
-          item.num_accidents = row["num_accidents"].to_i
-          item.num_days_lost = row["num_days_lost"].to_i
-          item.accident_rate = row["accident_rate"].to_f
-          item.casualty_rate = row["casualty_rate"].to_f
-          item.organization = current_user.organization
+            item.man_hours = row[3].to_f
+            item.worker_average = row[4].to_f
+            item.num_accidents = row[5].to_i
+            item.num_days_lost = row[6].to_i
+            item.accident_rate = row[7].to_f
+            item.casualty_rate = row[8].to_f
+            item.organization = current_user.organization
 
-          errors = {}
-          begin
-            item.save!
-          rescue => e
-            errors = item.errors.as_json
+            errors = {}
+            begin
+              item.save!
+            rescue => e
+              errors = item.errors.as_json
+            end
+
+
+            created = false
+            changed = false
+            success = true
+            if not errors.empty?
+              success = false
+            elsif item.previous_changes[:id].present?
+              created = true
+            elsif item.previous_changes.any?
+              changed = true
+            end
+
+            csv_resource = CsvUpload.new id: item.id, success: success,
+              errors: errors,
+              row_number: row_number, row_data: row_to_hash(headers, row),
+              created: created, changed: changed
+            row_number = row_number + 1
+
+            resources << csv_resource
+
+            # items << item
+            # resources << JSONAPI::ResourceSerializer.new(Api::V1::CsvUploadResource)
+            # .serialize_to_hash(Api::V1::CsvUploadResource.new(csv_resource, nil))
           end
-
-
-          created = false
-          changed = false
-          success = true
-          if not errors.empty?
-            success = false
-          elsif item.previous_changes[:id].present?
-            created = true
-          elsif item.previous_changes.any?
-            changed = true
-          end
-
-          csv_resource = CsvUpload.new id: item.id, success: success,
-            errors: errors,
+        else
+          csv_resource = CsvUpload.new id: nil, success: false,
+            errors: { "obra" => [ "No existe una obra con el código #{construction_code}"] },
             row_number: row_number, row_data: row.to_h,
-            created: created, changed: changed
+            created: false, changed: false
           row_number = row_number + 1
 
           resources << csv_resource
-
-          # items << item
-          # resources << JSONAPI::ResourceSerializer.new(Api::V1::CsvUploadResource)
-          # .serialize_to_hash(Api::V1::CsvUploadResource.new(csv_resource, nil))
         end
-      else
-        csv_resource = CsvUpload.new id: nil, success: false,
-          errors: { "obra" => [ "No existe una obra con el código #{construction_code}"] },
-          row_number: row_number, row_data: row.to_h,
-          created: false, changed: false
-        row_number = row_number + 1
-
-        resources << csv_resource
       end
     end
     resources
@@ -123,7 +151,7 @@ class AccidentRate < ApplicationRecord
       num_days_lost accident_rate casualty_rate frequency_index gravity_index}
     csv_obj = CSV.generate(headers: true,
     encoding: "UTF-8", col_sep: current_user.organization.csv_separator) do |csv|
-      csv << attributes
+      csv << attributes.map { |attr| column_translations[attr.to_sym] }
       current_user.organization.accident_rates.each do |item|
         csv << attributes.map do |column_name|
           item.month = item.rate_period.month
