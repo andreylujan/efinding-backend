@@ -280,7 +280,9 @@ class Api::V1::ReportResource < ApplicationResource
       records = records.order("reports.created_at DESC")
     end
 
-
+    if current_user.role_id == 14
+      records = records.where("reports.assigned_user_id = ?", current_user.id)
+    end
     records.includes(:initial_location).where("reports.scheduled_at IS NULL OR reports.scheduled_at <= ?", DateTime.now)
 
   end
