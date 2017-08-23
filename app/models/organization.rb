@@ -22,8 +22,8 @@ class Organization < ApplicationRecord
     has_many :report_types
     has_many :table_columns, -> { order(position: :asc) }
     has_many :menu_sections, -> { order(position: :asc) }
-    has_many :companies
-    has_many :reports, through: :report_types
+    has_many :companies, dependent: :destroy
+    has_many :reports, dependent: :destroy
     has_many :users, through: :roles
     has_many :collections
     belongs_to :checklist
@@ -40,10 +40,6 @@ class Organization < ApplicationRecord
         if checklist.present?
             checklist.id
         end
-    end
-
-    def reports
-        Report.joins(creator: :role).where(roles: { organization_id: id })
     end
 
     def users
