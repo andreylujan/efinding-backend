@@ -122,6 +122,7 @@ class Report < ApplicationRecord
   acts_as_list scope: :inspection
 
   before_save :cache_data
+  before_save :set_organization_id
   before_save :check_assigned_user
   before_save :check_state_changed, on: [ :update ]
   before_save :check_dynamic_changes, on: [ :update ]
@@ -273,7 +274,9 @@ class Report < ApplicationRecord
   def formatted_date_for(field)
     if field.present? and field.is_a? Hash and field["updated_at"].present?
       begin
-        DateTime.parse(field["updated_at"]).strftime("%d/%m/%Y %R")
+        DateTime.parse(field["updated_at"])
+          .in_time_zone(organization.time_zone)
+          .strftime("%d/%m/%Y %R")
       rescue => exception
         "Fecha inválida"
       end
@@ -441,19 +444,19 @@ class Report < ApplicationRecord
   end
 
   def formatted_finished_at
-    finished_at.strftime("%d/%m/%Y %R") if finished_at.present?
+    finished_at.in_time_zone(organization.time_zone).strftime("%d/%m/%Y %R") if finished_at.present?
   end
 
   def formatted_created_at
-    created_at.strftime("%d/%m/%Y %R")
+    created_at.in_time_zone(organization.time_zone).strftime("%d/%m/%Y %R")
   end
 
   def formatted_limit_date
-    limit_date.strftime("%d/%m/%Y %R") if limit_date.present?
+    limit_date.in_time_zone(organization.time_zone).strftime("%d/%m/%Y %R") if limit_date.present?
   end
 
   def formatted_resolved_at
-    resolved_at.strftime("%d/%m/%Y %R") if resolved_at.present?
+    resolved_at.in_time_zone(organization.time_zone).strftime("%d/%m/%Y %R") if resolved_at.present?
   end
 
   def execution_time
@@ -628,6 +631,10 @@ class Report < ApplicationRecord
   end
 
   private
+  def set_organization_id
+    self.organization_id = creator.organization_id
+  end
+
   def limit_date_cannot_be_in_the_past
     if limit_date.present? && limit_date < DateTime.now
       errors.add(:limit_date, "No puede estar en el pasado")
