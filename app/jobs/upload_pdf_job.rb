@@ -21,10 +21,7 @@ class UploadPdfJob < ApplicationJob
     html = nil
 
     report.ignore_pdf = true
-    map_type = report.creator.organization.map_type
-
-  
-
+    report.pdfs.destroy_all
     report.ignore_pdf = false
     report.report_type.pdf_templates.each do |template|
       html = (ac.render_to_string(inline: template.template,

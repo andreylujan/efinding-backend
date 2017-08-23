@@ -325,9 +325,11 @@ class Report < ApplicationRecord
   end
 
   def generate_pdf_instances
-    report_type.pdf_templates.each do |template|
-      pdf_instance = Pdf.find_or_initialize_by(pdf_template: template, report: self)
-      pdf_instance.save!
+    if not @ignore_pdf
+      report_type.pdf_templates.each do |template|
+        pdf_instance = Pdf.find_or_initialize_by(pdf_template: template, report: self)
+        pdf_instance.save!
+      end
     end
   end
 
@@ -553,7 +555,6 @@ class Report < ApplicationRecord
 
   def generate_pdf
     if not @ignore_pdf and self.finished?
-      pdfs.destroy_all
       self.pdf_uploaded = false
       regenerate_pdf(true)
     end
