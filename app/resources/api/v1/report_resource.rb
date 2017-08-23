@@ -202,7 +202,7 @@ class Api::V1::ReportResource < ApplicationResource
   filter :dynamic_attributes, apply: ->(records, value, _options) {
     if not value.empty?
       applied_filter = value.first
-      if applied_filter.is_a? Hash
+      if applied_filter.is_a? Hash or applied_filter.is_a? ActionController::Parameters
         applied_filter.each do |key, value|
           value.each do |subkey, subvalue|
             if not subvalue.blank?
