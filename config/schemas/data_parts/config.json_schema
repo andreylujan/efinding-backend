@@ -9,7 +9,8 @@
     "other_text": { "type": "string" },
     "other_enabled": { "type": "boolean" },
     "max_length": { "type": "number", "minimum": 1 },
-    "is_user_selector": { "type": "boolean" }
+    "is_user_selector": { "type": "boolean" },
+    "role_id": { "type": "string" }
   },
   "additionalProperties": false
 }
