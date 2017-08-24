@@ -93,6 +93,18 @@ class ChecklistReport < ApplicationRecord
     end
   end
 
+  def has_value_for_section(section)
+    section["items"].inject(0) do |sum, x|
+      if x["value"].present? and x["value"] != 0
+        sum + 1
+      elsif x["items"].present? and x["items"].length > 0
+        sum + x["items"].inject(0) { |subsum, y| if y["value"].present? and y["value"] != 0 then subsum + 1 else subsum end }
+      else
+        sum
+      end
+    end > 0
+  end
+
   def regenerate_pdf(force_random = false)
     if force_random
       update_columns pdf: nil, pdf_uploaded: false

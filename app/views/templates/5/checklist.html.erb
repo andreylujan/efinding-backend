@@ -241,7 +241,7 @@
 		<div class="row" id="location-info">
 			<div class="col-xs-12">
 				<% checklist.checklist_data.each do |section| %>
-					<% if section["items"].inject(0) { |sum, x| if x["value"].present? and x["value"] != 0 then sum + 1 else sum end  } > 0 %>
+					<% if checklist.has_value_for_section(section) %>
 						<div class="standalone-container">
 							<% if not checklist_title %>
 								<div class="row">
