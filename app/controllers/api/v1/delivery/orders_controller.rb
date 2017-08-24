@@ -6,19 +6,22 @@ class Api::V1::Delivery::OrdersController < ApplicationController
     created_at = params.require(:order_creation_date)
     report = Report.where("dynamic_attributes->'49'->>'text' = '#{order_id}'").first
 
-    address_info = params.require(:address_info)
-
-    coord_str = address_info["address_coordinates"][1...-1].split(',')
     store_info = params.require(:store)
     store_id = store_info["store_id"]
 
     creator = User.find_by_store_id!(store_id)
 
-    address = {
-      street: address_info["address_street"],
-      name: address_info["address_name"],
-      coordinates: coord_str.map { |c| c.to_f }
-    }
+    if params[:address_info].blank? and report.dynamic_attributes.has_key? "address"
+      address = report.dynamic_attributes["address"]
+    else
+      address_info = params.require(:address_info)
+      coord_str = address_info["address_coordinates"][1...-1].split(',')
+      address = {
+        street: address_info["address_street"],
+        name: address_info["address_name"],
+        coordinates: coord_str.map { |c| c.to_f }
+      }
+    end
 
     products = params["detail"].map do |detail|
       {
@@ -32,7 +35,7 @@ class Api::V1::Delivery::OrdersController < ApplicationController
       }
     end
 
-    user = params.require(:user_info)
+
     if report.nil?
       report = Report.new id: SecureRandom.uuid,
         creator: creator,
@@ -48,8 +51,8 @@ class Api::V1::Delivery::OrdersController < ApplicationController
       elsif order_state == "pedido pagado"
         state = "awaiting_delivery"
         SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
-        "Pedido pagado",
-        "Se ha pagado exitosamente el pedido #{order_id}")
+                                                      "Pedido pagado",
+                                                      "Se ha pagado exitosamente el pedido #{order_id}")
       elsif order_state == "pedido cancelado"
         state = "canceled"
       elsif order_state == "pedido aceptado"
@@ -57,8 +60,8 @@ class Api::V1::Delivery::OrdersController < ApplicationController
       elsif order_state == "pedido modificado"
         state = "modified"
         SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
-        "Pedido modificado",
-        "Se ha modificado el pedido #{order_id}")
+                                                      "Pedido modificado",
+                                                      "Se ha modificado el pedido #{order_id}")
       end
       report.state = state
     end
@@ -77,7 +80,7 @@ class Api::V1::Delivery::OrdersController < ApplicationController
       end
       report.dynamic_attributes["address"] = address
       report.dynamic_attributes["store"] = store_info
-      
+
       is_scheduled = params[:order_is_scheduled]
       scheduled_at = nil
       if is_scheduled
@@ -99,19 +102,24 @@ class Api::V1::Delivery::OrdersController < ApplicationController
       text: order_id.to_s
     }
 
-    user_name = user.dig("user_name")
-    if user.dig("user_last_name")
-      user_name = user_name + " " + user.dig("user_last_name")
+    if not report.dynamic_attributes.has_key? "50"
+      user = params.require(:user_info)
+
+      user_name = user.dig("user_name")
+      if user.dig("user_last_name")
+        user_name = user_name + " " + user.dig("user_last_name")
+      end
+      report.dynamic_attributes["50"] = {
+        text: user_name
+      }
+
+      report.dynamic_attributes["51"] = {
+        text: user.dig("user_phone") || "Sin número de teléfono"
+      }
+
+      report.dynamic_attributes["title"] = user_name
     end
-    report.dynamic_attributes["50"] = {
-      text: user_name
-    }
 
-    report.dynamic_attributes["51"] = {
-      text: user.dig("user_phone") || "Sin número de teléfono"
-    }
-
-    report.dynamic_attributes["title"] = user_name
     report.dynamic_attributes["subtitle"] = "Pedido #{order_id}"
 
     report.save!
