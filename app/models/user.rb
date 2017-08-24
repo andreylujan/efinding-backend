@@ -52,7 +52,7 @@ class User < ApplicationRecord
   has_many :checkins
   has_many :batch_uploads
   has_and_belongs_to_many :checklist_reports
-  validate :correct_rut
+  # validate :correct_rut
   before_save :format_rut
   scope :experts, -> { joins("INNER JOIN roles role_experts ON role_experts.id = users.role_id").where("role_experts.role_type = ?", 
       Role.role_types["expert"]) }
