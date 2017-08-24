@@ -166,11 +166,22 @@ class Construction < ApplicationRecord
     resources
   end
 
+  def self.column_translations
+    @column_translations ||= {
+      company_id: "ID empresa",
+      code: "Código",
+      administrator_email: "Email administrador de obra",
+      expert_emails: "Emails Jefes de Terreno (separados por ,)",
+      inspector_emails: "Emails inspectores (separados por ,)",
+      supervisor_email: "Email APR"
+    }
+  end
+
   def self.to_csv(current_user, file_name=nil)
     attributes = %w{company_id code name administrator_email expert_emails inspector_emails supervisor_email}
     csv_obj = CSV.generate(headers: true,
     encoding: "UTF-8", col_sep: current_user.organization.csv_separator) do |csv|
-      csv << attributes
+      csv << attributes.map { |attr| column_translations[attr.to_sym] }
       Construction.joins(:company).where(companies: { organization_id: current_user.organization_id }).each do |construction|
         csv << [
           construction.company.id,
@@ -191,6 +202,16 @@ class Construction < ApplicationRecord
     csv_obj
   end
 
+  def self.row_to_hash(headers, row)
+    hash = {
+
+    }
+    headers.each_with_index do |header, index|
+      hash[column_translations[header.to_sym]]  = row[index]
+    end
+    hash
+  end
+
   def self.from_csv(file_name, current_user)
 
     upload = BatchUpload.create! user: current_user, uploaded_file: file_name,
@@ -202,94 +223,96 @@ class Construction < ApplicationRecord
     row_number = 2
 
     begin
-      csv = CSV.parse(csv_text, { headers: true, encoding: "UTF-8", col_sep: current_user.organization.csv_separator })
+      csv = CSV.parse(csv_text, { headers: false, encoding: "UTF-8", col_sep: current_user.organization.csv_separator })
     rescue => exception
       raise exception.message
     end
 
-    csv.each do |row|
+    csv.each_with_index do |row, index|
+      if index > 0
 
-      errors = {}
-      cons = Construction.find_or_initialize_by(company_id: row["company_id"], code: row["code"]).tap do |construction|
-        construction.name = row["name"]
-        has_errors = false
-        expert_ids = construction.user_ids.dup
-        inspector_ids = construction.user_ids.dup
-        begin
-          construction.company = Company.find(row["company_id"])
-        rescue => e
-          errors = {
-            company_id: [ e.message ]
-          }
-          has_errors = true
-        end
-        begin
-          construction.administrator = User.find_by_email!(row["administrator_email"])
-        rescue => e
-          errors[:administrator_email] = [ e.message ]
-          has_errors = true
-        end
-        begin
-          if row["expert_emails"].present?
-            row["expert_emails"].strip.split(",").each do |email|
-              user = User.find_by_email!(email)
-              if user.organization_id == current_user.organization_id
-                expert_ids << user.id
-              end
-            end
-          end
-        rescue => e
-          errors[:expert_emails] << e.message
-          has_errors = true
-        end
-        begin
-          if row["inspector_emails"].present?
-            row["inspector_emails"].strip.split(",").each do |email|
-              user = User.find_by_email!(email)
-              if user.organization_id == current_user.organization_id
-                inspector_ids << user.id
-              end
-            end
-          end
-        rescue => e
-          errors[:expert_emails] << e.message
-          has_errors = true
-        end
-        begin
-          construction.supervisor = User.find_by_email!(row["supervisor_email"])
-        rescue => e
-          errors[:supervisor_email] = [ e.message ]
-          has_errors = true
-        end
-        if not has_errors
+        errors = {}
+        cons = Construction.find_or_initialize_by(company_id: row[0], code: row[1]).tap do |construction|
+          construction.name = row[2]
+          has_errors = false
+          expert_ids = construction.user_ids.dup
+          inspector_ids = construction.user_ids.dup
           begin
-            Construction.transaction do
-              construction.user_ids = inspector_ids | expert_ids
-              construction.save!
+            construction.company = Company.find(row[0])
+          rescue => e
+            errors = {
+              company_id: [ e.message ]
+            }
+            has_errors = true
+          end
+          begin
+            construction.administrator = User.find_by_email!(row[3])
+          rescue => e
+            errors[:administrator_email] = [ e.message ]
+            has_errors = true
+          end
+          begin
+            if row[4].present?
+              row[4].strip.split(",").each do |email|
+                user = User.find_by_email!(email)
+                if user.organization_id == current_user.organization_id
+                  expert_ids << user.id
+                end
+              end
             end
           rescue => e
-            errors = construction.errors.as_json
+            errors[:expert_emails] << e.message
+            has_errors = true
+          end
+          begin
+            if row[5].present?
+              row[5].strip.split(",").each do |email|
+                user = User.find_by_email!(email)
+                if user.organization_id == current_user.organization_id
+                  inspector_ids << user.id
+                end
+              end
+            end
+          rescue => e
+            errors[:expert_emails] << e.message
+            has_errors = true
+          end
+          begin
+            construction.supervisor = User.find_by_email!(row[6])
+          rescue => e
+            errors[:supervisor_email] = [ e.message ]
+            has_errors = true
+          end
+          if not has_errors
+            begin
+              Construction.transaction do
+                construction.user_ids = inspector_ids | expert_ids
+                construction.save!
+              end
+            rescue => e
+              errors = construction.errors.as_json
+            end
           end
         end
-      end
 
-      created = false
-      changed = false
-      success = true
-      if not errors.empty?
-        success = false
-      elsif cons.previous_changes[:id].present?
-        created = true
-      elsif cons.previous_changes.any?
-        changed = true
-      end
+        created = false
+        changed = false
+        success = true
+        if not errors.empty?
+          success = false
+        elsif cons.previous_changes[:id].present?
+          created = true
+        elsif cons.previous_changes.any?
+          changed = true
+        end
 
-      csv_resource = CsvUpload.new id: cons.id, success: success,
-        errors: errors,
-        row_number: row_number, row_data: row.to_h,
-        created: created, changed: changed
-      row_number = row_number + 1
-      resources << csv_resource
+        csv_resource = CsvUpload.new id: cons.id, success: success,
+          errors: errors,
+          row_number: row_number, row_data: row_to_hash(headers, row),
+          created: created, changed: changed
+        row_number = row_number + 1
+        resources << csv_resource
+      end
     end
 
     resources
