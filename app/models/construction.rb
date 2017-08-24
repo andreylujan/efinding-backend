@@ -169,6 +169,7 @@ class Construction < ApplicationRecord
   def self.column_translations
     @column_translations ||= {
       company_id: "ID empresa",
+      name: "Nombre Obra",
       code: "Código",
       administrator_email: "Email administrador de obra",
       expert_emails: "Emails Jefes de Terreno (separados por ,)",
