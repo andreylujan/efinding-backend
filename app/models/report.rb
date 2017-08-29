@@ -274,7 +274,7 @@ class Report < ApplicationRecord
 
   def change_state
     unless self.ignore_state_changes
-      if self.creator.organization_id == 6 and self.state_changed?
+      if self.creator.organization_id == 6 and self.state_id_changed?
         ChangeStateJob.set(wait: 3.seconds, queue: ENV['REPORT_QUEUE'] || "efinding_report").perform_later(self.id.to_s)
       end
     end
