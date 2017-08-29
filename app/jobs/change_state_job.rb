@@ -4,7 +4,7 @@ class ChangeStateJob < ApplicationJob
 
   def perform(report_id)
     report = Report.find(report_id)
-    if report.state_id == 18 || report.state_id == 21
+    if report.state_id == 18 || report.state_id == 16
 
       title = report.dynamic_attributes.dig("78", "value")
       email = report.dynamic_attributes.dig("81", "value")
