@@ -128,6 +128,7 @@ class Report < ApplicationRecord
   before_save :check_dynamic_changes, on: [ :update ]
   before_save :default_values
   before_save :check_limit_date
+  after_save :change_state, on: [ :update ]
   after_commit :generate_pdf_instances, on: [ :create, :update ]
 
   after_commit :generate_pdf, on: [ :create, :update ]
@@ -271,12 +272,20 @@ class Report < ApplicationRecord
     end
   end
 
+  def change_state
+    unless self.ignore_state_changes
+      if self.creator.organization_id == 7 and self.state_changed?
+        ChangeStateJob.set(wait: 3.seconds, queue: ENV['REPORT_QUEUE'] || "efinding_report").perform_later(self.id.to_s)
+      end
+    end
+  end
+
   def formatted_date_for(field)
     if field.present? and field.is_a? Hash and field["updated_at"].present?
       begin
         DateTime.parse(field["updated_at"])
-          .in_time_zone(organization.time_zone)
-          .strftime("%d/%m/%Y %R")
+        .in_time_zone(organization.time_zone)
+        .strftime("%d/%m/%Y %R")
       rescue => exception
         "Fecha inválida"
       end
