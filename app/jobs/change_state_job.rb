@@ -12,13 +12,7 @@ class ChangeStateJob < ApplicationJob
       message = "El reclamo #{title.downcase} ha sido #{suffix}"
 
       conn = Faraday.new(:url => "http://ec2-54-88-114-83.compute-1.amazonaws.com")
-      body = {
-        id_order: order_id,
-        state: state
-      }
-      if message.present?
-        body[:message] = message
-      end
+      
       begin
         response = conn.post do |req|
           req.url '/idd/index.php/api/reclamo/send_push_notification'
