@@ -80,6 +80,61 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
 
   end
 
+  def inverfact
+    date = DateTime.now
+    if params[:year].present? and params[:month].present?
+      year = params.require(:year).to_i
+      month = params.require(:month).to_i
+      date = DateTime.new(year, month)
+    end
+
+    reports = Report.joins(creator: :role)
+    .where(roles: { organization_id: current_user.organization_id })
+    .where("reports.created_at >= ? AND reports.created_at <= ?",
+           date.beginning_of_month,
+           date.end_of_month
+           )
+    by_user = reports.group("users.id")
+    .select("count(reports.id) AS num_reports, users.first_name || ' ' || users.last_name as user_name,
+      count(distinct(dynamic_attributes->'94'->>'value')) AS num_companies")
+    .map do |group|
+      {
+        user_name: group.user_name,
+        num_reports: group.num_reports,
+        num_companies: group.num_companies
+      }
+    end
+
+    num_companies = reports
+      .group("reports.id")
+      .select("count(distinct(dynamic_attributes->'94'->>'value')) AS num_companies")
+      .first
+      .num_companies
+
+    by_reason = reports.group("dynamic_attributes->'95'->>'value'")
+      .select("count(reports.id) AS num_reports, dynamic_attributes->'95'->>'value' AS reason")
+      .order("count(reports.id) DESC")
+      .map do |group|
+        {
+          num_reports: group.num_reports,
+          reason: group.reason
+        }
+    end
+
+    render json: {
+      data: {
+        id: "#{date.month}/#{date.year}",
+        type: "dashboards",
+        attributes: {
+          reports_by_user: by_user,
+          num_companies: num_companies,
+          reports_by_reason: by_reason
+        }
+      }
+    }
+
+  end
+
   def idd_public
     date = DateTime.now
     reports = Report.joins(creator: :role)

@@ -141,6 +141,7 @@ Rails.application.routes.draw do
               get :internal, to: "dashboard#idd_internal"
             end
           end
+          get :inverfact
         end
       end
 
