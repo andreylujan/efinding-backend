@@ -109,7 +109,11 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
       .group("reports.id")
       .select("count(distinct(dynamic_attributes->'94'->>'value')) AS num_companies")
       .first
-      .num_companies
+    if num_companies.nil?
+      num_companies = 0
+    else
+      num_companies = num_companies.num_companies
+    end
 
     by_reason = reports.group("dynamic_attributes->'95'->>'value'")
       .select("count(reports.id) AS num_reports, dynamic_attributes->'95'->>'value' AS reason")

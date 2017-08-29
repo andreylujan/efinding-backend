@@ -59,6 +59,10 @@ class User < ApplicationRecord
     end
   end
 
+  def app_name
+    organization.echeckit? ? "eCheckit" : "eFinding"
+  end
+
   def format_rut
     if rut.present? and RUT::validar(rut)
       self.rut = RUT::formatear(RUT::quitarFormato(self.rut).gsub(/^0+|$/, ''))
