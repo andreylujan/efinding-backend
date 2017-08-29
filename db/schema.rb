@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170823164118) do
+ActiveRecord::Schema.define(version: 20170829143058) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -549,11 +549,12 @@ ActiveRecord::Schema.define(version: 20170823164118) do
   end
 
   create_table "state_transitions", force: :cascade do |t|
-    t.integer  "previous_state_id", null: false
-    t.integer  "next_state_id",     null: false
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.text     "name",              null: false
+    t.integer  "previous_state_id",                 null: false
+    t.integer  "next_state_id",                     null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.text     "name",                              null: false
+    t.boolean  "is_local",          default: false, null: false
     t.index ["next_state_id", "previous_state_id"], name: "index_state_transitions_on_next_state_id_and_previous_state_id", unique: true, using: :btree
     t.index ["previous_state_id", "next_state_id"], name: "index_state_transitions_on_previous_state_id_and_next_state_id", unique: true, using: :btree
   end
