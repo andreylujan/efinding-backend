@@ -135,7 +135,7 @@ class Report < ApplicationRecord
   after_commit :send_task_job_update, on: [ :update ]
 
   validate :limit_date_cannot_be_in_the_past, on: :create
-  validate :valid_state_transition, on: [ :update ]
+  # validate :valid_state_transition, on: [ :update ]
   has_many :pdfs, dependent: :destroy
   acts_as_sequenced scope: :organization_id
   belongs_to :organization
