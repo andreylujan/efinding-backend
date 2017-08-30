@@ -27,6 +27,7 @@ class Device < ApplicationRecord
   after_create :destroy_old_devices
   validates_uniqueness_of :device_token, allow_nil: true
   validates_uniqueness_of :registration_id, allow_nil: true
+  validates_uniqueness_of :endpoint_arn, allow_nil: true
 
   def destroy_old_devices
     user = self.user
