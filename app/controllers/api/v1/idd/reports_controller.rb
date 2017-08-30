@@ -23,17 +23,20 @@ class Api::V1::Idd::ReportsController < Api::V1::JsonApiController
 
     by_email = {}
     reports.each do |report|
-      if email = report.dynamic_attributes.dig("81", "value").strip.downcase.gsub("\"", "").gsub("'", "")
-        if by_email[email]
-          by_email[email][:num_reports] += 1
-        else
-          by_email[email] = {
-            id: report.id.to_s,
-            num_reports: 1,
-            email: email,
-            name: report.dynamic_attributes.dig("80", "value"),
-            phone: report.dynamic_attributes.dig("82", "value")
-          }
+      email = report.dynamic_attributes.dig("81", "value")
+      if email.present?
+        if email = email.strip.downcase.gsub("\"", "").gsub("'", "")
+          if by_email[email]
+            by_email[email][:num_reports] += 1
+          else
+            by_email[email] = {
+              id: report.id.to_s,
+              num_reports: 1,
+              email: email,
+              name: report.dynamic_attributes.dig("80", "value"),
+              phone: report.dynamic_attributes.dig("82", "value")
+            }
+          end
         end
       end
     end
