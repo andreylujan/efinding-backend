@@ -86,19 +86,19 @@ class AccidentRate < ApplicationRecord
     end
 
     csv.each_with_index do |row, index|
-      if index > 0
+      if index > 0 and row.length > 0 and row[0].present?
         construction_code = row[0]
         construction = Construction.find_by_code(construction_code)
         if construction.present?
           AccidentRate.find_or_initialize_by(construction_id: construction.id,
           rate_period: Date.new(row[2].to_i, row[1].to_i)).tap do |item|
 
-            item.man_hours = row[3].to_f
-            item.worker_average = row[4].to_f
+            item.man_hours = row[3].gsub(",", ".").to_f
+            item.worker_average = row[4].gsub(",", ".").to_f
             item.num_accidents = row[5].to_i
             item.num_days_lost = row[6].to_i
-            item.accident_rate = row[7].to_f
-            item.casualty_rate = row[8].to_f
+            item.accident_rate = row[7].gsub(",", ".").to_f
+            item.casualty_rate = row[8].gsub(",", ".").to_f
             item.organization = current_user.organization
 
             errors = {}
