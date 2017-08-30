@@ -49,7 +49,7 @@ class AccidentRate < ApplicationRecord
       num_days_lost: "Número de días perdidos",
       accident_rate: "Tasa de accidentabilidad",
       casualty_rate: "Tasa de siniestralidad",
-      frequency_index: "Índice de frequency",
+      frequency_index: "Índice de frecuencia",
       gravity_index: "Índice de gravedad"
     }
   end
