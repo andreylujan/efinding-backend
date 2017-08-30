@@ -38,7 +38,13 @@ class SendTaskJob < ApplicationJob
     devices = user.devices
     registration_ids = devices.where("registration_id is not null").map { |r| r.registration_id }
     device_tokens = devices.where("device_token is not null").map { |r| r.device_token }
+    amazon_devices = devices.where.not(endpoint_arn: nil)
+    sns = Aws::SNS::Client.new(region: "us-west-2")
+    message = { GCM: { notification: { title: "Tarea asignada", body: "Se le ha asignado una tarea", icon: "logo" } }.to_json }.to_json
 
+    amazon_devices.each do |device|
+      sns.publish(message: message, target_arn: device.endpoint_arn, message_structure: "json")
+    end
 
     if registration_ids.length > 0 or device_tokens.length > 0
       body = params.merge({
