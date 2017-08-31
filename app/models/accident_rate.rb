@@ -50,7 +50,8 @@ class AccidentRate < ApplicationRecord
       accident_rate: "Tasa de accidentabilidad",
       casualty_rate: "Tasa de siniestralidad",
       frequency_index: "Índice de frecuencia",
-      gravity_index: "Índice de gravedad"
+      gravity_index: "Índice de gravedad",
+      num_total_workers: "Cantidad de trabajadores del mes empresa"
     }
   end
 
@@ -68,6 +69,7 @@ class AccidentRate < ApplicationRecord
     hash
   end
 
+
   def self.from_csv(file_name, current_user)
 
     upload = BatchUpload.create! user: current_user, uploaded_file: file_name,
@@ -75,7 +77,7 @@ class AccidentRate < ApplicationRecord
 
     csv_text = CsvUtils.read_file(file_name)
     headers = %w{construction_code month year man_hours worker_average num_accidents
-      num_days_lost accident_rate casualty_rate}
+      num_days_lost accident_rate casualty_rate num_total_workers}
     resources = []
     row_number = 2
 
@@ -99,6 +101,12 @@ class AccidentRate < ApplicationRecord
             item.num_days_lost = row[6].to_i
             item.accident_rate = row[7].gsub(",", ".").to_f
             item.casualty_rate = row[8].gsub(",", ".").to_f
+            if row[9].present?
+              global_data = MonthlyGlobalData.find_or_initialize_by(month_date: item.rate_period, organization: current_user.organization)
+              global_data.num_workers = row[9].to_i
+              global_data.save!
+            end
+
             item.organization = current_user.organization
 
             errors = {}
@@ -146,9 +154,16 @@ class AccidentRate < ApplicationRecord
     resources
   end
 
+  def num_total_workers
+    global_data = MonthlyGlobalData.find_by(month_date: rate_period, organization: organization)
+    if global_data.present?
+      global_data.num_workers
+    end
+  end
+
   def self.to_csv(current_user, file_name=nil)
     attributes = %w{construction_code month year man_hours worker_average num_accidents
-      num_days_lost accident_rate casualty_rate frequency_index gravity_index}
+      num_days_lost accident_rate casualty_rate num_total_workers frequency_index gravity_index}
     csv_obj = CSV.generate(headers: true,
     encoding: "UTF-8", col_sep: current_user.organization.csv_separator) do |csv|
       csv << attributes.map { |attr| column_translations[attr.to_sym] }

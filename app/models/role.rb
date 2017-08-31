@@ -9,6 +9,7 @@
 #  created_at      :datetime
 #  updated_at      :datetime
 #  role_type       :integer
+#  can_view_all    :boolean          default(FALSE), not null
 #
 
 class Role < ApplicationRecord

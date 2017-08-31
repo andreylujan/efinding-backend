@@ -44,6 +44,7 @@ class ChecklistReport < ApplicationRecord
   acts_as_paranoid
 
   after_commit :generate_pdf
+  after_commit :send_email, on: [ :create ]
 
   attr_accessor :ignore_pdf
 
@@ -66,6 +67,25 @@ class ChecklistReport < ApplicationRecord
   def generate_pdf
     if not @ignore_pdf and not self.pdf_uploaded?
       regenerate_pdf
+    end
+  end
+
+  def send_email
+    # UserMailer.delay_for(5.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+    #  .report_email(self.id, self.assigned_user,
+    #                "Tarea asignada",
+    #                "#{creator.name} ha generado una tarea para tu área.")
+    user_ids = []
+    user_ids << creator_id
+    user_ids = user_ids | construction.user_ids
+    user_ids = user_ids | [ construction.supervisor_id, construction.administrator_id ]
+    user_ids = user_ids.select { |i| i.present? }.uniq
+    user_ids.each do |user_id|
+      UserMailer.delay_for(5.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+        .checklist_email(self.id, user_id,
+          "Checklist creado",
+          "#{creator.name} ha generado un checklist de tipo: #{checklist.name}."
+          )
     end
   end
 

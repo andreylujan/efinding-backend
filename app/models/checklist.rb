@@ -9,6 +9,7 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  organization_id :integer          not null
+#  options         :jsonb            not null
 #
 
 class Checklist < ApplicationRecord

@@ -152,8 +152,8 @@ class Inspection < ApplicationRecord
 
   def reports_centroid
     result = ActiveRecord::Base.connection.execute("select ST_AsGeoJSON(st_centroid(st_union(locations.lonlat))) from locations INNER JOIN " +
-      "reports ON reports.initial_location_id = locations.id INNER JOIN " +
-      "inspections ON inspections.id = reports.inspection_id WHERE inspections.id = #{self.id}").first
+                                                   "reports ON reports.initial_location_id = locations.id INNER JOIN " +
+                                                   "inspections ON inspections.id = reports.inspection_id WHERE inspections.id = #{self.id}").first
     if result.present?
       coords = JSON.parse(result["st_asgeojson"])["coordinates"]
       "#{coords[1]}%2C#{coords[0]}"
@@ -219,7 +219,7 @@ class Inspection < ApplicationRecord
 
 
 
-  
+
 
   state_machine :state, initial: :reports_pending do
 
@@ -235,6 +235,19 @@ class Inspection < ApplicationRecord
                           "#{inspection.construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
                           "en la obra #{inspection.construction.name}. " +
                           "Para realizar la firma, puedes ingresar a #{ENV['ADMIN_URL']}/#/efinding/inspecciones/lista")
+      end
+    end
+
+    after_transition any => :first_signature_done do |inspection, transition|
+      if inspection.initial_signer.present?
+        users = inspection.construction.users.select { |u| u.role_id == 12 }
+        users.each do |user|
+          UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+          .inspection_email(inspection.id, user, "Hallazgos pendientes de resolución - #{inspection.construction.name}",
+                            "#{inspection.initial_signer.name} ha firmado la inspección #{inspection.id} " +
+                            "en la obra #{inspection.construction.name}. " +
+                            "Puedes resolverlo en la aplicación.")
+        end
       end
     end
 
