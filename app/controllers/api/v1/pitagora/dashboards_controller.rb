@@ -288,8 +288,8 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
 
     indices_de_frecuencia = {}
     indices_de_gravedad = {}
-    tasa_acumulada_accidentabilidad = nil
-    tasa_acumulada_siniestralidad = nil
+    tasa_acumulada_accidentabilidad = 0
+    tasa_acumulada_siniestralidad = 0
 
 
     if params.dig(:filter, :construction_id).present?
