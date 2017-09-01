@@ -14,4 +14,5 @@ class MonthlyGlobalData < ApplicationRecord
   belongs_to :organization
   validates :organization, presence: true
   validates :month_date, presence: true, uniqueness: { scope: :organization_id }
+  validates :num_workers, presence: true
 end
