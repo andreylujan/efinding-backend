@@ -47,6 +47,7 @@ gem 'jsoneditor-rails', '~> 1.0', '>= 1.0.1'
 gem 'turbolinks', '~> 5.0', '>= 5.0.1'
 gem 'sass', '~> 3.5', '>= 3.5.1'
 
+gem "mini_magick"
 gem 'devise', '~> 4.2'
 gem 'doorkeeper', '~> 4.2'
 gem 'ruby_kml', git: 'https://github.com/pelluch/ruby_kml'

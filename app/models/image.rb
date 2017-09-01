@@ -25,6 +25,10 @@ class Image < ApplicationRecord
   # validates_presence_of :image
   validates_presence_of :url
   belongs_to :resource, polymorphic: true
+  # after_commit :fix_rotation, on: [ :create ]
+  # mount_uploader :url, ReportImageUploader
+  before_save :set_id
+  before_save :fix_rotation, on: [ :create ]
 
   def http_url
   	self.url.gsub 'https', 'http' if self.url.present?
@@ -37,6 +41,34 @@ class Image < ApplicationRecord
       comment
     else
       "Sin comentario"
+    end
+  end
+
+  def fix_rotation
+    image = MiniMagick::Image.open(self.url)
+    if image.exif.present?
+      extension = ""
+      last_index = self.url.rindex(".")
+      if last_index.present?
+        extension = self.url.split(".")[-1]
+      end
+      image.auto_orient
+      image.strip
+      client = Aws::S3::Client.new(region: ENV['AWS_REGION'])
+      bucket = Aws::S3::Bucket.new(ENV['AMAZON_BUCKET'], client: client)
+      key = "images/#{SecureRandom.uuid}"
+      if extension.present?
+        key = "#{key}.#{extension}"
+      end
+      object = bucket.put_object(key: key, body: image.tempfile)
+      self.url = "#{ENV['ASSET_HOST']}/#{key}"
+    end
+  end
+
+  private
+  def set_id
+    if id.nil?
+      self.id = SecureRandom.uuid
     end
   end
 end
