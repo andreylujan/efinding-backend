@@ -72,6 +72,8 @@ class Image < ApplicationRecord
       object = bucket.put_object(key: key, body: image.tempfile)
       self.url = "#{ENV['ASSET_HOST']}/#{key}"
       self.is_processed = true
+    else
+      self.is_processed = true
     end
   end
 
