@@ -38,6 +38,12 @@ class Image < ApplicationRecord
   def fix_rotation
     image = MiniMagick::Image.open(self.url)
     if image.exif.present?
+      max = image.width > image.height ? image.width : image.height
+      if max > 1200
+        scale = 1200.0/max
+        scale = (scale*100).floor.to_s + "%"
+        image.resize scale
+      end
       extension = ""
       last_index = self.url.rindex(".")
       if last_index.present?
