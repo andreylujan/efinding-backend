@@ -8,13 +8,13 @@ staging:
     - [ efinding_pitagora_email, 2 ]
     - [ efinding_pitagora_push, 1 ]
 development:
-  :concurrency: 10
+  :concurrency: 5
   :queues:
     - [ efinding_report, 3 ]
     - [ efinding_email, 2 ]
     - [ efinding_push, 1 ]
 production:
-  :concurrency: 10
+  :concurrency: 5
   :queues:
     - [ efinding_report, 3 ]
     - [ efinding_email, 2 ]
