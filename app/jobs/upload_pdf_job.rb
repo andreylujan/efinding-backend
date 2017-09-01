@@ -21,6 +21,10 @@ class UploadPdfJob < ApplicationJob
     html = nil
 
     report.ignore_pdf = true
+    report.images.each do |image|
+      image.fix_rotation
+      image.save!
+    end
     report.pdfs.destroy_all
     report.report_type.pdf_templates.each do |template|
       html = (ac.render_to_string(inline: template.template,
