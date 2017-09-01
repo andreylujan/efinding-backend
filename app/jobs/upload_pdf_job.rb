@@ -22,6 +22,11 @@ class UploadPdfJob < ApplicationJob
     html_file_text = nil
     report.ignore_pdf = true
 
+    report.images.each do |image|
+      image.fix_rotation
+      image.save!
+    end
+
     map_type = "road_map"
     initial_location = report.initial_location
 

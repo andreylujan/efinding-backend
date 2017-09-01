@@ -28,7 +28,7 @@ class Image < ApplicationRecord
   # after_commit :fix_rotation, on: [ :create ]
   # mount_uploader :url, ReportImageUploader
   before_save :set_id
-  before_save :fix_rotation, on: [ :create ]
+  # before_save :fix_rotation, on: [ :create ]
 
   def http_url
   	self.url.gsub 'https', 'http' if self.url.present?
@@ -45,6 +45,9 @@ class Image < ApplicationRecord
   end
 
   def fix_rotation
+    if is_processed?
+      return
+    end
     image = MiniMagick::Image.open(self.url)
     if image.exif.present?
       max = image.width > image.height ? image.width : image.height
@@ -68,6 +71,7 @@ class Image < ApplicationRecord
       end
       object = bucket.put_object(key: key, body: image.tempfile)
       self.url = "#{ENV['ASSET_HOST']}/#{key}"
+      self.is_processed = true
     end
   end
 
