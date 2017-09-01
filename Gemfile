@@ -62,6 +62,7 @@ gem 'active_model_serializers', '~> 0.10.4'
 gem 'jsonapi-serializers', '~> 0.16.1'
 gem 'state_machines-activerecord'
 gem 'faraday', '~> 0.12.1'
+gem "mini_magick"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

@@ -29,9 +29,31 @@ class Image < ApplicationRecord
   belongs_to :state
 
   before_save :assign_state
+  before_save :fix_rotation, on: [ :create ]
 
   def http_url
-  	self.url.gsub 'https', 'http' if self.url.present?
+    self.url.gsub 'https', 'http' if self.url.present?
+  end
+
+  def fix_rotation
+    image = MiniMagick::Image.open(self.url)
+    if image.exif.present?
+      extension = ""
+      last_index = self.url.rindex(".")
+      if last_index.present?
+        extension = self.url.split(".")[-1]
+      end
+      image.auto_orient
+      image.strip
+      client = Aws::S3::Client.new(region: ENV['AWS_REGION'])
+      bucket = Aws::S3::Bucket.new(ENV['AMAZON_BUCKET'], client: client)
+      key = "images/#{SecureRandom.uuid}"
+      if extension.present?
+        key = "#{key}.#{extension}"
+      end
+      object = bucket.put_object(key: key, body: image.tempfile)
+      self.url = "#{ENV['ASSET_HOST']}/#{key}"
+    end
   end
 
   def generate_id
@@ -39,7 +61,7 @@ class Image < ApplicationRecord
       self.id = SecureRandom.uuid
     end
   end
-  
+
   # before_create :write_image_identifier
   # skip_callback :save, :before, :write_image_identifier
   private
