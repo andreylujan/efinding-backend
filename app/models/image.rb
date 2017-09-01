@@ -61,7 +61,7 @@ class Image < ApplicationRecord
         key = "#{key}.#{extension}"
       end
       object = bucket.put_object(key: key, body: image.tempfile)
-      self.url = "#{ENV['ASSET_HOST']}/#{key}"
+      self.url = "#{ENV['AMAZON_CDN']}/#{key}"
       self.is_processed = true
     else
       self.is_processed = true
