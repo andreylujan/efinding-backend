@@ -48,7 +48,20 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
   end
 
   def show
-    super
+    if params[:format] == "html"
+      report = Report.find(params[:id])
+      template = report.report_type.pdf_templates.first
+      render(inline: template.template, locals: { report: report })
+    elsif params[:format] == "pdf"
+      report = Report.find(params[:id])
+      template = report.report_type.pdf_templates.first
+      html = render_to_string(inline: template.template, locals: { report: report })
+        .force_encoding("UTF-8")
+      pdf = WickedPdf.new.pdf_from_string(html, zoom: 0.75)
+      render body: pdf
+    else
+      super
+    end
   end
 
   def create
