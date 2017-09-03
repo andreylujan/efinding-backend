@@ -50,11 +50,11 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
   def show
     if params[:format] == "html"
       report = Report.find(params[:id])
-      template = report.report_type.pdf_templates.first
+      template = params[:pdf_template_id].present? ? PdfTemplate.find(params[:pdf_template_id]) : report.report_type.pdf_templates.first
       render(inline: template.template, locals: { report: report })
     elsif params[:format] == "pdf"
       report = Report.find(params[:id])
-      template = report.report_type.pdf_templates.first
+      template = params[:pdf_template_id].present? ? PdfTemplate.find(params[:pdf_template_id]) : report.report_type.pdf_templates.first
       html = render_to_string(inline: template.template, locals: { report: report })
         .force_encoding("UTF-8")
       pdf = WickedPdf.new.pdf_from_string(html, zoom: 0.75)
