@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::StateResource < ApplicationResource
-  attributes :name, :color, :show_pdf, :editable
+  attributes :name, :color, :show_pdf, :editable,
+    :undoable
   has_many :previous_states
   has_many :next_states
   has_many :sections
