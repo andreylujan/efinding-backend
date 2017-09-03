@@ -141,7 +141,7 @@ class Report < ApplicationRecord
   acts_as_sequenced scope: :organization_id
   belongs_to :organization
   before_create :assign_user
-  before_create :assign_labels
+  before_save :set_default_attributes, on: [ :create ]
   after_commit :update_inspection, on: [ :create, :update ]
 
   acts_as_xlsx columns: [
@@ -233,10 +233,9 @@ class Report < ApplicationRecord
     end
   end
 
-  def assign_labels
-    self.dynamic_attributes["55"] = {
-      value: "6%"
-    }
+  def set_default_attributes
+    self.dynamic_attributes = 
+      self.report_type.default_dynamic_attributes.merge(self.dynamic_attributes)
   end
 
   def check_state_changed
