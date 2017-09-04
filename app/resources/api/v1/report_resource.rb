@@ -332,7 +332,7 @@ class Api::V1::ReportResource < ApplicationResource
       end
       records = records.select("reports.*, CASE WHEN(scheduled_at IS NOT NULL AND scheduled_at <= '#{DateTime.now}') THEN true ELSE false END as is_schedule_due")
     elsif not options[:dashboard]
-      records = records.select("reports.*, CASE WHEN(limit_date IS NOT NULL AND limit_date <= '#{DateTime.now}') THEN true ELSE false END as is_expired")
+      records = records.select("reports.*, CASE WHEN(limit_date IS NOT NULL AND limit_date <= '#{DateTime.now}' AND reports.state = 'unchecked') THEN true ELSE false END as is_expired")
     end
     records
 
