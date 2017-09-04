@@ -48,33 +48,36 @@ class Image < ApplicationRecord
     if is_processed?
       return
     end
-    image = MiniMagick::Image.open(self.url)
-    set_image_attributes(image)
-    if image.exif.present?
-      image.auto_orient
-      image.strip
-    end
-    max = image.width > image.height ? image.width : image.height
-    if max > 1200
-      scale = 1200.0/max
-      scale = (scale*100).floor.to_s + "%"
-      image.resize scale
-    end
-    extension = ""
-    last_index = self.url.rindex(".")
-    if last_index.present?
-      extension = self.url.split(".")[-1]
-    end
+    begin
+      image = MiniMagick::Image.open(self.url)
+      set_image_attributes(image)
+      if image.exif.present?
+        image.auto_orient
+        image.strip
+      end
+      max = image.width > image.height ? image.width : image.height
+      if max > 1200
+        scale = 1200.0/max
+        scale = (scale*100).floor.to_s + "%"
+        image.resize scale
+      end
+      extension = ""
+      last_index = self.url.rindex(".")
+      if last_index.present?
+        extension = self.url.split(".")[-1]
+      end
 
-    client = Aws::S3::Client.new(region: ENV['AWS_REGION'])
-    bucket = Aws::S3::Bucket.new(ENV['AMAZON_BUCKET'], client: client)
-    key = "images/#{SecureRandom.uuid}"
-    if extension.present?
-      key = "#{key}.#{extension}"
+      client = Aws::S3::Client.new(region: ENV['AWS_REGION'])
+      bucket = Aws::S3::Bucket.new(ENV['AMAZON_BUCKET'], client: client)
+      key = "images/#{SecureRandom.uuid}"
+      if extension.present?
+        key = "#{key}.#{extension}"
+      end
+      object = bucket.put_object(key: key, body: image.tempfile)
+      self.url = "#{ENV['AMAZON_CDN']}#{key}"
+      self.is_processed = true
+    rescue => e
     end
-    object = bucket.put_object(key: key, body: image.tempfile)
-    self.url = "#{ENV['AMAZON_CDN']}#{key}"
-    self.is_processed = true
   end
 
   def generate_id
