@@ -85,7 +85,7 @@ class Api::V1::Delivery::OrdersController < ApplicationController
       scheduled_at = nil
       if is_scheduled
         report.scheduled_at = DateTime.parse(params[:order_scheduled_date])
-        .change(offset: "-0400")
+        .change(offset: "-0300")
       end
       report.dynamic_attributes["47"] = {
         sections: [
