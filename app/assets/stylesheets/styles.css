@@ -66,6 +66,9 @@ td label{
 .pending{
 	color: #F8B700;
 }
+.late {
+	color: #b71919;
+}
 
 .table{
 	width: 100%;

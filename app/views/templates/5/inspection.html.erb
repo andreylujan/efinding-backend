@@ -68,7 +68,13 @@
 									<h2><small>Riesgo</small><br><%= report.dynamic_attributes.dig("53", "text") %></h2>
 								</td>
 								<td class="highlight">
-									<i class="fa fa-check fa-2x success"></i><!-- Estado -->
+									<% if report.state == "resolved" or report.state == "pending" %>
+										<i class="fa fa-check fa-2x success"></i>
+									<% elsif report.limit_date.present? and report.limit_date <= DateTime.now %>
+										<i class="fa fa-clock-o fa-2x late"></i>
+									<% else %>
+										<i class="fa fa-clock-o fa-2x pending"></i>
+									<% end %>
 								</td>
 							</tr>
 						<% end %>
@@ -109,7 +115,13 @@
 									<h2><small>Riesgo</small><br><%= report.dynamic_attributes.dig("53", "text") %></h2>
 								</td>
 								<td class="highlight">
-									<i class="fa fa-check fa-2x success"></i>
+									<% if report.state == "resolved" or report.state == "pending" %>
+										<i class="fa fa-check fa-2x success"></i>
+									<% elsif report.limit_date.present? and report.limit_date <= DateTime.now %>
+										<i class="fa fa-clock-o fa-2x late"></i>
+									<% else %>
+										<i class="fa fa-clock-o fa-2x pending"></i>
+									<% end %>
 								</td>
 							</tr>
 						</table>
