@@ -35,11 +35,21 @@ class Image < ApplicationRecord
     self.url.gsub 'https', 'http' if self.url.present?
   end
 
+  def set_image_attributes(image)
+    if image.present?
+      self.width = image.width
+      self.height = image.height
+      self.size = image.size
+      self.format = image["format"]
+    end
+  end
+
   def fix_rotation
     if is_processed?
       return
     end
     image = MiniMagick::Image.open(self.url)
+    set_image_attributes(image)
     if image.exif.present?
       image.auto_orient
       image.strip

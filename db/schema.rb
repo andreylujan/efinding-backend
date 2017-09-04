@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170903012216) do
+ActiveRecord::Schema.define(version: 20170904223426) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -248,6 +248,10 @@ ActiveRecord::Schema.define(version: 20170903012216) do
     t.integer  "state_id"
     t.boolean  "selected",      default: false, null: false
     t.boolean  "is_processed",  default: false, null: false
+    t.integer  "width"
+    t.integer  "height"
+    t.integer  "size"
+    t.text     "format"
     t.index ["deleted_at"], name: "index_images_on_deleted_at", using: :btree
     t.index ["report_id"], name: "index_images_on_report_id", using: :btree
     t.index ["resource_id"], name: "index_images_on_resource_id", using: :btree
