@@ -13,4 +13,5 @@
 class PdfTemplate < ApplicationRecord
   belongs_to :report_type
   has_many :report_types, foreign_key: :default_pdf_template_id, dependent: :nullify
+  has_many :pdfs, dependent: :destroy
 end
