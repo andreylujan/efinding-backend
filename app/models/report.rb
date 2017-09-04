@@ -198,8 +198,8 @@ class Report < ApplicationRecord
           data_part_value.select { |el| not el.has_key? "updated_at" }.each { |el| update_field_data(el) }
           dynamic_attributes[data_part_id] = data_part_value
         end
-        d = DataPart.find(data_part_id)
-        if d.assigns_user?
+        d = DataPart.find_by(id: data_part_id)
+        if d.present? and d.assigns_user?
           user_id = data_part_value["id"]
           self.assigned_user_id = user_id
         end
