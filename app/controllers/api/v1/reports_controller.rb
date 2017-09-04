@@ -2,7 +2,7 @@
 class Api::V1::ReportsController < Api::V1::JsonApiController
 
   require 'zip'
-  before_action :doorkeeper_authorize!
+  before_action :doorkeeper_authorize!, except: [ :pdf, :html ]
 
   def context
     super.merge({
@@ -47,21 +47,34 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
      :filename => 'reports.xlsx')
   end
 
-  def show
-    if params[:format] == "html"
-      report = Report.find(params[:id])
-      template = params[:pdf_template_id].present? ? PdfTemplate.find(params[:pdf_template_id]) : report.report_type.pdf_templates.first
+  def html
+    unless Rails.env.production?
+      pdf_template_id = params.require(:pdf_template_id)
+      template = PdfTemplate.find(pdf_template_id)
+      sequential_id = params.require(:sequential_id)
+      organization_id = template.report_type.organization_id
+      report = Report.find_by(sequential_id: sequential_id, organization_id: organization_id)
       render(inline: template.template, locals: { report: report })
-    elsif params[:format] == "pdf"
-      report = Report.find(params[:id])
-      template = params[:pdf_template_id].present? ? PdfTemplate.find(params[:pdf_template_id]) : report.report_type.pdf_templates.first
+    end
+  end
+
+  def pdf
+    unless Rails.env.production?
+      pdf_template_id = params.require(:pdf_template_id)
+      template = PdfTemplate.find(pdf_template_id)
+      sequential_id = params.require(:sequential_id)
+      organization_id = template.report_type.organization_id
+      report = Report.find_by(sequential_id: sequential_id, organization_id: organization_id)
       html = render_to_string(inline: template.template, locals: { report: report })
         .force_encoding("UTF-8")
       pdf = WickedPdf.new.pdf_from_string(html, zoom: 0.75)
       render body: pdf
-    else
-      super
     end
+  end
+
+
+  def show
+    super
   end
 
   def create

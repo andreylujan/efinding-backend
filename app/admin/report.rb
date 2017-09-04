@@ -8,6 +8,7 @@ ActiveAdmin.register Report do
   end
 
   index do
+    column :sequential_id
   	column :id
   	column :created_at
   	column :creator
@@ -17,13 +18,9 @@ ActiveAdmin.register Report do
   	column :pdf
   	column :pdf_uploaded
   	column :finished_at
-  	column :inspection
   	column :html
   	column :resolved_at
   	column :resolver
-  	column :resolution_comment
-  	column :initial_location_image
-  	column :final_location_image
   	column :scheduled_at
   	column :state
   	actions
@@ -41,7 +38,7 @@ ActiveAdmin.register Report do
       f.input :html
       f.input :started_at
       f.input :finished_at
-
+    
       f.input :resolver
       f.input :resolved_at
       f.input :initial_location_image

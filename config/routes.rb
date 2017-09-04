@@ -79,6 +79,8 @@ Rails.application.routes.draw do
           get :xlsx
           get :mine
           get :tasks
+          get :pdf
+          get :html
         end
       end
 
@@ -108,6 +110,7 @@ Rails.application.routes.draw do
 
       jsonapi_resources :inspections, only: [ :index, :create, :show, :update, :destroy ] do
         jsonapi_resources :reports, only: [ :index ] do
+
         end
 
         member do
