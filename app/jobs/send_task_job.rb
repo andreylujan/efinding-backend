@@ -45,7 +45,7 @@ class SendTaskJob < ApplicationJob
     amazon_devices.each do |device|
       begin
         sns.publish(message: message, target_arn: device.endpoint_arn, message_structure: "json")
-      rescue => Aws::SNS::Errors::EndpointDisabled => e
+      rescue Aws::SNS::Errors::EndpointDisabled => e
         device.destroy!
       end
     end
