@@ -8,7 +8,7 @@ class SendTaskJob < ApplicationJob
     if report.nil?
       return
     end
-    
+
     user = report.assigned_user
 
     if user.nil?
@@ -43,7 +43,11 @@ class SendTaskJob < ApplicationJob
     message = { GCM: { notification: { title: "Tarea asignada", body: "Se le ha asignado una tarea", icon: "logo" } }.to_json }.to_json
 
     amazon_devices.each do |device|
-      sns.publish(message: message, target_arn: device.endpoint_arn, message_structure: "json")
+      begin
+        sns.publish(message: message, target_arn: device.endpoint_arn, message_structure: "json")
+      rescue => Aws::SNS::Errors::EndpointDisabled => e
+        device.destroy!
+      end
     end
 
     if registration_ids.length > 0 or device_tokens.length > 0
