@@ -274,7 +274,7 @@ class Report < ApplicationRecord
   def change_state
     unless self.ignore_state_changes
       if self.creator.organization_id == 6 and self.state_id_changed?
-        ChangeStateJob.set(wait: 3.seconds, queue: ENV['REPORT_QUEUE'] || "efinding_report").perform_later(self.id.to_s)
+        ChangeStateJob.set(wait: 3.seconds, queue: ENV['REPORT_QUEUE'] || "etodo_report").perform_later(self.id.to_s)
       end
     end
   end
@@ -528,13 +528,13 @@ class Report < ApplicationRecord
 
   def send_task_job_create
     if self.assigned_user.present?
-      SendTaskJob.set(wait: 1.second, queue: ENV['PUSH_QUEUE'] || 'efinding_push').perform_later(self.id.to_s)
+      SendTaskJob.set(wait: 1.second, queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
     end
   end
 
   def send_task_job_update
     if changes["assigned_user_id"].present? and self.assigned_user.present?
-      SendTaskJob.set(wait: 1.second, queue: ENV['PUSH_QUEUE'] || 'efinding_push').perform_later(self.id.to_s)
+      SendTaskJob.set(wait: 1.second, queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
     end
   end
   
@@ -598,7 +598,7 @@ class Report < ApplicationRecord
       if force_random
         update_columns pdf: nil, pdf_uploaded: false
       end
-      UploadPdfJob.set(queue: ENV['REPORT_QUEUE'] || 'echeckit_report').perform_later(self.id.to_s)
+      UploadPdfJob.set(queue: ENV['REPORT_QUEUE'] || 'etodo_report').perform_later(self.id.to_s)
     end
   end
 

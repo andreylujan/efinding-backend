@@ -96,7 +96,7 @@ class ChecklistReport < ApplicationRecord
     if force_random
       update_columns pdf: nil, pdf_uploaded: false
     end
-    ChecklistPdfJob.set(queue: ENV['REPORT_QUEUE'] || 'echeckit_report').perform_later(self.id.to_s)
+    ChecklistPdfJob.set(queue: ENV['REPORT_QUEUE'] || 'etodo_report').perform_later(self.id.to_s)
   end
 
   def formatted_created_at

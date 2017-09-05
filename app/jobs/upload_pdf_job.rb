@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class UploadPdfJob < ApplicationJob
 
-  queue_as :efinding_report
+  queue_as :etodo_report
   require('open-uri')
 
   def perform(report_id)

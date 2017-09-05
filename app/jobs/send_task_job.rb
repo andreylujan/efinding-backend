@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class SendTaskJob < ApplicationJob
-  queue_as :efinding_push
+  queue_as :etodo_push
 
   def perform(report_id)
 

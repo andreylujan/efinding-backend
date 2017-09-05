@@ -16,6 +16,6 @@ development:
 production:
   :concurrency: 5
   :queues:
-    - [ efinding_report, 3 ]
-    - [ efinding_email, 2 ]
-    - [ efinding_push, 1 ]
+    - [ etodo_report, 3 ]
+    - [ etodo_email, 2 ]
+    - [ etodo_push, 1 ]

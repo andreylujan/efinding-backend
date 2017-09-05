@@ -32,7 +32,7 @@ class Invitation < ApplicationRecord
   validates :email, format: /(.)+@(\w)+/
 
   def send_email
-    UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email').invite_email(self)
+    UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'etodo_email').invite_email(self)
   end
 
   private
