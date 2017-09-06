@@ -4,6 +4,7 @@
   "properties": {
     "hint": { "type": "string" },
     "type": { "type": "string" },
+    "format": { "type": "string" },
     "multiline": { "type": "boolean" },
     "allow_multiple": { "type": "boolean" },
     "other_text": { "type": "string" },
