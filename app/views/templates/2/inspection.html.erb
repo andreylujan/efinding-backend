@@ -393,15 +393,16 @@
 							Resolución Hallazgo
 						</div>
 					</div>
-					<% report.images.where(is_initial: false).each do |image| %>
-					<div class="picsField center-cropped"
-					style="background-image: url('<%= image.url.gsub('https', 'http') %>');">
+					<% report.images.where(is_initial: true).each do |image| %>
+						<!--div class="picsField center-cropped"
+						style="background-image: url('<%= image.url.gsub('https', 'http') %>');">
+						</div-->
+						<img src="<%= image.url.gsub('https', 'http') %>" class="img-responsive picsField center-cropped">
+					<% end %>
 				</div>
-				<% end %>
 			</div>
-		</div>
 		
-		<% end %>
+			<% end %>
 
 		<div class="row standalone-container" id="location-info">
 			<div class="col-xs-12">
