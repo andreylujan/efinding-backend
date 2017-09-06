@@ -9,7 +9,8 @@
     "comment_required": { "type": "boolean" },
     "editable": { "type": "boolean" },
     "gallery_state_id": { "type": "string" },
-    "selection_enabled": { "type": "boolean" }
+    "selection_enabled": { "type": "boolean" },
+    "manual_address_enabled": { "type": "boolean" }
   },
   "additionalProperties": false
 }
