@@ -214,6 +214,7 @@ class Inspection < ApplicationRecord
     if state == "first_signature_done" and reports.where(state: "unchecked").count == 0
       self.resolved_at = DateTime.now
       resolve_reports!
+      regenerate_all_pdfs
     end
   end
 
