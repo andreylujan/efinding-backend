@@ -66,7 +66,6 @@ class Report < ApplicationRecord
   belongs_to :inspection
   acts_as_list scope: :inspection
 
-  before_save :cache_data
   before_save :set_organization_id
   before_save :check_assigned_user
   before_save :check_state_changed, on: [ :update ]
