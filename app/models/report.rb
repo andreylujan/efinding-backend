@@ -32,60 +32,6 @@
 
 class Report < ApplicationRecord
 
-  # state_machine :state do
-  # end
-
-  # # Replace this with an external source (like a db)
-  # def transitions
-  #   trans = StateTransition.joins(:previous_state)
-  #     .where(states: { report_type_id: self.report_type_id })
-  #     .map do |transition|
-  #       trans_hash = {}
-  #       trans_hash[transition.previous_state.name] =
-  #         transition.next_state.name
-  #       trans_hash[:on] = transition.action
-  #       trans_hash
-  #     end
-  #   trans
-  # end
-
-  # # Create a state machine for this vehicle instance dynamically based on the
-  # # transitions defined from the source above
-  # def machine
-  #   if report_type.present?
-  #     report = self
-  #     # @machine ||= Machine.new(report, initial: :parked, action: :save) do
-  #     Machine.new(report, initial: report.state || report_type.initial_state.name, action: :save) do
-  #       report.transitions.each {|attrs| transition(attrs)}
-  #     end
-  #   end
-  # end
-
-  # # Generic class for building machines
-  # class Machine
-  #   def self.new(object, *args, &block)
-  #     machine_class = Class.new
-  #     machine = machine_class.state_machine(*args, &block)
-  #     attribute = machine.attribute
-  #     action = machine.action
-
-  #     # Delegate attributes
-  #     machine_class.class_eval do
-  #       define_method(:definition) { machine }
-  #       define_method(attribute) { object.send(attribute) }
-  #       define_method("#{attribute}=") {|value| object.send("#{attribute}=", value) }
-  #       define_method(action) { object.send(action) } if action
-  #     end
-
-  #     machine_class.new
-  #   end
-  # end
-
-  # def save
-  # Save the state change...
-  #  true
-  # end
-
   before_validation :check_state
   before_validation :generate_id
   acts_as_paranoid
@@ -99,7 +45,6 @@ class Report < ApplicationRecord
 
   validates :state, presence: true
 
-  # enum state: [ :unchecked, :resolved, :pending ]
   attr_accessor :ignore_state_changes
 
   mount_uploader :pdf, PdfUploader
@@ -234,7 +179,7 @@ class Report < ApplicationRecord
   end
 
   def set_default_attributes
-    self.dynamic_attributes = 
+    self.dynamic_attributes =
       self.report_type.default_dynamic_attributes.merge(self.dynamic_attributes)
   end
 
@@ -373,42 +318,11 @@ class Report < ApplicationRecord
     end.join("\n")
   end
 
-  def self.non_audited_columns
-    super + [ "html", "pdf", "pdf_uploaded", "initial_location_image", "final_location_image" ]
-  end
-
   def check_limit_date
     if limit_date.nil? and dynamic_attributes.dig('19', 'iso_string').present?
       date = DateTime.parse(dynamic_attributes.dig('19', 'iso_string'))
       .in_time_zone("Chile/Continental")
       self.limit_date = date.end_of_day
-    end
-  end
-
-
-  def station
-    station_id = dynamic_attributes.dig("station_id")
-    if station_id.present?
-      Mongoid.raise_not_found_error = false
-      @station ||= Manflas::Station.find(station_id)
-    end
-  end
-
-  def update_inspection
-    if inspection.present?
-      field_chief_id = dynamic_attributes.dig('16', 'id')
-      needs_save = false
-      if field_chief_id.present? and inspection.field_chief.nil?
-        inspection.field_chief_id = field_chief_id
-        needs_save = true
-      end
-      expert_id = dynamic_attributes.dig('17', 'id')
-      if expert_id.present? and inspection.expert.nil?
-        inspection.expert_id = expert_id
-        needs_save = true
-      end
-      inspection.save!
-      inspection.check_state
     end
   end
 
@@ -568,76 +482,12 @@ class Report < ApplicationRecord
     end
   end
 
-  def receptor
-    if self.dynamic_attributes["14"].present? and self.dynamic_attributes["14"]["text"] != ""
-      self.dynamic_attributes["14"]["text"]
-    else
-      "No hay datos del receptor"
-    end
-  end
-
-  def checklist_items
-    items = []
-    self.dynamic_attributes.each do |key, value|
-      item = ChecklistItem.find_by_id(key)
-      if item.present?
-        info = {
-          value: value["value"],
-          name: item.name,
-          observation: item.config["observation"],
-          position: item.position
-        }
-        items << info
-      end
-    end
-    items.sort! { |a,b| b[:position] <=> a[:position] }
-  end
-
   def regenerate_pdf(force_random = false)
     if not destroyed? and report_type.has_pdf?
       if force_random
         update_columns pdf: nil, pdf_uploaded: false
       end
       UploadPdfJob.set(queue: ENV['REPORT_QUEUE'] || 'etodo_report').perform_later(self.id.to_s)
-    end
-  end
-
-  def station_id_criteria
-    dynamic_attributes["station_id"]
-  end
-
-  def cache_data
-    if self.dynamic_attributes.nil?
-      self.dynamic_attributes = {}
-    end
-    if self.dynamic_attributes["station_id"].present?
-      Mongoid.raise_not_found_error = false
-      station = Manflas::Station.find(dynamic_attributes["station_id"])
-      if station.present?
-        dynamic_attributes["station"] = {
-          text: station.name
-        }
-        dynamic_attributes["sector"] = {
-          text: station.sector
-        }
-      end
-    end
-  end
-
-  def get_message
-    if self.creator.organization_id == 4
-      sections = dynamic_attributes.dig("47", "sections")
-      if sections.present?
-        suggestions = []
-        sections.each do |section|
-          section["items"].each do |item|
-            if item["value"] == 0 and item["comment"].present?
-              suggestions << (item["name"].gsub("\n", " ") + ": " + item["comment"])
-            end
-          end
-        end
-        return suggestions.join("\n\n")
-      end
     end
   end
 
