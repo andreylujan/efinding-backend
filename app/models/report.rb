@@ -528,13 +528,13 @@ class Report < ApplicationRecord
 
   def send_task_job_create
     if self.assigned_user.present?
-      SendTaskJob.set(wait: 1.second, queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
+      SendTaskJob.set(queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
     end
   end
 
   def send_task_job_update
     if changes["assigned_user_id"].present? and self.assigned_user.present?
-      SendTaskJob.set(wait: 1.second, queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
+      SendTaskJob.set(queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
     end
   end
   
