@@ -10,7 +10,7 @@ class UserMailer < ApplicationMailer
 		else
 			url_suffix = Rails.env.production? ? "efinding" : "efinding-staging"
 		end
-		@url = "#{BASE_ADMIN_URL}/#{url_suffix}/admin/#/signup"
+		@url = "#{ENV['BASE_ADMIN_URL']}/#{url_suffix}/admin/#/signup"
 		mail(to: @invitation.email, subject: "Únete a #{invitation.role.organization.name}",
 			from: "#{invitation.role.organization.name} Admin<solutions@ewin.cl>",
 			template_name: "invite_#{invitation.role.organization.app_name}")
