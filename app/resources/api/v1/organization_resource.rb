@@ -6,6 +6,7 @@ class Api::V1::OrganizationResource < ApplicationResource
   has_many :table_columns
   has_many :collections
   has_many :users
+  has_many :app_menu_items
   has_one :checklist
 
   def custom_links(options)

@@ -28,6 +28,7 @@ class Organization < ApplicationRecord
   has_many :collections
   belongs_to :checklist
   has_many :checklists
+  has_many :app_menu_items
   has_many :personnel_types
   belongs_to :default_report_type, class_name: :ReportType, foreign_key: :default_report_type_id
 

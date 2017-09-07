@@ -1,6 +1,6 @@
 #!/bin/bash
 
 pgbackup
-dropdb efinding_development
-createdb efinding_development
-pg_restore -U efinding -d efinding_development db/dump.sql
+dropdb etodo_development
+createdb etodo_development
+pg_restore -U efinding -d etodo_development db/dump.sql
