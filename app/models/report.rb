@@ -86,7 +86,6 @@ class Report < ApplicationRecord
   belongs_to :organization
   before_create :assign_user
   before_save :set_default_attributes, on: [ :create ]
-  after_commit :update_inspection, on: [ :create, :update ]
 
   acts_as_xlsx columns: [
     :inspection_id,
