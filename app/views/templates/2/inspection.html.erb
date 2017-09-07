@@ -366,12 +366,10 @@
 							</div>
 						</div>
 						<% report.images.where(is_initial: true).each do |image| %>
-						<div class="picsField center-cropped"
-						style="background-image: url('<%= image.url.gsub('https', 'http') %>');">
+							<img src="<%= image.url.gsub('https', 'http') %>" class="img-responsive picsField" >
+						<% end %>
 					</div>
-					<% end %>
 				</div>
-			</div>
 			<% if report.state != "unchecked" %>
 			<div class="row standalone-container" style="margin-top: 20px">
 				<div class="col-xs-6">
@@ -394,13 +392,10 @@
 						</div>
 					</div>
 					<% report.images.where(is_initial: false).each do |image| %>
-					<div class="picsField center-cropped"
-					style="background-image: url('<%= image.url.gsub('https', 'http') %>');">
+						<img src="<%= image.url.gsub('https', 'http') %>" class="img-responsive picsField" >
+					<% end %>
 				</div>
-				<% end %>
 			</div>
-		</div>
-		
 		<% end %>
 
 		<div class="row standalone-container" id="location-info">
