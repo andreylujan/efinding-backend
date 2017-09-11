@@ -57,6 +57,11 @@ class Api::V1::Delivery::OrdersController < ApplicationController
         state = "canceled"
       elsif order_state == "pedido aceptado"
         state = "accepted"
+      elsif order.state == "pedido modificado aceptado"
+        state = "modified_accepted"
+        SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
+                                                      "Pedido modificado aceptado",
+                                                      "Se han aceptado las modificaciones del pedido #{order_id}")
       elsif order_state == "pedido modificado"
         state = "modified"
         SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
