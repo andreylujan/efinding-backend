@@ -299,6 +299,6 @@ class Api::V1::ReportResource < ApplicationResource
 
 
   def fetchable_fields
-    super - [ :final_location_attributes, :images_attributes ]
+    super - [ :images_attributes ]
   end
 end
