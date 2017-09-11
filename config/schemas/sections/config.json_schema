@@ -10,7 +10,8 @@
     "editable": { "type": "boolean" },
     "gallery_state_id": { "type": "string" },
     "selection_enabled": { "type": "boolean" },
-    "manual_address_enabled": { "type": "boolean" }
+    "manual_address_enabled": { "type": "boolean" },
+    "is_initial_location": { "type": "boolean" }
   },
   "additionalProperties": false
 }
