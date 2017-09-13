@@ -402,9 +402,6 @@ class Report < ApplicationRecord
     if self.pdf_uploaded.nil?
       self.pdf_uploaded = false
     end
-    if self.finished.nil?
-      self.finished = false
-    end
     true
   end
 
@@ -444,7 +441,7 @@ class Report < ApplicationRecord
   end
 
   def generate_pdf
-    if not @ignore_pdf and self.finished?
+    if not @ignore_pdf
       self.pdf_uploaded = false
       regenerate_pdf(true)
     end
