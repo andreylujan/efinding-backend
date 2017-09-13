@@ -167,6 +167,9 @@ class Report < ApplicationRecord
       self.report_type.default_dynamic_attributes.merge(self.dynamic_attributes)
   end
 
+  def finished=(val)
+  end
+  
   def check_state_changed
     if self.state_id_changed?
       assign_attributes pdf: nil, pdf_uploaded: false
