@@ -31,7 +31,7 @@ class Inspection < ApplicationRecord
   belongs_to :construction
   has_one :company, through: :construction
 
-  has_many :reports, -> { order(position: :asc) }, dependent: :destroy
+  has_many :reports, -> { order(created_at: :asc) }, dependent: :destroy
   belongs_to :creator, class_name: :User, foreign_key: :creator_id
   belongs_to :initial_signer, class_name: :User, foreign_key: :initial_signer_id
   belongs_to :final_signer, class_name: :User, foreign_key: :final_signer_id

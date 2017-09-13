@@ -1,21 +1,21 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::ReportResource < ApplicationResource
 
-  attributes :dynamic_attributes, :created_at,
+  attributes :dynamic_attributes, 
+    :created_at,
     :updated_at,
     :limit_date,
-    :finished, :pdf, :pdf_uploaded,
+    :finished, 
+    :pdf, 
+    :pdf_uploaded,
     :initial_location_attributes,
     :final_location_attributes,
     :started_at,
-    :finished_at,
-    :images_attributes, :synced, :is_draft,
-    :formatted_finished_at,
+    :images_attributes, 
+    :synced, 
+    :is_draft,
     :formatted_created_at,
     :formatted_limit_date,
-    :formatted_resolved_at,
-    :html,
-    :resolved_at,
     :resolution_comment,
     :sequential_id
 
@@ -25,7 +25,6 @@ class Api::V1::ReportResource < ApplicationResource
   has_one :assigned_user
   has_one :creator
   has_one :inspection
-  has_one :resolver
   has_one :state
   has_one :organization
 
@@ -67,15 +66,6 @@ class Api::V1::ReportResource < ApplicationResource
     end
   }
 
-
-  filter :station_id, apply: ->(records, value, _options) {
-    if not value.empty?
-      records.where("dynamic_attributes->>'station_id' = ?", value[0])
-    else
-      records
-    end
-  }
-
   filter :state, apply: ->(records, value, _options) {
     if not value.empty?
       if value[0].is_a? Hash or value[0].is_a? ActionController::Parameters
@@ -103,16 +93,6 @@ class Api::V1::ReportResource < ApplicationResource
     end
   }
 
-
-
-  filter :started_at, apply: ->(records, value, _options) {
-    if not value.empty?
-      records.where("to_char(reports.started_at, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
-    else
-      records
-    end
-  }
-
   filter :pdfs, apply: ->(records, value, _options) {
     records
   }
@@ -134,25 +114,9 @@ class Api::V1::ReportResource < ApplicationResource
     end
   }
 
-  filter :finished_at, apply: ->(records, value, _options) {
-    if not value.empty?
-      records.where("to_char(reports.finished_at, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
-    else
-      records
-    end
-  }
-
   filter :formatted_created_at, apply: ->(records, value, _options) {
     if not value.empty?
       records.where("to_char(reports.created_at, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
-    else
-      records
-    end
-  }
-
-  filter :formatted_resolved_at, apply: ->(records, value, _options) {
-    if not value.empty?
-      records.where("to_char(reports.resolved_at, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
     else
       records
     end
@@ -165,23 +129,6 @@ class Api::V1::ReportResource < ApplicationResource
       records
     end
   }
-
-  filter :formatted_finished_at, apply: ->(records, value, _options) {
-    if not value.empty?
-      records.where("to_char(reports.finished_at, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
-    else
-      records
-    end
-  }
-
-  filter :finished, apply: ->(records, value, _options) {
-    if not value.empty?
-      records.where(finished: value)
-    else
-      records
-    end
-  }
-
 
   filter :assigned_user_name, apply: ->(records, value, _options) {
     if not value.empty?
@@ -251,19 +198,10 @@ class Api::V1::ReportResource < ApplicationResource
     @model.default_pdf
   end
 
-  def html
-    @model.default_html
+  def finished
+    true
   end
 
-  # before_save do
-  #   if @model.state_changed?
-  #     if @model.state_change[1] == "resolved" || @model.state_change[1] == "pending"
-  #       @model.resolver = context[:current_user]
-  #     end
-  #     @model.pdf_uploaded = false
-  #   end
-  #   @model.creator_id = context[:current_user].id if @model.new_record?
-  # end
   before_save do
     current_user = context[:current_user]
     if @model.creator.nil?
@@ -292,7 +230,7 @@ class Api::V1::ReportResource < ApplicationResource
     if current_user.role_id == 14
       records = records.where("reports.assigned_user_id = ?", current_user.id)
     end
-    records.includes(:initial_location).where("reports.scheduled_at IS NULL OR reports.scheduled_at <= ?", DateTime.now)
+    records.includes(:initial_location)
 
   end
 

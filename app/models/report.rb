@@ -3,33 +3,23 @@
 #
 # Table name: reports
 #
-#  id                     :uuid             not null, primary key
-#  dynamic_attributes     :jsonb            not null
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  creator_id             :integer          not null
-#  limit_date             :datetime
-#  finished               :boolean
-#  assigned_user_id       :integer
-#  pdf                    :text
-#  pdf_uploaded           :boolean          default(FALSE), not null
-#  started_at             :datetime
-#  finished_at            :datetime
-#  deleted_at             :datetime
-#  inspection_id          :integer
-#  html                   :text
-#  position               :integer
-#  initial_location_id    :integer
-#  final_location_id      :integer
-#  resolved_at            :datetime
-#  resolver_id            :integer
-#  resolution_comment     :text
-#  initial_location_image :text
-#  final_location_image   :text
-#  scheduled_at           :datetime
-#  state_id               :integer          not null
-#  sequential_id          :integer          not null
-#  organization_id        :integer          not null
+#  id                  :uuid             not null, primary key
+#  dynamic_attributes  :jsonb            not null
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  creator_id          :integer          not null
+#  limit_date          :datetime
+#  assigned_user_id    :integer
+#  pdf                 :text
+#  pdf_uploaded        :boolean          default(FALSE), not null
+#  deleted_at          :datetime
+#  inspection_id       :integer
+#  initial_location_id :integer
+#  final_location_id   :integer
+#  resolution_comment  :text
+#  state_id            :integer          not null
+#  sequential_id       :integer          not null
+#  organization_id     :integer          not null
 #
 
 class Report < ApplicationRecord
@@ -50,9 +40,6 @@ class Report < ApplicationRecord
   attr_accessor :ignore_state_changes
 
   mount_uploader :pdf, PdfUploader
-  mount_uploader :html, HtmlUploader
-  mount_uploader :initial_location_image, ImageUploader
-  mount_uploader :final_location_image, ImageUploader
 
   has_many :images, dependent: :destroy
 
@@ -66,8 +53,7 @@ class Report < ApplicationRecord
   # validates :initial_location, presence: true
 
   belongs_to :inspection
-  acts_as_list scope: :inspection
-
+  
   before_save :set_organization_id
   before_save :check_assigned_user
   before_save :check_state_changed, on: [ :update ]
