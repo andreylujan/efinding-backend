@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class InitializeSequentialIds < ActiveRecord::Migration[5.0]
   def change
   	Organization.all.each do |org|

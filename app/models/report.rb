@@ -28,6 +28,8 @@
 #  final_location_image   :text
 #  scheduled_at           :datetime
 #  state_id               :integer          not null
+#  sequential_id          :integer          not null
+#  organization_id        :integer          not null
 #
 
 class Report < ApplicationRecord

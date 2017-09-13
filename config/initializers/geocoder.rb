@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 Geocoder.configure(
   # Geocoding options
   # timeout: 3,                 # geocoding service timeout (secs)

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Api::V1::PdfResource < ApplicationResource
 	attributes :pdf_url, :pdf_html
 	add_foreign_keys :report_id

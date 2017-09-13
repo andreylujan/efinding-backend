@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170907135747) do
+ActiveRecord::Schema.define(version: 20170913144522) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,20 +60,6 @@ ActiveRecord::Schema.define(version: 20170907135747) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.index ["user_id"], name: "index_batch_uploads_on_user_id", using: :btree
-  end
-
-  create_table "checkins", force: :cascade do |t|
-    t.integer  "user_id",                                                           null: false
-    t.datetime "arrival_time",                                                      null: false
-    t.datetime "exit_time"
-    t.datetime "created_at",                                                        null: false
-    t.datetime "updated_at",                                                        null: false
-    t.json     "data",                                                 default: {}, null: false
-    t.geometry "arrival_lonlat", limit: {:srid=>0, :type=>"st_point"}
-    t.geometry "exit_lonlat",    limit: {:srid=>0, :type=>"st_point"}
-    t.index ["arrival_lonlat"], name: "index_checkins_on_arrival_lonlat", using: :gist
-    t.index ["exit_lonlat"], name: "index_checkins_on_exit_lonlat", using: :gist
-    t.index ["user_id"], name: "index_checkins_on_user_id", using: :btree
   end
 
   create_table "checklist_reports", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -142,15 +129,6 @@ ActiveRecord::Schema.define(version: 20170907135747) do
     t.integer  "organization_id"
     t.index ["organization_id"], name: "index_collections_on_organization_id", using: :btree
     t.index ["parent_collection_id"], name: "index_collections_on_parent_collection_id", using: :btree
-  end
-
-  create_table "communes", force: :cascade do |t|
-    t.integer  "region_id"
-    t.text     "name",       null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["region_id", "name"], name: "index_communes_on_region_id_and_name", unique: true, using: :btree
-    t.index ["region_id"], name: "index_communes_on_region_id", using: :btree
   end
 
   create_table "companies", force: :cascade do |t|
@@ -453,16 +431,6 @@ ActiveRecord::Schema.define(version: 20170907135747) do
     t.index ["organization_id"], name: "index_personnel_types_on_organization_id", using: :btree
   end
 
-  create_table "regions", force: :cascade do |t|
-    t.text     "name",          null: false
-    t.text     "roman_numeral", null: false
-    t.integer  "number"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.index ["name"], name: "index_regions_on_name", unique: true, using: :btree
-    t.index ["roman_numeral"], name: "index_regions_on_roman_numeral", unique: true, using: :btree
-  end
-
   create_table "report_types", force: :cascade do |t|
     t.text     "name"
     t.integer  "organization_id"
@@ -635,7 +603,6 @@ ActiveRecord::Schema.define(version: 20170907135747) do
 
   add_foreign_key "app_menu_items", "organizations"
   add_foreign_key "batch_uploads", "users"
-  add_foreign_key "checkins", "users"
   add_foreign_key "checklist_reports", "checklists"
   add_foreign_key "checklist_reports", "constructions"
   add_foreign_key "checklist_reports", "locations"
@@ -646,7 +613,6 @@ ActiveRecord::Schema.define(version: 20170907135747) do
   add_foreign_key "collection_items", "collections"
   add_foreign_key "collections", "collections", column: "parent_collection_id"
   add_foreign_key "collections", "organizations"
-  add_foreign_key "communes", "regions"
   add_foreign_key "companies", "organizations"
   add_foreign_key "construction_personnel", "constructions"
   add_foreign_key "construction_personnel", "personnel"

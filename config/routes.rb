@@ -30,10 +30,7 @@ Rails.application.routes.draw do
           end
         end
       end
-
-      jsonapi_resources :checkins, only: [ :create ] do
-      end
-
+      
       jsonapi_resources :collections, only: [ :index, :show, :create, :update, :destroy ] do
         jsonapi_related_resources :collection_items
         # jsonapi_resources :collection_items, only: [ :index, :show, :create, :update, :destroy ] do
@@ -128,9 +125,6 @@ Rails.application.routes.draw do
       end
 
       jsonapi_resources :devices, only: [ :create, :update ] do
-      end
-
-      jsonapi_resources :regions, only: [ :index ] do
       end
 
       jsonapi_resources :menu_sections, only: [ :index ] do

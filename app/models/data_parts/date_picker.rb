@@ -15,6 +15,7 @@
 #  detail_id     :integer
 #  collection_id :integer
 #  list_id       :integer
+#  assigns_user  :boolean          default(FALSE), not null
 #
 
 class DatePicker < DataPart

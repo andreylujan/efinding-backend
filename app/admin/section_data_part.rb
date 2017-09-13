@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 ActiveAdmin.register SectionDataPart do
   controller do
     define_method :permitted_params do

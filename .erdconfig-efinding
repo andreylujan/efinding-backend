@@ -13,7 +13,7 @@ polymorphism: false
 sort: true
 warn: true
 title: eFinding
-exclude: ActiveAdmin::Comment,Doorkeeper::Application,Doorkeeper::AccessToken,Doorkeeper::Application,Doorkeeper::AccessGrant,RequestLog,Inspection,Personnel,PersonnelType,ChecklistReport,Construction,Company,Checklist,Contractor,ConstructionPersonnel
+exclude: ActiveAdmin::Comment,Doorkeeper::Application,Doorkeeper::AccessToken,Doorkeeper::Application,Doorkeeper::AccessGrant,RequestLog
 only: null
 only_recursion_depth: null
 prepend_primary: false

@@ -3,7 +3,7 @@ attributes:
   - foreign_key
 disconnected: true
 filename: erd
-filetype: png
+filetype: pdf
 indirect: true
 inheritance: false
 markup: true

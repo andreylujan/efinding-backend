@@ -16,6 +16,7 @@
 #  default_title              :text             default("Sin título"), not null
 #  default_subtitle           :text             default("Sin subtítulo"), not null
 #  default_pdf_template_id    :integer
+#  can_create_reports         :boolean          default(TRUE), not null
 #
 
 class ReportType < ApplicationRecord

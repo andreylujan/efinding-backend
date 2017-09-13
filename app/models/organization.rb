@@ -14,6 +14,7 @@
 #  default_report_type_id :integer
 #  map_type               :integer          default("roadmap"), not null
 #  app_name               :integer          default("echeckit"), not null
+#  time_zone              :text             default("Chile/Continental"), not null
 #
 
 class Organization < ApplicationRecord

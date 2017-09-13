@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 ActiveAdmin.register ReportType do
   controller do
     define_method :permitted_params do

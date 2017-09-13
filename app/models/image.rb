@@ -15,6 +15,11 @@
 #  deleted_at    :datetime
 #  state_id      :integer
 #  selected      :boolean          default(FALSE), not null
+#  is_processed  :boolean          default(FALSE), not null
+#  width         :integer
+#  height        :integer
+#  size          :integer
+#  format        :text
 #
 
 class Image < ApplicationRecord

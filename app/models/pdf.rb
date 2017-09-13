@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # == Schema Information
 #
 # Table name: pdfs
@@ -8,6 +9,8 @@
 #  report_id       :uuid             not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  html            :text
+#  uploaded        :boolean          default(FALSE), not null
 #
 
 class Pdf < ApplicationRecord

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddOrganizationReferenceToReports < ActiveRecord::Migration[5.0]
   def change
     add_reference :reports, :organization, foreign_key: true

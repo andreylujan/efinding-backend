@@ -45,7 +45,6 @@ class User < ApplicationRecord
   has_many :created_reports, class_name: :Report, foreign_key: :creator_id
   has_many :assigned_reports, class_name: :Report, foreign_key: :assigned_user_id
   after_create :send_confirmation_email
-  has_many :checkins
   has_many :batch_uploads
   has_and_belongs_to_many :checklist_reports
   # validate :correct_rut

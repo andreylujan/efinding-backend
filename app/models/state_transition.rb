@@ -9,6 +9,7 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  name              :text             not null
+#  is_local          :boolean          default(FALSE), not null
 #
 
 class StateTransition < ApplicationRecord

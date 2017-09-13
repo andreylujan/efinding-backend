@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddDefaultPdfTemplateToReportTypes < ActiveRecord::Migration[5.0]
   def change
     add_column :report_types, :default_pdf_template_id, :integer

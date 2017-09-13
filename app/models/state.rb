@@ -8,8 +8,9 @@
 #  report_type_id :integer          not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  color          :text
+#  color          :text             default("#7ECECB"), not null
 #  show_pdf       :boolean          default(TRUE), not null
+#  undoable       :boolean          default(FALSE), not null
 #
 
 class State < ApplicationRecord

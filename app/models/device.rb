@@ -20,6 +20,7 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  os_type         :text
+#  endpoint_arn    :text
 #
 
 class Device < ApplicationRecord

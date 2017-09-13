@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 ActiveAdmin.register Checklist do
   controller do
     define_method :permitted_params do
