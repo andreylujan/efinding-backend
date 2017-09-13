@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class RemoveReportAttributes < ActiveRecord::Migration[5.0]
   def change
   	remove_column :reports, :scheduled_at

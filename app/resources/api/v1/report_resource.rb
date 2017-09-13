@@ -10,13 +10,11 @@ class Api::V1::ReportResource < ApplicationResource
     :pdf_uploaded,
     :initial_location_attributes,
     :final_location_attributes,
-    :started_at,
     :images_attributes, 
     :synced, 
     :is_draft,
     :formatted_created_at,
     :formatted_limit_date,
-    :resolution_comment,
     :sequential_id
 
   add_foreign_keys :inspection_id, :creator_id, :assigned_user_id, :state_id

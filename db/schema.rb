@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170913164440) do
+ActiveRecord::Schema.define(version: 20170913165931) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -462,7 +463,6 @@ ActiveRecord::Schema.define(version: 20170913164440) do
     t.integer  "inspection_id"
     t.integer  "initial_location_id"
     t.integer  "final_location_id"
-    t.text     "resolution_comment"
     t.integer  "state_id",                            null: false
     t.integer  "sequential_id",                       null: false
     t.integer  "organization_id",                     null: false

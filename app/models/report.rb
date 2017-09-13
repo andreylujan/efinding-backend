@@ -16,7 +16,6 @@
 #  inspection_id       :integer
 #  initial_location_id :integer
 #  final_location_id   :integer
-#  resolution_comment  :text
 #  state_id            :integer          not null
 #  sequential_id       :integer          not null
 #  organization_id     :integer          not null
@@ -87,7 +86,6 @@ class Report < ApplicationRecord
     :pdf_url,
     :resolved_at,
     :resolver_name,
-    :resolution_comment,
     :report_fields
   ]
 
@@ -242,8 +240,7 @@ class Report < ApplicationRecord
       :final_location_image,
       :pdf_url,
       :resolved_at,
-      :resolver_name,
-      :resolution_comment
+      :resolver_name
     ]
   end
 
@@ -258,8 +255,7 @@ class Report < ApplicationRecord
       initial_location_image: "Ubicación inicial",
       final_location_image: "Ubicación de resolución",
       pdf_url: "PDF hallazgo",
-      resolved_at: "Fecha de resolución",
-      resolution_comment: "Comentario de resolución"
+      resolved_at: "Fecha de resolución"    
     }
   end
 
