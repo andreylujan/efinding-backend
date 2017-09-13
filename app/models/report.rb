@@ -169,7 +169,7 @@ class Report < ApplicationRecord
 
   def finished=(val)
   end
-  
+
   def check_state_changed
     if self.state_id_changed?
       assign_attributes pdf: nil, pdf_uploaded: false
@@ -352,26 +352,12 @@ class Report < ApplicationRecord
   def location_delta
   end
 
-  def formatted_finished_at
-    finished_at.in_time_zone(organization.time_zone).strftime("%d/%m/%Y %R") if finished_at.present?
-  end
-
   def formatted_created_at
     created_at.in_time_zone(organization.time_zone).strftime("%d/%m/%Y %R")
   end
 
   def formatted_limit_date
     limit_date.in_time_zone(organization.time_zone).strftime("%d/%m/%Y %R") if limit_date.present?
-  end
-
-  def formatted_resolved_at
-    resolved_at.in_time_zone(organization.time_zone).strftime("%d/%m/%Y %R") if resolved_at.present?
-  end
-
-  def execution_time
-    if finished_at.present? and started_at.present?
-      ((finished_at - started_at)/1.minute).round(2)
-    end
   end
 
   def generate_id
@@ -385,9 +371,6 @@ class Report < ApplicationRecord
   end
 
   def assign_default_values
-    if self.finished.nil?
-      self.finished = false
-    end
     if self.assigned_user.nil?
       self.assigned_user = self.creator
     end
