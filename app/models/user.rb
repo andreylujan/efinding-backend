@@ -47,6 +47,8 @@ class User < ApplicationRecord
   after_create :send_confirmation_email
   has_many :batch_uploads
   has_and_belongs_to_many :checklist_reports
+  attr_accessor :disable_emails
+
   # validate :correct_rut
   # before_save :format_rut
 
@@ -69,7 +71,9 @@ class User < ApplicationRecord
   end
 
   def send_confirmation_email
-    UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'etodo_email').confirmation_email(self)
+    unless @disable_emails
+      UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'etodo_email').confirmation_email(self)
+    end
   end
 
   def send_reset_password_instructions
