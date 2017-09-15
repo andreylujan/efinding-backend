@@ -19,6 +19,8 @@
 #  state_id            :integer          not null
 #  sequential_id       :integer          not null
 #  organization_id     :integer          not null
+#  started_at          :datetime
+#  finished_at         :datetime
 #
 
 class Report < ApplicationRecord
@@ -358,6 +360,14 @@ class Report < ApplicationRecord
 
   def formatted_limit_date
     limit_date.in_time_zone(organization.time_zone).strftime("%d/%m/%Y %R") if limit_date.present?
+  end
+
+  def formatted_started_at
+    started_at.in_time_zone(organization.time_zone).strftime("%d/%m/%Y %R") if started_at.present?
+  end
+
+   def formatted_finished_at
+    finished_at.in_time_zone(organization.time_zone).strftime("%d/%m/%Y %R") if finished_at.present?
   end
 
   def generate_id

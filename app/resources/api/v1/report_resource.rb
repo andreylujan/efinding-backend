@@ -15,7 +15,11 @@ class Api::V1::ReportResource < ApplicationResource
     :is_draft,
     :formatted_created_at,
     :formatted_limit_date,
-    :sequential_id
+    :sequential_id,
+    :started_at,
+    :finished_at,
+    :formatted_started_at,
+    :formatted_finished_at
 
   add_foreign_keys :inspection_id, :creator_id, :assigned_user_id, :state_id
 
@@ -123,6 +127,22 @@ class Api::V1::ReportResource < ApplicationResource
   filter :formatted_limit_date, apply: ->(records, value, _options) {
     if not value.empty?
       records.where("to_char(reports.limit_date, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
+    else
+      records
+    end
+  }
+
+  filter :formatted_started_at, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.where("to_char(reports.started_at, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
+    else
+      records
+    end
+  }
+
+  filter :formatted_finished_at, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.where("to_char(reports.finished_at, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
     else
       records
     end
