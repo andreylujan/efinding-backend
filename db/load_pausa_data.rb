@@ -182,7 +182,7 @@ def transform_attrs(data_mapping, attrs)
 end
 
 reports.sort! { |r1, r2| DateTime.parse(r1["created_at"]).to_i <=> DateTime.parse(r2["created_at"]).to_i }
-
+new_reports = []
 reports.each do |report_hash|
 	if not Report.exists? report_hash["id"]
 		details = report_hash["dynamic_attributes"].delete("138")
@@ -224,6 +224,7 @@ reports.each do |report_hash|
 			report.state_id = 25
 			report.save!
 			report.update_column :limit_date, limit_date 
+			new_reports << report
 			if images[report.id.to_s].present?
 				images[report.id.to_s].each do |image_hash|
 					image = Image.new(image_hash)
@@ -231,6 +232,11 @@ reports.each do |report_hash|
 				end
 			end
 		end
+	else
+		new_reports << Report.find(report_hash["id"])
 	end
 end
 
+new_reports.each do |report|
+	report.generate_pdf
+end
