@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170915222137) do
+ActiveRecord::Schema.define(version: 20170920160146) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -450,24 +450,26 @@ ActiveRecord::Schema.define(version: 20170915222137) do
   end
 
   create_table "reports", id: :uuid, default: nil, force: :cascade do |t|
-    t.jsonb    "dynamic_attributes",  default: {},    null: false
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.integer  "creator_id",                          null: false
+    t.jsonb    "dynamic_attributes",        default: {},    null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.integer  "creator_id",                                null: false
     t.datetime "limit_date"
     t.integer  "assigned_user_id"
     t.text     "pdf"
-    t.boolean  "pdf_uploaded",        default: false, null: false
+    t.boolean  "pdf_uploaded",              default: false, null: false
     t.datetime "deleted_at"
     t.integer  "inspection_id"
     t.integer  "initial_location_id"
     t.integer  "final_location_id"
-    t.integer  "state_id",                            null: false
-    t.integer  "sequential_id",                       null: false
-    t.integer  "organization_id",                     null: false
+    t.integer  "state_id",                                  null: false
+    t.integer  "sequential_id",                             null: false
+    t.integer  "organization_id",                           null: false
     t.datetime "started_at"
     t.datetime "finished_at"
+    t.boolean  "auto_assigned_on_creation", default: true,  null: false
     t.index ["assigned_user_id"], name: "index_reports_on_assigned_user_id", using: :btree
+    t.index ["auto_assigned_on_creation"], name: "index_reports_on_auto_assigned_on_creation", using: :btree
     t.index ["creator_id"], name: "index_reports_on_creator_id", using: :btree
     t.index ["deleted_at"], name: "index_reports_on_deleted_at", using: :btree
     t.index ["id"], name: "index_reports_on_id", using: :btree

@@ -138,6 +138,7 @@ Rails.application.routes.draw do
               get :internal, to: "dashboard#idd_internal"
             end
           end
+          resource :generic, only: [ :show ], to: "dashboard#generic"
           get :inverfact
         end
       end

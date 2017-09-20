@@ -56,7 +56,7 @@ class Report < ApplicationRecord
   belongs_to :inspection
   
   before_save :set_organization_id
-  before_save :check_assigned_user
+  before_validation :check_assigned_user, on: [ :create ]
   before_save :check_state_changed, on: [ :update ]
   before_save :check_dynamic_changes, on: [ :update ]
   before_save :default_values
@@ -69,6 +69,8 @@ class Report < ApplicationRecord
   after_commit :send_task_job_update, on: [ :update ]
 
   validate :limit_date_cannot_be_in_the_past, on: :create
+  validates :assigned_user, presence: true
+
   # validate :valid_state_transition, on: [ :update ]
   has_many :pdfs, dependent: :destroy
   acts_as_sequenced scope: :organization_id
@@ -98,6 +100,8 @@ class Report < ApplicationRecord
   def check_assigned_user
     if self.assigned_user.nil?
       self.assigned_user = self.creator
+    else
+      self.auto_assigned_on_creation = false
     end
   end
 
