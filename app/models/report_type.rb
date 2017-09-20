@@ -17,6 +17,8 @@
 #  default_subtitle           :text             default("Sin subtítulo"), not null
 #  default_pdf_template_id    :integer
 #  can_create_reports         :boolean          default(TRUE), not null
+#  draft_name                 :text
+#  draft_color                :text
 #
 
 class ReportType < ApplicationRecord
@@ -30,4 +32,12 @@ class ReportType < ApplicationRecord
   has_many :states
   accepts_nested_attributes_for :states
   has_many :pdf_templates
+  before_save :check_default_dynamic_attributes
+
+  private
+  def check_default_dynamic_attributes
+    if self.default_dynamic_attributes.is_a? String
+      self.default_dynamic_attributes = JSON.parse(self.default_dynamic_attributes)
+    end
+  end
 end

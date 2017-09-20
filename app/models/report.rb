@@ -21,12 +21,12 @@
 #  organization_id     :integer          not null
 #  started_at          :datetime
 #  finished_at         :datetime
+#  is_assigned         :boolean          default(FALSE), not null
 #
 
 class Report < ApplicationRecord
 
-  before_validation :check_state
-  before_validation :generate_id
+  
   acts_as_paranoid
   attr_accessor :ignore_pdf
   belongs_to :creator, class_name: :User, foreign_key: :creator_id
@@ -56,7 +56,11 @@ class Report < ApplicationRecord
   belongs_to :inspection
 
   before_save :set_organization_id
+
+  before_validation :check_state
+  before_validation :generate_id
   before_validation :check_assigned_user, on: [ :create ]
+  
   before_save :check_state_changed, on: [ :update ]
   before_save :check_dynamic_changes, on: [ :update ]
   before_save :check_assignment_changes, on: [ :update ]

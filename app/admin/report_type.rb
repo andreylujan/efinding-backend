@@ -16,6 +16,8 @@ ActiveAdmin.register ReportType do
       f.input :default_title
       f.input :default_subtitle
       f.input :has_pdf
+      f.input :draft_color
+      f.input :draft_name
       f.has_many :states do |new_state|
         new_state.inputs
       end
