@@ -54,11 +54,12 @@ class Report < ApplicationRecord
   # validates :initial_location, presence: true
 
   belongs_to :inspection
-  
+
   before_save :set_organization_id
   before_validation :check_assigned_user, on: [ :create ]
   before_save :check_state_changed, on: [ :update ]
   before_save :check_dynamic_changes, on: [ :update ]
+  before_save :check_assignment_changes, on: [ :update ]
   before_save :default_values
   before_save :check_limit_date
   after_save :change_state, on: [ :update ]
@@ -101,7 +102,15 @@ class Report < ApplicationRecord
     if self.assigned_user.nil?
       self.assigned_user = self.creator
     else
-      self.auto_assigned_on_creation = false
+      self.is_assigned = true
+    end
+  end
+
+  def check_assignment_changes
+    if changes["assigned_user_id"].present?
+      if assigned_user_id.present?
+        self.is_assigned = true
+      end
     end
   end
 
@@ -264,7 +273,7 @@ class Report < ApplicationRecord
       initial_location_image: "Ubicación inicial",
       final_location_image: "Ubicación de resolución",
       pdf_url: "PDF hallazgo",
-      resolved_at: "Fecha de resolución"    
+      resolved_at: "Fecha de resolución"
     }
   end
 
@@ -370,7 +379,7 @@ class Report < ApplicationRecord
     started_at.in_time_zone(organization.time_zone).strftime("%d/%m/%Y %R") if started_at.present?
   end
 
-   def formatted_finished_at
+  def formatted_finished_at
     finished_at.in_time_zone(organization.time_zone).strftime("%d/%m/%Y %R") if finished_at.present?
   end
 
@@ -403,7 +412,7 @@ class Report < ApplicationRecord
       end
     end
   end
-  
+
   def assigned_user_name
     if assigned_user.present?
       assigned_user.name
@@ -411,7 +420,7 @@ class Report < ApplicationRecord
       creator.name
     end
   end
-  
+
   def default_values
     if self.pdf_uploaded.nil?
       self.pdf_uploaded = false
@@ -430,7 +439,7 @@ class Report < ApplicationRecord
       SendTaskJob.set(queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
     end
   end
-  
+
   def location_attributes(location)
     {
       longitude: location.lonlat.x,
@@ -443,14 +452,14 @@ class Report < ApplicationRecord
   end
 
   def initial_location_attributes
-    if initial_location.present?      
-      location_attributes(initial_location)      
+    if initial_location.present?
+      location_attributes(initial_location)
     end
   end
 
   def final_location_attributes
-    if final_location.present?      
-      location_attributes(final_location)      
+    if final_location.present?
+      location_attributes(final_location)
     end
   end
 
@@ -480,7 +489,7 @@ class Report < ApplicationRecord
       errors.add(:limit_date, "No puede estar en el pasado")
     end
   end
-  
+
 
 
 end
