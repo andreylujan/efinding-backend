@@ -122,7 +122,7 @@ class Report < ApplicationRecord
     end
     super(val)
   end
-
+  
   def check_dynamic_changes
     if changes["dynamic_attributes"].present?
       new_attrs = changes["dynamic_attributes"][1]

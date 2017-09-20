@@ -23,8 +23,8 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
     reports_by_month = filtered_reports.group_by(&:month_criteria).map do |month|
       
       {
-        num_assigned: month[1].count { |r| r.assigned_user.present? },
-        num_executed: month[1].count { |r| r.finished? },
+        num_assigned: month[1].count { |r| r.is_assigned? },
+        num_executed: month[1].count { |r| r.state_id == 25 },
         month_name: I18n.l(month[0], format: '%B').capitalize
 
       }
@@ -34,11 +34,11 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
         DateTime.now.beginning_of_month, DateTime.now.end_of_month)
         # .where.not(assigned_user_id: nil)
 
-    current_month_reports_by_user = current_month_user_reports.where.not(assigned_user_id: nil).group_by(&:assigned_user).map do |info|
+    current_month_reports_by_user = current_month_user_reports.where(is_assigned: true).group_by(&:assigned_user).map do |info|
       {
         user_name: info[0].name,
         num_assigned_reports: info[1].length,
-        num_executed_reports: info[1].count { |r| r.finished? }
+        num_executed_reports: info[1].count { |r| r.state_id == 25 }
       }
     end.sort! { |a, b| a[:user_name] <=> b[:user_name] }
 
@@ -46,11 +46,11 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
         DateTime.now.beginning_of_month - 1.month, DateTime.now.end_of_month - 1.month)
         # .where.not(assigned_user_id: nil)
 
-    last_month_reports_by_user = last_month_user_reports.where.not(assigned_user_id: nil).group_by(&:assigned_user).select { |x| x.present? }.map do |info|
+    last_month_reports_by_user = last_month_user_reports.where(is_assigned: true).group_by(&:assigned_user).select { |x| x.present? }.map do |info|
       {
         user_name: info[0].name,
         num_assigned_reports: info[1].length,
-        num_executed_reports: info[1].count { |r| r.finished? }
+        num_executed_reports: info[1].count { |r| r.state_id == 25 }
       }
     end.sort! { |a, b| a[:user_name] <=> b[:user_name] }
 
