@@ -1,7 +1,11 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::ReportTypeResource < ApplicationResource
+  
   attributes :name, :title_field, :subtitle_field, :default_title, :default_subtitle,
-    :can_create_reports
+    :can_create_reports,
+    :draft_color,
+    :draft_name
+
   has_many :sections
   has_many :states
   has_one :initial_state
