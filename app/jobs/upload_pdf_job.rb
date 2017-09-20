@@ -9,6 +9,9 @@ class UploadPdfJob < ApplicationJob
       return
     end
     report = Report.find(report_id)
+    if report.inspection_id.present? and report.inspection.nil?
+      return
+    end
     if report.initial_location_id
       report.initial_location = Location.find(report.initial_location_id)
     end
