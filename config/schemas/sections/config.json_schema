@@ -6,6 +6,7 @@
     "max_images": { "type": "number", "minimum": 1 },
     "has_bottom_bar": { "type": "boolean" },
     "gallery_enabled": { "type": "boolean" },
+    "camera_enabled": { "type": "boolean" },
     "comment_required": { "type": "boolean" },
     "editable": { "type": "boolean" },
     "gallery_state_id": { "type": "string" },
