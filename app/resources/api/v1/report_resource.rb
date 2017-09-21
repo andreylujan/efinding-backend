@@ -90,6 +90,11 @@ class Api::V1::ReportResource < ApplicationResource
   }
 
   filter :state_name, apply: ->(records, value, _options) {
+    if not value.empty?
+      records = records
+                .where("CASE WHEN(state = 'unchecked') THEN 'Pendiente' WHEN(state = 'resolved') THEN 'Resuelto' WHEN(state = 'pending') THEN 'En Proceso' END ILIKE ?",
+                  "%#{value[0]}%")
+    end
     records
   }
 
