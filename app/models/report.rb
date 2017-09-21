@@ -327,10 +327,12 @@ class Report < ApplicationRecord
   end
 
   def state_name
-    if self.finished?
-      "Ejecutado"
-    else
+    if self.state == "unchecked"
       "Pendiente"
+    elsif self.state == "pending"
+      "En Proceso"
+    else
+      "Resuelto"
     end
   end
 
