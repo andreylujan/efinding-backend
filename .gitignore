@@ -22,6 +22,5 @@ dump.sql
 *.xml
 *.sql
 *.pdf
-.ruby-version
 DATOS.csv
 data_md5sum
