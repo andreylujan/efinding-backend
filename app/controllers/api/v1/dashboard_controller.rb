@@ -11,22 +11,7 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
                                                 },
                                                 order: ""
     })
-    # filters = Api::V1::ReportResource.verify_filters(params[:filter])
-    # filters = params[:filter] || {}
-    # if filters[:start_date].present?
-    #   reports = reports.where("reports.created_at >= ?", filters[:start_date])
-    # end
-    # if filters[:end_date].present?
-    #   reports = reports.where("reports.created_at <= ?", filters[:start_date])
-    # end
-    # if filters[:state_name].present?
-    #   reports = reports.where("reports.state = ?", Report.states[filters[:state_name]])
-    # end
-    # if filters[:area_id].present?
-    #   reports = reports.where("dynamic_attributes->>'43' = ?", filters[:area_id])
-    # end
-    # reports = Api::V1::ReportResource.apply_filters(reports,
-    #                                                        filters)
+    
     report_ratios = [
       {
         state: "unchecked",
@@ -38,7 +23,9 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
       }
     ]
 
-    sql_ratios = reports.group("reports.state").select("reports.state, count(reports.id) as num_reports")
+    sql_ratios = reports.group("reports.state")
+    .except(:select)
+    .select("reports.state, count(reports.id) as num_reports")
     .as_json.map do |json|
       json.delete "id"
       json
