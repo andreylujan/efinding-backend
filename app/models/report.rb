@@ -120,6 +120,9 @@ class Report < ApplicationRecord
           email: self.assigned_user.email,
           id: self.assigned_user.id
         }
+        SendTaskJob.set(wait: 1.second).perform_later(self.id.to_s,
+          "Tarea asignada",
+          "Se le ha asignado una tarea")
       end
     end
   end
