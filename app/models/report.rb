@@ -81,6 +81,7 @@ class Report < ApplicationRecord
   after_save :change_state, on: [ :update ]
   before_save :calculate_delivery_date, on: [ :update ]
   after_commit :send_email, on: [ :create ]
+  before_save :check_assignment_changes, on: [ :update ]
 
   acts_as_xlsx columns: [
     :inspection_id,
@@ -108,6 +109,19 @@ class Report < ApplicationRecord
       .report_email(self.id, self.assigned_user,
                     "Tarea asignada",
                     "#{creator.name} ha generado una tarea para tu área.")
+    end
+  end
+
+  def check_assignment_changes
+    if creator.organization_id == 3 and changes["assigned_user_id"].present?
+      if assigned_user_id.present? and assigned_user.present?
+        self.is_assigned = true
+        self.dynamic_attributes["assigned_user"] = {
+          name: self.assigned_user.name,
+          email: self.assigned_user.email,
+          id: self.assigned_user.id
+        }
+      end
     end
   end
 
