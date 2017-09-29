@@ -115,7 +115,6 @@ class Report < ApplicationRecord
   def check_assignment_changes
     if creator.organization_id == 3 and changes["assigned_user_id"].present?
       if assigned_user_id.present? and assigned_user.present?
-        self.is_assigned = true
         self.dynamic_attributes["assigned_user"] = {
           name: self.assigned_user.name,
           email: self.assigned_user.email,
