@@ -219,10 +219,11 @@
 							</div>
 						</div>
 						<% report.images.where(is_initial: true).each do |image| %>
-						<div class="picsField center-cropped"
-						style="background-image: url('<%= image.url.gsub('https', 'http') %>');">
-						</div>
-						<%= image.comment.present? ? image.comment : "Imagen sin comentario" %>
+							<div class="col-xs-6">
+								<img src="<%= image.url.gsub('https', 'http') %>" class="img-responsive" style="max-height: 450px;">
+								<br>
+								<%= image.comment %>
+							</div>
 						<% end %>
 				</div>
 			</div>
