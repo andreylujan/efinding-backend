@@ -152,7 +152,7 @@ GEM
       mime-types (>= 1.16)
     case_transform (0.2)
       activesupport
-    charlock_holmes (0.7.3)
+    charlock_holmes (0.7.5)
     choice (0.2.0)
     chronic (0.10.2)
     climate_control (0.1.0)
@@ -483,7 +483,7 @@ DEPENDENCIES
   capistrano-rbenv (~> 2.1)
   capistrano-sidekiq!
   carrierwave (~> 1.0)
-  charlock_holmes (~> 0.7.3)
+  charlock_holmes (~> 0.7.5)
   devise (~> 4.2)
   doorkeeper (~> 4.2)
   dotenv-rails (~> 2.2)
@@ -517,4 +517,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.3.1)
 
 BUNDLED WITH
-   1.15.3
+   1.15.4

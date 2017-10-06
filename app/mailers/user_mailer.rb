@@ -5,7 +5,7 @@ class UserMailer < ApplicationMailer
 
 	def invite_email(invitation)
 		@invitation = invitation
-		@url = Rails.env.production? ? "http://50.16.161.152/efinding/admin/#/signup" : "http://50.16.161.152/efinding-staging/admin/#/signup"
+		@url = Rails.env.production? ? "https://efinding.moller.cl/admin/#/signup" : "http://50.16.161.152/efinding-staging/admin/#/signup"
 		mail(to: @invitation.email, subject: "Únete a #{invitation.role.organization.name}",
 			from: "#{invitation.role.organization.name} Admin<solutions@ewin.cl>")
 	end	
