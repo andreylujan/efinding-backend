@@ -199,7 +199,7 @@
 				</div>
 				<hr />
 				<div class="row standalone-container">
-					<div class="col-xs-6">
+					<div class="col-xs-16">
 						<div class="row">
 							<div class="col-xs-12">
 								<h3>GEOLOCALIZACIÓN</h3>
@@ -212,18 +212,17 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-xs-6">
-						<div class="row">
-							<div class="col-xs-12">
-								<h3>FOTOS</h3>
-							</div>
-						</div>
+				<div class="col-xs-16">
+					<h3>Fotos</h3>
+					<div class="row">
 						<% report.images.where(is_initial: true).each do |image| %>
-						<div class="picsField center-cropped"
-						style="background-image: url('<%= image.url.gsub('https', 'http') %>');">
-						</div>
-						<%= image.comment.present? ? image.comment : "Imagen sin comentario" %>
+							<div class="col-xs-6">
+								<img src="<%= image.url %>" class="img-responsive" style="max-height: 450px;">
+								<br>
+								<%= image.comment %>
+							</div>
 						<% end %>
+					</div>
 				</div>
 			</div>
 			<hr />
