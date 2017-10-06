@@ -217,7 +217,7 @@
 					<div class="row">
 						<% report.images.where(is_initial: true).each do |image| %>
 							<div class="col-xs-6">
-								<img src="<%= image.url %>" class="img-responsive" style="max-height: 450px;">
+								<img src="<%= image.url.gsub('https', 'http') %>" class="img-responsive" style="max-height: 450px;">
 								<br>
 								<%= image.comment %>
 							</div>
