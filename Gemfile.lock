@@ -483,7 +483,7 @@ DEPENDENCIES
   capistrano-rbenv (~> 2.1)
   capistrano-sidekiq!
   carrierwave (~> 1.0)
-  charlock_holmes (~> 0.7.5)
+  charlock_holmes (~> 0.7.3)
   devise (~> 4.2)
   doorkeeper (~> 4.2)
   dotenv-rails (~> 2.2)
