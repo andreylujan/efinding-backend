@@ -369,7 +369,6 @@
 						<% report.images.where(is_initial: true).each do |image| %>
 							<img src="<%= image.url.gsub('https', 'http') %>" class="img-responsive picsField" >
 						<% end %>
-					<% end %>
 				</div>
 			</div>
 			<% if report.state != "unchecked" %>
