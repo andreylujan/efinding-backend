@@ -8,7 +8,7 @@
 			width: 200px;
 			margin-bottom: 15px;
 			margin-top: 10px;
-			height: 
+			height:
 		}
 
 		.inspeccion {
@@ -24,7 +24,7 @@
 
 		@media not print {
 			.container {
-				width: 100% !important;				
+				width: 100% !important;
 				padding-left: 20px !important;
 				padding-right: 20px !important;
 			}
@@ -65,7 +65,7 @@
 			border-right: 0;
 		}
 		table th, td {
-			text-align:center; 
+			text-align:center;
 			vertical-align:middle;
 		}
 
@@ -224,7 +224,7 @@
 					<div class="col-xs-8">
 						<%= report.dynamic_attributes.dig('21', 'text') %>
 					</div>
-				</div>			
+				</div>
 				<div class="row location-field">
 					<div class="col-xs-4 info-label">
 						Descripción Causa Básica:
@@ -240,7 +240,7 @@
 					<div class="col-xs-8">
 						<%= report.dynamic_attributes.dig('13', 'text') %>
 					</div>
-				</div>				
+				</div>
 				<div class="row location-field">
 					<div class="col-xs-4 info-label">
 						Gravedad potencial:
@@ -314,7 +314,7 @@
 				<div class="row location-field">
 					<div class="col-xs-12">
 						<span class="info-label">
-							Recomendaciones: 
+							Recomendaciones:
 						</span>
 						<span>
 							<%= report.dynamic_attributes.dig('14', 'text')  %>
@@ -337,7 +337,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-xs-12"> 
+					<div class="col-xs-12">
 						<div class="center-cropped map" style="background-image: url('<%= report.initial_location_image %>');">
 						</div>
 					</div>
@@ -355,10 +355,8 @@
 					</div>
 				</div>
 				<% report.images.where(is_initial: true).each do |image| %>
-				<div class="picsField center-cropped"
-				style="background-image: url('<%= image.url.gsub('https', 'http') %>');">
-			</div>
-			<% end %>
+					<img src="<%= image.url.gsub('https', 'http') %>" class="img-responsive picsField" >
+				<% end %>
 		</div>
 	</div>
 	<% if report.state != "unchecked" %>
@@ -370,7 +368,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-xs-12"> 
+				<div class="col-xs-12">
 					<div class="center-cropped map" style="background-image: url('<%= report.final_location_image %>');">
 					</div>
 				</div>
