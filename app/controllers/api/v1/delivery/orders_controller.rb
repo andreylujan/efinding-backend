@@ -48,11 +48,17 @@ class Api::V1::Delivery::OrdersController < ApplicationController
       state = nil
       if order_state == "pedido creado"
         state = "unchecked"
+        SendCommerceJob.set(wait: 1.second).perform_later(report.id.to_s,
+                                                      "Nuevo pedido",
+                                                      "Nuevo pedido solicitado")
       elsif order_state == "pedido pagado"
         state = "awaiting_delivery"
-        SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
-                                                      "Pedido pagado",
-                                                      "Se ha pagado exitosamente el pedido #{order_id}")
+        # SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
+        #                                               "Pedido pagado",
+        #                                               "Se ha pagado exitosamente el pedido #{order_id}")
+        SendDriverJob.set(wait: 1.second).perform_later(report.id.to_s,
+            "Nuevo pedido para retirar",
+            "Tiene pedidos habilitados para retirar.")
       elsif order_state == "pedido cancelado"
         state = "canceled"
       elsif order_state == "pedido aceptado"
