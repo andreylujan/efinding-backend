@@ -1,7 +1,9 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::PdfResource < ApplicationResource
-	attributes :pdf_url, :pdf_html
+	attributes :pdf_url, :pdf_html, :pdf_template_id
 	add_foreign_keys :report_id
+
+
 
 	def pdf_html
 		if @model.uploaded?

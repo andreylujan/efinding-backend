@@ -33,7 +33,6 @@ class UploadPdfJob < ApplicationJob
         pdf.pdf = file
         pdf.save!
         report.save!
-        sleep 7
       ensure
         file.close
         file.unlink   # deletes the temp file
