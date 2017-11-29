@@ -1,17 +1,17 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::ReportResource < ApplicationResource
 
-  attributes :dynamic_attributes, 
+  attributes :dynamic_attributes,
     :created_at,
     :updated_at,
     :limit_date,
-    :finished, 
-    :pdf, 
+    :finished,
+    :pdf,
     :pdf_uploaded,
     :initial_location_attributes,
     :final_location_attributes,
-    :images_attributes, 
-    :synced, 
+    :images_attributes,
+    :synced,
     :is_draft,
     :formatted_created_at,
     :formatted_limit_date,
@@ -45,7 +45,13 @@ class Api::V1::ReportResource < ApplicationResource
       records
     end
   }
-
+  filter :sequential_id, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.where("reports.sequential_id = ?", value[0])
+    else
+      records
+    end
+  }
   filter :assigned_user_id, apply: ->(records, value, _options) {
     if not value.empty?
       records.where("reports.assigned_user_id = ?", value[0])

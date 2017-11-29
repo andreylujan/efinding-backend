@@ -1,0 +1,22 @@
+branch-defaults:
+  production:
+    environment: production
+    group_suffix: null
+environment-defaults:
+  production:
+    branch: production
+    repository: echeckit-ruby
+global:
+  application_name: eCheckITPRO
+  branch: production
+  default_ec2_keyname: ElasticEcheckit
+  default_platform: Ruby 2.4 (Passenger Standalone)
+  default_region: us-west-2
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: eb-cli
+  repository: echeckit-ruby
+  sc: git
+  workspace_type: Application
