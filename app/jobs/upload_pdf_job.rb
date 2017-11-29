@@ -23,7 +23,7 @@ class UploadPdfJob < ApplicationJob
                                   locals: { report: report })).force_encoding("UTF-8")
       pdf = WickedPdf.new.pdf_from_string(html, zoom: 0.75)
       file = Tempfile.new('pdf', encoding: 'ascii-8bit')
-      
+
       begin
         file.write(pdf)
         # report.pdfs.destroy_all
@@ -33,12 +33,13 @@ class UploadPdfJob < ApplicationJob
         pdf.pdf = file
         pdf.save!
         report.save!
+        sleep 7
       ensure
         file.close
         file.unlink   # deletes the temp file
       end
     end
-    
+
     report.ignore_pdf = false
   end
 end
