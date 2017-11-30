@@ -121,8 +121,8 @@ class Report < ApplicationRecord
           id: self.assigned_user.id
         }
         SendTaskJob.set(wait: 1.second).perform_later(self.id.to_s,
-          "Tarea asignada",
-          "Se le ha asignado una tarea")
+                                                      "Tarea asignada",
+                                                      "Se le ha asignado una tarea")
       end
     end
   end
@@ -394,9 +394,15 @@ class Report < ApplicationRecord
   
   def send_task_job
     if self.assigned_user.present?
+      if self.assigned_user.store_id.present?
+        SendTaskJob.set(wait: 1.second).perform_later(self.id.to_s,
+        "Nuevo pedido",
+        "Nuevo pedido solicitado")
+      else
       SendTaskJob.set(wait: 1.second).perform_later(self.id.to_s,
         "Tarea asignada",
         "Se le ha asignado una tarea")
+      end
     end
   end
   
