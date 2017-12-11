@@ -12,9 +12,6 @@
   <p>Lugar: <%= @reporte.dynamic_attributes.dig('114', 'value') || "Lugar no seleccionado" %></p>
   <p>Solicitud de reputesto: <%= @solicitud %></p>
   <p>Comentarios: <%= @reporte.dynamic_attributes.dig('106', 'value').present? ? @reporte.dynamic_attributes.dig('106', 'value') : "Comentarios no ingresados" %></p>
-  <p>Reporte PDF: <a href="<%= @reporte.pdf %>">Click aqui</a></p>
-  <p>Reporte Id: <%= @reporte.id %></p>
-  <p>Reporte PDF URL:<%= @reporte.pdf %></p>
-  <p>Reporte PDF URL:<%= @reporte.default_pdf %></p>
+  <p>Reporte PDF: <a href="<%= @reporte.default_pdf %>">Click aqui</a></p>
 </body>
 </html>
