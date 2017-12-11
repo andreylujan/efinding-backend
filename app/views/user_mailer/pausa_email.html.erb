@@ -13,6 +13,8 @@
   <p>Solicitud de reputesto: <%= @solicitud %></p>
   <p>Comentarios: <%= @reporte.dynamic_attributes.dig('106', 'value').present? ? @reporte.dynamic_attributes.dig('106', 'value') : "Comentarios no ingresados" %></p>
   <p>Reporte PDF: <a href="<%= @reporte.pdf %>">Click aqui</a></p>
+  <p><%= @reporte.id %></p>
+  <p><%= @reporte.pdf %></p>
 
 </body>
 </html>
