@@ -33,6 +33,7 @@ class UploadPdfJob < ApplicationJob
         pdf.pdf = file
         pdf.save!
         report.save!
+        MailerJob.set(wait: 20.seconds, queue: ENV['REPORT_QUEUE'] || 'etodo_report').perform_later(report_id)
       ensure
         file.close
         file.unlink   # deletes the temp file
