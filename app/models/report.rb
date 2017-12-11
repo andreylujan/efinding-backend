@@ -70,7 +70,7 @@ class Report < ApplicationRecord
   after_commit :generate_pdf_instances, on: [ :create, :update ]
 
   after_commit :generate_pdf, on: [ :create, :update ]
-  #after_commit :send_email_pausa, on: [:create]
+  after_commit :send_email_pausa, on: [:update]
   after_commit :send_task_job_create, on: [ :create ]
   after_commit :send_task_job_update, on: [ :update ]
 
