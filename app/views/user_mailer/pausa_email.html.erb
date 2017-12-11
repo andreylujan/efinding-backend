@@ -7,6 +7,12 @@
   <title>Document</title>
 </head>
 <body>
-  <h1>Prueba email jano</h1>
+  <p>Fecha de ejecución: <%= @reporte.formatted_created_at.to_s  %></p>
+  <p>Categoria: <%= @reporte.dynamic_attributes.dig('113', 'value') || "Categoría no seleccionada" %></p>
+  <p>Lugar: <%= @reporte.dynamic_attributes.dig('114', 'value') || "Lugar no seleccionado" %></p>
+  <p>Solicitud de reputesto: <%= @solicitud %></p>
+  <p>Comentarios: <%= @reporte.dynamic_attributes.dig('106', 'value').present? ? report.dynamic_attributes.dig('106', 'value') : "Comentarios no ingresados" %></p>
+  <p>Reporte PDF: <a href="<%= @reporte.pdf %>">Click aqui</a></p>
+
 </body>
 </html>

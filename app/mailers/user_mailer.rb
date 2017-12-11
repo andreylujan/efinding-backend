@@ -22,10 +22,21 @@ class UserMailer < ApplicationMailer
 			from: "#{user.organization.name} Admin<solutions@ewin.cl>")
 	end
 
-	def pausa_email()
+	def pausa_email(report)
+		@reporte =  report
+		@d = "116"
+		if Integer(report.organization_id) == 11
+			if report.dynamic_attributes.dig(@d, "value") != nil
+				@solicitud = report.dynamic_attributes.dig(@d, "value")
+				if  @solicitud != ""
+					mail(to: 'alejandrorodriguezpena@gmail.com, lguanco@bildchile.com', subject: "PAUSA PERÚ - Se generado una Solicitud de Repuesto",
+						from: "Admin<solutions@ewin.cl>")
+				end
+			else
 
-		mail(to: 'alejandrorodriguezpena@gmail.com, lguanco@bildchile.com', subject: "Mail de Prueba",
-			from: "Admin<solutions@ewin.cl>")
+			end
+		end
+		return
 	end
 
 	def reset_password_email(user)
