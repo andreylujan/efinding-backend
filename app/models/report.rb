@@ -26,7 +26,7 @@
 
 class Report < ApplicationRecord
 
-  
+
   acts_as_paranoid
   attr_accessor :ignore_pdf
   belongs_to :creator, class_name: :User, foreign_key: :creator_id
@@ -60,7 +60,7 @@ class Report < ApplicationRecord
   before_validation :check_state
   before_validation :generate_id
   before_validation :check_assigned_user, on: [ :create ]
-  
+
   before_save :check_state_changed, on: [ :update ]
   before_save :check_dynamic_changes, on: [ :update ]
   before_save :check_assignment_changes, on: [ :update ]
@@ -70,6 +70,7 @@ class Report < ApplicationRecord
   after_commit :generate_pdf_instances, on: [ :create, :update ]
 
   after_commit :generate_pdf, on: [ :create, :update ]
+
   after_commit :send_task_job_create, on: [ :create ]
   after_commit :send_task_job_update, on: [ :update ]
 
@@ -126,7 +127,7 @@ class Report < ApplicationRecord
     end
     super(val)
   end
-  
+
   def check_dynamic_changes
     if changes["dynamic_attributes"].present?
       new_attrs = changes["dynamic_attributes"][1]
@@ -438,6 +439,7 @@ class Report < ApplicationRecord
     end
   end
 
+
   def send_task_job_update
     if changes["assigned_user_id"].present? and self.assigned_user.present?
       SendTaskJob.set(queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
@@ -480,6 +482,7 @@ class Report < ApplicationRecord
         update_columns pdf: nil, pdf_uploaded: false
       end
       UploadPdfJob.set(queue: ENV['REPORT_QUEUE'] || 'etodo_report').perform_later(self.id.to_s)
+      MailerJob.set(queue: ENV['REPORT_QUEUE'] || 'etodo_report').perform_later(self.id.to_s)
     end
   end
 

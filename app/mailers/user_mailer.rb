@@ -14,7 +14,7 @@ class UserMailer < ApplicationMailer
 		mail(to: @invitation.email, subject: "Únete a #{invitation.role.organization.name}",
 			from: "#{invitation.role.organization.name} Admin<solutions@ewin.cl>",
 			template_name: "invite_#{invitation.role.organization.app_name}")
-	end	
+	end
 
 	def confirmation_email(user)
 		@user = user
@@ -22,11 +22,17 @@ class UserMailer < ApplicationMailer
 			from: "#{user.organization.name} Admin<solutions@ewin.cl>")
 	end
 
+	def pausa_email()
+
+		mail(to: 'alejandrorodriguezpena@gmail.com, lguanco@bildchile.com', subject: "Mail de Prueba",
+			from: "Admin<solutions@ewin.cl>")
+	end
+
 	def reset_password_email(user)
 		@user = user
 		mail(to: @user.email, subject: 'Recuperación de contraseña')
 	end
-	
+
 	def inspection_email(inspection_id, user, subject, message)
 		inspection = Inspection.find(inspection_id)
 		@user = user
