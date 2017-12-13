@@ -53,4 +53,8 @@ class Manflas::Station
   def water_precipitation
     html.xpath('//tr/td[contains(text(), "Precipitac")]/following-sibling::td').text.strip
   end
+
+  def performance
+    html.xpath('//tr/td[contains(text(), "REND__Prod")]/following-sibling::td').text.strip
+  end
 end
