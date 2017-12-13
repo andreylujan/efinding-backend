@@ -1,17 +1,252 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-</head>
-<body>
-  <p>Fecha de ejecución: <%= @reporte.formatted_created_at.to_s  %></p>
-  <p>Categoria: <%= @reporte.dynamic_attributes.dig('113', 'value') || "Categoría no seleccionada" %></p>
-  <p>Lugar: <%= @reporte.dynamic_attributes.dig('114', 'value') || "Lugar no seleccionado" %></p>
-  <p>Solicitud de reputesto: <%= @solicitud %></p>
-  <p>Comentarios: <%= @reporte.dynamic_attributes.dig('106', 'value').present? ? @reporte.dynamic_attributes.dig('106', 'value') : "Comentarios no ingresados" %></p>
-  <p>Reporte PDF: <a href="<%= @reporte.default_pdf %>">Click aqui</a></p>
-</body>
-</html>
+<html lang="es">
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Pausa Chile</title>
+    <link rel="shortcut icon" href="http://bildchile.com/img/favicon.png">
+
+    <!--[if (gte mso 9)|(IE)]> <style type="text/css"> table {border-collapse: collapse;} </style> <![endif]-->
+
+    <style type="text/css">
+      /* Basics */
+      body {
+        margin: 0;
+        padding: 0;
+        min-width: 100%;
+        background-color: #ffffff;
+      }
+      table {
+        border-spacing: 0;
+        font-family: arial, sans-serif;
+        color: #838483;
+        font-size: 35px;
+      }
+      td {
+        padding: 0;
+      }
+      img {
+        border: 0;
+      }
+      .wrapper {
+        width: 100%;
+        table-layout: fixed;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+      }
+      .webkit {
+        max-width: 800px;
+      }
+      .outer {
+        margin: 0 auto;
+        width: 100%;
+        max-width: 600px;
+      }
+      .full-width-image img {
+        max-width: 100%;
+        height: auto;
+        margin: 7% 0;
+        background: #000000;
+      }
+      img {
+        border: 0;
+      }
+      .inner {
+        padding: 10px;
+      }
+      a {
+        color: #91d204;
+        text-decoration: underline;
+      }
+      .contents {
+        width: 100%;
+        align-content: right;
+        float: right;
+      }
+      .text1 {
+        align-content: right;
+        float: right;
+        font-size: 17px;
+        font-weight: bold;
+        padding: 5px 1%;
+
+      }
+      .text2 {
+        font-size: 17px;
+        font-weight: normal;
+        padding: 5px 1%;
+      }
+
+      /*Two column layout*/
+      .two-column {
+        text-align: center;
+        font-size: 0;
+      }
+      .two-column .column {
+        width: 100%;
+        max-width: 300px;
+        display: inline-block;
+        vertical-align: top;
+      }
+      .two-column .contents {
+        font-size: 14px;
+        text-align: left;
+      }
+      .two-column img {
+        width: 100%;
+        height: auto;
+      }
+      .two-column .text {
+        padding-top: 10px;
+      }
+
+      /* One column layout */
+      .one-column .contents {
+        text-align: left;
+      }
+      .one-column p {
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+      /*Media Queries*/
+      @media screen and (max-width: 400px) {
+        .two-column .column {
+          max-width: 50% !important;
+        }
+        .text1 {
+          float: none;
+          font-size: 17px;
+          font-weight: bold;
+          padding: 5px 1%;
+        }
+
+      }
+      @media screen and (min-width: 401px) and (max-width: 620px) {
+        .two-column .column {
+          max-width: 50% !important;
+        }
+      }
+
+      /* Windows Phone Viewport Fix */
+      @-ms-viewport {
+        width: device-width;
+      }
+    </style>
+  </head>
+
+  <body id="page-top">
+    <center class="wrapper">
+      <div class="webkit">
+        <!--[if (gte mso 9)|(IE)]> <table width="600" align="center"> <tr> <td> <![endif]-->
+        <table class="outer">
+          <tr style="background: #000000">
+            <td class="full-width-image" align="center">
+              <img src="http://bildchile.com/img/logo_pausa3.png" alt=""/>
+            </td>
+          </tr>
+          <tr>
+            <td class="two-column">
+              <!--[if (gte mso 9)|(IE)]> <table width="100%"> <tr> <td width="50%" valign="top"> <![endif]-->
+              <div class="column">
+                <table width="100%">
+                  <tr>
+                    <td class="inner">
+                      <table class="contents">
+                        <tr>
+                          <td class="text1">
+                            Fecha de ejecución:
+                          </td>
+                          <tr>
+                            <td class="text1">
+                              Categoria:
+                            </td>
+                            <tr>
+                              <td class="text1">
+                                Lugar:
+                              </td>
+                              <tr>
+                                <td class="text1">
+                                  Solicitud de reputesto:
+                                </td>
+                                <tr>
+                                  <td class="text1">
+                                    Detalle de Mantención:
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="text1">
+                                    Comentarios:
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="text1">
+                                    Reporte PDF:
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                      <!--[if (gte mso 9)|(IE)]> </td><td width="50%" valign="top"> <![endif]-->
+                      <div class="column">
+                        <table width="100%">
+                          <tr>
+                            <td class="inner">
+                              <table class="contents">
+                                <tr>
+                                  <td class="text2">
+                                    <%= @reporte.formatted_created_at.to_s %>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="text2">
+                                    <%= @reporte.dynamic_attributes.dig('113', 'value') || "Categoría no seleccionada" %>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="text2">
+                                    <%= @reporte.dynamic_attributes.dig('114', 'value') || "Lugar no seleccionado" %>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="text2">
+                                    <%= @solicitud %>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="text2">
+                                    <%= @reporte.dynamic_attributes.dig('116', 'value').present? ? @reporte.dynamic_attributes.dig('116', 'value') : "Solicitud de Repuesto no seleccionados" %>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="text2">
+                                    <%= @reporte.dynamic_attributes.dig('106', 'value').present? ? @reporte.dynamic_attributes.dig('106', 'value') : "Comentarios no ingresados" %>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="text2">
+                                    <a href="<%= @reporte.default_pdf %>">Click aqui</a>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                      <!--[if (gte mso 9)|(IE)]> </td> </tr> </table> <![endif]-->
+                    </td>
+                  </tr>
+                </table>
+                <!--[if (gte mso 9)|(IE)]> </td> </tr> </table> <![endif]-->
+
+              </div>
+            </center>
+
+          </body>
+
+        </html>
