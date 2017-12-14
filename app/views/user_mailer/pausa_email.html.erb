@@ -104,14 +104,6 @@
         padding-top: 10px;
       }
 
-      /* One column layout */
-      .one-column .contents {
-        text-align: left;
-      }
-      .one-column p {
-        font-size: 14px;
-        margin-bottom: 10px;
-      }
       /*Media Queries*/
       @media screen and (max-width: 400px) {
         .two-column .column {
@@ -130,6 +122,11 @@
           max-width: 50% !important;
         }
       }
+      @media only screen and (min-device-width: 601px) {
+        .outer {
+          width: 600px !important;
+        }
+      }
 
       /* Windows Phone Viewport Fix */
       @-ms-viewport {
@@ -138,114 +135,83 @@
     </style>
   </head>
 
-  <body id="page-top">
-    <center class="wrapper">
-      <div class="webkit">
-        <!--[if (gte mso 9)|(IE)]> <table width="600" align="center"> <tr> <td> <![endif]-->
-        <table class="outer">
-          <tr style="background: #000000">
-            <td class="full-width-image" align="center">
-              <img src="http://bildchile.com/img/logo_pausa3.png" alt=""/>
-            </td>
-          </tr>
-          <tr>
-            <td class="two-column">
-              <!--[if (gte mso 9)|(IE)]> <table width="100%"> <tr> <td width="50%" valign="top"> <![endif]-->
-              <div class="column">
-                <table width="100%">
+  <body>
+    <!--[if (gte mso 9)|(IE)]> <table width="600" align="center"> <tr> <td> <![endif]-->
+    <table cellpadding="0" cellspacing="0" border="0" class="outer" width="100%">
+      <tr style="background: #000000">
+        <td class="full-width-image" align="center">
+          <img src="http://bildchile.com/img/logo_pausa3.png" alt=""/>
+        </td>
+      </tr>
+      <tr>
+        <td class="">
+          <!--[if (gte mso 9)|(IE)]> <table width="100%"> <tr> <td width="50%" valign="top"> <![endif]-->
+          <table width="100%">
+            <tr>
+              <td class="inner">
+                <table class="contents">
                   <tr>
-                    <td class="inner">
-                      <table class="contents">
+                    <td class="text1" width="200">
+                      Fecha de ejecución:
+                    </td>
+                    <td class="text2" width="100%">
+                      <%= @reporte.formatted_created_at.to_s %>
+                    </td>
+                    <tr>
+                      <td class="text1" width="200">
+                        Categoria:
+                      </td>
+                      <td class="text2" width="100%">
+                        <%= @reporte.dynamic_attributes.dig('113', 'value') || "Categoría no seleccionada" %>
+                      </td>
+                      <tr>
+                        <td class="text1" width="200">
+                          Lugar:
+                        </td>
+                        <td class="text2" width="100%">
+                          <%= @reporte.dynamic_attributes.dig('114', 'value') || "Lugar no seleccionado" %>
+                        </td>
                         <tr>
-                          <td class="text1">
-                            Fecha de ejecución:
+                          <td class="text1" width="200">
+                            Solicitud de repuesto:
+                          </td>
+                          <td class="text2">
+                            <%= @solicitud %>
                           </td>
                           <tr>
-                            <td class="text1">
-                              Categoria:
+                            <td class="text1" width="200">
+                              Detalle de Mantención:
                             </td>
-                            <tr>
-                              <td class="text1">
-                                Lugar:
-                              </td>
-                              <tr>
-                                <td class="text1">
-                                  Solicitud de reputesto:
-                                </td>
-                                <tr>
-                                  <td class="text1">
-                                    Detalle de Mantención:
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="text1">
-                                    Comentarios:
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="text1">
-                                    Reporte PDF:
-                                  </td>
-                                </tr>
-                              </table>
+                            <td class="text2">
+                              <%= @reporte.dynamic_attributes.dig('116', 'value').present? ? @reporte.dynamic_attributes.dig('116', 'value') : "Solicitud de Repuesto no seleccionados" %>
                             </td>
                           </tr>
-                        </table>
-                      </div>
-                      <!--[if (gte mso 9)|(IE)]> </td><td width="50%" valign="top"> <![endif]-->
-                      <div class="column">
-                        <table width="100%">
                           <tr>
-                            <td class="inner">
-                              <table class="contents">
-                                <tr>
-                                  <td class="text2">
-                                    <%= @reporte.formatted_created_at.to_s %>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="text2">
-                                    <%= @reporte.dynamic_attributes.dig('113', 'value') || "Categoría no seleccionada" %>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="text2">
-                                    <%= @reporte.dynamic_attributes.dig('114', 'value') || "Lugar no seleccionado" %>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="text2">
-                                    <%= @solicitud %>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="text2">
-                                    <%= @reporte.dynamic_attributes.dig('116', 'value').present? ? @reporte.dynamic_attributes.dig('116', 'value') : "Solicitud de Repuesto no seleccionados" %>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="text2">
-                                    <%= @reporte.dynamic_attributes.dig('106', 'value').present? ? @reporte.dynamic_attributes.dig('106', 'value') : "Comentarios no ingresados" %>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="text2">
-                                    <a href="<%= @reporte.default_pdf %>">Click aqui</a>
-                                  </td>
-                                </tr>
-                              </table>
+                            <td class="text1" width="200">
+                              Comentarios:
+                            </td>
+                            <td class="text2">
+                              <%= @reporte.dynamic_attributes.dig('106', 'value').present? ? @reporte.dynamic_attributes.dig('106', 'value') : "Comentarios no ingresados" %>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="text1" width="200">
+                              Reporte PDF:
+                            </td>
+                            <td class="text2">
+                              <a href="<%= @reporte.default_pdf %>">Click aqui</a>
                             </td>
                           </tr>
                         </table>
-                      </div>
-                      <!--[if (gte mso 9)|(IE)]> </td> </tr> </table> <![endif]-->
-                    </td>
-                  </tr>
-                </table>
-                <!--[if (gte mso 9)|(IE)]> </td> </tr> </table> <![endif]-->
-
-              </div>
-            </center>
+                      </td>
+                    </tr>
+                  </table>
+                  <!--[if (gte mso 9)|(IE)]> </td><td width="50%" valign="top"> <![endif]-->
+                  <!--[if (gte mso 9)|(IE)]> </td> </tr> </table> <![endif]-->
+                </td>
+              </tr>
+            </table>
+            <!--[if (gte mso 9)|(IE)]> </td> </tr> </table> <![endif]-->
 
           </body>
 
