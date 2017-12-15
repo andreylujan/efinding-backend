@@ -79,6 +79,7 @@ class Report < ApplicationRecord
   before_create :assign_user
   after_commit :update_inspection, on: [ :create, :update ]
   after_save :change_state, on: [ :update ]
+  after_commit :send_email_manflas, on: [:update]
   before_save :calculate_delivery_date, on: [ :update ]
   after_commit :send_email, on: [ :create ]
   before_save :check_assignment_changes, on: [ :update ]
@@ -111,6 +112,12 @@ class Report < ApplicationRecord
                     "#{creator.name} ha generado una tarea para tu área.")
     end
   end
+
+  def send_email_manflas
+    MailerJob.set(wait: 10.seconds, queue: ENV['REPORT_QUEUE'] || 'etodo_report').perform_later(self.id.to_s)
+  end
+
+
 
   def check_assignment_changes
     if creator.organization_id == 3 and changes["assigned_user_id"].present?
@@ -372,7 +379,7 @@ class Report < ApplicationRecord
       self.report_type = self.creator.organization.report_types.first
     end
   end
-  
+
   def assigned_user_name
     if assigned_user.present?
       assigned_user.name
@@ -380,7 +387,7 @@ class Report < ApplicationRecord
       creator.name
     end
   end
-  
+
   def default_values
     if self.pdf_uploaded.nil?
       self.pdf_uploaded = false
@@ -391,7 +398,7 @@ class Report < ApplicationRecord
     true
   end
 
-  
+
   def send_task_job
     if self.assigned_user.present?
       if self.assigned_user.store_id.present?
@@ -405,7 +412,7 @@ class Report < ApplicationRecord
       end
     end
   end
-  
+
   def location_attributes(location)
     {
       longitude: location.lonlat.x,
@@ -418,14 +425,14 @@ class Report < ApplicationRecord
   end
 
   def initial_location_attributes
-    if initial_location.present?      
-      location_attributes(initial_location)      
+    if initial_location.present?
+      location_attributes(initial_location)
     end
   end
 
   def final_location_attributes
-    if final_location.present?      
-      location_attributes(final_location)      
+    if final_location.present?
+      location_attributes(final_location)
     end
   end
 

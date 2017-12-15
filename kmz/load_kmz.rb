@@ -33,6 +33,6 @@ stations.each_with_index do |station_data, idx|
       variety: variety
     station.save!
   else
-    asd
+    #asd
   end
 end

@@ -1,0 +1,17 @@
+{
+  "infraestructura": {
+    "operacional": "rsusaeta@dainal.cl,maraya@dainal.cl,fognio@dainal.cl,csilva@dainal.c,nfigueroa@dainal.cl",
+    "calidad y seguridad": "rsusaeta@dainal.cl,maraya@dainal.cl,fognio@dainal.cl,csilva@dainal.cl,nfigueroa@dainal.cl,jvalenzuela@dainal.cl"},
+  "riego":{
+    "operacional":"rsusaeta@dainal.cl,maraya@dainal.cl,fognio@dainal.cl,csilva@dainal.cl,ndvega@manflas.cl",
+    "calidad y seguridad":"rsusaeta@dainal.cl,maraya@dainal.cl,fognio@dainal.cl,csilva@dainal.cl,dvega@manflas.cl,Jvalenzuela@dainal.cl"
+  },
+  "terreno":{
+    "operacional":"rsusaeta@dainal.cl,maraya@dainal.cl,nfigueroa@dainal.cl,csilva@dainal.cl,vzarate@manflas.cl",
+    "calidad y seguridad":"rsusaeta@dainal.cl,maraya@dainal.cl,nfigueroa@dainal.cl,csilva@dainal.cl,vzarate@manflas.cl,jvalenzuela@dainal.cl"
+  },
+  "packing":{
+    "operacional":"rsusaeta@dainal.cl,maraya@dainal.cl,fognio@dainal.cl,csilva@dainal.cl,nfigueroa@dainal.cl",
+    "calidad y seguridad":"rsusaeta@dainal.cl,maraya@dainal.cl,fognio@dainal.cl,csilva@dainal.cl,nfigueroa@dainal.cl,jvalenzuela@dainal.cl"
+  }
+}
