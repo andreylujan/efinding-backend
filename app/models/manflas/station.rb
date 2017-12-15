@@ -39,20 +39,22 @@ class Manflas::Station
   end
 
   def plantation_year
-    html.xpath('//tr/td[contains(text(), "Año_Plant")]/following-sibling::td').text.strip
+    html.xpath('//tr/td[contains(text(), "Año_de_pl")]/following-sibling::td').text.strip
   end
 
   def plantation_density
-    w = "%.2f" % html.xpath('//tr/td[contains(text(), "Distancia")]/following-sibling::td').text.strip.gsub(",", ".").to_f
-    h = "%.2f" % html.xpath('//tr/td[contains(text(), "Distanci_1")]/following-sibling::td').text.strip.gsub(",", ".").to_f
-    "#{w.to_s.gsub('.', ',')} x #{h.to_s.gsub('.', ',')}"
+    html.xpath('//tr/td[contains(text(), "Plantas_h")]/following-sibling::td').text.strip
   end
 
   def last_year_production
-    html.xpath('//tr/td[contains(text(), "Prod_2015_")]/following-sibling::td').text.strip
+    html.xpath('//tr/td[contains(text(), "Producció")]/following-sibling::td').text.strip
   end
 
   def water_precipitation
     html.xpath('//tr/td[contains(text(), "Precipitac")]/following-sibling::td').text.strip
+  end
+
+  def performance
+    html.xpath('//tr/td[contains(text(), "REND__Prod")]/following-sibling::td').text.strip
   end
 end
