@@ -30,7 +30,7 @@ class UserMailer < ApplicationMailer
 			if report.dynamic_attributes.dig(@d, "value") != nil
 				@solicitud = report.dynamic_attributes.dig(@d, "value")
 				if  @solicitud != ""
-					mail(to: 'jguerrero80@gmail.com,leslienilu@hotmail.com,lesliepassalacqua@pausaperu.pe, lguanco@bildchile.com, Luisaleon@pausaperu.pe', subject: "PAUSA PERÚ - Se generado una Solicitud de Repuesto",
+					mail(to: 'nvera@bildchile.com, pruebas.bild@gmail.com, jguerrero80@gmail.com,leslienilu@hotmail.com,lesliepassalacqua@pausaperu.pe, lguanco@bildchile.com, Luisaleon@pausaperu.pe', subject: "PAUSA PERÚ - Se generado una Solicitud de Repuesto",
 						from: "Admin<solutions@ewin.cl>")
 				end
 			else
