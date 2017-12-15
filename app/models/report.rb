@@ -71,6 +71,7 @@ class Report < ApplicationRecord
 
   after_commit :generate_pdf, on: [ :create, :update ]
   after_commit :send_email_pausa, on: [:update]
+  after_commit :send_email_manflas, on: [:update]
   after_commit :send_task_job_create, on: [ :create ]
   after_commit :send_task_job_update, on: [ :update ]
 
@@ -435,6 +436,10 @@ class Report < ApplicationRecord
   def send_email_pausa
     MailerJob.set(wait: 10.seconds, queue: ENV['REPORT_QUEUE'] || 'etodo_report').perform_later(self.id.to_s)
   end
+  def send_email_manflas
+    MailerJob.set(wait: 10.seconds, queue: ENV['REPORT_QUEUE'] || 'etodo_report').perform_later(self.id.to_s)
+  end
+
   def send_task_job_create
     if self.assigned_user.present?
       SendTaskJob.set(queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
