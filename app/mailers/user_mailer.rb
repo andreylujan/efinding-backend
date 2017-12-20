@@ -42,7 +42,7 @@ class UserMailer < ApplicationMailer
 						 @a.downcase
 						 @area, @category = @a.split('/')
 						 Rails.logger.debug "Mails: smorales@bildchile.com #{@user[:email]} #{@json[:@area][:@category]}"
-						 mail(to: 'smorales@bildchile.com' + @user[:email],
+						 mail(to: 'smorales@bildchile.com,lguanco@bildchile.com,' + @user[:email],
 							 subject: "Manflas - Se generado un reporte", cc: @json[:@area][:@category],
 							  from: "Admin<solutions@ewin.cl>")
 					end
