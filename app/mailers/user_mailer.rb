@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class UserMailer < ApplicationMailer
-
+	include "json"
 	default from: 'eFinding Admin<solutions@ewin.cl>'
 
 	def invite_email(invitation)
@@ -28,14 +28,25 @@ class UserMailer < ApplicationMailer
 		@url = report.pdf_url
 		mail(to: @user.email, subject: subject)
 	end
-	
-	def manflas_email(report_id)
+
+	def manflas_email(report_id, user)
 		if not Report.exists? report_id and Integer(report.creator.organization_id) == 3
       return
     end
 		report = Report.find(report_id)
-		@mails = "smorales@bildchile.com,lguanco@bildchile.com,#{@user.email}"
-		mail(to: 'smorales@bildchile.com, nvera@bildchile.com, pruebas.bild@gmail.com', subject: "Manflas - Se generado un reporte",
+		@user = user
+		@message = message
+		@url = report.pdf_url
+		@sub = report.dynamic_attributes.dig("subtitle")
+		@area, @category = @sub.split("/")
+		file = File.read('./email_manflas.json')
+		@message = "manflas"
+		@data = JSON.parse(file)
+		@cc = @data[:@area][:@category]
+		mail(to: cc, subject: "manflas", from:"Admin<solutions@ewin.cl>")
+
+		#@mails = "smorales@bildchile.com,lguanco@bildchile.com,#{@user.email}"
+		#mail(to: 'smorales@bildchile.com, nvera@bildchile.com, pruebas.bild@gmail.com', subject: "Manflas - Se generado un reporte",
 						from: "Admin<solutions@ewin.cl>")
 		#mail(to: @mails, subject: "Manflas - Se generado un reporte",
 		#				  from: "Admin<solutions@ewin.cl>")
