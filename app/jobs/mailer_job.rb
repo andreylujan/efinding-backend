@@ -8,8 +8,8 @@ class MailerJob < ApplicationJob
     if not Report.exists? report_id
       return
     end
-    report = Report.find(report_id)
+    #report = Report.find(report_id)
     p "report MailerJOB"
-    UserMailer.manflas_email(report).deliver
+    UserMailer.manflas_email(report_id).deliver
   end
 end
