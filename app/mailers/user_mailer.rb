@@ -35,15 +35,15 @@ class UserMailer < ApplicationMailer
 		report = Report.find(report_id)
 		@file = File.read('./email_manflas.json')
 		@json = JSON.parse(@file)
-		@s = "subtitle"
-		@u = "assigned_user"
+		s = "subtitle"
+		u = "assigned_user"
 		if Integer(report.creator.organization_id) == 3
-			if report.dynamic_attributes.dig(@s, "value") != nil
-				@user = report.dynamic_attributes.dig(@u, "value")
-				if @user != nil and @user != ""
-					 @a = report.dynamic_attributes.dig(@s, "value")
-					 @a.downcase
-					 @area, @category = @a.split('/')
+			if report.dynamic_attributes.dig(@s, "text") != nil
+				user = report.dynamic_attributes.dig(@u, "user")
+				if user != nil and user != ""
+					 a = report.dynamic_attributes.dig(@s, "text")
+					 a.downcase
+					 area, category = a.split('/')
 					 Rails.logger.debug "Mails: smorales@bildchile.com #{@user[:email]} #{@json[:@area][:@category]}"
 					 mail(to: 'smorales@bildchile.com,lguanco@bildchile.com,' + @user[:email],
 						 subject: "Manflas - Se generado un reporte", cc: @json[:@area][:@category],
