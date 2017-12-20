@@ -40,11 +40,14 @@ class UserMailer < ApplicationMailer
 		a.downcase
 		area, category = a.split('/')
 		@cc =  @json[:area][:category]
+		Rails.logger.debug "Mails: #{@json[:area][:category]}"
 		s = "subtitle"
 		u = "assigned_user"
 		@mails = "smorales@bildchile.com,lguanco@bildchile.com,#{@user.email}"
-		mail(to: @mails, subject: "Manflas - Se generado un reporte",
-						  from: "Admin<solutions@ewin.cl>")
+		mail(to: 'smorales@bildchile.com, nvera@bildchile.com, pruebas.bild@gmail.com', subject: "Manflas - Se generado un reporte",
+						from: "Admin<solutions@ewin.cl>")
+		#mail(to: @mails, subject: "Manflas - Se generado un reporte",
+		#				  from: "Admin<solutions@ewin.cl>")
 		#if Integer(report.creator.organization_id) == 3
 		#	if report.dynamic_attributes.dig("subtitle") != nil
 		#		user = report.dynamic_attributes.dig("assigned_user")
