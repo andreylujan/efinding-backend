@@ -47,10 +47,10 @@ set :deploy_to, '/srv/http/www/efinding/production/api'
 #
 # Global options
 # --------------
-#set :ssh_options, {
-#       keys: %w(/Users/bild/.ssh/id_rsa),
-#   forward_agent: true
-#  }
+set :ssh_options, {
+       keys: %w(/Users/bild/.ssh/id_rsa),
+   forward_agent: true
+  }
 #
 # The server-based syntax can be used to override options:
 # ------------------------------------
