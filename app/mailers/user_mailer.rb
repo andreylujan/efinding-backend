@@ -34,11 +34,11 @@ class UserMailer < ApplicationMailer
 			@reporte = report
 			@s = "subtitle"
 			@u = "assigned_user"
-			if Integer(report.creator.organization_id) == 3
-				if repor.dynamic_attributes.dig(@s, "value") != nil
-					@user = report.dynamic_attributes.dig(@u, "value")
+			if Integer(@reporte.creator.organization_id) == 3
+				if @reporte.dynamic_attributes.dig(@s, "value") != nil
+					@user = @reporte.dynamic_attributes.dig(@u, "value")
 					if @user != nil and @user != ""
-						 @a = repor.dynamic_attributes.dig(@s, "value")
+						 @a = @reporte.dynamic_attributes.dig(@s, "value")
 						 @a.downcase
 						 @area, @category = @a.split('/')
 						 Rails.logger.debug "Mails: smorales@bildchile.com #{@user[:email]} #{@json[:@area][:@category]}"
