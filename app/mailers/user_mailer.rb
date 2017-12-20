@@ -33,16 +33,6 @@ class UserMailer < ApplicationMailer
       return
     end
 		report = Report.find(report_id)
-		@file = File.read('./email_manflas.json')
-		@json = JSON.parse(@file)
-		@user = user
-		a = report.dynamic_attributes.dig("subtitle")
-		a.downcase
-		area, category = a.split('/')
-		@cc =  @json[:area][:category]
-		Rails.logger.debug "Mails: #{@json[:area][:category]}"
-		s = "subtitle"
-		u = "assigned_user"
 		@mails = "smorales@bildchile.com,lguanco@bildchile.com,#{@user.email}"
 		mail(to: 'smorales@bildchile.com, nvera@bildchile.com, pruebas.bild@gmail.com', subject: "Manflas - Se generado un reporte",
 						from: "Admin<solutions@ewin.cl>")
