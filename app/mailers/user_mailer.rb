@@ -28,7 +28,8 @@ class UserMailer < ApplicationMailer
 		@url = report.pdf_url
 		mail(to: @user.email, subject: subject)
 	end
-	def manflas_email(report_id, user)
+	
+	def manflas_email(report_id)
 		if not Report.exists? report_id and Integer(report.creator.organization_id) == 3
       return
     end
