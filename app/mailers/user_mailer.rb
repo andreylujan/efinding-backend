@@ -30,7 +30,7 @@ class UserMailer < ApplicationMailer
 	end
 	def manflas_email(report)
 			@file = File.read('./email_manflas.json')
-			@json = JSON.parse(file)
+			@json = JSON.parse(@file)
 			@reporte = report
 			@s = "subtitle"
 			@u = "assigned_user"
