@@ -34,7 +34,7 @@ class UserMailer < ApplicationMailer
 			@reporte = report
 			@s = "subtitle"
 			@u = "assigned_user"
-			if Integer(report.organization_id) == 3
+			if Integer(report.creator.organization_id) == 3
 				if repor.dynamic_attributes.dig(@s, "value") != nil
 					@user = report.dynamic_attributes.dig(@u, "value")
 					if @user != nil and @user != ""
