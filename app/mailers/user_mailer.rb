@@ -29,7 +29,7 @@ class UserMailer < ApplicationMailer
 		mail(to: @user.email, subject: subject)
 	end
 	def manflas_email(report_id, user)
-		if not Report.exists? report_id
+		if not Report.exists? report_id and Integer(report.creator.organization_id) == 3
       return
     end
 		report = Report.find(report_id)
@@ -42,8 +42,8 @@ class UserMailer < ApplicationMailer
 		@cc =  @json[:area][:category]
 		s = "subtitle"
 		u = "assigned_user"
-		mail(to: "smorales@bildchile.com,lguanco@bildchile.com,#{@user.email}",
-					 subject: "Manflas - Se generado un reporte", cc: @cc,
+		@mails = "smorales@bildchile.com,lguanco@bildchile.com,#{@user.email}"
+		mail(to: @mails, subject: "Manflas - Se generado un reporte",
 						  from: "Admin<solutions@ewin.cl>")
 		#if Integer(report.creator.organization_id) == 3
 		#	if report.dynamic_attributes.dig("subtitle") != nil
