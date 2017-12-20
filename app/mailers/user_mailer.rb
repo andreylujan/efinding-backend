@@ -38,15 +38,15 @@ class UserMailer < ApplicationMailer
 		s = "subtitle"
 		u = "assigned_user"
 		if Integer(report.creator.organization_id) == 3
-			if report.dynamic_attributes.dig(s, "text") != nil
-				user = report.dynamic_attributes.dig(u, "user")
+			if report.dynamic_attributes.dig("subtitle") != nil
+				user = report.dynamic_attributes.dig("assigned_user")
 				if user != nil and user != ""
-					 a = report.dynamic_attributes.dig(s, "text")
+					 a = report.dynamic_attributes.dig("subtitle")
 					 a.downcase
 					 area, category = a.split('/')
-					 Rails.logger.debug "Mails: smorales@bildchile.com #{user[:email]} #{@json[:@area][:@category]}"
-					 mail(to: 'smorales@bildchile.com,lguanco@bildchile.com,' + user[:email],
-						 subject: "Manflas - Se generado un reporte", cc: @json[:@area][:@category],
+					 Rails.logger.debug "Mails: smorales@bildchile.com #{user[:email]} #{@json[:area][:category]}"
+					 mail(to: 'smorales@bildchile.com,lguanco@bildchile.com,' + user.email,
+						 subject: "Manflas - Se generado un reporte", cc: @json[:area][:category],
 						  from: "Admin<solutions@ewin.cl>")
 				end
 			end
