@@ -28,29 +28,34 @@ class UserMailer < ApplicationMailer
 		@url = report.pdf_url
 		mail(to: @user.email, subject: subject)
 	end
-	def manflas_email(report_id)
+	def manflas_email(report_id, user)
 		if not Report.exists? report_id
       return
     end
 		report = Report.find(report_id)
 		@file = File.read('./email_manflas.json')
 		@json = JSON.parse(@file)
+		@user = user
+		a = report.dynamic_attributes.dig("subtitle")
+		a.downcase
+		area, category = a.split('/')
+		@cc =  @json[:area][:category]
 		s = "subtitle"
 		u = "assigned_user"
-		if Integer(report.creator.organization_id) == 3
-			if report.dynamic_attributes.dig("subtitle") != nil
-				user = report.dynamic_attributes.dig("assigned_user")
-				if user != nil and user != ""
-					 a = report.dynamic_attributes.dig("subtitle")
-					 a.downcase
-					 area, category = a.split('/')
-					 #Rails.logger.debug "Mails: smorales@bildchile.com, #{user.email}, #{@json[:area][:category]}"
-					 mail(to: 'smorales@bildchile.com,lguanco@bildchile.com,', #+ user.email,
-						 subject: "Manflas - Se generado un reporte", cc: @json[:area][:category],
+		mail(to: "smorales@bildchile.com,lguanco@bildchile.com,#{@user.email}",
+					 subject: "Manflas - Se generado un reporte", cc: @cc,
 						  from: "Admin<solutions@ewin.cl>")
-				end
-			end
-		end
+		#if Integer(report.creator.organization_id) == 3
+		#	if report.dynamic_attributes.dig("subtitle") != nil
+		#		user = report.dynamic_attributes.dig("assigned_user")
+		#		if user != nil and user != ""
+		#			 #Rails.logger.debug "Mails: smorales@bildchile.com, #{user.email}, #{@json[:area][:category]}"
+		#			 mail(to: 'smorales@bildchile.com,lguanco@bildchile.com,', #+ user.email,
+		#				 subject: "Manflas - Se generado un reporte", cc: @json[:area][:category],
+		#				  from: "Admin<solutions@ewin.cl>")
+		#		end
+		#	end
+		#end
 	end
 
 	def report_email(report_id, user, subject, message)

@@ -114,7 +114,9 @@ class Report < ApplicationRecord
   end
 
   def send_email_manflas
-    MailerJob.set(wait: 10.seconds, queue: ENV['REPORT_QUEUE'] || "efinding_report").perform_later(self.id)
+    UserMailer.delay_for(5.second, queue: ENV['REPORT_QUEUE'] || 'efinding_report')
+      .manflas_email(self.id, self.assign_user)
+    #MailerJob.set(wait: 10.seconds, queue: ENV['REPORT_QUEUE'] || "efinding_report").perform_later(self.id)
   end
 
 
