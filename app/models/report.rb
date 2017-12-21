@@ -79,7 +79,7 @@ class Report < ApplicationRecord
   before_create :assign_user
   after_commit :update_inspection, on: [ :create, :update ]
   after_save :change_state, on: [ :update ]
-  after_commit :send_email_manflas, on: [:update]
+  after_commit :send_email_manflas, on: [:create]
   before_save :calculate_delivery_date, on: [ :update ]
   after_commit :send_email, on: [ :create ]
   before_save :check_assignment_changes, on: [ :update ]

@@ -34,7 +34,7 @@ class UserMailer < ApplicationMailer
 			if report.dynamic_attributes["subtitle"]!= nil
 				a = report.dynamic_attributes["subtitle"]
 				a.downcase
-				area, category = s.split('/')
+				area, category = a.split('/')
 				file = File.read('./email_manflas.json')
 				mailJson = JSON.parse(file)
 				@user = user
