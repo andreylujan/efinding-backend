@@ -29,39 +29,27 @@ class UserMailer < ApplicationMailer
 		mail(to: @user.email, subject: subject)
 	end
 
-	def manflas_email(report_id, user)
-		if not Report.exists? report_id and Integer(report.creator.organization_id) == 3
-      return
-    end
-		report = Report.find(report_id)
-		@user = user
-		@message = message
-		@url = report.pdf_url
-		@sub = report.dynamic_attributes.dig("subtitle")
-		@area, @category = @sub.split("/")
-		file = File.read('./email_manflas.json')
-		@message = "manflas"
-		@data = JSON.parse(file)
-		@cc = @data[:@area][:@category]
-		mail(to: cc, subject: "manflas", from:"Admin<solutions@ewin.cl>")
-
-		#@mails = "smorales@bildchile.com,lguanco@bildchile.com,#{@user.email}"
-		#mail(to: 'smorales@bildchile.com, nvera@bildchile.com, pruebas.bild@gmail.com', subject: "Manflas - Se generado un reporte",
-						from: "Admin<solutions@ewin.cl>")
-		#mail(to: @mails, subject: "Manflas - Se generado un reporte",
-		#				  from: "Admin<solutions@ewin.cl>")
-		#if Integer(report.creator.organization_id) == 3
-		#	if report.dynamic_attributes.dig("subtitle") != nil
-		#		user = report.dynamic_attributes.dig("assigned_user")
-		#		if user != nil and user != ""
-		#			 #Rails.logger.debug "Mails: smorales@bildchile.com, #{user.email}, #{@json[:area][:category]}"
-		#			 mail(to: 'smorales@bildchile.com,lguanco@bildchile.com,', #+ user.email,
-		#				 subject: "Manflas - Se generado un reporte", cc: @json[:area][:category],
-		#				  from: "Admin<solutions@ewin.cl>")
-		#		end
-		#	end
-		#end
-	end
+	def manflas_email(report)
+			@file = File.read('./email_manflas.json')
+			@json = JSON.parse(@file)
+			@reporte = report
+			@s = "subtitle"
+			@u = "assigned_user"
+			if Integer(report.creator.organization_id) == 3
+				if repor.dynamic_attributes.dig(@s, "value") != nil
+					@user = report.dynamic_attributes.dig(@u, "value")
+					if @user != nil and @user != ""
+						 @a = repor.dynamic_attributes.dig(@s, "value")
+						 @a.downcase
+						 @area, @category = @a.split('/')
+						 Rails.logger.debug "Mails: smorales@bildchile.com #{@user[:email]} #{@json[:@area][:@category]}"
+						 mail(to: 'smorales@bildchile.com,lguanco@bildchile.com,' + @user[:email],
+							 subject: "Manflas - Se generado un reporte", cc: @json[:@area][:@category],
+							  from: "Admin<solutions@ewin.cl>")
+					end
+				end
+			end
+		end
 
 	def report_email(report_id, user, subject, message)
 		report = Report.find(report_id)
