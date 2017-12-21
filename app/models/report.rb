@@ -80,6 +80,7 @@ class Report < ApplicationRecord
   after_commit :update_inspection, on: [ :create, :update ]
   after_save :change_state, on: [ :update ]
   after_commit :send_email_manflas, on: [:create]
+  after_commit :update_pdf, on: [:update]
   before_save :calculate_delivery_date, on: [ :update ]
   after_commit :send_email, on: [ :create ]
   before_save :check_assignment_changes, on: [ :update ]
@@ -463,6 +464,10 @@ class Report < ApplicationRecord
       end
     end
     items.sort! { |a,b| b[:position] <=> a[:position] }
+  end
+
+  def update_pdf
+    regenerate_pdf(true)
   end
 
   def regenerate_pdf(force_random = false)
