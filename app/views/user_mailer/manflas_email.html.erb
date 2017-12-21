@@ -11,7 +11,6 @@
   <p>Cuartel: <%= @reporte.dynamic_attributes['title'] || "Cuartel no seleccionada" %></p>
   <!--@reporte.dynamic_attributes['46'].present? ? @reporte.dynamic_attributes['46'] -->
   <!--<p>Comentarios: <%=  @reporte.dynamic_attributes.dig('title', 'value').present? @reporte.dynamic_attributes.dig('title', 'value') : "Comentarios no ingresados" %></p>-->
-  <p>Comentarios: <%= @reporte.dynamic_attributes.dig('title', 'value').present? ? @reporte.dynamic_attributes.dig('title', 'value') : "Comentarios no ingresados" %></p>
   <p>Reporte PDF: <a href="<%= @url %>">Click aqui</a></p>
 </body>
 </html>
