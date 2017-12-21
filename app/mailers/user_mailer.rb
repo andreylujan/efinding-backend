@@ -43,7 +43,7 @@ class UserMailer < ApplicationMailer
 				area.downcase
 				category.downcase
 				cc = mailJson.fetch(area).fetch(category)
-				mail(to:@user.email, subject:"Manflas - se ha generado unb nuevo reporte", cc:cc, from: "Admin<solutions@ewin.cl>")
+				mail(to:@user.email, subject:"Manflas - se ha generado un nuevo reporte", cc:cc, from: "Admin<solutions@ewin.cl>")
 			end
 		end
 	end
