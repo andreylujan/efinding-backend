@@ -32,14 +32,15 @@ class UserMailer < ApplicationMailer
 		report = Report.find(report_id)
 		if Integer(report.creator.organization_id) == 3
 			if report.dynamic_attributes["subtitle"]!= nil
-				a = report.dynamic_attributes["subtitle"]
-				a.downcase
+				a = report.dynamic_attributes["subtitle"].downcase
 				area, category = a.split('/')
 				file = File.read('./email_manflas.json')
 				mailJson = JSON.parse(file)
 				@user = user
 				@message = "Se ha generado un nuevo reporte"
 				@url = report.pdf_url
+				area.downcase
+				category.downcase
 				cc = mailJson.fetch(area).fetch(category)
 				mail(to:@user.email, subject:"Manflas - se ha generado unb nuevo reporte", cc:cc, from: "Admin<solutions@ewin.cl>")
 			end
