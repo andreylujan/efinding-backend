@@ -1,6 +1,5 @@
 # -*- encoding : utf-8 -*-
 class UserMailer < ApplicationMailer
-	include "json"
 	default from: 'eFinding Admin<solutions@ewin.cl>'
 
 	def invite_email(invitation)
@@ -29,27 +28,6 @@ class UserMailer < ApplicationMailer
 		mail(to: @user.email, subject: subject)
 	end
 
-	def manflas_email(report)
-			@file = File.read('./email_manflas.json')
-			@json = JSON.parse(@file)
-			@reporte = report
-			@s = "subtitle"
-			@u = "assigned_user"
-			if Integer(report.creator.organization_id) == 3
-				if repor.dynamic_attributes.dig(@s, "value") != nil
-					@user = report.dynamic_attributes.dig(@u, "value")
-					if @user != nil and @user != ""
-						 @a = repor.dynamic_attributes.dig(@s, "value")
-						 @a.downcase
-						 @area, @category = @a.split('/')
-						 Rails.logger.debug "Mails: smorales@bildchile.com #{@user[:email]} #{@json[:@area][:@category]}"
-						 mail(to: 'smorales@bildchile.com,lguanco@bildchile.com,' + @user[:email],
-							 subject: "Manflas - Se generado un reporte", cc: @json[:@area][:@category],
-							  from: "Admin<solutions@ewin.cl>")
-					end
-				end
-			end
-		end
 
 	def report_email(report_id, user, subject, message)
 		report = Report.find(report_id)
