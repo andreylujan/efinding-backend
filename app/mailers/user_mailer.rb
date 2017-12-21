@@ -31,8 +31,8 @@ class UserMailer < ApplicationMailer
 	def manflas_email(report_id, user)
 		report = Report.find(report_id)
 		if Integer(report.creator.organization_id) == 3
-			if report.dynamic_attributes.dig("subtitle", "text")!= nil
-				a = report.dynamic_attributes.dig("subtitle", "text")
+			if report.dynamic_attributes["subtitle"]!= nil
+				a = report.dynamic_attributes["subtitle"]
 				a.downcase
 				area, category = s.split('/')
 				file = File.read('./email_manflas.json')
