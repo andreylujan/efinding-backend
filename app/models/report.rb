@@ -80,7 +80,6 @@ class Report < ApplicationRecord
   after_commit :update_inspection, on: [ :create, :update ]
   after_save :change_state, on: [ :update ]
   after_commit :send_email_manflas, on: [:update]
-  after_commit :update_pdf, on: [:update]
   before_save :calculate_delivery_date, on: [ :update ]
   after_commit :send_email, on: [ :create ]
   before_save :check_assignment_changes, on: [ :update ]
@@ -118,9 +117,6 @@ class Report < ApplicationRecord
     MailerJob.set(wait: 10.seconds, queue: ENV['REPORT_QUEUE'] || "efinding_report").perform_later(self.id.to_s)
   end
 
-  def update_pdf
-    self.regenerate_pdf(true)
-  end
   def check_assignment_changes
     if creator.organization_id == 3 and changes["assigned_user_id"].present?
       if assigned_user_id.present? and assigned_user.present?
