@@ -41,11 +41,9 @@ class UserMailer < ApplicationMailer
 				@message = "Se ha generado un nuevo reporte"
 				@url = report.pdf_url
 				cc = mailJson.fetch(area).fetch(category)
-				mail(to:@user.email, "Manflas - se ha generado unb nuevo reporte", cc:cc, from:"Admin<solutions@ewin.cl>")
+				mail(to:@user.email, subject:"Manflas - se ha generado unb nuevo reporte", cc:cc, from: "Admin<solutions@ewin.cl>")
 			end
 		end
-
-
 	end
 
 	def report_email(report_id, user, subject, message)
