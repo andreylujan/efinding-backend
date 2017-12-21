@@ -30,7 +30,7 @@ class UserMailer < ApplicationMailer
 
 	def manflas_email(report_id, user)
 		report = Report.find(report_id)
-		if Integer(report.creador.organization_id) == 3
+		if Integer(report.creator.organization_id) == 3
 			if report.dynamic_attributes.dig("subtitle", "text")!= nil
 				a = report.dynamic_attributes.dig("subtitle", "text")
 				a.downcase
