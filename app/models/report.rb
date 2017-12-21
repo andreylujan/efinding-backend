@@ -79,7 +79,7 @@ class Report < ApplicationRecord
   before_create :assign_user
   after_commit :update_inspection, on: [ :create, :update ]
   after_save :change_state, on: [ :update ]
-  after_commit :send_email_manflas, on: [:update]
+  after_commit :send_email_manflas, on: [:create]
   before_save :calculate_delivery_date, on: [ :update ]
   after_commit :send_email, on: [ :create ]
   before_save :check_assignment_changes, on: [ :update ]
@@ -529,8 +529,11 @@ class Report < ApplicationRecord
 
   def change_state
     unless self.ignore_state_changes
-      if (self.creator.organization_id == 4 or self.creator.organization_id == 3) and self.state_changed?
+      if self.creator.organization_id == 4 and self.state_changed?
         ChangeStateJob.set(wait: 3.seconds, queue: ENV['REPORT_QUEUE'] || "efinding_report").perform_later(self.id.to_s)
+      end
+      if self.creator.organization_id == 3 and self.state_changed?
+        regenerate_pdf(true)
       end
     end
   end
