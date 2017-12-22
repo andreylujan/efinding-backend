@@ -69,7 +69,7 @@ class Report < ApplicationRecord
   belongs_to :inspection
   acts_as_list scope: :inspection
 
-  after_commit :generate_pdf
+  after_commit :generate_pdf, on: [:create, :update]
   after_commit :send_task_job, on: [ :create ]
   after_commit :schedule_order, on: [ :create ]
   validate :limit_date_cannot_be_in_the_past, on: :create
@@ -436,7 +436,7 @@ class Report < ApplicationRecord
 
   def generate_pdf
     if not @ignore_pdf and self.finished? and not self.pdf_uploaded?
-      regenerate_pdf
+      regenerate_pdf(true)
     end
   end
 
