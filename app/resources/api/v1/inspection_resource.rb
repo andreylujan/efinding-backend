@@ -23,11 +23,16 @@ class Api::V1::InspectionResource < ApplicationResource
     :cached_data,
     :num_reports_html,
     :field_chief_name,
-    :inspection_id
+    :inspection_id,
+    :synced
 
 
   add_foreign_keys :construction_id
 
+  def synced
+    true
+  end
+  
   def inspection_id
     @model.id.to_s
   end
