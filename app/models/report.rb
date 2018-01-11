@@ -491,7 +491,7 @@ class Report < ApplicationRecord
   end
 
   def delivery_code
-    if self.creator.organization_id != nil and self.creator.organization_id == '12'
+    if self.creator.organization_id != nil and self.creator.organization_id == 12
       if self.dynamic_attributes.dig('119', 'value') != nil
         "#{self.dynamic_attributes.dig('119','value').split('-')[0]} - W#{self.created_at.strftime("%U").to_i + 1 }"
       else
@@ -501,13 +501,13 @@ class Report < ApplicationRecord
   end
 
   def week_code
-    if self.creator.organization_id != nil and self.creator.organization_id == '12'
+    if self.creator.organization_id != nil and self.creator.organization_id == 12
       self.created_at.strftime("%U").to_i + 1
     end
   end
 
   def delivery_type
-    if self.creator.organization_id != nil and self.creator.organization_id == '12'
+    if self.creator.organization_id != nil and self.creator.organization_id == 12
       if self.dynamic_attributes.dig('117', 'items') != nil
         d = []
         self.dynamic_attributes.dig('117', 'items').each{|n| d.push("#{n.dig('name')}")}
