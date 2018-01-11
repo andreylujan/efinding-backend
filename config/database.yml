@@ -81,12 +81,12 @@ test:
 
 staging:
   <<: *default
-  database: efinding_staging
-  username: efinding
+  database: etodo_staging
+  username: etodo
   password: bild
 
 production:
   <<: *default
-  database: efinding_production
-  username: efinding
+  database: etodo_production
+  username: etodo
   password: bild
