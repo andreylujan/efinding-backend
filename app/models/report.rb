@@ -183,8 +183,7 @@ class Report < ApplicationRecord
   end
 
   def set_default_attributes
-    self.dynamic_attributes =
-      self.report_type.default_dynamic_attributes.merge(self.dynamic_attributes)
+    self.dynamic_attributes = self.report_type.default_dynamic_attributes.merge(self.dynamic_attributes)
   end
 
   def finished=(val)
