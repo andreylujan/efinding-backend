@@ -117,7 +117,16 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
           num_reports: group.num_reports,
           state: group.state
         }
-      end
+    end
+
+    reports_by_week = filtered_reports.group("report.created_at.strftime('%U')")
+      .select("count(filtered_reports.id) AS num_reports, report.created_at.strftime('%U') + 1 AS week")
+      .order("report.created_at.strftime('%U') + 1 DESC")
+      .map do |group|{
+        num_reports: group.num_reports,
+        week: week
+      }
+    end
 
     report_counts = {
       num_reports_by_day: reports_by_day.count,
@@ -131,7 +140,8 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
       current_month_reports_by_user: current_month_reports_by_user,
       reports_by_delivery_result: reports_by_delivery_result,
       reports_last_fifteen_days: reports_last_fifteen_days,
-      reports_by_day: reports_by_day
+      reports_by_day: reports_by_day,
+      reports_by_week: reports_by_week
     }
     render json: {
         data: {
