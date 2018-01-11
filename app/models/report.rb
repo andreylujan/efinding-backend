@@ -71,7 +71,6 @@ class Report < ApplicationRecord
 
   after_commit :generate_pdf, on: [ :create, :update ]
   after_commit :send_email_pausa, on: [:update]
-  after_commit :send_email_manflas, on: [:update]
   after_commit :send_task_job_create, on: [ :create ]
   after_commit :send_task_job_update, on: [ :update ]
 
@@ -492,6 +491,32 @@ class Report < ApplicationRecord
     end
   end
 
+  def delivery_code
+    if self.creator.organization_id != nil and self.creator.organization_id == '12'
+      if self.dynamic_attributes.dig('119', 'value') != nil
+        "#{self.dynamic_attributes.dig('119','value').split('-')[0]} - W#{self.created_at.strftime("%U").to_i + 1 }"
+      else
+        "No existe código de entrega"
+      end
+    end
+  end
+
+  def week_code
+    if self.creator.organization_id != nil and self.creator.organization_id == '12'
+      self.created_at.strftime("%U").to_i + 1
+    end
+  end
+
+  def delivery_type
+    if self.creator.organization_id != nil and self.creator.organization_id == '12'
+      if self.dynamic_attributes.dig('117', 'items') != nil
+        d = []
+        self.dynamic_attributes.dig('117', 'items').each{|n| d.push("#{n.dig('name')}")}
+        d.join(', ')
+      end
+    end
+  end
+
   private
   def set_organization_id
     self.organization_id = creator.organization_id
@@ -502,7 +527,4 @@ class Report < ApplicationRecord
       errors.add(:limit_date, "No puede estar en el pasado")
     end
   end
-
-
-
 end

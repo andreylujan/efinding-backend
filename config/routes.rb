@@ -7,8 +7,8 @@ Rails.application.routes.draw do
   require 'sidekiq/web'
 
   mount Sidekiq::Web => '/sidekiq'
-  
-  
+
+
 
   use_doorkeeper do
     skip_controllers :sessions, :authorizations, :applications,
@@ -30,7 +30,7 @@ Rails.application.routes.draw do
           end
         end
       end
-      
+
       jsonapi_resources :collections, only: [ :index, :show, :create, :update, :destroy ] do
         jsonapi_related_resources :collection_items
         # jsonapi_resources :collection_items, only: [ :index, :show, :create, :update, :destroy ] do
@@ -139,6 +139,7 @@ Rails.application.routes.draw do
             end
           end
           resource :generic, only: [ :show ], to: "dashboard#generic"
+          resource :intralot, only: [ :show ], to: "dashboard#intralot"
           get :inverfact
         end
       end

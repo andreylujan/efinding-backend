@@ -11,6 +11,5 @@ class MailerJob < ApplicationJob
     report = Report.find(report_id)
     p "report MailerJOB"
     UserMailer.pausa_email(report).deliver
-    UserMailer.manflas_email(report).deliver
   end
 end
