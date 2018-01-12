@@ -124,7 +124,7 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
        .order("reports.created_at DESC")
        .map do |group|{
          num_reports: group.num_reports,
-         week_code: group.week.strftime('%U') + 1
+         week_code: group.week.strftime('%U')
        }
      end
 
