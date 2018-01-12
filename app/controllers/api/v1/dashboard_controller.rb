@@ -102,7 +102,7 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
          # .where.not(assigned_user_id: nil)
 
      reports_by_delivery_result = reports.group("dynamic_attributes->'118'->>'value'")
-       .select("count(reports.id) AS num_reports, dynamic_attributes->'118'->>'value' AS start_date")
+       .select("count(reports.id) AS num_reports, dynamic_attributes->'118'->>'value' AS state")
        .order("count(reports.id) DESC")
        .map do |group|
          {
