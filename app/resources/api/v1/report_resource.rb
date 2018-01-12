@@ -171,6 +171,14 @@ class Api::V1::ReportResource < ApplicationResource
     end
   }
 
+  filter :loto_number, apply: ->(records, value, _options){
+    if not value.empty?
+      records.where("reports.loto_number ILIKE ?", "%#{value.first}%")
+    else
+      records
+    end
+  }
+
   filter :week_code, apply: ->(records, value, _options){
     if not value.empty?
       records.where("reports.week_code ILIKE ?", "%#{value.first}%")

@@ -493,9 +493,19 @@ class Report < ApplicationRecord
   def delivery_code
     if self.creator.organization_id != nil and self.creator.organization_id == 12
       if self.dynamic_attributes.dig('119', 'value') != nil
-        "#{self.dynamic_attributes.dig('119','value').split('-')[0]} - W#{self.created_at.strftime("%U").to_i + 1 }"
+        "#{self.dynamic_attributes.dig('119','value').split(' - ')[0]} - W#{self.created_at.strftime("%U").to_i + 1 }"
       else
         "No existe código de entrega"
+      end
+    end
+  end
+
+  def loto_number
+    if self.creator.organization_id != nil and self.creator.organization_id == 12
+      if self.dynamic_attributes.dig('119', 'value') != nil
+        "#{self.dynamic_attributes.dig('119','value').split(' - ')[0]}"
+      else
+        "No número de loto"
       end
     end
   end
