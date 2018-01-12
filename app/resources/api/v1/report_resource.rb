@@ -163,6 +163,29 @@ class Api::V1::ReportResource < ApplicationResource
     end
   }
 
+  filter :delivery_code, apply: ->(records, value, _options){
+    if not value.empty?
+      records.where("reports.delivery_code ILIKE ?", "%#{value.first}%")
+    else
+      records
+    end
+  }
+
+  filter :week_code, apply: ->(records, value, _options){
+    if not value.empty?
+      records.where("reports.week_code ILIKE ?", "%#{value.first}%")
+    else
+      records
+    end
+  }
+
+  filter :delivery_type, apply: ->(records, value, _options){
+    if not value.empty?
+      records.where("reports.delivery_type ILIKE ?", "%#{value.first}%")
+    else
+      records
+    end
+  }
 
   filter :"initial_location_attributes", apply: ->(records, value, _options) {
     if not value.empty?
