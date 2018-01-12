@@ -91,6 +91,14 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
            date.end_of_month
            )
 
+     reports_by_month = reports.group_by(&:month_criteria).map do |month|
+       {
+         num_assigned: month[1].count { |r| r.is_assigned? },
+         num_executed: month[1].count { |r| r.state_id == 25 },
+         month_name: I18n.l(month[0], format: '%B').capitalize
+       }
+     end
+
      reports_by_day = reports.where("reports.created_at >= ? AND reports.created_at < ?",
          Time.zone.now.beginning_of_day, Time.zone.now.end_of_day)
 
@@ -132,6 +140,7 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
          id: "#{date.month}/#{date.year}",
          type: "dashboards",
          attributes: {
+           reports_by_month: reports_by_month,
            reports_by_day: reports_by_day,
            reports_last_fifteen_days: reports_last_fifteen_days,
            current_month_user_reports: current_month_user_reports,
