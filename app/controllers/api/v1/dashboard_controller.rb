@@ -103,7 +103,7 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
          Time.zone.now.beginning_of_day, Time.zone.now.end_of_day)
 
      reports_last_fifteen_days = reports.where("reports.created_at >= ? AND reports.created_at < ?",
-         DateTime.now.days_ago(-15).beginning_of_day, DateTime.now.end_of_day)
+         DateTime.now.days_ago(15).beginning_of_day, DateTime.now.end_of_day)
 
      current_month_user_reports = reports.where("reports.created_at >= ? AND reports.created_at < ?",
          DateTime.now.beginning_of_month, DateTime.now.end_of_month)
