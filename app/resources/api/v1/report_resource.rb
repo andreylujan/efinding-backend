@@ -19,7 +19,11 @@ class Api::V1::ReportResource < ApplicationResource
     :started_at,
     :finished_at,
     :formatted_started_at,
-    :formatted_finished_at
+    :formatted_finished_at,
+    :delivery_code,
+    :loto_number,
+    :week_code,
+    :delivery_type
 
   add_foreign_keys :inspection_id, :creator_id, :assigned_user_id, :state_id
 
