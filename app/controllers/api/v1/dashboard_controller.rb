@@ -107,8 +107,7 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
 
      current_month_user_reports = reports.where("reports.created_at >= ? AND reports.created_at < ?",
          DateTime.now.beginning_of_month, DateTime.now.end_of_month)
-         # .where.not(assigned_user_id: nil)
-
+         .each { |r|r.creator_id = r.creator.full_name  }
      reports_by_delivery_result = reports.group("dynamic_attributes->'118'->>'value'")
        .select("count(reports.id) AS num_reports, dynamic_attributes->'118'->>'value' AS state_report")
        .order("count(reports.id) DESC")
