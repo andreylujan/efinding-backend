@@ -56,6 +56,8 @@ class Report < ApplicationRecord
   has_many :images, dependent: :destroy
   before_save :cache_data
 
+  delegate :report_type, to: :state, allow_nil: false
+
   validates :report_type_id, presence: true
   validates :report_type, presence: true
   validates :state, presence: true
