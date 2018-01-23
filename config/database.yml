@@ -23,7 +23,7 @@ default: &default
 
 development:
   <<: *default
-  database: etodo_production
+  database: efinding_staging
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -57,7 +57,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: efinding_test
+  database: efinding_staging
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -81,12 +81,12 @@ test:
 
 staging:
   <<: *default
-  database: etodo_staging
+  database: efinding_staging
   username: etodo
   password: bild
 
 production:
   <<: *default
   database: etodo_production
-  username: bild
+  username: etodo
   password: bild
