@@ -23,7 +23,7 @@ default: &default
 
 development:
   <<: *default
-  database: efinding_production
+  database: etodo_production
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -88,5 +88,5 @@ staging:
 production:
   <<: *default
   database: etodo_production
-  username: etodo
+  username: bild
   password: bild
