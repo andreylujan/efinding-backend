@@ -285,7 +285,7 @@ class Report < ApplicationRecord
   end
 
   def self.setup_xlsx(organization_id)
-    data_parts = DataPart.joins(collection: :organization).where(organizations: {id: organization_id})
+    data_parts = DataPart.joins(collection: :organization).where(organizations: {id: organization_id}).where.not(data_parts:{id:120})
     .order("data_parts.position ASC")
     cols = []
     column_translations.each do |key, value|
@@ -297,7 +297,13 @@ class Report < ApplicationRecord
 
     data_parts.each do | data_part |
       define_method :"#{data_part.name}" do
-        val = self.dynamic_attributes.dig(data_part.id.to_s, "value")
+        if self.dynamic_attributes.dig(data_part.id.to_s, 'items') != nil
+          d = []
+          self.dynamic_attributes.dig(data_part.id.to_s, 'items').each{|n| d.push("#{n.dig('name')}")}
+          val = d.join(', ')
+        else
+          val = self.dynamic_attributes.dig(data_part.id.to_s, "value")
+        end
         if (val.nil? or val == "") and inspection.present?
           cached_id = data_part.config.dig("depends", "cached_id")
           inspection.cached_data[cached_id]
