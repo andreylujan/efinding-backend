@@ -132,6 +132,11 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
        num_current_month: current_month_user_reports.count
      }
 
+     current_month_user_reports_json = current_month_user_reports.as_json
+     current_month_user_reports_json.each do |r|
+       r['creator_id'] = Report.find(r['id']).creator.full_name
+     end
+     JSON.dump(current_month_user_reports_json)
 
      render json: {
        data: {
@@ -141,7 +146,7 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
            reports_by_month: reports_by_month,
            reports_by_day: reports_by_day,
            reports_last_fifteen_days: reports_last_fifteen_days,
-           current_month_user_reports: current_month_user_reports,
+           current_month_user_reports: current_month_user_reports_json,
            reports_by_delivery_result: reports_by_delivery_result,
            reports_by_week: reports_by_week,
            report_counts: report_counts
