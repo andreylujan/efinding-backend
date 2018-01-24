@@ -41,7 +41,6 @@ class Report < ApplicationRecord
   belongs_to :creator, class_name: :User, foreign_key: :creator_id
   belongs_to :assigned_user, class_name: :User, foreign_key: :assigned_user_id
   belongs_to :resolver, class_name: :User, foreign_key: :resolver_id
-  
   # audited
   has_many :data_part_values, dependent: :destroy
 
@@ -56,11 +55,8 @@ class Report < ApplicationRecord
   has_many :images, dependent: :destroy
   before_save :cache_data
 
-  delegate :report_type, to: :state, allow_nil: false
-
   validates :report_type_id, presence: true
   validates :report_type, presence: true
-  validates :state, presence: false
 
   belongs_to :initial_location, class_name: :Location
   belongs_to :final_location, class_name: :Location
