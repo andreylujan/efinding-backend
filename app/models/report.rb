@@ -93,7 +93,7 @@ class Report < ApplicationRecord
     :creator_name,
     :initial_location_image,
     :final_location_image,
-    :pdf_url,
+    :default_pdf,
     :resolved_at,
     :resolver_name,
     :report_fields
@@ -260,7 +260,7 @@ class Report < ApplicationRecord
       :creator_name,
       :initial_location_image,
       :final_location_image,
-      :pdf_url,
+      :default_pdf,
       :resolved_at,
       :resolver_name
     ]
@@ -271,7 +271,7 @@ class Report < ApplicationRecord
       id: "Id reporte",
       created_at: "Fecha de creación",
       creator_name: "Nombre del creador",
-      pdf_url: "PDF reporte"
+      default_pdf: "PDF reporte"
     }
   end
 
