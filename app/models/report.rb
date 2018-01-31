@@ -88,6 +88,7 @@ class Report < ApplicationRecord
   acts_as_xlsx columns: [
     :inspection_id,
     :id,
+    :sequential_id,
     :state,
     :created_at,
     :limit_date,
@@ -97,7 +98,10 @@ class Report < ApplicationRecord
     :default_pdf,
     :resolved_at,
     :resolver_name,
-    :report_fields
+    :report_fields,
+    :delivery_code,
+    :loto_number,
+    :week_code
   ]
 
   def name
@@ -261,6 +265,7 @@ class Report < ApplicationRecord
     [
       :inspection_id,
       :id,
+      :sequential_id,
       :state,
       :created_at,
       :limit_date,
@@ -269,15 +274,21 @@ class Report < ApplicationRecord
       :final_location_image,
       :default_pdf,
       :resolved_at,
-      :resolver_name
+      :resolver_name,
+      :delivery_code,
+      :loto_number,
+      :week_code
     ]
   end
 
   def self.column_translations
     {
-      id: "Id reporte",
+      sequential_id: "Id reporte",
       created_at: "Fecha de creación",
       creator_name: "Nombre del creador",
+      delivery_code: "Código de entrega",
+      loto_number: "Nro Loto",
+      week_code: "Nro Semana",
       default_pdf: "PDF reporte"
     }
   end
