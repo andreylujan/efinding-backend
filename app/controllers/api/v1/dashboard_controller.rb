@@ -104,6 +104,7 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
 
      reports_last_fifteen_days = reports.where("reports.created_at >= ? AND reports.created_at < ?",
          DateTime.now.days_ago(15).beginning_of_day, DateTime.now.end_of_day)
+         .order("reports.created_at ASC")
 
      current_month_user_reports = reports.where("reports.created_at >= ? AND reports.created_at < ?",
          DateTime.now.beginning_of_month, DateTime.now.end_of_month)
@@ -117,12 +118,12 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
          }
      end
 
-     reports_by_week = reports.group("reports.created_at")
-       .select("count(reports.id) AS num_reports, reports.created_at AS week")
-       .order("reports.created_at DESC")
+     reports_by_week = reports.group("date_part('week',reports.created_at)")
+       .select("count(reports.id) AS num_reports, date_part('week',reports.created_at) AS week")
+       .order("count(reports.id) DESC")
        .map do |group|{
          num_reports: group.num_reports,
-         week_code: group.week.strftime('%U')
+         week_code: group.week #.strftime('%W')
        }
      end
 

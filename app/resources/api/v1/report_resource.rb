@@ -43,6 +43,7 @@ class Api::V1::ReportResource < ApplicationResource
     :state_id, :creator_id, :assigned_user_id
 
   filter :creator_id, apply: ->(records, value, _options) {
+    Rails.logger.info "creator_id : #{value.first}"
     if not value.empty?
       records.where("reports.creator_id = ?", value[0])
     else
@@ -65,9 +66,10 @@ class Api::V1::ReportResource < ApplicationResource
   }
 
   filter :creator, apply: ->(records, value, _options) {
+    Rails.logger.info "creator : #{value.first}"
     if not value.empty?
       if (value[0].is_a? Hash or value[0].is_a? ActionController::Parameters) and value[0]["full_name"].present?
-        records.includes(:assigned_user, :creator).where("creators_reports.first_name || ' ' || creators_reports.last_name ilike '%" + value[0]["full_name"] + "%'")
+        records.includes(:assigned_user, :creator).where("users.first_name || ' ' || users.last_name ilike '%" + value[0]["full_name"] + "%'")
         .where.not(creator_id: nil).references(:users)
       else
         records
@@ -186,7 +188,6 @@ class Api::V1::ReportResource < ApplicationResource
   }
 
   filter :week_code, apply: ->(records, value, _options){
-    Rails.logger.info "VALUE : #{value.first}"
     if not value.empty?
       records.where("date_part('week',reports.created_at) = ?", "#{value.first}")
     else
