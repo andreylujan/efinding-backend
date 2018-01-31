@@ -69,7 +69,6 @@ class Api::V1::ReportResource < ApplicationResource
       if (value[0].is_a? Hash or value[0].is_a? ActionController::Parameters) and value[0]["full_name"].present?
         records.includes(:assigned_user, :creator).where("creators_reports.first_name || ' ' || creators_reports.last_name ilike '%" + value[0]["full_name"] + "%'")
         .where.not(creator_id: nil).references(:users)
-
       else
         records
       end
@@ -168,32 +167,38 @@ class Api::V1::ReportResource < ApplicationResource
   }
 
   filter :delivery_code, apply: ->(records, value, _options){
+    key = '119'
+    subkey = 'value'
     if not value.empty?
-      records.where("reports.delivery_code ILIKE ?", "%#{value.first}%")
+      records = records.where("concat(split_part(reports.dynamic_attributes -> '#{key}' ->> '#{subkey}','-',1),' - W',date_part('week',reports.created_at)) ILIKE ?", "%#{value.first}%")
     else
       records
     end
   }
-
   filter :loto_number, apply: ->(records, value, _options){
+    key = '119'
+    subkey = 'value'
     if not value.empty?
-      records.where("reports.loto_number ILIKE ?", "%#{value.first}%")
+      records.where("split_part(reports.dynamic_attributes -> '#{key}' ->> '#{subkey}','-',1) ILIKE ?", "%#{value.first}%")
     else
       records
     end
   }
 
   filter :week_code, apply: ->(records, value, _options){
+    Rails.logger.info "VALUE : #{value.first}"
     if not value.empty?
-      records.where("reports.week_code ILIKE ?", "%#{value.first}%")
+      records.where("date_part('week',reports.created_at) = ?", "#{value.first}")
     else
       records
     end
   }
 
   filter :delivery_type, apply: ->(records, value, _options){
+    key = '117'
+    subkey = 'items'
     if not value.empty?
-      records.where("reports.delivery_type ILIKE ?", "%#{value.first}%")
+      records.where("reports.dynamic_attributes -> '#{key}' ->> '#{subkey}' ILIKE ?", "%#{value.first}%")
     else
       records
     end

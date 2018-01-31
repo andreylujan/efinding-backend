@@ -73,6 +73,7 @@ class Report < ApplicationRecord
   after_commit :send_email_pausa, on: [:update]
   after_commit :send_task_job_create, on: [ :create ]
   after_commit :send_task_job_update, on: [ :update ]
+  after_commit :check_assigned_user_change, on: [ :update ]
 
   validate :limit_date_cannot_be_in_the_past, on: :create
   validates :assigned_user, presence: true
@@ -116,6 +117,12 @@ class Report < ApplicationRecord
       if assigned_user_id.present?
         self.is_assigned = true
       end
+    end
+  end
+
+  def check_assigned_user_change
+    if self.assigned_user_id_changed?
+      logger.info "User id : #{assigned_user_id}"
     end
   end
 
@@ -494,7 +501,7 @@ class Report < ApplicationRecord
   def delivery_code
     if self.creator.organization_id != nil and self.creator.organization_id == 12
       if self.dynamic_attributes.dig('119', 'value') != nil
-        "#{self.dynamic_attributes.dig('119','value').split(' - ')[0]} - W#{self.created_at.strftime("%U").to_i + 1 }"
+        "#{self.dynamic_attributes.dig('119','value').split(' - ')[0]} - W#{self.created_at.strftime("%W").to_i}"
       else
         "No existe código de entrega"
       end
@@ -513,7 +520,7 @@ class Report < ApplicationRecord
 
   def week_code
     if self.creator.organization_id != nil and self.creator.organization_id == 12
-      self.created_at.strftime("%U").to_i + 1
+      self.created_at.strftime("%W").to_i
     end
   end
 

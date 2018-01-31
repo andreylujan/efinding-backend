@@ -75,7 +75,12 @@ class UserMailer < ApplicationMailer
 		mail(to: @user.email, subject: subject)
 	end
 
-	def report_email()
+	def report_email(report_id, user, subject, message)
+		report = Report.find(inspection_id)
+		@user = user
+		@message = message
+		@url = report.default_pdf
+		mail(to: @user.email, subject: subject)
 	end
 
 end
