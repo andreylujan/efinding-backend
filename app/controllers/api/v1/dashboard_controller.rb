@@ -86,10 +86,10 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
 
     reports = Report.joins(creator: :role)
     .where(roles: { organization_id: current_user.organization_id })
-    .where("reports.created_at >= ? AND reports.created_at <= ?",
-           date.beginning_of_month,
-           date.end_of_month
-           )
+    #.where("reports.created_at >= ? AND reports.created_at <= ?",
+    #       date.beginning_of_month,
+    #       date.end_of_month
+    #       )
 
      reports_by_month = reports.group_by(&:month_criteria).map do |month|
        {
@@ -102,13 +102,18 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
      reports_by_day = reports.where("reports.created_at >= ? AND reports.created_at < ?",
          Time.zone.now.beginning_of_day, Time.zone.now.end_of_day)
 
-     reports_last_fifteen_days = reports.where("reports.created_at >= ? AND reports.created_at < ?",
+    Rails.logger.info "-15 DIAS : #{DateTime.now.days_ago(15).beginning_of_day} - HOY: #{DateTime.now.end_of_day} "
+
+     reports_last_fifteen_days = reports.where("reports.created_at between ? and ?",
          DateTime.now.days_ago(15).beginning_of_day, DateTime.now.end_of_day)
-         .order("reports.created_at ASC")
 
      current_month_user_reports = reports.where("reports.created_at >= ? AND reports.created_at < ?",
          DateTime.now.beginning_of_month, DateTime.now.end_of_month)
-     reports_by_delivery_result = reports.group("dynamic_attributes->'118'->>'value'")
+
+     reports_by_delivery_result = reports.where("reports.created_at >= ? AND reports.created_at <= ?",
+            date.beginning_of_month,
+            date.end_of_month)
+       .group("dynamic_attributes->'118'->>'value'")
        .select("count(reports.id) AS num_reports, dynamic_attributes->'118'->>'value' AS state_report")
        .order("count(reports.id) DESC")
        .map do |group|
