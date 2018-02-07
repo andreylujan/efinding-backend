@@ -94,6 +94,10 @@ class Api::V1::Delivery::OrdersController < ApplicationController
         report.dynamic_attributes["48"] = {
           text: report.scheduled_at.strftime("%d/%m/%Y %H:%M")
         }
+        order_schedule_description = params[:order_schedule_description]
+        report.dynamic_attributes["73"] = {
+          text: order_schedule_description
+        }
       end
       report.dynamic_attributes["47"] = {
         sections: [
