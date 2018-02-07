@@ -7,7 +7,7 @@ set :repo_url, 'git@github.com:andreylujan/efinding-backend.git'
 set :branch, 'master'
 
 set :ssh_options, {
- keys: [ "#{ENV['HOME']}/.ssh/echeckit_production.pem", "./keys/echeckit_production.pem" ],
+ keys: [ "#{ENV['HOME']}/.ssh/echeckit_production.pem"],
  forward_agent: true,
  auth_methods: ["publickey"]
 }
