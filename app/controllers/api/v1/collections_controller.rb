@@ -34,6 +34,7 @@ class Api::V1::CollectionsController < Api::V1::JsonApiController
         }, status: :bad_request
         return
       end
+      Rails.logger.info "Response : #{resources}"
       render json: CsvUploadSerializer.serialize(resources, is_collection: true)
     else
       super
