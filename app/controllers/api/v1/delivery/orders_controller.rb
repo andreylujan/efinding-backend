@@ -88,12 +88,14 @@ class Api::V1::Delivery::OrdersController < ApplicationController
 
       is_scheduled = params[:order_is_scheduled]
       scheduled_at = nil
-      if is_scheduled and params[:order_scheduled_date].present?
-        report.scheduled_at = DateTime.parse(params[:order_scheduled_date])
-        .change(offset: "-0300")
-        report.dynamic_attributes["48"] = {
-          text: report.scheduled_at.strftime("%d/%m/%Y %H:%M")
-        }
+      if is_scheduled
+        if params[:order_scheduled_date].present?
+          report.scheduled_at = DateTime.parse(params[:order_scheduled_date])
+          .change(offset: "-0300")
+          report.dynamic_attributes["48"] = {
+            text: report.scheduled_at.strftime("%d/%m/%Y %H:%M")
+          }
+        end
         order_schedule_description = params[:order_schedule_description]
         report.dynamic_attributes["73"] = {
           text: order_schedule_description
