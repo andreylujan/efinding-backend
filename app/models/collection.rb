@@ -167,10 +167,14 @@ class Collection < ApplicationRecord
         elsif item.previous_changes.any?
           changed = true
         end
-        csv_resource = CsvUpload.new id: item.id, success: success,
+
+        csv_resource = CsvUpload.new id: item.id,
+          row_number: row_number,
+          row_data: row.to_h,
           errors: errors,
-          row_number: row_number, row_data: row.to_h,
-          created: created, changed: changed
+          created: created,
+          changed: changed,
+          success: success
         row_number = row_number + 1
         resources << csv_resource
       end

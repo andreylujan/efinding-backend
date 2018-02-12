@@ -2,8 +2,7 @@
 class CsvUpload
   include ActiveModel::Model
   attr_accessor :id, :row_number, :row_data, :errors,
-    :created, :changed, :changed_attributes, :success,
-    :row_number, :row_data
+    :created, :changed, :success
 
   def meta
     meta_obj = {
@@ -16,9 +15,6 @@ class CsvUpload
       	created: @created,
       	changed: @changed
       })
-      if @changed
-      	meta_obj[:changed_attributes] = []
-      end
     else
       meta_obj[:errors] = @errors
     end
