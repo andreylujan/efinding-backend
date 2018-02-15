@@ -19,16 +19,25 @@ class SendTaskJob < ApplicationJob
     gcm_app_name = ENV["GCM_APP_NAME"]
 
     conn = Faraday.new(:url => ENV["PUSH_ENGINE_HOST"])
+    if report.organization_id == 12
+      text_title = "Reporte enviado"
+      text_body = "Se ha enviado su reporte"
+      text_alert = "Reporte enviado"
+    else
+      text_title = "Tarea asignada"
+      text_body = "Se le ha asignado una tarea"
+      text_alert = "Tarea asignada"
+    end
     params = {
-      alert: "Tarea asignada",
+      alert: text_alert,
       data: {
-        body: "Se le ha asignado una tarea",
-        title: "Tarea asignada",
+        body: text_body,
+        title: text_title,
         report_id: report.id.to_s
       },
       notification_hash: {
-        body: "Se le ha asignado una tarea",
-        title: "Tarea asignada",
+        body: text_body,
+        title: text_title,
         icon: "logo"
       },
       gcm_app_name: gcm_app_name,
@@ -40,7 +49,7 @@ class SendTaskJob < ApplicationJob
     device_tokens = devices.where("device_token is not null").map { |r| r.device_token }
     amazon_devices = devices.where.not(endpoint_arn: nil)
     sns = Aws::SNS::Client.new(region: "us-west-2")
-    message = { GCM: { notification: { title: "Tarea asignada", body: "Se le ha asignado una tarea", icon: "logo" } }.to_json }.to_json
+    message = { GCM: { notification: { title: text_title, body: text_body, icon: "logo" } }.to_json }.to_json
 
     amazon_devices.each do |device|
       begin
