@@ -88,5 +88,5 @@ staging:
 production:
   <<: *default
   database: etodo_production
-  username: etodo
+  username: bild
   password: bild

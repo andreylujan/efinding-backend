@@ -36,6 +36,21 @@ class Collection < ApplicationRecord
     csv_obj
   end
 
+  def to_csv_intralot(file_name=nil)
+    Rails.logger.info "to_csv_intralot"
+    attributes = %w{loto agencia direccion comuna}
+    csv_obj = CSV.generate(headers: true,
+    encoding: "UTF-8", col_sep: '|') do |csv|
+      csv << attributes
+      collection_items.each do |item|
+        Rails.logger.info "Item : #{item}"
+        address = CollectionItem.find_by("code = 'LT#{item.code}'").name
+        Rails.logger.info "Address : #{address}"
+        csv << [item.code, item.name.split('-')[1].strip, address, item.name.split('-')[2].strip]
+      end
+    end
+  end
+
   def from_csv(file_name, current_user)
 
     upload = BatchUpload.create! user: current_user, uploaded_file: file_name,
