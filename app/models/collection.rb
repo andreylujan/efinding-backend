@@ -127,6 +127,9 @@ class Collection < ApplicationRecord
         agency_name = "#{row["loto"]} - #{row["direccion"].gsub("-", ",")} - #{row["comuna"]}"
         Rails.logger.info "ROW : #{agency_name}"
         item.name = agency_name
+        parent_item = CollectionItem.find_by_code!(row["comuna"])
+        item.parent_item = parent_item
+        item.parent_code = parent_item.code
         errors = {}
         begin
           item.save!
@@ -157,9 +160,6 @@ class Collection < ApplicationRecord
         # loto - agencia - comuna
         agency = row["agencia"].gsub("-", ",")
         item.name = agency
-        parent_item = CollectionItem.find_by_code!(row["comuna"])
-        item.parent_item = parent_item
-        item.parent_code = parent_item.code
         errors = {}
         begin
           item.save!
