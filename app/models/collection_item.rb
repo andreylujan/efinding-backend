@@ -28,6 +28,7 @@ class CollectionItem < ApplicationRecord
   # validates :code, presence: true
   validates_uniqueness_of :code, scope: :collection
   before_save :generate_code
+  before_destroy :destroy_agency, prepend: true
   # validates_uniqueness_of :name, scope: :collection
 
 
@@ -40,6 +41,13 @@ class CollectionItem < ApplicationRecord
   def generate_code
     if code.blank?
       self.code = SecureRandom.uuid
+    end
+  end
+
+  def destroy_agency
+    if self.collection_id == 46
+      agency = CollectionItem.find_by("code = 'LT#{self.code}'")
+      agency.destroy
     end
   end
 end

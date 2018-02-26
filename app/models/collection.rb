@@ -37,15 +37,12 @@ class Collection < ApplicationRecord
   end
 
   def to_csv_intralot(file_name=nil)
-    Rails.logger.info "to_csv_intralot"
     attributes = %w{loto agencia direccion comuna}
     csv_obj = CSV.generate(headers: true,
     encoding: "UTF-8", col_sep: '|') do |csv|
       csv << attributes
       collection_items.each do |item|
-        Rails.logger.info "Item : #{item}"
         address = CollectionItem.find_by("code = 'LT#{item.code}'").name
-        Rails.logger.info "Address : #{address}"
         csv << [item.code, item.name.split('-')[1].strip, address, item.name.split('-')[2].strip]
       end
     end
@@ -112,7 +109,6 @@ class Collection < ApplicationRecord
   end
 
   def from_csv_intralot(file_name, current_user)
-    Rails.logger.info "File : #{file_name} - User: #{current_user}"
     upload = BatchUpload.create! user: current_user, uploaded_file: file_name,
       uploaded_resource_type: "#{self.name}"
     require 'csv_utils'
@@ -128,7 +124,7 @@ class Collection < ApplicationRecord
     csv.each do |row|
       CollectionItem.find_or_initialize_by(code: row["loto"], collection_id: self.id).tap do |item|
         # loto - agencia - comuna
-        agency_name = "#{row["loto"]} - #{row["agencia"]} - #{row["comuna"]}"
+        agency_name = "#{row["loto"]} - #{row["direccion"].gsub("-", ",")} - #{row["comuna"]}"
         Rails.logger.info "ROW : #{agency_name}"
         item.name = agency_name
         errors = {}
@@ -157,11 +153,10 @@ class Collection < ApplicationRecord
       end
 
       item_code = "LT#{row["loto"]}"
-      CollectionItem.find_or_initialize_by(code: item_code, collection_id: 48).tap do |item|
+      CollectionItem.find_or_initialize_by(code: item_code, collection_id:  48).tap do |item|
         # loto - agencia - comuna
-        address = row["direccion"]
-        Rails.logger.info "Address : #{address}"
-        item.name = address
+        agency = row["agencia"].gsub("-", ",")
+        item.name = agency
         parent_item = CollectionItem.find_by_code!(row["comuna"])
         item.parent_item = parent_item
         item.parent_code = parent_item.code

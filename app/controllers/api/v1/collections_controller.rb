@@ -16,16 +16,14 @@ class Api::V1::CollectionsController < Api::V1::JsonApiController
       Rails.logger.info "Parametros: #{params}"
       if params.require(:id) == "46"
         render_intralot(params.require(:id))
-        #super
       else
         super
       end
     end
   end
+
   def render_intralot(id)
     collection = Collection.find(id)
-    Rails.logger.info "CollectionJson: #{collection.as_json}"
-    #csv << [item.code, item.name.split('-')[1].strip, address, item.name.split('-')[2].strip]
     collection_items_data = []
     collection.collection_items.each do |item|
       collection_items_data << {type: "collection_items", id:item.id}
@@ -35,7 +33,8 @@ class Api::V1::CollectionsController < Api::V1::JsonApiController
       address = CollectionItem.find_by("code = 'LT#{item.code}'").name
       included_collection_items << {id:item.id ,type: "collection_items",
         attributes: {parent_item_id: nil, collection_id: item.collection_id,
-          name:  "#{item.name.clone.split(/-/).take(2).join('- ').strip} - #{address} - #{item.name.split('-')[2].strip}"}}
+          name: item.name}}
+          #name:  "#{item.name.clone.split(/-/).take(2).join('- ').strip} - #{address} - #{item.name.split('-')[2].strip}"}}
     end
     render json: {
       data:{
@@ -47,9 +46,9 @@ class Api::V1::CollectionsController < Api::V1::JsonApiController
       included: included_collection_items
     }
   end
+
   def update
     if params[:format] == "csv"
-      Rails.logger.info "ID collection : #{params.require(:id)}"
       collection_id = params.require(:id)
       collection = Collection.find(params.require(:id))
       begin
@@ -67,9 +66,7 @@ class Api::V1::CollectionsController < Api::V1::JsonApiController
         }, status: :bad_request
         return
       end
-      Rails.logger.info "Response : #{resources}"
       render json: {data:resources}
-      super
     end
   end
 end
