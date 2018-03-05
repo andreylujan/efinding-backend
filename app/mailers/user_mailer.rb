@@ -32,7 +32,7 @@ class UserMailer < ApplicationMailer
 			@solicitud = report.dynamic_attributes.dig(@d, "value")
 			@mantencion = report.dynamic_attributes.dig("115", "value")
 			@category = report.dynamic_attributes.dig('113', 'value').present? ? @reporte.dynamic_attributes.dig('113', 'value') : "Categoría no seleccionada"
-			@place = reportdynamic_attributes.dig('114', 'value').present? ? @reporte.dynamic_attributes.dig('114', 'value') : "Lugar no seleccionado"
+			@place = report.dynamic_attributes.dig('114', 'value').present? ? @reporte.dynamic_attributes.dig('114', 'value') : "Lugar no seleccionado"
 			if  @solicitud != ""
 				mail(to: 'pruebas.bild@gmail.com, jguerrero80@gmail.com,leslienilu@hotmail.com,lesliepassalacqua@pausaperu.pe, lguanco@bildchile.com, Luisaleon@pausaperu.pe', subject: "PAUSA PERÚ - Se generado una Solicitud de Repuesto",
 					from: "Admin<solutions@ewin.cl>")
@@ -42,7 +42,7 @@ class UserMailer < ApplicationMailer
 			@solicitud = report.dynamic_attributes.dig(@d, "value")
 			@mantencion = report.dynamic_attributes.dig("121", "value")
 			@category = report.dynamic_attributes.dig('101', 'value').present? ? @reporte.dynamic_attributes.dig('113', 'value') : "Categoría no seleccionada"
-			@place = reportdynamic_attributes.dig('102', 'value').present? ? @reporte.dynamic_attributes.dig('114', 'value') : "Lugar no seleccionado"
+			@place = report.dynamic_attributes.dig('102', 'value').present? ? @reporte.dynamic_attributes.dig('114', 'value') : "Lugar no seleccionado"
 			if  @solicitud != ""
 				mail(to: 'pruebas.bild@gmail.com, cristianquilaman@pausachile.cl, carolakrebs@pausachile.cl, jorgeguerrero@pausachile.cl, lguanco@bildchile.com', subject: "PAUSA CHILE - Se generado una Solicitud de Repuesto",
 					from: "Admin<solutions@ewin.cl>")
