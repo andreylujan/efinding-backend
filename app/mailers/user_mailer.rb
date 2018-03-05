@@ -25,16 +25,21 @@ class UserMailer < ApplicationMailer
 
 	def pausa_email(report)
 		@reporte =  report
-		@d = "116"
-		if Integer(report.organization_id) == 11
-			if report.dynamic_attributes.dig(@d, "value") != nil
-				@solicitud = report.dynamic_attributes.dig(@d, "value")
-				if  @solicitud != ""
-					mail(to: 'pruebas.bild@gmail.com, jguerrero80@gmail.com,leslienilu@hotmail.com,lesliepassalacqua@pausaperu.pe, lguanco@bildchile.com, Luisaleon@pausaperu.pe', subject: "PAUSA PERÚ - Se generado una Solicitud de Repuesto",
-						from: "Admin<solutions@ewin.cl>")
-				end
-			else
 
+		case Integer(report.organization_id)
+		when 11
+			@d = "116"
+			@solicitud = report.dynamic_attributes.dig(@d, "value")
+			if  @solicitud != ""
+				mail(to: 'smorales@bildchile.com, pruebas.bild@gmail.com, jguerrero80@gmail.com,leslienilu@hotmail.com,lesliepassalacqua@pausaperu.pe, lguanco@bildchile.com, Luisaleon@pausaperu.pe', subject: "PAUSA PERÚ - Se generado una Solicitud de Repuesto",
+					from: "Admin<solutions@ewin.cl>")
+			end
+		when 8
+			@d = "122"
+			@solicitud = report.dynamic_attributes.dig(@d, "value")
+			if  @solicitud != ""
+				mail(to: 'pruebas.bild@gmail.com, arodriguez@bildchile.com, alagos@bildchile.com, smorales@bildchile.com', subject: "PAUSA CHILE - Se generado una Solicitud de Repuesto",
+					from: "Admin<solutions@ewin.cl>")
 			end
 		end
 		return
