@@ -219,7 +219,7 @@ class Inspection < ApplicationRecord
   end
 
   #state_machine :state, initial: :reports_pending do
-  state_machine :state, initial => :reports_pending do
+  state_machine :state, :initial => :reports_pending do
     Rails.logger.info "state_machine - state : #{state}"
 
     after_transition any => :first_signature_done do |inspection, transition|
