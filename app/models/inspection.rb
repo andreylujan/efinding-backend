@@ -218,19 +218,19 @@ class Inspection < ApplicationRecord
     end
   end
 
-
-
-
-
-  state_machine :state, initial: :reports_pending do
+  #state_machine :state, initial: :reports_pending do
+  state_machine :state, initial => :reports_pending do
+    Rails.logger.info "state_machine - state : #{state}"
 
     after_transition any => :first_signature_done do |inspection, transition|
       inspection.initial_signed_at = DateTime.now
     end
 
-    after_transition any => :first_signature_pending do |inspection, transition|
+    #after_transition any => :first_signature_pending do |inspection, transition|
+    after_transition :on => :create, :first_signature_pending do |inspection, transition|
       users = [ inspection.construction.administrator ]
       users.each do |user|
+        Rails.logger.info "Solicitud de firma : #{user}"
         UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
         .inspection_email(inspection.id, user, "Solicitud de firma - #{inspection.construction.name}",
                           "#{inspection.construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
@@ -243,6 +243,7 @@ class Inspection < ApplicationRecord
       if inspection.initial_signer.present?
         users = inspection.construction.users.select { |u| u.role_id == 12 }
         users.each do |user|
+          Rails.logger.info "Hallazgos pendientes : #{user}"
           UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
           .inspection_email(inspection.id, user, "Hallazgos pendientes de resolución - #{inspection.construction.name}",
                             "#{inspection.initial_signer.name} ha firmado la inspección #{inspection.id} " +
@@ -253,6 +254,7 @@ class Inspection < ApplicationRecord
     end
 
     after_transition any => :final_signature_pending do |inspection, transition|
+      Rails.logger.info "Solicitud de firma final : #{inspection.construction.administrator}"
       UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
       .inspection_email(inspection.id, inspection.construction.administrator,
                         "Solicitud de firma final - #{inspection.construction.name}",
@@ -264,6 +266,9 @@ class Inspection < ApplicationRecord
                         "Aviso de levantamiento - #{inspection.construction.name}",
                         "Se informa que se han cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}. " +
                         "Se ha enviado una solicitud de firma al Administrador de Obra #{inspection.construction.administrator.name}.")
+
+      Rails.logger.info "Aviso de levantamiento : #{inspection.construction.supervisor}"
+
     end
 
     after_transition any => :finished do |inspection, transition|
@@ -272,6 +277,8 @@ class Inspection < ApplicationRecord
       .inspection_email(inspection.id, inspection.construction.supervisor,
                         "Firma final realizada - #{inspection.construction.name}",
                         "#{inspection.construction.administrator.name} ha realizado la firma final para la inspección #{inspection.id} - #{inspection.construction.name}.")
+
+    Rails.logger.info "Firma final realizada : #{inspection.construction.supervisor}"
     end
 
     event :send_for_revision do

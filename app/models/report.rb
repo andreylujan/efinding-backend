@@ -114,7 +114,9 @@ class Report < ApplicationRecord
   end
 
   def send_email_manflas
-    MailerJob.set(wait: 10.seconds, queue: ENV['REPORT_QUEUE'] || "efinding_report").perform_later(self.id.to_s)
+    if creator.organization_id == 3
+      MailerJob.set(wait: 10.seconds, queue: ENV['REPORT_QUEUE'] || "efinding_report").perform_later(self.id.to_s)
+    end
   end
 
   def check_assignment_changes
