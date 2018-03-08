@@ -227,7 +227,7 @@ class Inspection < ApplicationRecord
     end
 
     #after_transition any => :first_signature_pending do |inspection, transition|
-    after_transition :on => :create, :first_signature_pending do |inspection, transition|
+    after_transition :on => :create :first_signature_pending do |inspection, transition|
       users = [ inspection.construction.administrator ]
       users.each do |user|
         Rails.logger.info "Solicitud de firma : #{user}"
