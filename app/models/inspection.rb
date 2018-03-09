@@ -213,13 +213,13 @@ class Inspection < ApplicationRecord
   end
 
   def signature_pending
-    users = [ inspection.construction.administrator ]
+    users = [ construction.administrator ]
     users.each do |user|
       Rails.logger.info "Solicitud de firma : #{user}"
       UserMailer.delay_for(10.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
-      .inspection_email(id, user, "Solicitud de firma - #{inspection.construction.name}",
-                        "#{inspection.construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
-                        "en la obra #{inspection.construction.name}. " +
+      .inspection_email(id, user, "Solicitud de firma - #{construction.name}",
+                        "#{construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
+                        "en la obra #{construction.name}. " +
                         "Para realizar la firma, puedes ingresar a #{ENV['ADMIN_URL']}/#/efinding/inspecciones/lista")
     end
   end
