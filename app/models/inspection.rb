@@ -207,7 +207,7 @@ class Inspection < ApplicationRecord
     if force_random
       update_columns pdf: nil, pdf_uploaded: false
     end
-    InspectionPdfJob.set(wait: 3.seconds, queue: ENV['REPORT_QUEUE'] || 'echeckit_report').perform_later(self.id.to_s)
+    InspectionPdfJob.set(wait: 5.seconds, queue: ENV['REPORT_QUEUE'] || 'echeckit_report').perform_later(self.id.to_s)
   end
 
   def check_state
@@ -225,7 +225,8 @@ class Inspection < ApplicationRecord
       inspection.initial_signed_at = DateTime.now
     end
 
-    after_transition any => :first_signature_pending do |inspection, transition|
+    #after_transition any => :first_signature_pending do |inspection, transition|
+    after_transition any => :reports_pending do |inspection, transition|
       users = [ inspection.construction.administrator ]
       users.each do |user|
         Rails.logger.info "Solicitud de firma : #{user}"

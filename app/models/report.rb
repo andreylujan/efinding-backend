@@ -472,7 +472,7 @@ class Report < ApplicationRecord
       if force_random
         update_columns pdf: nil, pdf_uploaded: false
       end
-      UploadPdfJob.set(wait: 3.seconds, queue: ENV['REPORT_QUEUE'] || 'echeckit_report').perform_later(self.id.to_s)
+      UploadPdfJob.set(wait: 2.seconds, queue: ENV['REPORT_QUEUE'] || 'echeckit_report').perform_later(self.id.to_s)
     end
   end
 
