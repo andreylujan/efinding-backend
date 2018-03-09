@@ -239,17 +239,17 @@ class Inspection < ApplicationRecord
       inspection.initial_signed_at = DateTime.now
     end
 
-    #after_transition any => :first_signature_pending do |inspection, transition|
-    #  users = [ inspection.construction.administrator ]
-    #  users.each do |user|
-    #    Rails.logger.info "Solicitud de firma : #{user}"
-    #    UserMailer.delay_for(10.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
-    #    .inspection_email(inspection.id, user, "Solicitud de firma - #{inspection.construction.name}",
-    #                      "#{inspection.construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
-    #                      "en la obra #{inspection.construction.name}. " +
-    #                      "Para realizar la firma, puedes ingresar a #{ENV['ADMIN_URL']}/#/efinding/inspecciones/lista")
-    #  end
-    #end
+    after_transition any => :first_signature_pending do |inspection, transition|
+      users = [ inspection.construction.administrator ]
+      users.each do |user|
+      Rails.logger.info "Solicitud de firma : #{user}"
+        UserMailer.delay_for(10.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+        .inspection_email(inspection.id, user, "Solicitud de firma - #{inspection.construction.name}",
+                          "#{inspection.construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
+                          "en la obra #{inspection.construction.name}. " +
+                          "Para realizar la firma, puedes ingresar a #{ENV['ADMIN_URL']}/#/efinding/inspecciones/lista")
+      end
+    end
 
     after_transition any => :first_signature_done do |inspection, transition|
       Rails.logger.info "Hallazgos pendientes : #{user}"
