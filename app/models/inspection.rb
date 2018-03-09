@@ -39,9 +39,9 @@ class Inspection < ApplicationRecord
   validates :state, presence: true
   before_create :cache_data
 
-  after_commit :signature_pending, on: [ :create ]
-
   mount_uploader :pdf, PdfUploader
+
+  after_commit :signature_pending, on: [ :create ]
 
   acts_as_xlsx columns: [
     :id,
@@ -223,7 +223,7 @@ class Inspection < ApplicationRecord
   def signature_pending
     users = [ inspection.construction.administrator ]
     users.each do |user|
-      Rails.logger.info "Solicitud de firma : #{user}"
+      Rails.logger.info "signature_pending : #{user}"
       UserMailer.delay_for(10.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
       .inspection_email(inspection.id, user, "Solicitud de firma - #{inspection.construction.name}",
                         "#{inspection.construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
