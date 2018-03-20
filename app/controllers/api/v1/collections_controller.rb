@@ -28,6 +28,8 @@ class Api::V1::CollectionsController < Api::V1::JsonApiController
     collection.collection_items.each do |item|
       collection_items_data << {type: "collection_items", id:item.id}
     end
+
+  
     included_collection_items = []
     collection.collection_items.each do |item|
       address = CollectionItem.find_by("code = 'LT#{item.code}'").name
