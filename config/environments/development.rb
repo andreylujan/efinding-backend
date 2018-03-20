@@ -39,6 +39,7 @@ Rails.application.configure do
   config.active_record.migration_error = :page_load
 
 
+  config.active_record.logger = nil
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 

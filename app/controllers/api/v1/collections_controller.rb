@@ -6,7 +6,7 @@ class Api::V1::CollectionsController < Api::V1::JsonApiController
     if params[:format] == "csv"
       collection = Collection.find(params.require(:id))
       if params.require(:id) == "46"
-        send_data collection.to_csv_intralot, filename: "#{collection.name.parameterize.underscore}.csv",
+         send_data collection.to_csv_intralot, filename: "#{collection.name.parameterize.underscore}.csv",
           disposition: "attachment", type: "text/csv"
       else
         send_data collection.to_csv, filename: "#{collection.name.parameterize.underscore}.csv",

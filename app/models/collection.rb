@@ -37,13 +37,17 @@ class Collection < ApplicationRecord
   end
 
   def to_csv_intralot(file_name=nil)
-    attributes = %w{loto agencia direccion comuna}
+    attributes = %w{loto agencia direccion comuna eliminado}
     csv_obj = CSV.generate(headers: true,
     encoding: "UTF-8", col_sep: '|') do |csv|
       csv << attributes
       collection_items.each do |item|
         address = CollectionItem.find_by("code = 'LT#{item.code}'").name
-        csv << [item.code, item.name.split('-')[1].strip, address, item.name.split('-')[2].strip]
+        if item.deleted_at != nil 
+          csv << [item.code, item.name.split('-')[1].strip, address, item.name.split('-')[2].strip, "X"]
+        else
+          csv << [item.code, item.name.split('-')[1].strip, address, item.name.split('-')[2].strip]
+        end
       end
     end
   end
@@ -84,6 +88,7 @@ class Collection < ApplicationRecord
         created = false
         changed = false
         success = true
+
         if not errors.empty?
           success = false
         elsif item.previous_changes[:id].present?
@@ -125,11 +130,19 @@ class Collection < ApplicationRecord
       CollectionItem.find_or_initialize_by(code: row["loto"], collection_id: self.id).tap do |item|
         # loto - agencia - comuna
         agency_name = "#{row["loto"]} - #{row["direccion"].gsub("-", ",")} - #{row["comuna"]}"
+
         Rails.logger.info "ROW : #{agency_name}"
+        
         item.name = agency_name
         parent_item = CollectionItem.find_by_code!(row["comuna"])
         item.parent_item = parent_item
         item.parent_code = parent_item.code
+        if row["eliminado"] ==  "X"
+          item.deleted_at = Time.now
+        else 
+          item.deleted_at = nil
+        end
+        
         errors = {}
         begin
           item.save!
