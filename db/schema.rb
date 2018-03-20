@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170920190708) do
+ActiveRecord::Schema.define(version: 20180320181857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -113,6 +113,7 @@ ActiveRecord::Schema.define(version: 20170920190708) do
     t.integer  "position"
     t.integer  "resource_owner_id"
     t.text     "resource_owner_type"
+    t.datetime "deleted_at"
     t.index ["collection_id", "code"], name: "index_collection_items_on_collection_id_and_code", unique: true, using: :btree
     t.index ["collection_id"], name: "index_collection_items_on_collection_id", using: :btree
     t.index ["name"], name: "index_collection_items_on_name", using: :btree
