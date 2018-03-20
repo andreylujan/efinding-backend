@@ -100,12 +100,23 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
   end
 
   def reports_by_month
+    rate_period = DateTime.now
+    if period_filter = params.dig(:filter, :period)
+      date_str = period_filter.split("/")
+      year = date_str[1].to_i
+      month = date_str[0].to_i
+      rate_period = Date.new(year, month)
+      Rails.logger.info "Rate_period: #{rate_period}"
+    end
+
     data = []
     months = [
-      DateTime.now.beginning_of_month - 3.months,
-      DateTime.now.beginning_of_month - 2.months,
-      DateTime.now.beginning_of_month - 1.month
+      rate_period.beginning_of_month - 3.months,
+      rate_period.beginning_of_month - 2.months,
+      rate_period.beginning_of_month - 1.month
     ]
+
+    Rails.logger.info "months: #{months}"
     months.each do |month|
       indexes_by_construction = filtered_reports.joins(inspection: { construction: :accident_rates })
       .group("constructions.id").select("constructions.name as construction_name, " +
@@ -163,7 +174,7 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
   def resolved_reports
     filtered_reports.where("reports.state = ?", "resolved")
   end
-  
+
   def porcentaje_cumplimiento
     resolved = resolved_reports
     internal = resolved.where("dynamic_attributes->'68'->>'id' = ?", "777")
@@ -321,7 +332,7 @@ class Api::V1::Pitagora::DashboardsController < Api::V1::JsonApiController
         }
 
       end
-      
+
       month_rate = AccidentRate.find_by_construction_id_and_rate_period(params.dig(:filter, :construction_id), rate_period)
       global_data = MonthlyGlobalData.find_by(organization: current_user.organization, month_date: rate_period)
 
