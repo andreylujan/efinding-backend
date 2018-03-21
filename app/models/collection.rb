@@ -41,7 +41,7 @@ class Collection < ApplicationRecord
     csv_obj = CSV.generate(headers: true,
     encoding: "UTF-8", col_sep: '|') do |csv|
       csv << attributes
-      collection_items.each do |item|
+      collection_items.where(:deleted_at => nil).each do |item|
         address = CollectionItem.find_by("code = 'LT#{item.code}'").name
         csv << [item.code, item.name.split('-')[1].strip, address, item.name.split('-')[2].strip]
       end

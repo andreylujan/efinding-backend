@@ -13,7 +13,7 @@ class Api::V1::CollectionsController < Api::V1::JsonApiController
           disposition: "attachment", type: "text/csv"
       end
     else
-      Rails.logger.info "Parametros: #{params}"
+      Rails.logger.info "Parametros intralot: #{params}"
       if params.require(:id) == "46"
         render_intralot(params.require(:id))
       else
@@ -25,17 +25,18 @@ class Api::V1::CollectionsController < Api::V1::JsonApiController
   def render_intralot(id)
     collection = Collection.find(id)
     collection_items_data = []
-    collection.collection_items.each do |item|
-      collection_items_data << {type: "collection_items", id:item.id}
+    collection.collection_items.where(:deleted_at => nil).each do |item|
+        collection_items_data << {type: "collection_items", id:item.id}
     end
 
   
     included_collection_items = []
-    collection.collection_items.each do |item|
-      address = CollectionItem.find_by("code = 'LT#{item.code}'").name
-      included_collection_items << {id:item.id ,type: "collection_items",
-        attributes: {parent_item_id: nil, collection_id: item.collection_id,
-          name: item.name}}
+    collection.collection_items.where(:deleted_at => nil).each do |item|
+        address = CollectionItem.find_by("code = 'LT#{item.code}'").name
+        included_collection_items << {id:item.id ,type: "collection_items",
+          attributes: {parent_item_id: nil, collection_id: item.collection_id,
+            name: item.name}}
+      
           #name:  "#{item.name.clone.split(/-/).take(2).join('- ').strip} - #{address} - #{item.name.split('-')[2].strip}"}}
     end
     render json: {
