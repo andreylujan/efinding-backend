@@ -50,12 +50,20 @@ class Api::V1::CollectionsController < Api::V1::JsonApiController
   end
 
   def update
+    
     if params[:format] == "csv"
       collection_id = params.require(:id)
       collection = Collection.find(params.require(:id))
       begin
         if collection_id == "46"
-          resources = collection.from_csv_intralot(params.require(:csv), current_user)
+          Rails.logger.info "Parametros: #{params["delete"]}"
+          if params["delete"] == "true"
+            Rails.logger.info "ELIMINACION +++++++++++++++++++++++++++++++++++"
+            resources = collection.from_csv_intralot_delete(params.require(:csv), current_user)
+          else
+            Rails.logger.info "AÑADE +++++++++++++++++++++++++++++++++++"
+            resources = collection.from_csv_intralot(params.require(:csv), current_user)
+          end
         else
           resources = collection.from_csv(params.require(:csv), current_user)
         end
