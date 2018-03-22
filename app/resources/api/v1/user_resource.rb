@@ -3,7 +3,7 @@ class Api::V1::UserResource < ApplicationResource
   attributes :rut, :first_name, :last_name, :phone_number,
     :password, :password_confirmation, :email,
     :image, :role_name, :full_name, :address,
-    :role_type
+    :role_type, :constructions
 
   add_foreign_keys :role_id
 

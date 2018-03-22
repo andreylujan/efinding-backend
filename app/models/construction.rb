@@ -94,9 +94,6 @@ class Construction < ApplicationRecord
       construction = Construction.find_by_code(row["code"])
 
       if construction.present?
-
-        
-
         new_personnel = []
         item = ConstructionPersonnel.find_or_initialize_by(construction_id: construction.id,
           personnel_type_id: row["personnel_type_id"]).tap do |cp|
@@ -109,8 +106,6 @@ class Construction < ApplicationRecord
         rescue => e
           errors = item.errors.as_json
         end
-
-
 
         created = false
         changed = false
@@ -139,7 +134,7 @@ class Construction < ApplicationRecord
       end
       resources << csv_resource
     end
-    
+
     ConstructionPersonnel.where.not(id: ids).destroy_all
     resources
   end

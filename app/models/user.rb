@@ -122,4 +122,5 @@ class User < ApplicationRecord
     self.save validate: false
     token
   end
+
 end

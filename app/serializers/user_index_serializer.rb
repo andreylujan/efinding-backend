@@ -25,7 +25,7 @@
 #
 
 class UserIndexSerializer < ActiveModel::Serializer
-  attributes :email, :first_name, :last_name, :role_name, :role_id
+  attributes :email, :first_name, :last_name, :role_name, :role_id, :constructions
 
     def role_name
     	object.role.name
