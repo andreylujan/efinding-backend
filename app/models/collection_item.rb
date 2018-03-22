@@ -17,6 +17,7 @@
 #
 
 class CollectionItem < ApplicationRecord
+  acts_as_paranoid
   belongs_to :collection
   acts_as_list scope: :collection
   belongs_to :parent_item, class_name: :CollectionItem,

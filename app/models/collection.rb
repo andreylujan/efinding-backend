@@ -123,11 +123,11 @@ class Collection < ApplicationRecord
       raise exception.message
     end
     csv.each do |row|
-      CollectionItem.find_or_initialize_by(code: row["loto"], collection_id: self.id).tap do |item|
+      CollectionItem.with_deleted.find_or_initialize_by(code: row["loto"], collection_id: self.id).tap do |item|
         # loto - agencia - comuna
         agency_name = "#{row["loto"]} - #{row["direccion"].gsub("-", ",")} - #{row["comuna"]}"
 
-        # Rails.logger.info "ROW : #{agency_name}"
+         Rails.logger.info "ADD ROW : #{agency_name}"
         
         item.name = agency_name
         parent_item = CollectionItem.find_by_code!(row["comuna"])
@@ -165,7 +165,7 @@ class Collection < ApplicationRecord
       end
 
       item_code = "LT#{row["loto"]}"
-      CollectionItem.find_or_initialize_by(code: item_code, collection_id:  48).tap do |item|
+      CollectionItem.with_deleted.find_or_initialize_by(code: item_code, collection_id:  48).tap do |item|
         # loto - agencia - comuna
         agency = row["agencia"].gsub("-", ",")
         item.name = agency
@@ -215,7 +215,7 @@ class Collection < ApplicationRecord
       raise exception.message
     end
     csv.each do |row|
-      CollectionItem.find_or_initialize_by(code: row["loto"], collection_id: self.id).tap do |item|
+      CollectionItem.with_deleted.find_or_initialize_by(code: row["loto"], collection_id: self.id).tap do |item|
         # loto - agencia - comuna
         agency_name = "#{row["loto"]} - #{row["direccion"].gsub("-", ",")} - #{row["comuna"]}"
 
@@ -257,7 +257,7 @@ class Collection < ApplicationRecord
       end
 
       item_code = "LT#{row["loto"]}"
-      CollectionItem.find_or_initialize_by(code: item_code, collection_id:  48).tap do |item|
+      CollectionItem.with_deleted.find_or_initialize_by(code: item_code, collection_id:  48).tap do |item|
         # loto - agencia - comuna
         agency = row["agencia"].gsub("-", ",")
         item.name = agency
