@@ -127,18 +127,35 @@ class Collection < ApplicationRecord
         # loto - agencia - comuna
         agency_name = "#{row["loto"]} - #{row["direccion"].gsub("-", ",")} - #{row["comuna"]}"
 
-         Rails.logger.info "ADD ROW : #{agency_name}"
-        
+        Rails.logger.info "ADD ROW : #{agency_name}"
+
         item.name = agency_name
-        parent_item = CollectionItem.find_by_code!(row["comuna"])
+
+        comuna = self.normalize(row["comuna"])
+        Rails.logger.info "COMUNA: #{comuna}"
+        
+
+        begin 
+          parent_item = CollectionItem.find_by_code!(comuna)
+        rescue => e 
+          Rails.logger.info "No existe la comuna"
+          errors = []
+          errors << Hash["status" => "", 
+          "detail" => "La agencia #{agency_name}, tiene una comuna que no existe en la base de datos, verifique el csv y vuelva a subir"]
+          c = Hash[
+            "e" => true,
+            "errors" => errors,
+            "created" =>false,
+            "changed" => false,
+            "success" => false
+          ]
+          Rails.logger.info "No existe la comuna #{c}"
+          return c
+        end
         item.parent_item = parent_item
         item.parent_code = parent_item.code
-        # if row["eliminado"] ==  "X"
-        #   item.deleted_at = Time.now
-        # else 
-        #   
-        # end
         item.deleted_at = nil
+
         errors = {}
         begin
           item.save!
@@ -200,6 +217,13 @@ class Collection < ApplicationRecord
     end
     resources
   end
+  
+  def normalize(txt)
+    campo = txt.upcase.tr(
+      "ÀÁÂÃÄÅàáâãäåĀāĂăĄąÇçĆćĈĉĊċČčÐðĎďĐđÈÉÊËèéêëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħÌÍÎÏìíîïĨĩĪīĬĭĮįİıĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓÔÕÖØòóôõöøŌōŎŏŐőŔŕŖŗŘřŚśŜŝŞşŠšſŢţŤťŦŧÙÚÛÜùúûüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽž",
+      "AAAAAAaaaaaaAaAaAaCcCcCcCcCcDdDdDdEEEEeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIiiiiIiIiIiIiIiJjKkkLlLlLlLlLlÑñNnNnNnnNnOOOOOOooooooOoOoOoRrRrRrSsSsSsSssTtTtTtUUUUuuuuUuUuUuUuUuUuWwYyyYyYZzZzZz")
+    campo
+  end
 
   def from_csv_intralot_delete(file_name, current_user)
     upload = BatchUpload.create! user: current_user, uploaded_file: file_name,
@@ -220,16 +244,6 @@ class Collection < ApplicationRecord
         agency_name = "#{row["loto"]} - #{row["direccion"].gsub("-", ",")} - #{row["comuna"]}"
 
         Rails.logger.info "ROW : #{agency_name}"
-        
-        # item.name = agency_name
-        # parent_item = CollectionItem.find_by_code!(row["comuna"])
-        # item.parent_item = parent_item
-        # item.parent_code = parent_item.code
-        # if row["eliminado"] ==  "X"
-        #   item.deleted_at = Time.now
-        # else 
-        #   item.deleted_at = nil
-        # end
         item.deleted_at = Time.now
         errors = {}
         begin

@@ -7,6 +7,7 @@ class Api::V1::CollectionItemResource < ApplicationResource
   has_one :resource_owner, polymorphic: true
 
   def self.records(options = {})
+    Rails.logger.info "hellow"
     context = options[:context]
     current_user = context[:current_user]
     CollectionItem.joins(:collection)
