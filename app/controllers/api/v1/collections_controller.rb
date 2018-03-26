@@ -62,10 +62,14 @@ class Api::V1::CollectionsController < Api::V1::JsonApiController
             resources = collection.from_csv_intralot_delete(params.require(:csv), current_user)
           else
             resources = collection.from_csv_intralot(params.require(:csv), current_user)
-            if resources["e"] == true 
-              render json: resources, status: 400
-              return 
+            Rails.logger.info resources.class
+            if resources.class != Array
+              if resources["e"] == true 
+                render json: resources, status: 400
+                return 
+              end
             end
+            
           end
         else
           resources = collection.from_csv(params.require(:csv), current_user)

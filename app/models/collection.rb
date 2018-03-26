@@ -123,6 +123,10 @@ class Collection < ApplicationRecord
       raise exception.message
     end
     csv.each do |row|
+      if row.key?("loto") === false
+        Rails.logger.info "hay un salto de linea adicional"
+        return resources
+      end
       CollectionItem.with_deleted.find_or_initialize_by(code: row["loto"], collection_id: self.id).tap do |item|
         # loto - agencia - comuna
         agency_name = "#{row["loto"]} - #{row["direccion"].gsub("-", ",")} - #{row["comuna"]}"
