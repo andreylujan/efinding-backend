@@ -235,7 +235,7 @@ class Inspection < ApplicationRecord
     after_transition any => :first_signature_pending do |inspection, transition|
       users = [ inspection.construction.administrator ]
       users.each do |user|
-        UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'etodo_email')
+        UserSendGridMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'etodo_email')
         .inspection_email(inspection.id, user, "Solicitud de firma - #{inspection.construction.name}",
                           "#{inspection.construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
                           "en la obra #{inspection.construction.name}. " +
@@ -244,13 +244,13 @@ class Inspection < ApplicationRecord
     end
 
     after_transition any => :final_signature_pending do |inspection, transition|
-      UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'etodo_email')
+      UserSendGridMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'etodo_email')
       .inspection_email(inspection.id, inspection.construction.administrator,
                         "Solicitud de firma final - #{inspection.construction.name}",
                         "#{inspection.construction.expert.name} ha cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}. " +
                         "Para realizar la firma final, puedes ingresar a http://50.16.161.152/efinding/admin/#/efinding/inspecciones/lista")
 
-      UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'etodo_email')
+      UserSendGridMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'etodo_email')
       .inspection_email(inspection.id, inspection.construction.supervisor,
                         "Aviso de levantamiento - #{inspection.construction.name}",
                         "Se informa que #{inspection.construction.expert.name} ha cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}. " +
@@ -259,7 +259,7 @@ class Inspection < ApplicationRecord
 
     after_transition any => :finished do |inspection, transition|
       inspection.final_signed_at = DateTime.now
-      UserMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'etodo_email')
+      UserSendGridMailer.delay_for(8.seconds, queue: ENV['EMAIL_QUEUE'] || 'etodo_email')
       .inspection_email(inspection.id, inspection.construction.supervisor,
                         "Firma final realizada - #{inspection.construction.name}",
                         "#{inspection.construction.administrator.name} ha realizado la firma final para la inspección #{inspection.id} - #{inspection.construction.name}.")

@@ -28,7 +28,7 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, 
+  devise :database_authenticatable,
     :recoverable, :validatable
 
   validates :email, uniqueness: true, presence: true
@@ -72,13 +72,13 @@ class User < ApplicationRecord
 
   def send_confirmation_email
     unless @disable_emails
-      UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'etodo_email').confirmation_email(self)
+      UserSendGridMailer.confirmation_email(self).deliver
     end
   end
 
   def send_reset_password_instructions
     token = set_reset_password_token
-    UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'etodo_email').reset_password_email(self)
+    UserSendGridMailer.reset_password_email(self).deliver
   end
 
   def full_name

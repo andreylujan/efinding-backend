@@ -10,6 +10,6 @@ class MailerJob < ApplicationJob
     end
     report = Report.find(report_id)
     p "report MailerJOB"
-    UserMailer.pausa_email(report).deliver
+    UserSendGridMailer.pausa_email(report).deliver
   end
 end
