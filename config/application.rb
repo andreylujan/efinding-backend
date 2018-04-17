@@ -36,7 +36,7 @@ module Efinding
     config.autoload_paths += Dir[Rails.root.join('lib')]
 
     config.active_job.queue_adapter = :sidekiq
-    
+
     # ActiveModelSerializers.config.adapter = :json_api
     # ActiveModelSerializers.config.key_transform = :underscore
     config.middleware.insert_before 0, :"Rack::Cors" do
@@ -49,13 +49,13 @@ module Efinding
     config.action_mailer.delivery_method = :smtp
 
     config.action_mailer.smtp_settings = {
-      :address        => 'smtp.office365.com',
-        :port           => '587',
-        :authentication => :login,
-        :user_name      => ENV['EMAIL_USERNAME'],
-        :password       => ENV['EMAIL_PASSWORD'],
-        :domain         => 'ewin.cl',
-        :enable_starttls_auto => true
+      :user_name => ENV["SENDGRID_USER"],
+      :password => ENV["SENDGRID_PASSWORD"],
+      :domain => ENV["SENDGRID_DOMAIN"],
+      :address => ENV["SENDGRID_ADDRESS"],
+      :port => ENV["SENDGRID_PORT"],
+      :authentication => :plain,
+      :enable_starttls_auto => true
     }
 
   end

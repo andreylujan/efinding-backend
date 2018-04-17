@@ -73,12 +73,12 @@ class User < ApplicationRecord
   end
 
   def send_confirmation_email
-    UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email').confirmation_email(self)
+    UserSendGridMailer.confirmation_email(self).deliver
   end
 
   def send_reset_password_instructions
     token = set_reset_password_token
-    UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email').reset_password_email(self)
+    UserSendGridMailer.reset_password_email(self).deliver
   end
 
   def full_name

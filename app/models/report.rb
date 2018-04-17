@@ -102,7 +102,7 @@ class Report < ApplicationRecord
 
   def send_email
     if self.assigned_user.present? and self.inspection.nil?
-      UserMailer.delay_for(5.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+      UserSendGridMailer.delay_for(5.seconds, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
       .report_email(self.id, self.assigned_user,
                     "Tarea asignada",
                     "#{creator.name} ha generado una tarea para tu área.")
@@ -322,7 +322,7 @@ class Report < ApplicationRecord
       self.report_type = self.creator.organization.report_types.first
     end
   end
-  
+
   def assigned_user_name
     if assigned_user.present?
       assigned_user.name
@@ -330,7 +330,7 @@ class Report < ApplicationRecord
       creator.name
     end
   end
-  
+
   def default_values
     if self.pdf_uploaded.nil?
       self.pdf_uploaded = false
@@ -341,13 +341,13 @@ class Report < ApplicationRecord
     true
   end
 
-  
+
   def send_task_job
     if self.assigned_user.present?
       SendTaskJob.set(wait: 1.second).perform_later(self.id.to_s)
     end
   end
-  
+
   def location_attributes(location)
     {
       longitude: location.lonlat.x,
@@ -360,14 +360,14 @@ class Report < ApplicationRecord
   end
 
   def initial_location_attributes
-    if initial_location.present?      
-      location_attributes(initial_location)      
+    if initial_location.present?
+      location_attributes(initial_location)
     end
   end
 
   def final_location_attributes
-    if final_location.present?      
-      location_attributes(final_location)      
+    if final_location.present?
+      location_attributes(final_location)
     end
   end
 
