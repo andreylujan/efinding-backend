@@ -1,4 +1,5 @@
 class UserSendGridMailer < ApplicationMailer
+	default from: 'eFinding Admin<solutions@ewin.cl>'
 
 	def invite_email(invitation)
 		@invitation = invitation
@@ -72,35 +73,23 @@ class UserSendGridMailer < ApplicationMailer
 
 	def reset_password_email(user)
     @user = user
-    @from = 'eFinding Admin<solutions@ewin.cl>'
-    if @user.organization.echeckit?
-      @from = 'eCheckit Admin<solutions@ewin.cl>'
-    end
-		mail(to: @user.email, subject: 'Recuperación de contraseña', from: @from)
+		mail(to: @user.email, subject: 'Recuperación de contraseña')
 	end
 
 	def inspection_email(inspection_id, user, subject, message)
 		inspection = Inspection.find(inspection_id)
 		@user = user
-    @from = 'eFinding Admin<solutions@ewin.cl>'
-    if @user.organization.echeckit?
-      @from = 'eCheckit Admin<solutions@ewin.cl>'
-    end
 		@message = message
 		@url = inspection.pdf_url
-		mail(to: @user.email, subject: subject, from: @from)
+		mail(to: @user.email, subject: subject)
 	end
 
 	def report_email(report_id, user, subject, message)
 		report = Report.find(inspection_id)
 		@user = user
-    @from = 'eFinding Admin<solutions@ewin.cl>'
-    if @user.organization.echeckit?
-      @from = 'eCheckit Admin<solutions@ewin.cl>'
-    end
 		@message = message
 		@url = report.default_pdf
-		mail(to: @user.email, subject: subject, from: @from)
+		mail(to: @user.email, subject: subject)
 	end
 
 end
