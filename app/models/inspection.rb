@@ -216,7 +216,7 @@ class Inspection < ApplicationRecord
     users = [ construction.administrator ]
     users.each do |user|
       Rails.logger.info "Solicitud de firma : #{user}"
-      UserMailer.delay_for(5.minutes, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+      UserSendGridMailer.delay_for(5.minutes, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
       .inspection_email(id, user, "Solicitud de firma - #{construction.name}",
                         "#{construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
                         "en la obra #{construction.name}. " +
@@ -256,7 +256,7 @@ class Inspection < ApplicationRecord
         users = inspection.construction.users.select { |u| u.role_id == 12 }
         users.each do |user|
           Rails.logger.info "Hallazgos pendientes : #{user}"
-          UserMailer.delay_for(5.minutes, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+          UserSendGridMailer.delay_for(5.minutes, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
           .inspection_email(inspection.id, user, "Hallazgos pendientes de resolución - #{inspection.construction.name}",
                             "#{inspection.initial_signer.name} ha firmado la inspección #{inspection.id} " +
                             "en la obra #{inspection.construction.name}. " +
@@ -267,13 +267,13 @@ class Inspection < ApplicationRecord
 
     after_transition any => :final_signature_pending do |inspection, transition|
       Rails.logger.info "Solicitud de firma final : #{inspection.construction.administrator}"
-      UserMailer.delay_for(5.minutes, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+      UserSendGridMailer.delay_for(5.minutes, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
       .inspection_email(inspection.id, inspection.construction.administrator,
                         "Solicitud de firma final - #{inspection.construction.name}",
                         "Se han cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}. " +
                         "Para realizar la firma final, puedes ingresar a #{ENV['ADMIN_URL']}/#/efinding/inspecciones/lista")
 
-      UserMailer.delay_for(5.minutes, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+      UserSendGridMailer.delay_for(5.minutes, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
       .inspection_email(inspection.id, inspection.construction.supervisor,
                         "Aviso de levantamiento - #{inspection.construction.name}",
                         "Se informa que se han cerrado los hallazgos para la inspección #{inspection.id} - #{inspection.construction.name}. " +
@@ -285,7 +285,7 @@ class Inspection < ApplicationRecord
 
     after_transition any => :finished do |inspection, transition|
       inspection.final_signed_at = DateTime.now
-      UserMailer.delay_for(5.minutes, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
+      UserSendGridMailer.delay_for(5.minutes, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
       .inspection_email(inspection.id, inspection.construction.supervisor,
                         "Firma final realizada - #{inspection.construction.name}",
                         "#{inspection.construction.administrator.name} ha realizado la firma final para la inspección #{inspection.id} - #{inspection.construction.name}.")

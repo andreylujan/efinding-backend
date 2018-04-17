@@ -11,6 +11,6 @@ class MailerJob < ApplicationJob
     report = Report.find(report_id)
     user = report.assigned_user
     p "report MailerJOB"
-    UserMailer.manflas_email(report_id, user).deliver
+    UserSendGridMailer.manflas_email(report_id, user).deliver
   end
 end

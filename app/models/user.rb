@@ -30,7 +30,7 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, 
+  devise :database_authenticatable,
     :recoverable, :validatable
 
   validates :email, uniqueness: true, presence: true
@@ -54,16 +54,16 @@ class User < ApplicationRecord
   has_and_belongs_to_many :checklist_reports
   # validate :correct_rut
   before_save :format_rut
-  scope :experts, -> { joins("INNER JOIN roles role_experts ON role_experts.id = users.role_id").where("role_experts.role_type = ?", 
+  scope :experts, -> { joins("INNER JOIN roles role_experts ON role_experts.id = users.role_id").where("role_experts.role_type = ?",
       Role.role_types["expert"]) }
-  scope :inspectors, -> { joins("INNER JOIN roles role_inspectors ON role_inspectors.id = users.role_id").where("role_inspectors.role_type = ?", 
+  scope :inspectors, -> { joins("INNER JOIN roles role_inspectors ON role_inspectors.id = users.role_id").where("role_inspectors.role_type = ?",
       Role.role_types["inspector"]) }
 
   has_many :created_inspections, class_name: :Inspection, foreign_key: :creator_id, dependent: :destroy
   has_many :initially_signed_inspections, class_name: :Inspection, foreign_key: :initial_signer_id, dependent: :destroy
   has_many :finally_signed_inspections, class_name: :Inspection, foreign_key: :final_signer_id, dependent: :destroy
   has_many :construction_users, dependent: :destroy
-  
+
   def correct_rut
     if rut.present?
       unless RUT::validar(self.rut)
@@ -79,12 +79,12 @@ class User < ApplicationRecord
   end
 
   def send_confirmation_email
-    UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email').confirmation_email(self)
+    UserSendGridMailer.confirmation_email(self).deliver
   end
 
   def send_reset_password_instructions
     token = set_reset_password_token
-    UserMailer.delay(queue: ENV['EMAIL_QUEUE'] || 'echeckit_email').reset_password_email(self)
+    UserSendGridMailer.reset_password_email(self).deliver
   end
 
   def full_name
