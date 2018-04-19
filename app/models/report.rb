@@ -454,15 +454,14 @@ class Report < ApplicationRecord
 
   def send_task_job_create
     if self.assigned_user.present?
-      SendTaskJob.set(queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
+      SendTaskJob.set(wait: 1.seconds, queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
     end
   end
 
 
   def send_task_job_update
     if changes["assigned_user_id"].present? and self.assigned_user.present?
-      SendTaskJob.set(queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
-      Rails.logger.info "push : #{changes["assigned_user_id"]}"
+      SendTaskJob.set(wait: 1.seconds, queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
     end
   end
 
@@ -501,7 +500,7 @@ class Report < ApplicationRecord
       if force_random
         update_columns pdf: nil, pdf_uploaded: false
       end
-      UploadPdfJob.set(queue: ENV['REPORT_QUEUE'] || 'etodo_report').perform_later(self.id.to_s)
+      UploadPdfJob.set(wait: 1.seconds, queue: ENV['REPORT_QUEUE'] || 'etodo_report').perform_later(self.id.to_s)
     end
   end
 
