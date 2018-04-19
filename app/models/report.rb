@@ -73,6 +73,7 @@ class Report < ApplicationRecord
   after_commit :send_email_pausa, on: [:update]
   after_commit :send_task_job_create, on: [ :create ]
   after_commit :send_task_job_update, on: [ :update ]
+  after_commit :update_pdf, on: [:update]
 
   validate :limit_date_cannot_be_in_the_past, on: :create
   validates :assigned_user, presence: true
@@ -118,7 +119,6 @@ class Report < ApplicationRecord
   def check_assignment_changes
     if changes["assigned_user_id"].present?
       if assigned_user_id.present?
-        Rails.logger.info "User id : #{assigned_user_id}"
         self.is_assigned = true
         self.send_task_job_update
       end
@@ -454,15 +454,14 @@ class Report < ApplicationRecord
 
   def send_task_job_create
     if self.assigned_user.present?
-      SendTaskJob.set(queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
+      SendTaskJob.set(wait: 1.seconds, queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
     end
   end
 
 
   def send_task_job_update
     if changes["assigned_user_id"].present? and self.assigned_user.present?
-      SendTaskJob.set(queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
-      Rails.logger.info "push : #{changes["assigned_user_id"]}"
+      SendTaskJob.set(wait: 1.seconds, queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
     end
   end
 
@@ -486,6 +485,11 @@ class Report < ApplicationRecord
   def final_location_attributes
     if final_location.present?
       location_attributes(final_location)
+    end
+  end
+  def update_pdf
+    if dynamic_attributes.dig("75").present?
+      regenerate_pdf(true)
     end
   end
 
