@@ -125,10 +125,6 @@ class Report < ApplicationRecord
     end
   end
 
-  def push_assignment_changes
-
-  end
-
   def dynamic_attributes=(val)
     if val.present?
       if val.is_a? String
@@ -465,6 +461,7 @@ class Report < ApplicationRecord
 
   def send_task_job_update
     if changes["assigned_user_id"].present? and self.assigned_user.present?
+      SendTaskJob.set(queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
       Rails.logger.info "push : #{changes["assigned_user_id"]}"
     end
   end
