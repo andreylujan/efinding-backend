@@ -73,7 +73,6 @@ class Report < ApplicationRecord
   after_commit :send_email_pausa, on: [:update]
   after_commit :send_task_job_create, on: [ :create ]
   after_commit :send_task_job_update, on: [ :update ]
-  after_commit :check_assigned_user_change, on: [ :update ]
 
   validate :limit_date_cannot_be_in_the_past, on: :create
   validates :assigned_user, presence: true
@@ -119,15 +118,15 @@ class Report < ApplicationRecord
   def check_assignment_changes
     if changes["assigned_user_id"].present?
       if assigned_user_id.present?
+        Rails.logger.info "User id : #{assigned_user_id}"
         self.is_assigned = true
+        self.send_task_job_update
       end
     end
   end
 
-  def check_assigned_user_change
-    if self.assigned_user_id_changed?
-      logger.info "User id : #{assigned_user_id}"
-    end
+  def push_assignment_changes
+
   end
 
   def dynamic_attributes=(val)
@@ -466,7 +465,7 @@ class Report < ApplicationRecord
 
   def send_task_job_update
     if changes["assigned_user_id"].present? and self.assigned_user.present?
-      SendTaskJob.set(queue: ENV['PUSH_QUEUE'] || 'etodo_push').perform_later(self.id.to_s)
+      Rails.logger.info "push : #{changes["assigned_user_id"]}"
     end
   end
 
