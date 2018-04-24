@@ -41,7 +41,7 @@ class Inspection < ApplicationRecord
 
   mount_uploader :pdf, PdfUploader
 
-  after_create :signature_pending, :generate_pdf
+  after_create :signature_pending
 
   acts_as_xlsx columns: [
     :id,
