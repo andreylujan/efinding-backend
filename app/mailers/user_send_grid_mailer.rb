@@ -60,6 +60,10 @@ class UserSendGridMailer < ApplicationMailer
 		@user = user
 		@message = message
 		@url = inspection.pdf_url
-		mail(to: @user.email, subject: subject)
+
+		if inspection.pdf_uploaded 
+			mail(to: @user.email, subject: subject)
+		end
+		
 	end
 end
