@@ -205,8 +205,22 @@ class Api::V1::InspectionResource < ApplicationResource
     end
   }
 
-
-
+  filter :inspections_thirty_days, apply: ->(records, value, _options){
+    if not value.empty?
+      d = Date.parse(value[0])
+      Rails.logger.info "Date : #{d}"
+      Rails.logger.info "Date - 30 : #{d.days_ago(30).beginning_of_day}"
+      records.where("inspections.created_at BETWEEN ? AND ?",
+        d.days_ago(30).beginning_of_day, d.end_of_day)
+        .order("inspections.created_at ASC")
+    else
+      Rails.logger.info "Date : #{DateTime.now}"
+      Rails.logger.info "Date - 30 : #{DateTime.now.days_ago(30).beginning_of_day}"
+      records.where("inspections.created_at BETWEEN ? AND ? OR inspections.state = ? ",
+        DateTime.now.days_ago(30).beginning_of_day, DateTime.now.end_of_day, 'reports_pending')
+        .order("inspections.created_at ASC")
+    end
+  }
   filter :creator, apply: ->(records, value, _options) {
     if not value.empty? and value[0].is_a? ActionController::Parameters
       if value[0]["full_name"].present?
@@ -269,7 +283,7 @@ class Api::V1::InspectionResource < ApplicationResource
       .select("inspections.*, count(reports.id) as num_reports, count(case when reports.state = 'unchecked' THEN 1 END) as num_pending_reports, count(case when reports.state = 'unchecked' AND reports.limit_date <= '" +
               DateTime.now.to_s + "' THEN 1 END) as num_expired_reports")
       .group("inspections.id")
-      
+
       if current_user.role_id == 2
         inspections = inspections.joins(:construction)
         .where("constructions.supervisor_id = ? OR inspections.creator_id = ?",
