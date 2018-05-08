@@ -12,6 +12,12 @@ class Api::V1::InspectionsController < Api::V1::JsonApiController
     super
   end
 
+  def context
+    super.merge({
+      role: params[:role]
+    })
+  end
+
   def get_excel
     package = Axlsx::Package.new
     start_date = DateTime.new(@year, @month)
