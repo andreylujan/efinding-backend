@@ -8,7 +8,7 @@
 		<%= wicked_pdf_stylesheet_link_tag("application") %>
 	</head>
 
-	
+
 	<body>
 		<div class="container page-break">
 			<div class="row">
@@ -38,10 +38,6 @@
 							<td><strong><%= if inspection.construction.has_expert? then inspection.construction.formatted_expert_names else "Obra sin Jefes de Terreno" end %></strong></td>
 						</tr>
 						<tr>
-							<td>Administrador de Obra:</td>
-							<td><strong><%= if inspection.construction.administrator.present? then inspection.construction.administrator.name else "Obra sin Administrador" end %></strong></td>
-						</tr>
-						<tr>
 							<td>Obra:</td>
 							<td><strong><%= inspection.construction.name %></strong></td>
 						</tr>
@@ -62,7 +58,7 @@
 							<tr>
 								<td><h3><%= report.dynamic_attributes.dig("67", "text") %></h3></td>
 								<td class="text-center">
-									<h2><small>Gravedad</small><br><%= report.dynamic_attributes.dig("52", "text") %></h2>								
+									<h2><small>Gravedad</small><br><%= report.dynamic_attributes.dig("52", "text") %></h2>
 								</td>
 								<td class="text-center">
 									<h2><small>Riesgo</small><br><%= report.dynamic_attributes.dig("53", "text") %></h2>
@@ -97,7 +93,7 @@
 					<img src="<%= map_url %>">
 				</div>
 			</div>
-			
+
 		</div>
 		<!-- BRAKE PAGE ALWAYS IN CONTAINER DIV -->
 
@@ -109,7 +105,7 @@
 							<tr>
 								<td><h2>Hallazgo <%= idx + 1 %><br><small><%= report.dynamic_attributes.dig("67", "text") %></small></h2></td>
 								<td class="text-center">
-									<h2><small>Gravedad</small><br><%= report.dynamic_attributes.dig("52", "text") %></h2>								
+									<h2><small>Gravedad</small><br><%= report.dynamic_attributes.dig("52", "text") %></h2>
 								</td>
 								<td class="text-center">
 									<h2><small>Riesgo</small><br><%= report.dynamic_attributes.dig("53", "text") %></h2>
@@ -265,7 +261,7 @@
 						<hr>
 						<h2>Firmas</h2>
 					</div>
-					
+
 					<div class="col-xs-12">
 						<table class="table" >
 							<tr>
@@ -326,6 +322,6 @@
 				</div>
 			</div>
 		<% end %>
-		
+
 	</body>
 </html>
