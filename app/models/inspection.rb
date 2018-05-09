@@ -41,7 +41,7 @@ class Inspection < ApplicationRecord
 
   mount_uploader :pdf, PdfUploader
 
-  after_commit :signature_pending, on: [ :create ]
+  after_create :signature_pending
 
   acts_as_xlsx columns: [
     :id,
@@ -217,7 +217,7 @@ class Inspection < ApplicationRecord
     users.each do |user|
       Rails.logger.info "Solicitud de firma : #{user}"
       UserSendGridMailer.delay_for(5.minutes, queue: ENV['EMAIL_QUEUE'] || 'echeckit_email')
-      .inspection_email(id, user, "Solicitud de firma - #{construction.name}",
+      .inspection_email(self.id, user, "Solicitud de firma - #{construction.name}",
                         "#{construction.supervisor.name} ha enviado una nueva inspección para ser firmada " +
                         "en la obra #{construction.name}. " +
                         "Para realizar la firma, puedes ingresar a #{ENV['ADMIN_URL']}/#/efinding/inspecciones/lista")

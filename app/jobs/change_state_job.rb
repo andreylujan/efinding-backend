@@ -11,6 +11,9 @@ class ChangeStateJob < ApplicationJob
     Rails.logger.info "Estado : #{report.state}"
     if report.state == "accepted"
       state = "pedido aceptado"
+      SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
+      "Pedido aceptado",
+      "Nuevo Pedido aceptado")
     elsif report.state == "rejected"
       state = "pedido rechazado"
       message = report.get_message
