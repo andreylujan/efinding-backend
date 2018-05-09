@@ -55,9 +55,9 @@ class Api::V1::Delivery::OrdersController < ApplicationController
                                                       "Pedido pagado",
                                                       "Se ha pagado exitosamente el pedido #{order_id}")
 
-        SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
-                                                      "Pedido Pendiente de retiro",
-                                                      "El pedido #{order_id} está Pendiente de retiro")
+        #SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
+        #                                              "Pedido Pendiente de retiro",
+        #                                              "El pedido #{order_id} está Pendiente de retiro")
       elsif order_state == "pedido cancelado"
         state = "canceled"
       elsif order_state == "pedido aceptado"
@@ -74,11 +74,10 @@ class Api::V1::Delivery::OrdersController < ApplicationController
                                                       "Se ha modificado el pedido #{order_id}")
 
       elsif order_state == "Pendiente de retiro"
-        state = "awaiting_delivery"
-        SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
-                                                    "Pedido Pendiente de retiro",
-                                                    "El pedido #{order_id} está Pendiente de retiro")
-
+        #state = "awaiting_delivery"
+        #SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
+        #                                            "Pedido Pendiente de retiro",
+        #                                            "El pedido #{order_id} está Pendiente de retiro")
       end
       report.state = state
     end
