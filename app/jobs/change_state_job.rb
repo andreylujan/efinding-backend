@@ -8,6 +8,7 @@ class ChangeStateJob < ApplicationJob
     order_id = report.dynamic_attributes.dig("49", "text").to_i
     state = ""
     message = nil
+    Rails.logger.info "Estado : #{report.state}"
     if report.state == "accepted"
       state = "pedido aceptado"
     elsif report.state == "rejected"
@@ -20,6 +21,8 @@ class ChangeStateJob < ApplicationJob
       state = "pedido en camino"
     elsif report.state == "delivered"
       state = "pedido entregado"
+    elsif report.state == "awaiting_delivery"
+      state = "Pendiente de retiro"
     else
       return
     end
