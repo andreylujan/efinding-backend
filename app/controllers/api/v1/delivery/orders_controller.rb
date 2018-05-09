@@ -46,6 +46,7 @@ class Api::V1::Delivery::OrdersController < ApplicationController
     else
       report.ignore_state_changes = true
       state = nil
+      Rails.logger.info "ORDER STATE : #{order_state}"
       if order_state == "pedido creado"
         state = "unchecked"
       elsif order_state == "pedido pagado"
