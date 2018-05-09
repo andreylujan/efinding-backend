@@ -206,19 +206,22 @@ class Api::V1::InspectionResource < ApplicationResource
   }
 
   filter :inspections_thirty_days, apply: ->(records, value, _options){
+
     if not value.empty?
-      d = Date.parse(value[0])
-      Rails.logger.info "Date : #{d}"
-      Rails.logger.info "Date - 30 : #{d.days_ago(30).beginning_of_day}"
-      records.where("inspections.created_at BETWEEN ? AND ?",
-        d.days_ago(30).beginning_of_day, d.end_of_day)
-        .order("inspections.created_at ASC")
-    else
-      Rails.logger.info "Date : #{DateTime.now}"
-      Rails.logger.info "Date - 30 : #{DateTime.now.days_ago(30).beginning_of_day}"
-      records.where("inspections.created_at BETWEEN ? AND ? OR inspections.state = ? ",
-        DateTime.now.days_ago(30).beginning_of_day, DateTime.now.end_of_day, 'reports_pending')
-        .order("inspections.created_at ASC")
+      if value[0] == 'false'
+        Rails.logger.info "Date : #{DateTime.now}"
+        Rails.logger.info "Date - 30 : #{DateTime.now.days_ago(30).beginning_of_day}"
+        records.where("inspections.created_at BETWEEN ? AND ? OR inspections.state = ? ",
+          DateTime.now.days_ago(30).beginning_of_day, DateTime.now.end_of_day, 'reports_pending')
+          .order("inspections.created_at ASC")
+      else
+        d = Date.parse(value[0])
+        Rails.logger.info "Date : #{d}"
+        Rails.logger.info "Date - 30 : #{d.days_ago(30).beginning_of_day}"
+        records.where("inspections.created_at BETWEEN ? AND ? AND inspections.state != ?" ,
+          d.days_ago(30).beginning_of_day, d.end_of_day, 'reports_pending')
+          .order("inspections.created_at ASC")
+      end
     end
   }
   filter :creator, apply: ->(records, value, _options) {
