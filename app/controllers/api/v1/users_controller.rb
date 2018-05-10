@@ -184,12 +184,33 @@ class Api::V1::UsersController < Api::V1::JsonApiController
     api_token = params[:api_token]
     if api_token.present? and api_token == "c5152d8ac998168b79cb84add2bdfa12568c045c9e4326bad2ad5ad838b6dbce28954a011353db28725a39321a2763e06564fc781bf5e95249e9073ded995f63"
       user_type = params.require(:role_type)
-      if user_type == "comercio"
-        @role_id = 10
-      elsif user_type == "transportista"
-        @role_id = 11
+      if params[:email].present?
+        user = User.find_by_email(params.require(:email))
+        if user.deleted_at.nil?
+          user.update_attributes deleted_at: DateTime.now, password: SecureRandom.uuid
+          Doorkeeper::AccessToken.where(resource_owner_id: user.id).destroy_all
+          render json:{
+            data: {
+              id: (DateTime.now.to_f*1000).to_i,
+              type: "delete_user",
+              attributes: {
+                success: true
+              }
+            }
+          }, status: :ok
+        else
+          render json: {
+            errors: [ { title: "Usuario ya fue borrado", detail: "Este usuario ya fue eliminado anteriormente"}]
+          }, status: :unprocessable_entity
+        end
+      else
+        if user_type == "comercio"
+          @role_id = 10
+        elsif user_type == "transportista"
+          @role_id = 11
+        end
+        return
       end
-      return
     else
       token = params.require(:confirmation_token)
       inv = Invitation.find_by_confirmation_token_and_accepted(token, true)
