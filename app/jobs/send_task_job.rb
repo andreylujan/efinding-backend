@@ -8,7 +8,7 @@ class SendTaskJob < ApplicationJob
     if report.nil?
       return
     end
-    Rails.logger.info "REPORTS : #{report}"
+    Rails.logger.info "REPORTS PUSH: #{report.creator_id}"
 
     user = report.assigned_user
 
