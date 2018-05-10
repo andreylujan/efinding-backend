@@ -209,15 +209,11 @@ class Api::V1::InspectionResource < ApplicationResource
 
     if not value.empty?
       if value[0] == 'false'
-        Rails.logger.info "Date : #{DateTime.now}"
-        Rails.logger.info "Date - 30 : #{DateTime.now.days_ago(30).beginning_of_day}"
         records.where("inspections.created_at BETWEEN ? AND ? OR inspections.state = ? ",
           DateTime.now.days_ago(30).beginning_of_day, DateTime.now.end_of_day, 'reports_pending')
           .order("inspections.created_at ASC")
       else
         d = Date.parse(value[0])
-        Rails.logger.info "Date : #{d}"
-        Rails.logger.info "Date - 30 : #{d.days_ago(30).beginning_of_day}"
         records.where("inspections.created_at BETWEEN ? AND ? AND inspections.state != ?" ,
           d.days_ago(30).beginning_of_day, d.end_of_day, 'reports_pending')
           .order("inspections.created_at ASC")

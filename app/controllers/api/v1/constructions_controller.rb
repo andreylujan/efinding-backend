@@ -30,6 +30,11 @@ class Api::V1::ConstructionsController < Api::V1::JsonApiController
       disposition: "attachment", type: "text/csv"
   end
 
+  def get_constructions
+    send_data Construction.construction_to_csv, filename: "maestro_obras.csv",
+      disposition: "attachment", type: "text/csv"
+  end
+
   def create_personnel
     begin
       resources = Construction.from_csv(params.require(:csv), current_user)

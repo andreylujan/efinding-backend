@@ -25,6 +25,7 @@ class Construction < ApplicationRecord
   belongs_to :administrator, class_name: :User, foreign_key: :administrator_id
   belongs_to :expert, class_name: :User, foreign_key: :expert_id
   belongs_to :supervisor, class_name: :User, foreign_key: :supervisor_id
+  belongs_to :inspector, class_name: :User, foreign_key: :inspector_id
   # belongs_to :visitor, class_name: :Person, foreign_key: :visitor_id
   has_and_belongs_to_many :contractors
   has_many :construction_personnel, dependent: :destroy
@@ -43,6 +44,48 @@ class Construction < ApplicationRecord
     self.construction_personnel.each { |p| p.destroy! }
     val.select! { |v| v.key?("personnel_id") and v.key?("personnel_type_id") }
     super
+  end
+
+  def self.construction_to_csv(file_name=nil)
+    attributes = %w{code name administrator_id administrator_name
+        expert_id expert_name supervisor_id supervisor_name inspector_id inspector_name experts}
+    csv_obj = CSV.generate(headers: true,
+    encoding: "UTF-8", col_sep: ';') do |csv|
+      csv << attributes
+      Construction.includes(:construction_personnel).each do |construction|
+          csv << [
+            construction.code,
+            construction.name,
+            construction.administrator.present? ? construction.administrator.id : "",
+            construction.administrator.present? ? construction.administrator.name : "",
+            construction.expert.present? ? construction.expert_id : "",
+            construction.expert.present? ? construction.expert.name : "",
+            construction.supervisor.present? ? construction.supervisor.id : "",
+            construction.supervisor.present? ? construction.supervisor.name : "",
+            construction.inspector.present? ? construction.inspector_id : "",
+            construction.inspector.present? ? construction.inspector.name : "",
+            #construction.inspector_id.present? ? User.find(construction.inspector_id).name : "",
+            #construction.experts.to_s
+          ]
+      end
+    end
+    if file_name.present?
+      f = File.open(file_name, 'w')
+      f.write(csv_obj)
+      f.close
+    end
+    csv_obj
+
+  end
+
+  def self.user_name(user_id)
+    user = User.find(user_id)
+    Rails.logger.info "User : #{user}"
+    name = ""
+    if user != nil
+      name = user.name
+    end
+    name
   end
 
   def self.to_csv(file_name=nil)
