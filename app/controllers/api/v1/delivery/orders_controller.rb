@@ -55,6 +55,7 @@ class Api::V1::Delivery::OrdersController < ApplicationController
                                                       "Pedido pagado",
                                                       "Se ha pagado exitosamente el pedido #{order_id}")
 
+        Rails.logger.info "REPORTS : #{report}"
         SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
                                                       "Pedido Pendiente de retiro",
                                                       "El pedido #{order_id} está Pendiente de retiro")
