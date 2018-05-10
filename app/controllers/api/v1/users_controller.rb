@@ -9,6 +9,35 @@ class Api::V1::UsersController < Api::V1::JsonApiController
 
   before_action :verify_invitation, only: :create
 
+  def delete_user
+    email = params.require(:email)
+    user = User.find_by_email(email)
+
+    if user.organization == current_user.organization
+      if user.deleted_at.nil?
+        user.update_attributes deleted_at: DateTime.now, password: SecureRandom.uuid
+        Doorkeeper::AccessToken.where(resource_owner_id: user.id).destroy_all
+        render json:{
+          data: {
+            id: (DateTime.now.to_f*1000).to_i,
+            type: "delete_user",
+            attributes: {
+              success: true
+            }
+          }
+        }, status: :ok
+      else
+        render json: {
+          errors: [ { title: "Usuario ya fue borrado", detail: "Este usuario ya fue eliminado anteriormente"}]
+        }, status: :unprocessable_entity
+      end
+    else
+      render json: {
+        errors: [ { title: "No permitido", detail: "No puede eliminar usuarios de otra organización" }]
+      }, status: :unprocessable_entity
+    end
+  end
+
   def reset_password_token
     email = params.require(:email)
     user = User.find_by_email(email)

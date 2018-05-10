@@ -45,7 +45,7 @@ Rails.application.routes.draw do
           post :csv, to: "accident_rates#create_csv"
         end
       end
-      
+
       jsonapi_resources :collections, only: [ :index, :show, :create, :update, :destroy ] do
         jsonapi_related_resources :collection_items
         # jsonapi_resources :collection_items, only: [ :index, :show, :create, :update, :destroy ] do
@@ -173,6 +173,7 @@ Rails.application.routes.draw do
           post :reset_password_token
           get :all
           get :verify
+          post :delete_user
         end
         member do
           put :password
