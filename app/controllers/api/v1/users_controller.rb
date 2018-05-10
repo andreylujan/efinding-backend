@@ -183,10 +183,9 @@ class Api::V1::UsersController < Api::V1::JsonApiController
   def verify_invitation
     api_token = params[:api_token]
     if api_token.present? and api_token == "c5152d8ac998168b79cb84add2bdfa12568c045c9e4326bad2ad5ad838b6dbce28954a011353db28725a39321a2763e06564fc781bf5e95249e9073ded995f63"
-      user_type = params.require(:role_type)
       if params[:email].present?
         user = User.find_by_email(params.require(:email))
-        if user.deleted_at.nil?
+        if user != nil and user.deleted_at.nil?
           user.update_attributes deleted_at: DateTime.now, password: SecureRandom.uuid
           Doorkeeper::AccessToken.where(resource_owner_id: user.id).destroy_all
           render json:{
@@ -204,6 +203,7 @@ class Api::V1::UsersController < Api::V1::JsonApiController
           }, status: :unprocessable_entity
         end
       else
+        user_type = params.require(:role_type)
         if user_type == "comercio"
           @role_id = 10
         elsif user_type == "transportista"
