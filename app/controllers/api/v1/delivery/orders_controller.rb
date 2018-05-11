@@ -82,7 +82,6 @@ class Api::V1::Delivery::OrdersController < ApplicationController
                                                    "El pedido #{order_id} está Pendiente de retiro")
       end
       report.state = state
-      report.save
     end
 
     if report.state == "unchecked" or report.state == "modified"

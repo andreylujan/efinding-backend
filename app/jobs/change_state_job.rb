@@ -55,6 +55,16 @@ class ChangeStateJob < ApplicationJob
       })
     end
 
+    if report.state = "awaiting_delivery"
+      Rails.logger.info "REPORTS PUSH: #{report.state}"
+
+      Rails.logger.info "ORDER STATE Pendiente de retiro - creator_id: #{report.creator_id}"
+      SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
+                                                  "Pedido Pendiente de retiro",
+                                                 "El pedido #{order_id} está Pendiente de retiro")
+
+    end
+
     if report.state == "accepted"
       conn = Faraday.new(:url => "http://ec2-54-88-114-83.compute-1.amazonaws.com")
       body = {
