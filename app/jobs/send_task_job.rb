@@ -31,7 +31,7 @@ class SendTaskJob < ApplicationJob
       apns_app_name: apns_app_name
     }
 
-    devices = nil
+    devices = []
     if report.state == "awaiting_delivery"
 
       users = User.all.where("role_id = 11")
