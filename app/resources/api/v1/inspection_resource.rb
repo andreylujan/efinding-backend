@@ -277,6 +277,7 @@ class Api::V1::InspectionResource < ApplicationResource
 
     if options[:context] and options[:context][:role].present?
       @role = options[:context][:role].to_i
+      current_user = options[:context][:current_user]
     elsif options[:context] and current_user = options[:context][:current_user]
       @role = current_user.role_id
     end
