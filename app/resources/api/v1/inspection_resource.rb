@@ -280,6 +280,8 @@ class Api::V1::InspectionResource < ApplicationResource
     elsif options[:context] and current_user = options[:context][:current_user]
       @role = current_user.role_id
     end
+
+    Rails.logger.info "User : #{current_user.id}"
     Rails.logger.info "Role : #{@role}"
 
     if options[:context] and current_user = options[:context][:current_user]
