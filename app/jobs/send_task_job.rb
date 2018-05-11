@@ -33,10 +33,15 @@ class SendTaskJob < ApplicationJob
 
     devices = []
     if report.state == "awaiting_delivery"
-
+      if user.nil?
+           return
+      end
       users = User.where("role_id = 11")
-      users.each do |user|
-        user.devices.each do |d|
+      users.each do |item|
+        if item.nil?
+             return
+        end
+        item.devices.each do |d|
           devices << d
         end
       end
