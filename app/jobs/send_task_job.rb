@@ -33,7 +33,7 @@ class SendTaskJob < ApplicationJob
 
     devices = []
     if report.state == "awaiting_delivery"
-      devices = get_delivery_devices
+      devices = report.get_delivery_devices
     else
       devices = user.devices
     end
