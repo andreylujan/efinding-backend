@@ -36,7 +36,7 @@ class SendTaskJob < ApplicationJob
 
       users = User.all.where("role_id = 11")
       users.each do |user|
-        devices = devices + user.devices
+        devices  = devices | user.devices
       end
     else
       devices = user.devices
