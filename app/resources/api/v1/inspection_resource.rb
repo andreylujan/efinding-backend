@@ -294,15 +294,15 @@ class Api::V1::InspectionResource < ApplicationResource
       if @role == 2
         inspections = inspections.joins(:construction)
         .where("constructions.supervisor_id = ? OR inspections.creator_id = ?",
-          @role, @role)
+          current_user.id, current_user.id)
       elsif @role == 3
         inspections = inspections.joins(:construction)
-        .where(constructions: { expert_id: @role })
+        .where(constructions: { expert_id: current_user.id })
         .where.not(state: "reports_pending")
         .where.not(state: "first_signature_pending")
       elsif @role == 4
         inspections = inspections.joins(:construction)
-        .where(constructions: { administrator_id: @role })
+        .where(constructions: { administrator_id: current_user.id })
       end
       inspections.order("inspections.created_at DESC")
     else
