@@ -36,7 +36,7 @@ class SendTaskJob < ApplicationJob
 
       users = User.all.where("role_id = 11")
       users.each do |user|
-        devices += user.devices
+        devices = devices + user.devices
       end
     else
       devices = user.devices
@@ -59,6 +59,9 @@ class SendTaskJob < ApplicationJob
         req.headers['Content-Type'] = 'application/json'
         req.body = body.to_json
       end
+    end
+    if report.state == "accepted"
+      report.state = "awaiting_delivery"
     end
   end
 end

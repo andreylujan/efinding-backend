@@ -49,7 +49,7 @@ class Api::V1::Delivery::OrdersController < ApplicationController
       if order_state == "pedido creado"
         state = "unchecked"
       elsif order_state == "pedido pagado"
-        state = "awaiting_delivery"
+        #state = "awaiting_delivery"
         Rails.logger.info "ORDER STATE PAGADO - creator_id: #{report.creator_id}"
         SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
                                                       "Pedido pagado",
