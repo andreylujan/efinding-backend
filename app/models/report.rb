@@ -438,9 +438,7 @@ class Report < ApplicationRecord
 
   def get_delivery_devices
     devices = []
-    if user.nil?
-         return
-    end
+    
     users = User.where("role_id = 11")
     users.each do |item|
       if item.nil?
