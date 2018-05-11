@@ -55,7 +55,7 @@ class ChangeStateJob < ApplicationJob
       })
     end
 
-    if report.state = "awaiting_delivery"
+    if report.state == "awaiting_delivery"
       Rails.logger.info "REPORTS PUSH: #{report.state}"
 
       Rails.logger.info "ORDER STATE Pendiente de retiro - creator_id: #{report.creator_id}"
