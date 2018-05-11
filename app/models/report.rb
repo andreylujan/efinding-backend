@@ -436,6 +436,23 @@ class Report < ApplicationRecord
     end
   end
 
+  def get_delivery_devices
+    devices = []
+    if user.nil?
+         return
+    end
+    users = User.where("role_id = 11")
+    users.each do |item|
+      if item.nil?
+           return
+      end
+      item.devices.each do |d|
+        devices << d
+      end
+    end
+    devices
+  end
+
   def generate_pdf
     if not @ignore_pdf and self.finished? and not self.pdf_uploaded?
       regenerate_pdf(true)
