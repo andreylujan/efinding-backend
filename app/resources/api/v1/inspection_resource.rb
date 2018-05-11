@@ -303,6 +303,8 @@ class Api::V1::InspectionResource < ApplicationResource
         .where.not(state: "reports_pending")
         .where.not(state: "first_signature_pending")
       elsif @role == 4
+        Rails.logger.info "Role : #{@role}"
+        Rails.logger.info "USER : #{current_user.id}"
         inspections = inspections.joins(:construction)
         .where(constructions: { administrator_id: current_user.id })
       end
