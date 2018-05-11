@@ -42,8 +42,10 @@ class SendTaskJob < ApplicationJob
       devices = user.devices
     end
 
-    Rails.logger.info "DEVICES: #{devices}"
-
+    Rails.logger.info "DEVICES: #{devices.count}"
+    if title == "Pedido pagado"
+      report.state = "awaiting_delivery"
+    end
     #devices = user.devices
     registration_ids = devices.where("registration_id is not null").map { |r| r.registration_id }
     device_tokens = devices.where("device_token is not null").map { |r| r.device_token }
@@ -59,9 +61,6 @@ class SendTaskJob < ApplicationJob
         req.headers['Content-Type'] = 'application/json'
         req.body = body.to_json
       end
-    end
-    if report.state == "accepted"
-      report.state = "awaiting_delivery"
     end
   end
 end
