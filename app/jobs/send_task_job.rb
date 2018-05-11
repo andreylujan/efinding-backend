@@ -31,7 +31,20 @@ class SendTaskJob < ApplicationJob
       apns_app_name: apns_app_name
     }
 
-    devices = user.devices
+    devices = nil
+    if report.state == "awaiting_delivery"
+
+      users = User.all.where("role_id = 11")
+      users.each do |user|
+        devices += user.devices
+      end
+    else
+      devices = user.devices
+    end
+
+    Rails.logger.info "DEVICES: #{devices}"
+
+    #devices = user.devices
     registration_ids = devices.where("registration_id is not null").map { |r| r.registration_id }
     device_tokens = devices.where("device_token is not null").map { |r| r.device_token }
 
