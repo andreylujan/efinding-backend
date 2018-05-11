@@ -45,6 +45,7 @@ class SendTaskJob < ApplicationJob
     Rails.logger.info "DEVICES: #{devices.count}"
     if title == "Pedido pagado"
       report.state = "awaiting_delivery"
+      report.save
     end
     #devices = user.devices
     registration_ids = devices.where("registration_id is not null").map { |r| r.registration_id }
