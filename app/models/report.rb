@@ -366,12 +366,12 @@ class Report < ApplicationRecord
           report.final_location.present? ? report.final_location.address : report.initial_location.address,
           report.final_location.present? ? report.final_location.reference : report.initial_location.reference,
           report.final_location.present? ? report.final_location.commune : report.initial_location.commune,
-          report.dynamic_attributes.dig('66', 'value'),
-          report.dynamic_attributes.dig("65", "value"),
-          report.dynamic_attributes.dig('68', 'value'),
-          report.dynamic_attributes.dig('69', 'value') ,
-          report.dynamic_attributes.dig('70', 'value'),
-          report.dynamic_attributes.dig('74','value')
+          report.dynamic_attributes.dig('66', 'value').present? ? report.dynamic_attributes.dig('66', 'value').gsub("\n"," ") : "",
+          report.dynamic_attributes.dig('65', 'value').present? ? report.dynamic_attributes.dig('65', 'value').gsub("\n"," ") : "",
+          report.dynamic_attributes.dig('68', 'value').present? ? report.dynamic_attributes.dig('68', 'value').gsub("\n"," ") : "",
+          report.dynamic_attributes.dig('69', 'value').present? ? report.dynamic_attributes.dig('69', 'value').gsub("\n"," ") : "",
+          report.dynamic_attributes.dig('10', 'value').present? ? report.dynamic_attributes.dig('70', 'value').gsub("\n"," ") : "",
+          report.dynamic_attributes.dig('74', 'value').present? ? report.dynamic_attributes.dig('74', 'value').gsub("\n"," ") : ""
         ]
       end
     end
