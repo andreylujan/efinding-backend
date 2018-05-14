@@ -51,9 +51,9 @@ class Api::V1::Delivery::OrdersController < ApplicationController
       elsif order_state == "pedido pagado"
         #state = "awaiting_delivery"
         Rails.logger.info "ORDER STATE PAGADO - creator_id: #{report.creator_id}"
-        SendTaskJob.perform_now(report.id.to_s,
+        SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
                                                       "Pedido pagado",
-                                                      "Se ha pagado exitosamente el pedido #{order_id}", report.get_delivery_devices)
+                                                      "Se ha pagado exitosamente el pedido #{order_id}")
 
       elsif order_state == "pedido cancelado"
         state = "canceled"
@@ -61,14 +61,14 @@ class Api::V1::Delivery::OrdersController < ApplicationController
         state = "accepted"
       elsif order_state == "pedido modificado aceptado"
         state = "modified_accepted"
-        SendTaskJob.perform_now(report.id.to_s,
+        SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
                                                       "Pedido modificado aceptado",
-                                                      "Se han aceptado las modificaciones del pedido #{order_id}", report.get_delivery_devices)
+                                                      "Se han aceptado las modificaciones del pedido #{order_id}")
       elsif order_state == "pedido modificado"
         state = "modified"
-        SendTaskJob.perform_now(report.id.to_s,
+        SendTaskJob.set(wait: 1.second).perform_later(report.id.to_s,
                                                       "Pedido modificado",
-                                                      "Se ha modificado el pedido #{order_id}", report.get_delivery_devices)
+                                                      "Se ha modificado el pedido #{order_id}")
       end
       report.state = state
     end
