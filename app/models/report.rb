@@ -603,7 +603,7 @@ class Report < ApplicationRecord
       
       SendTaskJob.perform_later(report.id.to_s,
                                                   "Pedido Pendiente de retiro",
-                                                 "El pedido #{order_id} está Pendiente de retiro", report.get_delivery_devices)
+                                                 "El pedido #{order_id} está Pendiente de retiro")
 
     end
 
