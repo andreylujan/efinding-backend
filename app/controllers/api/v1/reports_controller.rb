@@ -31,20 +31,26 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
     params["action"] = "index"
     params["all"] = true
     @zip = true
-    
+
     @month = params[:month].present? ? params[:month].to_i : DateTime.now.month
     @year = params[:year].present? ? params[:year].to_i : DateTime.now.year
     @start_date = DateTime.new(@year, @month).beginning_of_month
     @end_date = DateTime.new(@year, @month).end_of_month
-    
-    reports = Report.includes(creator: :role)
-    .includes(:assigned_user)
-    .where(roles: { organization_id: current_user.organization_id })
-    .where("reports.created_at >= ? AND reports.created_at <= ?", @start_date, @end_date)
-    Report.setup_xlsx(current_user.organization_id)
-    xlsx = reports.to_xlsx
-    send_data(xlsx.to_stream.read, :type => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-     :filename => 'reports.xlsx')
+
+    if current_user.organization_id == 5
+      send_data Report.to_csv(current_user.organization_id, @start_date, @end_date), filename: "reports.csv",
+      disposition: "attachment", type: "text/csv"
+
+    else
+      reports = Report.includes(creator: :role)
+      .includes(:assigned_user)
+      .where(roles: { organization_id: current_user.organization_id })
+      .where("reports.created_at >= ? AND reports.created_at <= ?", @start_date, @end_date)
+      Report.setup_xlsx(current_user.organization_id)
+      xlsx = reports.to_xlsx
+      send_data(xlsx.to_stream.read, :type => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+       :filename => 'reports.xlsx')
+    end
   end
 
   def html
@@ -86,7 +92,7 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
     params.permit!
     super
   end
-  
+
   def zip
     params["action"] = "index"
     params["all"] = true
@@ -94,7 +100,7 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
     reports = get_records_without_render.results.first.resources
     pdf_urls = reports.select { |r| r.pdf_uploaded }.map { |r| r.pdf }
     temp_file = Tempfile.new('reports_' + SecureRandom.uuid.to_s + '.zip')
-    
+
     begin
       Zip::OutputStream.open(temp_file) do |zipfile|
         pdf_urls.each do |pdf|

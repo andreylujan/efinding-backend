@@ -344,6 +344,39 @@ class Report < ApplicationRecord
     end
   end
 
+  def self.to_csv(organization_id, start_date, end_date)
+    attributes = %w{Id_reporte Fecha_creación Fecha_ultima_visita Usuario_Responsable
+      Estado Pdf_reporte Dirección	Referencia  Comuna Tipo_construcción
+      Constructora Persona_Contacto Mail_Contacto Telefono_Contacto Comentario}
+    csv_obj = CSV.generate(headers: true,
+    encoding: "UTF-8", col_sep: ';') do |csv|
+      csv << attributes
+      reports = Report.includes(creator: :role)
+      .includes(:assigned_user)
+      .where(roles: { organization_id: organization_id })
+      .where("reports.created_at >= ? AND reports.created_at <= ?", start_date, end_date)
+      reports.each do |report|
+        csv <<[
+          report.sequential_id,
+          report.formatted_created_at,
+          report.dynamic_attributes.dig('75').present? ? report.formatted_date_for(report.dynamic_attributes.dig('75').last): "",
+          report.creator_name,
+          report.state.name,
+          report.pdf_url,
+          report.final_location.present? ? report.final_location.address : report.initial_location.address,
+          report.final_location.present? ? report.final_location.reference : report.initial_location.reference,
+          report.final_location.present? ? report.final_location.commune : report.initial_location.commune,
+          report.dynamic_attributes.dig('66', 'value'),
+          report.dynamic_attributes.dig("65", "value"),
+          report.dynamic_attributes.dig('68', 'value'),
+          report.dynamic_attributes.dig('69', 'value') ,
+          report.dynamic_attributes.dig('70', 'value'),
+          report.dynamic_attributes.dig('74','value')
+        ]
+      end
+    end
+  end
+
   def images_attributes=(val)
     val = val.map do |v|
       if v["attributes"].present?
