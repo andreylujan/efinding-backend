@@ -601,8 +601,7 @@ class Report < ApplicationRecord
 
       Rails.logger.info "ORDER STATE Pendiente de retiro - creator_id: #{report.creator_id}"
       
-      SendTaskJob.perform_later(report.id.to_s,
-                                                  "Pedido Pendiente de retiro",
+      SendTaskJob.perform_later(report.id.to_s,  "Pedido Pendiente de retiro",
                                                  "El pedido #{order_id} está Pendiente de retiro")
 
     end

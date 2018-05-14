@@ -43,9 +43,24 @@ class SendTaskJob < ApplicationJob
       report.state = "awaiting_delivery"
       report.save
     end
+
+    Rails.logger.info "DEVICES PUSH: #{devices}"
+
+
     #devices = user.devices
-    registration_ids = devices.where("registration_id is not null").map { |r| r.registration_id }
-    device_tokens = devices.where("device_token is not null").map { |r| r.device_token }
+    # registration_ids = devices.where("registration_id is not null").map { |r| r.registration_id }
+    # device_tokens = devices.where("device_token is not null").map { |r| r.device_token }
+    
+    devices.each do | item | 
+      if item.registration_id != nil 
+        registration_ids << item.registration_id
+      end
+      if item.device_token !=nil 
+        device_tokens << item.device_token
+      end
+    end
+
+
 
 
     if registration_ids.length > 0 or device_tokens.length > 0

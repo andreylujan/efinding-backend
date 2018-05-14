@@ -59,9 +59,9 @@ class ChangeStateJob < ApplicationJob
       Rails.logger.info "REPORTS PUSH: #{report.state}"
 
       Rails.logger.info "ORDER STATE Pendiente de retiro - creator_id: #{report.creator_id}"
-      DeliverySendTaskJob.perform_now(report.id.to_s,
+      SendTaskJob.perform_now(report.id.to_s,
                                                   "Pedido Pendiente de retiro",
-                                                 "El pedido #{order_id} está Pendiente de retiro", report.get_delivery_devices)
+                                                 "El pedido #{order_id} está Pendiente de retiro")
 
     end
 
