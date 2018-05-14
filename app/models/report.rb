@@ -532,21 +532,7 @@ class Report < ApplicationRecord
       end
     end
   end
-
-  private
-  def limit_date_cannot_be_in_the_past
-    if limit_date.present? && limit_date < DateTime.now
-      errors.add(:limit_date, "No puede estar en el pasado")
-    end
-  end
-
-  def schedule_order
-    if self.scheduled_at.present? and self.creator.organization_id == 4
-      ScheduledOrderJob.set(wait_until: self.scheduled_at)
-            .perform_later(self.id)
-    end
-  end
-
+  
   def change_state
     unless self.ignore_state_changes
       if self.creator.organization_id == 4 and self.state_changed?
@@ -649,6 +635,24 @@ class Report < ApplicationRecord
       end
     end
   end
+
+
+
+  private
+  def limit_date_cannot_be_in_the_past
+    if limit_date.present? && limit_date < DateTime.now
+      errors.add(:limit_date, "No puede estar en el pasado")
+    end
+  end
+
+  def schedule_order
+    if self.scheduled_at.present? and self.creator.organization_id == 4
+      ScheduledOrderJob.set(wait_until: self.scheduled_at)
+            .perform_later(self.id)
+    end
+  end
+
+
 
   def calculate_delivery_date
     if self.state_changed? and self.state == "accepted" and self.creator.organization_id == 4 and delivery_time = dynamic_attributes.dig("48", "code")
