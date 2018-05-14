@@ -26,7 +26,9 @@ class Api::V1::ConstructionsController < Api::V1::JsonApiController
   end
 
   def get_personnel
-    send_data Construction.to_csv, filename: "personal_de_obra.csv",
+    #send_data Construction.to_csv, filename: "personal_de_obra.csv",
+    #  disposition: "attachment", type: "text/csv"
+    send_data Construction.construction_to_csv, filename: "maestro_obras.csv",
       disposition: "attachment", type: "text/csv"
   end
 

@@ -22,8 +22,13 @@ class Api::V1::InspectionResource < ApplicationResource
     :state_name,
     :cached_data,
     :field_chief_name,
-    :inspection_id
+    :inspection_id,
+    :synced
 
+  def synced
+    true
+  end
+  
   def inspection_id
     @model.id.to_s
   end

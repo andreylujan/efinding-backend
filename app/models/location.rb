@@ -22,8 +22,10 @@ class Location < ApplicationRecord
 	before_create :set_lonlat
 
 	def set_lonlat
-		if longitude and latitude
+		if not longitude.nil? and not latitude.nil?
 			self.lonlat = "POINT(#{longitude} #{latitude})"
+		else
+			self.lonlat = "POINT(-33.443988 -70.655401)"
 		end
 	end
 end
