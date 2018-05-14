@@ -532,7 +532,7 @@ class Report < ApplicationRecord
       end
     end
   end
-  
+
   def change_state
     unless self.ignore_state_changes
       if self.creator.organization_id == 4 and self.state_changed?
@@ -597,10 +597,14 @@ class Report < ApplicationRecord
     end
 
     if report.state == "awaiting_delivery"
-      Rails.logger.info "REPORTS PUSH: #{report.state}"
+      Rails.logger.info "JANO: REPORTS PUSH: #{report.state}"
 
       Rails.logger.info "ORDER STATE Pendiente de retiro - creator_id: #{report.creator_id}"
-      DeliverySendTaskJob.perform_now(report.id.to_s,
+      
+
+
+
+      DeliverySendTaskJob.perform_later(report.id.to_s,
                                                   "Pedido Pendiente de retiro",
                                                  "El pedido #{order_id} está Pendiente de retiro", report.get_delivery_devices)
 
