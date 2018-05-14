@@ -439,7 +439,7 @@ class Report < ApplicationRecord
   def get_delivery_devices
     devices = []
     users = User.joins(:role)
-    .where(roles: { organization_id: self.creator.organization_id })
+    .where(roles: { organization_id: report.creator.organization_id })
     .where("role_id = 11")
 
     #users = User.where("role_id = 11")
