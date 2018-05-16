@@ -181,4 +181,72 @@ class Construction < ApplicationRecord
     ConstructionPersonnel.where.not(id: ids).destroy_all
     resources
   end
+
+  def UpdateUsers
+    constructions = Construction.includes(:construction_personnel)
+    constructions.each do |const|
+      const_code = const.code
+      const_name = const.name
+      experts = const.experts
+      experts.map do |exp|
+        Rails.logger.info "Expert id : #{exp['id']}"
+        if not exp['id'].present?
+          return
+        end
+        user = User.find(exp['id'])
+        Rails.logger.info "User : #{user}"
+        constuct = user.constructions
+        construction_array = []
+        if constuct.present?
+          constuct.map do |m|
+            if m['code'] == const_code
+              expert_json = {:active => true, :base => false}
+              administrator_json = m['roles']['administrador']
+              supervisor_json = m['roles']['jefe']
+              construction_array << {:code => const_code, :name => const_name,
+                :roles => {:experto => expert_json, :administrador => administrator_json, :jefe => supervisor_json}}
+            else
+              construction_array << m
+            end
+          end
+        else
+          const_code = const.code
+          const_name = const.name
+          if const.expert_id.present?
+            base = false
+            if user.role_id == 3
+              base = true
+            end
+            expert_json = {:active => true, :base => base}
+          else
+            expert_json = {:active => false, :base => false}
+          end
+
+          if const.administrator_id.present?
+            base = false
+            if user.role_id == 4
+              base = true
+            end
+            administrator_json = {:active => true, :base => base}
+          else
+            administrator_json = {:active => false, :base => false}
+          end
+
+          if const.supervisor_id.present?
+            base = false
+            if user.role_id == 2
+              base = true
+            end
+            supervisor_json = {:active => true, :base => base}
+
+          else
+            supervisor_json = {:active => false, :base => false}
+          end
+          construction_array << {:code => const_code, :name => const_name,
+            :roles => {:experto => expert_json, :administrador => administrator_json, :jefe => supervisor_json}}
+        end
+        user.update_column :constructions, construction_array
+      end
+    end
+  end
 end
