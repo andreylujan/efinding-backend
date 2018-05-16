@@ -33,7 +33,8 @@ class Construction < ApplicationRecord
   has_many :personnel, through: :construction_personnel
   has_many :checklist_reports, dependent: :destroy
   before_create :upcase_code
-
+  before_save :update_users, on: [ :update ]
+  @previos_expert
   def upcase_code
     if self.code.present?
       self.code = self.code.strip.upcase
@@ -182,70 +183,66 @@ class Construction < ApplicationRecord
     resources
   end
 
-  def UpdateUsers
-    constructions = Construction.includes(:construction_personnel)
-    constructions.each do |const|
-      const_code = const.code
-      const_name = const.name
-      experts = const.experts
-      experts.map do |exp|
-        Rails.logger.info "Expert id : #{exp['id']}"
-        if not exp['id'].present?
-          return
-        end
-        user = User.find(exp['id'])
-        Rails.logger.info "User : #{user}"
-        constuct = user.constructions
-        construction_array = []
-        if constuct.present?
-          constuct.map do |m|
-            if m['code'] == const_code
-              expert_json = {:active => true, :base => false}
-              administrator_json = m['roles']['administrador']
-              supervisor_json = m['roles']['jefe']
-              construction_array << {:code => const_code, :name => const_name,
-                :roles => {:experto => expert_json, :administrador => administrator_json, :jefe => supervisor_json}}
-            else
-              construction_array << m
-            end
+  def update_users
+    @previos_expert = Construction.find(self.id).experts
+
+    if not self.experts.present?
+      return
+    end
+    experts = self.experts
+    Rails.logger.info "previos_expert : #{@previos_expert}"
+    Rails.logger.info "Expert : #{experts}"
+    @previos_expert.map do |p|
+      user = User.find(p['id'])
+      construction = user.constructions
+      cons = construction.find{|c|c['code']== self.code}
+      user.constructions.delete(cons)
+      user.save
+    end
+
+    experts.map do |exp|
+      user = User.find(exp['id'])
+      construction = user.constructions
+      cons = construction.find{|c|c['code']== self.code}
+      if not cons.present?
+        const_code = self.code
+        const_name = self.name
+        if self.expert_id.present?
+          base = false
+          if user.role_id == 3
+            base = true
           end
+          expert_json = {:active => true, :base => base}
         else
-          const_code = const.code
-          const_name = const.name
-          if const.expert_id.present?
-            base = false
-            if user.role_id == 3
-              base = true
-            end
-            expert_json = {:active => true, :base => base}
-          else
-            expert_json = {:active => false, :base => false}
-          end
-
-          if const.administrator_id.present?
-            base = false
-            if user.role_id == 4
-              base = true
-            end
-            administrator_json = {:active => true, :base => base}
-          else
-            administrator_json = {:active => false, :base => false}
-          end
-
-          if const.supervisor_id.present?
-            base = false
-            if user.role_id == 2
-              base = true
-            end
-            supervisor_json = {:active => true, :base => base}
-
-          else
-            supervisor_json = {:active => false, :base => false}
-          end
-          construction_array << {:code => const_code, :name => const_name,
-            :roles => {:experto => expert_json, :administrador => administrator_json, :jefe => supervisor_json}}
+          expert_json = {:active => false, :base => false}
         end
-        user.update_column :constructions, construction_array
+
+        if self.administrator_id.present?
+          base = false
+          if user.role_id == 4
+            base = true
+          end
+          administrator_json = {:active => true, :base => base}
+        else
+          administrator_json = {:active => false, :base => false}
+        end
+
+        if self.supervisor_id.present?
+          base = false
+          if user.role_id == 2
+            base = true
+          end
+          supervisor_json = {:active => true, :base => base}
+
+        else
+          supervisor_json = {:active => false, :base => false}
+        end
+        construction << {:code => const_code, :name => const_name,
+          :roles => {:experto => expert_json, :administrador => administrator_json, :jefe => supervisor_json}}
+        user.constructions = construction
+        user.save
+      else
+
       end
     end
   end
