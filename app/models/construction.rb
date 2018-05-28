@@ -207,37 +207,37 @@ class Construction < ApplicationRecord
       if not cons.present?
         const_code = self.code
         const_name = self.name
-        if self.expert_id.present?
-          base = false
-          if user.id == self.expert_id
-            base = true
-            expert_json = {:active => true, :base => base}
-          else
-            expert_json = {:active => true, :base => base}
-          end
-        else
-          expert_json = {:active => true, :base => false}
+        base = false
+        active = false
+        if user.role_id == 3
+          base = true
+          active = true
         end
+        expert_json = {:active => active, :base => base}
 
+        base = false
+        active = false
         if self.administrator_id.present?
-          base = false
           if user.id == self.administrator_id
             base = true
-            administrator_json = {:active => true, :base => base}
+            active = true
+            administrator_json = {:active => active, :base => base}
           else
-            administrator_json = {:active => false, :base => base}
+            administrator_json = {:active => active, :base => base}
           end
         else
           administrator_json = {:active => false, :base => false}
         end
 
+        base = false
+        active = false
         if self.supervisor_id.present?
-          base = false
           if user.role_id == self.supervisor_id
             base = true
-            supervisor_json = {:active => true, :base => base}
+            active = true
+            supervisor_json = {:active => active, :base => base}
           else
-            supervisor_json = {:active => false, :base => base}
+            supervisor_json = {:active => active, :base => base}
           end
         else
           supervisor_json = {:active => false, :base => false}
