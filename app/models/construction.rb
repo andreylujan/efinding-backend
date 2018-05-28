@@ -213,13 +213,10 @@ class Construction < ApplicationRecord
           base = true
           active = true
           expert_json = {:active => active, :base => base}
-        else
-          if self.administrator_id.present?
-            if user.id == self.expert_id
-              active = true
-              expert_json = {:active => active, :base => base}
-            end
-          end
+        end
+        if user.role_id == 1
+          active = true
+          expert_json = {:active => active, :base => base}          
         end
 
         base = false
