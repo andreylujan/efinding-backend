@@ -65,8 +65,7 @@ class Construction < ApplicationRecord
             construction.supervisor.present? ? construction.supervisor.name : "",
             construction.inspector.present? ? construction.inspector_id : "",
             construction.inspector.present? ? construction.inspector.name : "",
-            #construction.inspector_id.present? ? User.find(construction.inspector_id).name : "",
-            #construction.experts.to_s
+
           ]
       end
     end
@@ -183,7 +182,54 @@ class Construction < ApplicationRecord
     resources
   end
 
+  def set_construction_to_user
+    if self.administrator_id.present?
+      admin = User.find(self.administrator_id)
+      base = false
+      if admin.role_id == 4
+        base = true
+      end
+      if admin.constructions.find{|c|c['code']==self.code}.present?
+        admin.constructions.find{|c|c['code']==self.code}['roles']['administrador'] = {:active => true, :base => base}
+      else
+        admin.constructions <<  {:code => self.code, :name => self.name,
+          :roles => {:experto => {:active => false, :base => false}, :administrador => {:active => true, :base => base}, :jefe => {:active => false, :base => false}}}
+      end
+      admin.save
+    end
+
+    if self.expert_id.present?
+      expert = User.find(self.expert_id)
+      base = false
+      if expert.role_id == 3
+        base = true
+      end
+      if expert.constructions.find{|c|c['code']==self.code}.present?
+        expert.constructions.find{|c|c['code']==self.code}['roles']['experto'] = {:active => true, :base => base}
+      else
+        expert.constructions <<  {:code => self.code, :name => self.name,
+          :roles => {:experto => {:active => true, :base => base}, :administrador => {:active => false, :base => false}, :jefe => {:active => false, :base => false}}}
+      end
+      expert.save
+    end
+
+    if self.supervisor_id
+      boss = User.find(self.supervisor_id)
+      if boss.role_id == 2
+        base = true
+      end
+      if boss.constructions.find{|c|c['code']==self.code}.present?
+        boss.constructions.find{|c|c['code']==self.code}['roles']['jefe'] = {:active => true, :base => base}
+      else
+        boss.constructions <<  {:code => self.code, :name => self.name,
+          :roles => {:experto => {:active => false, :base => false}, :administrador => {:active => false, :base => false}, :jefe => {:active => true, :base => base}}}
+      end
+      boss.save
+    end
+  end
+
   def update_users
+
     @previos_expert = Construction.find(self.id).experts
 
     if not self.experts.present?
@@ -208,44 +254,40 @@ class Construction < ApplicationRecord
         const_code = self.code
         const_name = self.name
         base = false
-        active = false
         if user.role_id == 3
           base = true
-          active = true
-          expert_json = {:active => active, :base => base}
         end
-        if user.role_id == 1
-          active = true
-          expert_json = {:active => active, :base => base}          
-        end
+        expert_json = {:active => true, :base => base}
+        administrator_json = {:active => false, :base => false}
+        supervisor_json = {:active => false, :base => false}
 
-        base = false
-        active = false
-        if self.administrator_id.present?
-          if user.id == self.administrator_id
-            base = true
-            active = true
-            administrator_json = {:active => active, :base => base}
-          else
-            administrator_json = {:active => active, :base => base}
-          end
-        else
-          administrator_json = {:active => false, :base => false}
-        end
+        #base = false
+        #active = false
+        #if self.administrator_id.present?
+        #  if user.id == self.administrator_id
+        #    base = true
+        #    active = true
+        #    administrator_json = {:active => active, :base => base}
+        #  else
+        #    administrator_json = {:active => active, :base => base}
+        #  end
+        #else
+        #  administrator_json = {:active => false, :base => false}
+        #end
 
-        base = false
-        active = false
-        if self.supervisor_id.present?
-          if user.role_id == self.supervisor_id
-            base = true
-            active = true
-            supervisor_json = {:active => active, :base => base}
-          else
-            supervisor_json = {:active => active, :base => base}
-          end
-        else
-          supervisor_json = {:active => false, :base => false}
-        end
+        #base = false
+        #active = false
+        #if self.supervisor_id.present?
+        #  if user.role_id == self.supervisor_id
+        #    base = true
+        #    active = true
+        #    supervisor_json = {:active => active, :base => base}
+        #  else
+        #    supervisor_json = {:active => active, :base => base}
+        #  end
+        #else
+        #  supervisor_json = {:active => false, :base => false}
+        #end
         construction << {:code => const_code, :name => const_name,
           :roles => {:experto => expert_json, :administrador => administrator_json, :jefe => supervisor_json}}
         user.constructions = construction
@@ -254,5 +296,6 @@ class Construction < ApplicationRecord
 
       end
     end
+    self.set_construction_to_user
   end
 end
