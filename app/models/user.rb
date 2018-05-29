@@ -125,6 +125,7 @@ class User < ApplicationRecord
   end
 
   def update_roles
+    Rails.logger.info "UPDATE ROLES"
     self.roles = nil
     if self.role_id.present?
       rs = []
@@ -145,18 +146,17 @@ class User < ApplicationRecord
         if roles['administrador']['active']
           role = Role.find(4)
           if not self.roles.find{|r|r['id']==4}.present?
-            self.roles << {:id => 3, :name => role.name, :active => roles['administrador']['active'], :base => roles['administrador']['base']}
+            self.roles << {:id => 4, :name => role.name, :active => roles['administrador']['active'], :base => roles['administrador']['base']}
           end
         end
         Rails.logger.info "roles['jefe']['active'] : #{roles['administrador']['active']}"
         if roles['jefe']['active']
           role = Role.find(2)
-          if not self.roles.find{|r|r['id']==4}.present?
-            self.roles << {:id => 3, :name => role.name, :active => roles['jefe']['active'], :base => roles['jefe']['base']}
+          if not self.roles.find{|r|r['id']==2}.present?
+            self.roles << {:id => 2, :name => role.name, :active => roles['jefe']['active'], :base => roles['jefe']['base']}
           end
         end
       end
     end
-    self.save
   end
 end
