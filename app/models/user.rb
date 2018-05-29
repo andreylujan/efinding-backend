@@ -51,6 +51,7 @@ class User < ApplicationRecord
   has_and_belongs_to_many :checklist_reports
   validate :correct_rut
   before_save :format_rut
+  before_save :update_roles, on: [ :update ]
 
   has_many :created_inspections, class_name: :Inspection, foreign_key: :creator_id, dependent: :destroy
   has_many :initially_signed_inspections, class_name: :Inspection, foreign_key: :initial_signer_id, dependent: :destroy
@@ -123,4 +124,38 @@ class User < ApplicationRecord
     token
   end
 
+  def update_roles
+    self.roles = nil
+    if self.role_id.present?
+      rs = []
+      rs  << {:id => self.role_id, :name => self.role_name, :active => true, :base => true}
+      self.roles = rs
+    end
+    if self.constructions.present?
+      self.constructions.map do |c|
+        roles = c['roles']
+        Rails.logger.info "roles['experto']['active'] : #{roles['experto']['active']}"
+        if roles['experto']['active']
+          role = Role.find(3)
+          if not self.roles.find{|r|r['id']==3}.present?
+            self.roles << {:id => 3, :name => role.name, :active => roles['experto']['active'], :base => roles['experto']['base']}
+          end
+        end
+        Rails.logger.info "roles['administrador']['active'] : #{roles['administrador']['active']}"
+        if roles['administrador']['active']
+          role = Role.find(4)
+          if not self.roles.find{|r|r['id']==4}.present?
+            self.roles << {:id => 3, :name => role.name, :active => roles['administrador']['active'], :base => roles['administrador']['base']}
+          end
+        end
+        Rails.logger.info "roles['jefe']['active'] : #{roles['administrador']['active']}"
+        if roles['jefe']['active']
+          role = Role.find(2)
+          if not self.roles.find{|r|r['id']==4}.present?
+            self.roles << {:id => 3, :name => role.name, :active => roles['jefe']['active'], :base => roles['jefe']['base']}
+          end
+        end
+      end
+    end
+  end
 end
