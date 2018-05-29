@@ -157,5 +157,6 @@ class User < ApplicationRecord
         end
       end
     end
+    self.save
   end
 end
