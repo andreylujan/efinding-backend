@@ -139,7 +139,6 @@ class User < ApplicationRecord
         Rails.logger.info "ROLES CONS : #{roles}"
 
         if cRoles['experto']['active']
-          Rails.logger.info "not self.roles.find{|r|r['id']==3}.present? : #{not self.roles.find{|r|r['id']==3}.present?}"
           rls << {:id => 3, :name => Role.find(3).name, :active => cRoles['experto']['active'], :base => cRoles['experto']['base']}
 
           #if not self.roles.find{|r|r['id']==3}.present?
@@ -149,7 +148,6 @@ class User < ApplicationRecord
         Rails.logger.info "roles['administrador']['active'] : #{cRoles['administrador']['active']}"
         if cRoles['administrador']['active']
           rls << {:id => 4, :name => Role.find(4).name, :active => cRoles['administrador']['active'], :base => cRoles['administrador']['base']}
-          Rails.logger.info "not self.roles.find{|r|r['id']==4}.present? : #{self.roles.find{|r|r['id']==4}}"
           #if not self.roles.find{|r|r['id']==4}.present?
           #  rls << {:id => 4, :name => Role.find(4).name, :active => cRoles['administrador']['active'], :base => cRoles['administrador']['base']}
           #end
