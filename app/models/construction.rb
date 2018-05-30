@@ -33,7 +33,7 @@ class Construction < ApplicationRecord
   has_many :personnel, through: :construction_personnel
   has_many :checklist_reports, dependent: :destroy
   before_create :upcase_code
-  after_commit :update_users, on: [ :update ]
+  after_save :update_users, on: [ :update ]
   @previos_expert
   def upcase_code
     if self.code.present?
