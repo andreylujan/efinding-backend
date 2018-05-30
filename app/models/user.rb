@@ -136,7 +136,7 @@ class User < ApplicationRecord
     if self.constructions.present?
       self.constructions.each do |c|
         cRoles = c['roles']
-        Rails.logger.info "ROLES CONS : #{roles}"
+        Rails.logger.info "ROLES CONS : #{cRoles}"
 
         if cRoles['experto']['active']
           rls << {:id => 3, :name => Role.find(3).name, :active => cRoles['experto']['active'], :base => cRoles['experto']['base']}
