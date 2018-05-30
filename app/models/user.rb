@@ -51,7 +51,7 @@ class User < ApplicationRecord
   has_and_belongs_to_many :checklist_reports
   validate :correct_rut
   before_save :format_rut
-  after_commit :update_roles, on: [ :update ]
+  before_save :update_roles, on: [ :update ]
 
   has_many :created_inspections, class_name: :Inspection, foreign_key: :creator_id, dependent: :destroy
   has_many :initially_signed_inspections, class_name: :Inspection, foreign_key: :initial_signer_id, dependent: :destroy
@@ -157,7 +157,6 @@ class User < ApplicationRecord
           end
         end
         self.roles = rls
-        self.save
       end
     end
   end
