@@ -16,7 +16,8 @@ class Api::V1::ReportResource < ApplicationResource
     :html,
     :state,
     :resolved_at,
-    :resolution_comment
+    :resolution_comment,
+    :role_id
 
   add_foreign_keys :inspection_id, :creator_id, :assigned_user_id, :report_type_id
 

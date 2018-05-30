@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180516174725) do
+ActiveRecord::Schema.define(version: 20180530143101) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -269,6 +269,7 @@ ActiveRecord::Schema.define(version: 20180516174725) do
     t.integer  "expert_id"
     t.json     "cached_data",       default: {}
     t.integer  "code"
+    t.integer  "role_id",           default: 0,     null: false
     t.index ["code"], name: "index_inspections_on_code", using: :btree
     t.index ["construction_id"], name: "index_inspections_on_construction_id", using: :btree
     t.index ["creator_id"], name: "index_inspections_on_creator_id", using: :btree
@@ -452,6 +453,7 @@ ActiveRecord::Schema.define(version: 20180516174725) do
     t.text     "final_location_image"
     t.text     "state",                  default: "unchecked", null: false
     t.datetime "scheduled_at"
+    t.integer  "role_id",                default: 0,           null: false
     t.index ["assigned_user_id"], name: "index_reports_on_assigned_user_id", using: :btree
     t.index ["creator_id"], name: "index_reports_on_creator_id", using: :btree
     t.index ["deleted_at"], name: "index_reports_on_deleted_at", using: :btree
