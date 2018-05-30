@@ -301,19 +301,28 @@ class Api::V1::InspectionResource < ApplicationResource
       .group("inspections.id")
 
       if @role == 2
+        where = "constructions.supervisor_id = #{current_user.id} OR inspections.creator_id = #{current_user.id}}"
+        if @role != current_user.role_id
+          where = "inspections.creator_id = #{current_user.id} and inspections.role_id = #{@role}"
+        end
         inspections = inspections.joins(:construction)
-        .where("constructions.supervisor_id = ? OR inspections.creator_id = ?",
-          current_user.id, current_user.id)
+        .where( where)
       elsif @role == 3
+        where = "constructions.expert_id = #{current_user.id}"
+        if @role != current_user.role_id
+          where = "inspections.creator_id = #{current_user.id} and inspections.role_id = #{@role}"
+        end
         inspections = inspections.joins(:construction)
-        .where(constructions: { expert_id: current_user.id })
+        .where(where)
         .where.not(state: "reports_pending")
         .where.not(state: "first_signature_pending")
       elsif @role == 4
-        Rails.logger.info "Role : #{@role}"
-        Rails.logger.info "USER : #{current_user.id}"
+        where = "constructions.administrator_id = #{current_user.id}"
+        if @role != current_user.role_id
+          where = "inspections.creator_id = #{current_user.id} and inspections.role_id = #{@role}"
+        end
         inspections = inspections.joins(:construction)
-        .where(constructions: { administrator_id: current_user.id })
+        .where(where ,current_user.id, current_user.id, @role)
       end
       inspections.order("inspections.created_at DESC")
     else
