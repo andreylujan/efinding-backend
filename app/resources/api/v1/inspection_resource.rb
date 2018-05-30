@@ -301,7 +301,7 @@ class Api::V1::InspectionResource < ApplicationResource
       .group("inspections.id")
 
       if @role == 2
-        where = "constructions.supervisor_id = #{current_user.id} OR inspections.creator_id = #{current_user.id}}"
+        where = "constructions.supervisor_id = #{current_user.id} OR inspections.creator_id = #{current_user.id}"
         if @role != current_user.role_id
           where = "inspections.creator_id = #{current_user.id} and inspections.role_id = #{@role}"
         end

@@ -157,6 +157,7 @@ class User < ApplicationRecord
           end
         end
         self.roles = rls
+        self.save
       end
     end
   end
