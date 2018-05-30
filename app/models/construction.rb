@@ -196,6 +196,7 @@ class Construction < ApplicationRecord
           :roles => {:experto => {:active => false, :base => false}, :administrador => {:active => true, :base => base}, :jefe => {:active => false, :base => false}}}
       end
       admin.save
+      admin.update_roles
     end
 
     if self.expert_id.present?
@@ -211,6 +212,7 @@ class Construction < ApplicationRecord
           :roles => {:experto => {:active => true, :base => base}, :administrador => {:active => false, :base => false}, :jefe => {:active => false, :base => false}}}
       end
       expert.save
+      expert.update_roles
     end
 
     if self.supervisor_id
@@ -225,20 +227,34 @@ class Construction < ApplicationRecord
           :roles => {:experto => {:active => false, :base => false}, :administrador => {:active => false, :base => false}, :jefe => {:active => true, :base => base}}}
       end
       boss.save
+      boss.update_roles
     end
   end
 
   def update_users
 
-    @previos_expert = Construction.find(self.id).experts
-
-    if not self.experts.present?
-      return
+    @previos_experts = Construction.find(self.id).experts
+    rolesUsers = []
+    rolesUsers << Construction.find(self.id).administrator_id
+    rolesUsers << Construction.find(self.id).supervisor_id
+    rolesUsers << Construction.find(self.id).expert_id
+    rolesUsers.map do |p|
+      user = User.find(p)
+      construction = user.constructions
+      cons = construction.find{|c|c['code']== self.code}
+      user.constructions.delete(cons)
+      user.roles = '[]'
+      user.save
     end
+
+    #if not self.experts.present?
+    #  return
+    #
+    #end
     experts = self.experts
-    Rails.logger.info "previos_expert : #{@previos_expert}"
+    Rails.logger.info "previos_expert : #{@previos_experts}"
     Rails.logger.info "Expert : #{experts}"
-    @previos_expert.map do |p|
+    @previos_experts.map do |p|
       user = User.find(p['id'])
       construction = user.constructions
       cons = construction.find{|c|c['code']== self.code}

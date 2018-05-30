@@ -51,7 +51,7 @@ class User < ApplicationRecord
   has_and_belongs_to_many :checklist_reports
   validate :correct_rut
   before_save :format_rut
-  before_save :update_roles, on: [ :update ]
+  #before_save :update_roles, on: [ :update ]
 
   has_many :created_inspections, class_name: :Inspection, foreign_key: :creator_id, dependent: :destroy
   has_many :initially_signed_inspections, class_name: :Inspection, foreign_key: :initial_signer_id, dependent: :destroy
@@ -133,7 +133,6 @@ class User < ApplicationRecord
       self.roles = rs
     end
     Rails.logger.info "constructions : #{self.constructions.length}"
-    Rails.logger.info "constructions : #{self.constructions.class}"
 
     if self.constructions.present?
       rls = []
@@ -144,22 +143,20 @@ class User < ApplicationRecord
             rls << {:id => 3, :name => Role.find(3).name, :active => roles['experto']['active'], :base => roles['experto']['base']}
           end
         end
-        Rails.logger.info "roles['administrador']['active'] : #{roles['administrador']['active']}"
         if roles['administrador']['active']
           if not self.roles.find{|r|r['id']==4}.present?
             rls << {:id => 4, :name => Role.find(4).name, :active => roles['administrador']['active'], :base => roles['administrador']['base']}
           end
         end
-        Rails.logger.info "roles['jefe']['active'] : #{roles['jefe']['active']}"
         if roles['jefe']['active']
           if not self.roles.find{|r|r['id']==2}.present?
             rls << {:id => 2, :name => Role.find(2).name, :active => roles['jefe']['active'], :base => roles['jefe']['base']}
           end
         end
-        self.roles = rls
-
+        Rails.logger.info "roles : #{rls}"
+        self.roles = rls.uniq
+        self.save
       end
     end
-    self.save
   end
 end
