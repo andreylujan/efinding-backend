@@ -51,7 +51,7 @@ class User < ApplicationRecord
   has_and_belongs_to_many :checklist_reports
   validate :correct_rut
   before_save :format_rut
-  before_save :update_roles, on: [ :update ]
+  before_commit :update_roles, on: [ :update ]
 
   has_many :created_inspections, class_name: :Inspection, foreign_key: :creator_id, dependent: :destroy
   has_many :initially_signed_inspections, class_name: :Inspection, foreign_key: :initial_signer_id, dependent: :destroy
@@ -127,34 +127,37 @@ class User < ApplicationRecord
   def update_roles
     Rails.logger.info "UPDATE ROLES"
     self.roles = nil
+    rls = []
     if self.role_id.present?
-      rs = []
-      rs  << {:id => self.role_id, :name => self.role_name, :active => true, :base => true}
-      self.roles = rs
+      rls  << {:id => self.role_id, :name => self.role_name, :active => true, :base => true}
     end
     Rails.logger.info "constructions : #{self.constructions.length}"
 
     if self.constructions.present?
-      rls = []
       self.constructions.each do |c|
-        roles = c['roles']
-        if roles['experto']['active']
+        cRoles = c['roles']
+        Rails.logger.info "ROLES CONS : #{roles}"
+
+        if cRoles['experto']['active']
+          Rails.logger.info "not self.roles.find{|r|r['id']==3}.present? : #{not self.roles.find{|r|r['id']==3}.present?}"
           if not self.roles.find{|r|r['id']==3}.present?
-            rls << {:id => 3, :name => Role.find(3).name, :active => roles['experto']['active'], :base => roles['experto']['base']}
+            rls << {:id => 3, :name => Role.find(3).name, :active => cRoles['experto']['active'], :base => cRoles['experto']['base']}
           end
         end
-        if roles['administrador']['active']
+        Rails.logger.info "roles['administrador']['active'] : #{cRoles['administrador']['active']}"
+        if cRoles['administrador']['active']
+          Rails.logger.info "not self.roles.find{|r|r['id']==4}.present? : #{self.roles.find{|r|r['id']==4}}"
           if not self.roles.find{|r|r['id']==4}.present?
-            rls << {:id => 4, :name => Role.find(4).name, :active => roles['administrador']['active'], :base => roles['administrador']['base']}
+            rls << {:id => 4, :name => Role.find(4).name, :active => cRoles['administrador']['active'], :base => cRoles['administrador']['base']}
           end
         end
-        if roles['jefe']['active']
+        if cRoles['jefe']['active']
           if not self.roles.find{|r|r['id']==2}.present?
-            rls << {:id => 2, :name => Role.find(2).name, :active => roles['jefe']['active'], :base => roles['jefe']['base']}
+            rls << {:id => 2, :name => Role.find(2).name, :active => cRoles['jefe']['active'], :base => cRoles['jefe']['base']}
           end
         end
         Rails.logger.info "roles : #{rls}"
-        self.roles = rls.uniq
+        self.roles = rls
         self.save
       end
     end
