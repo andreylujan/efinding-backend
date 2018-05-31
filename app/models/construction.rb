@@ -196,7 +196,6 @@ class Construction < ApplicationRecord
           :roles => {:experto => {:active => false, :base => false}, :administrador => {:active => true, :base => base}, :jefe => {:active => false, :base => false}}}
       end
       admin.save
-      admin.update_roles
     end
 
     if self.expert_id.present?
@@ -212,7 +211,6 @@ class Construction < ApplicationRecord
           :roles => {:experto => {:active => true, :base => base}, :administrador => {:active => false, :base => false}, :jefe => {:active => false, :base => false}}}
       end
       expert.save
-      expert.update_roles
     end
 
     if self.supervisor_id
@@ -227,7 +225,6 @@ class Construction < ApplicationRecord
           :roles => {:experto => {:active => false, :base => false}, :administrador => {:active => false, :base => false}, :jefe => {:active => true, :base => base}}}
       end
       boss.save
-      boss.update_roles
     end
   end
 
