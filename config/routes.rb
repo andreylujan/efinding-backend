@@ -140,6 +140,7 @@ Rails.application.routes.draw do
           end
           resource :generic, only: [ :show ], to: "dashboard#generic"
           resource :intralot, only: [ :show ], to: "dashboard#intralot"
+          resource :dom, only: [ :show ], to: "dashboard#dom"
           get :inverfact
         end
       end

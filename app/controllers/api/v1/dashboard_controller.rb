@@ -75,6 +75,73 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
     }
   end
 
+  def dom
+    date = nil
+    creator_id = ''
+    construction_id = ''
+
+    reports = Report.joins(creator: :role)
+    .where(roles: { organization_id: current_user.organization_id })
+
+    Rails.logger.info "reports : #{reports.count}"
+
+
+    if params[:construction_id].present?
+      construction_id = params.require(:construction_id)
+    end
+
+    if params[:creator_id].present?
+      creator_id = params.require(:creator_id)
+    end
+
+    if params[:period].present?
+      if params[:period].empty?
+        return
+      end
+      month = params.require(:period).split('-')[0]
+      year = params.require(:period).split('-')[1]
+      date = DateTime.new(year.to_i, month.to_i)
+    end
+
+    key = '65'
+    subkey = 'value'
+
+    if construction_id.empty?
+      by_constructions_query = "1=1"
+    elsif construction_id == 'null'
+      by_constructions_query = "reports.dynamic_attributes -> '#{key}' IS NULL"
+      else
+        by_constructions_query = "reports.dynamic_attributes -> '#{key}' ->> '#{subkey}' ILIKE '#{construction_id}'"
+    end
+
+    if creator_id.empty?
+      by_creator_query = "1=1"
+    else
+      by_creator_query = "reports.creator_id = '#{creator_id}'"
+    end
+    
+    if not date.present?
+      by_period = "1=1"
+    else
+      by_period = "reports.created_at between '#{date.beginning_of_month}' and '#{date.end_of_month()}'"
+    end
+    filtered_reports = reports.where(by_constructions_query)
+                      .where(by_creator_query)
+                      .where(by_period)
+    Rails.logger.info "filtered_reports : #{filtered_reports.count}"
+
+    render json: {
+      data: {
+        id: "#{DateTime.now}}",
+        type: "dashboards",
+        attributes: {
+          reports: filtered_reports,
+          reports_count: filtered_reports.count
+        }
+      }
+    }
+
+  end
 
   def intralot
     date = DateTime.now
@@ -83,15 +150,10 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
       month = params.require(:month).to_i
       date = DateTime.new(year, month)
     end
-
     reports = Report.joins(creator: :role)
-    .where(roles: { organization_id: current_user.organization_id })
-    #.where("reports.created_at >= ? AND reports.created_at <= ?",
-    #       date.beginning_of_month,
-    #       date.end_of_month
-    #       )
+      .where(roles: { organization_id: current_user.organization_id })
 
-     reports_by_month = reports.group_by(&:month_criteria).map do |month|
+    reports_by_month = reports.group_by(&:month_criteria).map do |month|
        {
          num_assigned: month[1].count { |r| r.is_assigned? },
          num_executed: month[1].count { |r| r.state_id == 25 },
@@ -174,22 +236,6 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
                                                 },
                                                 order: ""
     })
-    # filters = Api::V1::ReportResource.verify_filters(params[:filter])
-    # filters = params[:filter] || {}
-    # if filters[:start_date].present?
-    #   reports = reports.where("reports.created_at >= ?", filters[:start_date])
-    # end
-    # if filters[:end_date].present?
-    #   reports = reports.where("reports.created_at <= ?", filters[:start_date])
-    # end
-    # if filters[:state_name].present?
-    #   reports = reports.where("reports.state = ?", Report.states[filters[:state_name]])
-    # end
-    # if filters[:area_id].present?
-    #   reports = reports.where("dynamic_attributes->>'43' = ?", filters[:area_id])
-    # end
-    # reports = Api::V1::ReportResource.apply_filters(reports,
-    #                                                        filters)
     report_ratios = [
       {
         state: "unchecked",

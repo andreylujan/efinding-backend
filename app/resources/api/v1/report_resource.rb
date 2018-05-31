@@ -43,7 +43,6 @@ class Api::V1::ReportResource < ApplicationResource
     :state_id, :creator_id, :assigned_user_id
 
   filter :creator_id, apply: ->(records, value, _options) {
-    Rails.logger.info "creator_id : #{value.first}"
     if not value.empty?
       records.where("reports.creator_id = ?", value[0])
     else
@@ -109,7 +108,6 @@ class Api::V1::ReportResource < ApplicationResource
   filter :pdfs, apply: ->(records, value, _options) {
     records
   }
-
 
   filter :created_at, apply: ->(records, value, _options) {
     if not value.empty?
