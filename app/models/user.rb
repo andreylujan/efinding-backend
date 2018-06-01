@@ -127,38 +127,48 @@ class User < ApplicationRecord
   def update_roles
     Rails.logger.info "UPDATE ROLES"
     self.roles = nil
+
     rls = []
     if self.role_id.present?
       rls  << {:id => self.role_id, :name => self.role_name, :active => true, :base => true}
     end
-    Rails.logger.info "constructions : #{self.constructions.length}"
 
+    
+    Rails.logger.info "constructions : #{self.constructions.length}"
     if self.constructions.present?
       self.constructions.each do |c|
         cRoles = c['roles']
         Rails.logger.info "ROLES CONS : #{cRoles}"
-
-        if cRoles['experto']['active']
+        if (cRoles['experto']['active'] || cRoles['experto']['base'])
           if not rls.find{|r|r['id']==3}.present?
-            rls << {:id => 3, :name => Role.find(3).name, :active => cRoles['experto']['active'], :base => cRoles['experto']['base']}
+            if self.role_id != 3 
+              rls << {:id => 3, :name => Role.find(3).name, :active => cRoles['experto']['active'], :base => cRoles['experto']['base']}
+            end
           end
+        else
+          Rails.logger.info "CAMBIOJANO"
         end
+
         Rails.logger.info "rls: #{rls}"
         if cRoles['administrador']['active']
           Rails.logger.info "cRoles['administrador']['active']: #{rls.find{|r|r['id']==4}}"
           if not rls.find{|r|r['id']==4}.present?
-            rls << {:id => 4, :name => Role.find(4).name, :active => cRoles['administrador']['active'], :base => cRoles['administrador']['base']}
+            if self.role_id != 4
+              rls << {:id => 4, :name => Role.find(4).name, :active => cRoles['administrador']['active'], :base => cRoles['administrador']['base']}
+            end
           end
         end
         Rails.logger.info "rls: #{rls}"
 
         if cRoles['jefe']['active']
           if not rls.find{|r|r['id']==2}.present?
-            rls << {:id => 2, :name => Role.find(2).name, :active => cRoles['jefe']['active'], :base => cRoles['jefe']['base']}
+            if self.role_id != 2 
+             rls << {:id => 2, :name => Role.find(2).name, :active => cRoles['jefe']['active'], :base => cRoles['jefe']['base']}
+            end
           end
         end
-        Rails.logger.info "roles : #{rls}"
-        self.roles = rls.uniq
+        Rails.logger.info "roles y wuea : #{rls}"
+        self.roles = rls
         self.save
       end
     end

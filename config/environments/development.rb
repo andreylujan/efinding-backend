@@ -38,6 +38,7 @@ Rails.application.configure do
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
 
+  # ActiveRecord::Base.logger = Logger.new(STDOUT)
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
@@ -54,4 +55,6 @@ Rails.application.configure do
     :authentication => :plain,
     :enable_starttls_auto => true
   }
+
+  config.active_record.logger = nil
 end
