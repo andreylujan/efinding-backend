@@ -226,9 +226,28 @@ class Construction < ApplicationRecord
      
       user = User.find(p["id"])
       construction = user.constructions
+      
+      rol = user.role_id
+
+      admin = false
+      experto = false 
+      jefe = false 
+
+      if rol == 1 
+        admin = true
+      end
+    
+      if rol == 2 
+        jefe = true
+      end
+      if rol == 3 
+        experto = true
+      end
+
       construction << {:id => self.id,:company_id => self.company_id, :code => self.code, :name => self.name,
-        :roles => {:experto => {:active => false, :base => false}, :administrador => {:active => false, :base => false}, :jefe => {:active => false, :base => false}}}
+        :roles => {:experto => {:active => experto, :base => experto}, :administrador => {:active => admin, :base => admin}, :jefe => {:active => jefe, :base => jefe}}}
       user.constructions = construction
+      
       user.save
       Rails.logger.info "#{user.constructions}"
       Rails.logger.info "----------------------------------"
