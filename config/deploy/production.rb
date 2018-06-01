@@ -10,7 +10,7 @@
 
 server 'efinding.moller.cl', port: 22, user: 'plluch', roles: [:web, :app, :db]
 
-set :branch, 'moller'
+set :branch, 'moller2'
 
 # Default deploy_to directory is /var/www/my_app
 set :deploy_to, '/srv/http/www/efinding/production/api'
