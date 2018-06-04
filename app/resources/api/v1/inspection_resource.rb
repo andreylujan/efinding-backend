@@ -40,73 +40,7 @@ class Api::V1::InspectionResource < ApplicationResource
     @model.pdf.url
   end
 
-  filter :app, apply: ->(records, value, _options) {
-    if not value.empty?
-      Rails.logger.info "el rol: #{value[0]}"
-      Rails.logger.info "user: #{@user}"
-
-      role_id =  value[0].to_i 
-   
-      constructions = @user.constructions 
-      roles = @user.roles 
   
-      # no mostrar nada si el rol no exite
-      exist = false 
-      roles.map do | x | 
-        Rails.logger.info "roles map: #{x}"
-        if role_id == x["id"].to_i
-          Rails.logger.info "paso"
-          exist = true
-        end
-      end
-
-      if exist == false 
-        records = records.where("inspections.state = ?", "-99")
-        records
-      else
-        arr = ""
-        first = false 
-        constructions.map do |x|
-            
-          roles = x["roles"]
-          admin = roles["administrador"]["active"]
-          jefe = roles["jefe"]["active"] 
-          experto = roles["experto"]["active"] 
-      
-          c = Construction.where(:code => x["code"]).first
-          
-          isActive  = false
-  
-          if role_id == 1 && admin 
-            isActive = true
-          end
-          
-          if role_id == 2 && jefe 
-            isActive = true
-          end
-    
-          if role_id == 3 && experto 
-            isActive = true
-          end
-  
-          if isActive 
-            if first == false 
-              first = true
-              arr  =  "#{c["id"]}"
-            else 
-              arr  =  "#{arr},#{c["id"]}"
-            end
-          end
-        end
-  
-        Rails.logger.info "construccion a filtrar: #{arr}"
-        records = records.where('construction_id IN (?)', arr)
-        records
-      end
-    else
-      records
-    end
-  }
 
 
   filter :inspection_id, apply: ->(records, value, _options) {
@@ -319,6 +253,74 @@ class Api::V1::InspectionResource < ApplicationResource
   filter :resolved_at, apply: ->(records, value, _options) {
     if not value.empty?
       records.where("to_char(inspections.resolved_at, 'DD/MM/YYYY HH:MI') similar to '%(" + value.join("|") + ")%'")
+    else
+      records
+    end
+  }
+
+  filter :app, apply: ->(records, value, _options) {
+    if not value.empty?
+      Rails.logger.info "el rol: #{value[0]}"
+      Rails.logger.info "user: #{@user}"
+
+      role_id =  value[0].to_i 
+   
+      constructions = @user.constructions 
+      roles = @user.roles 
+  
+      # no mostrar nada si el rol no exite
+      exist = false 
+      roles.map do | x | 
+        Rails.logger.info "roles map: #{x}"
+        if role_id == x["id"].to_i
+          Rails.logger.info "paso"
+          exist = true
+        end
+      end
+
+      if exist == false 
+        records = records.where("inspections.state = ?", "-99")
+        records
+      else
+        arr = ""
+        first = false 
+        constructions.map do |x|
+            
+          roles = x["roles"]
+          admin = roles["administrador"]["active"]
+          jefe = roles["jefe"]["active"] 
+          experto = roles["experto"]["active"] 
+      
+          c = Construction.where(:code => x["code"]).first
+          
+          isActive  = false
+  
+          if role_id == 1 && admin 
+            isActive = true
+          end
+          
+          if role_id == 2 && jefe 
+            isActive = true
+          end
+    
+          if role_id == 3 && experto 
+            isActive = true
+          end
+  
+          if isActive 
+            if first == false 
+              first = true
+              arr  =  "#{c["id"]}"
+            else 
+              arr  =  "#{arr},#{c["id"]}"
+            end
+          end
+        end
+  
+        Rails.logger.info "construccion a filtrar: #{arr}"
+        records = records.where('construction_id IN (?)', arr)
+        records
+      end
     else
       records
     end
