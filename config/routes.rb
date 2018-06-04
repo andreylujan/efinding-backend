@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
 
-      get 'list2/:role_id', to: 'inspections#list2' 
+    
 
       namespace :delivery do
         resources :orders, only: [ :create ]
