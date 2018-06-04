@@ -40,7 +40,7 @@ class Api::V1::InspectionResource < ApplicationResource
     @model.pdf.url
   end
 
-  filter :role_id, apply: ->(records, value, _options) {
+  filter :app, apply: ->(records, value, _options) {
     if not value.empty?
       Rails.logger.info "el rol: #{value[0]}"
       Rails.logger.info "user: #{@user}"
