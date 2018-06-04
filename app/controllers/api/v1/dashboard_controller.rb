@@ -32,7 +32,7 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
 
     current_month_user_reports = filtered_reports.where("reports.created_at >= ? AND reports.created_at < ?",
         DateTime.now.beginning_of_month, DateTime.now.end_of_month)
-        # .where.not(assigned_user_id: nil)
+        # .where.not(assigned_user_id: nil)
 
     current_month_reports_by_user = current_month_user_reports.where(is_assigned: true).group_by(&:assigned_user).map do |info|
       {
@@ -80,12 +80,6 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
     creator_id = ''
     construction_id = ''
 
-    reports = Report.joins(creator: :role)
-    .where(roles: { organization_id: current_user.organization_id })
-
-    Rails.logger.info "reports : #{reports.count}"
-
-
     if params[:construction_id].present?
       construction_id = params.require(:construction_id)
     end
@@ -104,7 +98,7 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
     end
 
     key = '65'
-    subkey = 'value'
+    subkey = 'id'
 
     if construction_id.empty?
       by_constructions_query = "1=1"
@@ -119,24 +113,88 @@ class Api::V1::DashboardController < Api::V1::JsonApiController
     else
       by_creator_query = "reports.creator_id = '#{creator_id}'"
     end
-    
+
     if not date.present?
       by_period = "1=1"
     else
       by_period = "reports.created_at between '#{date.beginning_of_month}' and '#{date.end_of_month()}'"
     end
-    filtered_reports = reports.where(by_constructions_query)
-                      .where(by_creator_query)
-                      .where(by_period)
-    Rails.logger.info "filtered_reports : #{filtered_reports.count}"
+    reports = []
+    reports = Report.joins(creator: :role)
+    .where(roles: { organization_id: current_user.organization_id })
+    .where(by_constructions_query)
+    .where(by_creator_query)
+    .where(by_period)
 
+    by_reason = reports.group("dynamic_attributes->'61'->>'value'")
+      .where("dynamic_attributes->'61'->>'value' IS NOT NULL")
+      .select("count(reports.id) AS num_reports, dynamic_attributes->'61'->>'value' AS state_report")
+      .order("count(reports.id) DESC")
+      .map do |group|
+        {
+          num_reports: group.num_reports,
+          reason: group.state_report
+        }
+    end
+
+    states = State.where("report_type_id = 7 AND id <> 11")
+
+    by_state = reports.group("state_id")
+      .where("state_id IS NOT NULL")
+      .select("count(reports.id) AS num_reports, state_id AS state_report")
+      .order("count(reports.id) DESC")
+      .map do |group|
+        {
+          num_reports: group.num_reports,
+          state: states.find(group.state_report).name
+        }
+    end
+
+    by_business = []
+    won = 0
+    lost = 0
+
+    reports.group("dynamic_attributes->'63'->>'value'")
+      .where("dynamic_attributes->'63'->>'value' IS NOT NULL")
+      .select("count(reports.id) AS num_reports")
+      .map do |group|
+          won = group.num_reports
+    end
+
+    reports.group("dynamic_attributes->'61'->>'value'")
+      .where("dynamic_attributes->'61'->>'value' IS NOT NULL")
+      .select("count(reports.id) AS num_reports")
+      .map do |group|
+          lost = group.num_reports
+    end
+
+    by_business << {
+      name: 'Ganado',
+      num_reports: won
+    }
+    by_business << {
+      name: 'Perdido',
+      num_reports: lost
+    }
+
+    report_locations = []
+    reports.includes(:initial_location).each do |report|
+      report_locations << {
+        id: report.sequential_id.to_s,
+        state_id: report.state_id.to_s,
+        position: [ report.initial_location.lonlat.y, report.initial_location.lonlat.x ]
+      }
+    end
     render json: {
       data: {
         id: "#{DateTime.now}}",
         type: "dashboards",
         attributes: {
-          reports: filtered_reports,
-          reports_count: filtered_reports.count
+          reports_count: reports.count,
+          report_locations: report_locations,
+          by_reason: by_reason,
+          by_business: by_business,
+          by_state: by_state
         }
       }
     }
