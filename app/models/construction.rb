@@ -226,31 +226,54 @@ class Construction < ApplicationRecord
      
       user = User.find(p["id"])
       construction = user.constructions
+
+
+      cons = construction.find{|c|c['code']== self.code}
+
+      if not cons.present? 
+        rol = user.role_id
+
+        admin = false
+        experto = false 
+        jefe = false 
+  
+        if rol == 1 
+          admin = true
+        end
       
-      rol = user.role_id
+        if rol == 2 
+          jefe = true
+        end
+        if rol == 3 
+          experto = true
+        end
+  
+        construction << {:id => self.id,:company_id => self.company_id, :code => self.code, :name => self.name,
+          :roles => {:experto => {:active => experto, :base => experto}, :administrador => {:active => admin, :base => admin}, :jefe => {:active => jefe, :base => jefe}}}
+        user.constructions = construction
+        
+        user.save
+        Rails.logger.info "#{user.constructions}"
+        Rails.logger.info "----------------------------------"
+      else
+  
+ 
+        Rails.logger.info "#{cons}"
 
-      admin = false
-      experto = false 
-      jefe = false 
+        cons["name"] = self.name
 
-      if rol == 1 
-        admin = true
-      end
-    
-      if rol == 2 
-        jefe = true
-      end
-      if rol == 3 
-        experto = true
-      end
+        cnn = []
+        construction.map do |c| 
+          if c["code"] == cons["code"] 
+            cnn << cons
+          else 
+            cnn << c  
+          end
+        end
 
-      construction << {:id => self.id,:company_id => self.company_id, :code => self.code, :name => self.name,
-        :roles => {:experto => {:active => experto, :base => experto}, :administrador => {:active => admin, :base => admin}, :jefe => {:active => jefe, :base => jefe}}}
-      user.constructions = construction
-      
-      user.save
-      Rails.logger.info "#{user.constructions}"
-      Rails.logger.info "----------------------------------"
+        user.constructions = cnn 
+        user.save 
+      end
     end
   end
 end

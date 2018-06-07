@@ -4,9 +4,9 @@ uri = URI(url)
 req = Net::HTTP::Get.new(uri)
 req['Authorization'] = 'Basic ZUZpbmRpbmc6dkF2JC0kQVN3QWNIVWthdHUtMnU='
 
-
 log = RequestLog.new organization_id: 1, url: url, error_messages: []
 
+Rails.logger.info "Ejecutando..."
 begin
   res = Net::HTTP.start(uri.hostname, uri.port) do |http|
     http.request(req)
@@ -34,11 +34,13 @@ if not res.is_a? Net::HTTPSuccess and not res.is_a? Net::HTTPRedirection
   body.force_encoding detection[:encoding]
   body.encode! "UTF-8"
 end
-
+Rails.logger.info "PASO O No"
 constructions = []
 doc = Nokogiri::XML.parse(body, nil, "UTF-8") { |config| config.noblanks }
 
 doc.xpath("//Obra").each do |construction|
+  Rails.logger.info "#{construction}"
+
   construction_json = {}
   construction_json[:codigo] = construction.at_css("Codigo").text.upcase
   construction_json[:name] = construction.at_css("Nombre").text
