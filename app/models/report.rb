@@ -362,7 +362,7 @@ class Report < ApplicationRecord
           report.dynamic_attributes.dig('75').present? ? report.formatted_date_for(report.dynamic_attributes.dig('75').last): "",
           report.creator_name,
           report.state.name,
-          report.pdf_url,
+          report.default_pdf,
           report.final_location.present? ? report.final_location.address : report.initial_location.address,
           report.final_location.present? ? report.final_location.reference : report.initial_location.reference,
           report.final_location.present? ? report.final_location.commune : report.initial_location.commune,
