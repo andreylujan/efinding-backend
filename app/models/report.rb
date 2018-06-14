@@ -360,7 +360,7 @@ class Report < ApplicationRecord
           report.sequential_id,
           report.formatted_created_at,
           report.dynamic_attributes.dig('75').present? ? report.formatted_date_for(report.dynamic_attributes.dig('75').last): "",
-          report.creator_name,
+          report.assigned_user_name,
           report.state.name,
           report.default_pdf,
           report.final_location.present? ? report.final_location.address : report.initial_location.address,
@@ -406,6 +406,10 @@ class Report < ApplicationRecord
 
   def assigned_user_email
     assigned_user.present? ? assigned_user.email : creator.email
+  end
+
+  def assigned_user_name
+    assigned_user.present? ? assigned_user.name : ""
   end
 
 
