@@ -102,6 +102,10 @@ class Api::V1::UsersController < Api::V1::JsonApiController
   def verify
     token = params.require(:reset_password_token)
     email = params.require(:email)
+    
+    Rails.logger.info "token: #{token}"
+    Rails.logger.info "email: #{email}"
+
     @user = User.find_by_reset_password_token_and_email(token, email)
     if @user
       render json: JSONAPI::ResourceSerializer.new(Api::V1::UserResource)
