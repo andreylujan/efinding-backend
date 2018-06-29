@@ -225,8 +225,10 @@ class Construction < ApplicationRecord
       Rails.logger.info "AÑADIR todo el estado anterior de : #{p["id"]} #{p["name"]}"
      
       user = User.find(p["id"])
-      construction = user.constructions
-
+      construction = []
+      if user.constructions.kind_of?(Array) 
+        construction = user.constructions
+      end
 
       cons = construction.find{|c|c['code']== self.code}
 
@@ -242,15 +244,20 @@ class Construction < ApplicationRecord
         end
       
         if rol == 2 
+
           jefe = true
         end
         if rol == 3 
           experto = true
         end
-  
+        
+        Rails.logger.info "construccion: asiganaion de cosas #{construction.kind_of?(Array)}"
+
+
         construction << {:id => self.id,:company_id => self.company_id, :code => self.code, :name => self.name,
           :roles => {:experto => {:active => experto, :base => experto}, :administrador => {:active => admin, :base => admin}, :jefe => {:active => jefe, :base => jefe}}}
-        user.constructions = construction
+        Rails.logger.info "construccion: #{construction}"
+          user.constructions = construction
         
         user.save
         Rails.logger.info "#{user.constructions}"
