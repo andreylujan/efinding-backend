@@ -283,4 +283,20 @@ class Construction < ApplicationRecord
       end
     end
   end
+  
+  def userroles 
+    users = []
+    self.experts.map do |c| 
+      user = User.find(c["id"])
+      roles = []
+      user.constructions.map do |x|
+        if self.id == x["id"]
+          roles = x["roles"]
+        end
+      end
+      users <<  {:id =>  user.id , :fullName => user.full_name, :roles => roles}
+    end
+    return users
+  end
+
 end

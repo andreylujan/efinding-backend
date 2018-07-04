@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class Api::V1::ConstructionsController < Api::V1::JsonApiController
-  before_action :doorkeeper_authorize!, except: :uploadData
+  before_action :doorkeeper_authorize!, except: [:uploadData, :userconstruction]
 
 
   def uploadData 
@@ -179,6 +179,12 @@ class Api::V1::ConstructionsController < Api::V1::JsonApiController
       params[:fields] = fields
     end
     super
+  end
+
+  def userconstruction
+    construction = Construction.find(params[:id])
+    # construction = Construction.all
+    render json: construction.userroles
   end
 
   def get_personnel

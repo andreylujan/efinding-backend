@@ -16,7 +16,7 @@ Rails.application.routes.draw do
     namespace :v1 do
 
       get 'upload', to: 'constructions#uploadData'
-    
+      get 'userconstruction/:id', to: 'constructions#userconstruction'
 
       namespace :delivery do
         resources :orders, only: [ :create ]
