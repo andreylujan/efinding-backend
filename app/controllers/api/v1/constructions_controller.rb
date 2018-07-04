@@ -184,7 +184,7 @@ class Api::V1::ConstructionsController < Api::V1::JsonApiController
   def userconstruction
     construction = Construction.find(params[:id])
     # construction = Construction.all
-    render json: construction.userroles
+    render json: {data:construction.userroles}
   end
 
   def get_personnel
