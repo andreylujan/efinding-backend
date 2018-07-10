@@ -244,6 +244,13 @@ class Api::V1::ReportResource < ApplicationResource
       records
     end
   }
+  filter :exclude_state, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.where.not(state_id: value)
+    else
+      records
+    end
+  }
 
   def custom_links(options)
     {self: nil}
