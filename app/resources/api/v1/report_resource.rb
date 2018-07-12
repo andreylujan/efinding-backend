@@ -246,7 +246,16 @@ class Api::V1::ReportResource < ApplicationResource
   }
   filter :exclude_state, apply: ->(records, value, _options) {
     if not value.empty?
-      records.where.not(state_id: value)
+      #records.where.not(state_id: value)
+      records.where.not(:state_id => value)
+    else
+      records
+    end
+  }
+  filter :lost_business, apply: ->(records, value, _options) {
+    if not value.empty?
+      #records.where.not(state_id: value)
+      records.where.not("(dynamic_attributes->'63') is null and state_id = 9")
     else
       records
     end
