@@ -252,6 +252,13 @@ class Api::V1::ReportResource < ApplicationResource
       records
     end
   }
+  filter :allreport, apply: ->(records, value, _options) {
+    if not value.empty?
+      records.where("assigned_user_id = ? or creator_id = ? ", value, value)
+    else
+      records
+    end
+  }
   filter :lost_business, apply: ->(records, value, _options) {
     if not value.empty?
       #records.where.not(state_id: value)
