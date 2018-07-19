@@ -31,6 +31,8 @@ Rails.application.routes.draw do
         end
       end
 
+      post 'activitytemp/', to: 'reports#saveactivity'
+
       jsonapi_resources :collections, only: [ :index, :show, :create, :update, :destroy ] do
         jsonapi_related_resources :collection_items
         # jsonapi_resources :collection_items, only: [ :index, :show, :create, :update, :destroy ] do

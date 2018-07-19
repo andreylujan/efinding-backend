@@ -2,7 +2,7 @@
 class Api::V1::ReportsController < Api::V1::JsonApiController
 
   require 'zip'
-  before_action :doorkeeper_authorize!, except: [ :pdf, :html ]
+  before_action :doorkeeper_authorize!, except: [ :pdf, :html, :saveactivity ]
 
   def context
     super.merge({
@@ -78,10 +78,13 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
     end
   end
 
-  def saveActivity
+  def saveactivity
     reportId = params.require(:report_id)
-    code = params.require(:code)
+    attributeId = params.require(:attribute_id)
+    details = params.require(:details)
+    comment = params.require(:comment)
 
+    ActivityTemp.create(report_id: reportId, attributeId: attributeId, details: details, comment: comment)
     render json: {"success": true, body: params}
 
   end
