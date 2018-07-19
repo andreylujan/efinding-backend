@@ -43,10 +43,13 @@ class Report < ApplicationRecord
   mount_uploader :pdf, PdfUploader
 
   has_many :images, dependent: :destroy
-
+  
 
   belongs_to :initial_location, class_name: :Location
   belongs_to :final_location, class_name: :Location
+
+  has_many :ActivityTemp
+
 
   accepts_nested_attributes_for :initial_location
   accepts_nested_attributes_for :final_location

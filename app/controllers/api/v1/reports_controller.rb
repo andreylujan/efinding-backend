@@ -78,7 +78,14 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
     end
   end
 
+  def saveActivity
+    reportId = params.require(:report_id)
+    code = params.require(:code)
 
+    render json: {"success": true, body: params}
+
+  end
+  
   def show
     super
   end
