@@ -118,6 +118,12 @@ class Api::V1::Delivery::OrdersController < ApplicationController
       text: order_id.to_s
     }
 
+    address_info = params.require(:address_info)    
+
+    report.dynamic_attributes["74"] = {
+      text: address_info["address_street"] || "Sin dirección"
+    }
+
     if not report.dynamic_attributes.has_key? "50"
       user = params.require(:user_info)
 
@@ -131,7 +137,7 @@ class Api::V1::Delivery::OrdersController < ApplicationController
 
       report.dynamic_attributes["51"] = {
         text: user.dig("user_phone") || "Sin número de teléfono"
-      }
+      }      
 
       report.dynamic_attributes["title"] = user_name
     end
