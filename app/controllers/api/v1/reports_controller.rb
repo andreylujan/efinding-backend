@@ -2,7 +2,7 @@
 class Api::V1::ReportsController < Api::V1::JsonApiController
 
   require 'zip'
-  before_action :doorkeeper_authorize!, except: [ :pdf, :html, :saveactivity ]
+  before_action :doorkeeper_authorize!, except: [ :pdf, :html, :saveactivity, :getactivity ]
 
   def context
     super.merge({
@@ -79,15 +79,46 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
   end
 
   def saveactivity
-    reportId = params.require(:report_id)
-    attributeId = params.require(:attribute_id)
-    details = params.require(:details)
-    comment = params.require(:comment)
+    report_id = params.require(:report_id)
+    datapart = "#{params.require(:datapart)}"
+    activity = params.require(:activity)
 
-    ActivityTemp.create(report_id: reportId, attributeId: attributeId, details: details, comment: comment)
+    if datapart != "75" 
+      return render json: {"success": false, message: "no es dom ventas"}
+    end
+
+    report = Report.where(id: report_id)
+    if report.count == 0
+     return render json: {"success": false, "message": "Reporte no encontrado"}
+    end
+
+    ActivityTemp.create(report_id: report_id, datapart: datapart, activity: activity)
+    activities = ActivityTemp.where(report_id: report_id)
+
+    objs = []
+    activities.each do |t|
+      x = t.activity 
+      x["updated_at"] = t.updated_at.to_time.iso8601
+      objs  << x
+    end
+
+    report = Report.where(id: report_id).first
+    din = report.dynamic_attributes
+    din[datapart] = objs
+    report.dynamic_attributes = din 
+    report.save
+    
+    #grabar en el reporte dynamic atribute
     render json: {"success": true, body: params}
-
   end
+
+  def getactivity
+    reportId = params.require(:reportId)
+    activitiy = ActivityTemp.where(:report_id => reportId)
+    render json: {success: true, data: activitiy }
+  end
+
+
   
   def show
     super

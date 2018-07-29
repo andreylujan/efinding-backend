@@ -13,10 +13,10 @@
 ActiveRecord::Schema.define(version: 20180719144901) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "uuid-ossp"
   enable_extension "plpgsql"
   enable_extension "hstore"
   enable_extension "postgis"
-  enable_extension "uuid-ossp"
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -33,12 +33,11 @@ ActiveRecord::Schema.define(version: 20180719144901) do
   end
 
   create_table "activity_temps", force: :cascade do |t|
-    t.string   "attributeId"
-    t.string   "details"
-    t.string   "comment"
+    t.string   "datapart"
+    t.jsonb    "activity"
     t.uuid     "report_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["report_id"], name: "index_activity_temps_on_report_id", using: :btree
   end
 

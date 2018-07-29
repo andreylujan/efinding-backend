@@ -142,19 +142,46 @@ class Report < ApplicationRecord
       new_attrs = changes["dynamic_attributes"][1]
       old_attrs = changes["dynamic_attributes"][0]
       new_attrs.each do |data_part_id, data_part_value|
+        if data_part_id == "75"
+          Rails.logger.info "paso por aca 0 #{data_part_id}"
+        end
+        
         if data_part_value.is_a? Hash
           if old_attrs.has_key? data_part_id
+            if data_part_id == "75"
+              Rails.logger.info "paso por aca 1 #{data_part_id}"
+            end
+            
             if old_attrs[data_part_id] != data_part_value
+              if data_part_id == "75"
+                Rails.logger.info "paso por aca 2 #{data_part_id}"
+              end
               update_field_data(data_part_value)
               dynamic_attributes[data_part_id] = data_part_value
             end
           else
+            if data_part_id == "75"
+              Rails.logger.info "paso por aca 3 #{data_part_id}"
+            end
             update_field_data(data_part_value)
             dynamic_attributes[data_part_id] = data_part_value
           end
         else
-          data_part_value.select { |el| not el.has_key? "updated_at" }.each { |el| update_field_data(el) }
-          dynamic_attributes[data_part_id] = data_part_value
+          if data_part_id == "75"
+            Rails.logger.info "paso por aca 4 #{data_part_id}"
+            activities = ActivityTemp.where(report_id: self.id)
+            objs = []
+            activities.each do |t|
+              x = t.activity 
+              x["updated_at"] = t.updated_at.to_time.iso8601
+              objs  << x
+            end
+            dynamic_attributes[data_part_id] = objs
+          else
+            data_part_value.select { |el| not el.has_key? "updated_at" }.each { |el| update_field_data(el) }
+            dynamic_attributes[data_part_id] = data_part_value
+          end
+          
         end
         d = DataPart.find_by(id: data_part_id)
         if d.present? and d.assigns_user?
