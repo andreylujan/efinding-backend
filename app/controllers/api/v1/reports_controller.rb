@@ -79,9 +79,21 @@ class Api::V1::ReportsController < Api::V1::JsonApiController
   end
 
   def saveactivity
+
     report_id = params.require(:report_id)
     datapart = "#{params.require(:datapart)}"
     activity = params.require(:activity)
+  
+    Rails.logger.info "que pasa"
+    if !params[:act].nil?
+      Rails.logger.info "android present"
+      activity = JSON.parse(params.require(:activity))
+    end
+
+
+    Rails.logger.info "*****************"
+  
+
 
     if datapart != "75" 
       return render json: {"success": false, message: "no es dom ventas"}
