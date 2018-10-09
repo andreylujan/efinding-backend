@@ -1,0 +1,18 @@
+version: '3'
+services:
+  postgres:
+    image: mdillon/postgis:9.5-alpine
+    environment:
+      POSTGRES_USER: efinding
+      POSTGRES_DB: efinding_development
+      POSTGRES_PASSWORD: ""
+    ports:
+      - "5432:5432"
+      - "32768:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
+  mongo:
+    image: mongo:3.4
+    ports:
+      - 27017:27017
