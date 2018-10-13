@@ -68,6 +68,7 @@ gem 'faraday', '~> 0.13.1'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 9.0', '>= 9.0.6', platform: :mri
+  gem 'pry', '~> 0.11'
   gem 'listen', '~> 3.1', '>= 3.1.5'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring', '~> 2.0'
@@ -75,7 +76,7 @@ group :development, :test do
 end
 
 group :development do
-  gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.2'  
+  gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.2'
   gem 'capistrano-rails', '~> 1.2', '>= 1.2.1'
   gem 'capistrano-rbenv', '~> 2.1'
   gem 'capistrano-passenger', '~> 0.2.0'
