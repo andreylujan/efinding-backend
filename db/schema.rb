@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170901203206) do
+ActiveRecord::Schema.define(version: 20180530143101) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -204,14 +204,15 @@ ActiveRecord::Schema.define(version: 20170901203206) do
   end
 
   create_table "constructions", force: :cascade do |t|
-    t.text     "name",             null: false
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.text     "name",                          null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
     t.integer  "company_id"
     t.integer  "administrator_id"
     t.text     "code"
     t.datetime "deleted_at"
     t.integer  "supervisor_id"
+    t.json     "experts",          default: {}, null: false
     t.index ["company_id", "code"], name: "index_constructions_on_company_id_and_code", unique: true, using: :btree
     t.index ["company_id"], name: "index_constructions_on_company_id", using: :btree
     t.index ["deleted_at"], name: "index_constructions_on_deleted_at", using: :btree
@@ -319,6 +320,7 @@ ActiveRecord::Schema.define(version: 20170901203206) do
     t.datetime "final_signed_at"
     t.json     "cached_data",       default: {}
     t.integer  "code"
+    t.integer  "role_id",           default: 0,     null: false
     t.index ["code"], name: "index_inspections_on_code", using: :btree
     t.index ["construction_id"], name: "index_inspections_on_construction_id", using: :btree
     t.index ["creator_id"], name: "index_inspections_on_creator_id", using: :btree
@@ -514,6 +516,7 @@ ActiveRecord::Schema.define(version: 20170901203206) do
     t.text     "final_location_image"
     t.text     "state",                  default: "unchecked", null: false
     t.datetime "scheduled_at"
+    t.integer  "role_id",                default: 0,           null: false
     t.index ["assigned_user_id"], name: "index_reports_on_assigned_user_id", using: :btree
     t.index ["creator_id"], name: "index_reports_on_creator_id", using: :btree
     t.index ["deleted_at"], name: "index_reports_on_deleted_at", using: :btree
@@ -596,6 +599,8 @@ ActiveRecord::Schema.define(version: 20170901203206) do
     t.text     "image"
     t.integer  "role_id",                                null: false
     t.datetime "deleted_at"
+    t.json     "constructions",          default: {},    null: false
+    t.json     "roles",                  default: {},    null: false
     t.boolean  "is_superuser",           default: false, null: false
     t.integer  "store_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

@@ -24,3 +24,6 @@ dump.sql
 *.pdf
 DATOS.csv
 data_md5sum
+
+# Ignore data created by Docker postgres
+pgdata/*
