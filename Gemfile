@@ -64,6 +64,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 9.0', '>= 9.0.6', platform: :mri
   gem 'listen', '~> 3.1', '>= 3.1.5'
+  gem 'pry', '~> 0.11'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring', '~> 2.0'
   gem 'spring-watcher-listen', '~> 2.0', '>= 2.0.1'
