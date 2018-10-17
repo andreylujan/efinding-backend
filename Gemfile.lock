@@ -158,6 +158,7 @@ GEM
     climate_control (0.1.0)
     cocaine (0.5.8)
       climate_control (>= 0.0.3, < 1.0)
+    coderay (1.1.2)
     concurrent-ruby (1.0.5)
     connection_pool (2.2.1)
     devise (4.2.0)
@@ -360,6 +361,9 @@ GEM
     paranoia (2.2.1)
       activerecord (>= 4.0, < 5.1)
     pg (0.19.0)
+    pry (0.11.0)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
     rack (2.0.1)
     rack-cors (0.4.1)
     rack-protection (1.5.3)
@@ -498,6 +502,7 @@ DEPENDENCIES
   paperclip (~> 5.1)
   paranoia (~> 2.2, >= 2.2.1)
   pg (~> 0.19.0)
+  pry (~> 0.11)
   rack-cors (~> 0.4.0)
   rails (~> 5.0.2)
   rails-erd (~> 1.5)
@@ -517,4 +522,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.3.1)
 
 BUNDLED WITH
-   1.15.4
+   1.16.6

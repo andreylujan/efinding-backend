@@ -58,7 +58,7 @@ set :deploy_to, '/srv/http/www/efinding/production/api'
 # server 'example.com',
 #   user: 'user_name',
 #   roles: %w{web app},
-  ssh_options: {
-    keys: %w[~/.ssh/id_rsa],
-    forward_agent: true,
-  }
+set :ssh_options, {
+  keys: %w[~/.ssh/id_rsa],
+  forward_agent: true,
+}
