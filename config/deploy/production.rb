@@ -10,7 +10,7 @@
 
 server 'efinding.moller.cl', port: 22, user: 'plluch', roles: [:web, :app, :db]
 
-set :branch, 'moller2'
+set :branch, 'deploy'
 
 # Default deploy_to directory is /var/www/my_app
 set :deploy_to, '/srv/http/www/efinding/production/api'
@@ -58,10 +58,7 @@ set :deploy_to, '/srv/http/www/efinding/production/api'
 # server 'example.com',
 #   user: 'user_name',
 #   roles: %w{web app},
-#   ssh_options: {
-#     user: 'user_name', # overrides user setting above
-#     keys: %w(/home/user_name/.ssh/id_rsa),
-#     forward_agent: false,
-#     auth_methods: %w(publickey password)
-#     # password: 'please use keys'
-#   }
+  ssh_options: {
+    keys: %w[~/.ssh/id_rsa],
+    forward_agent: true,
+  }

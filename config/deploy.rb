@@ -4,13 +4,13 @@ lock '3.7.2'
 
 set :application, 'api'
 set :repo_url, 'git@github.com:andreylujan/efinding-backend.git'
-set :branch, 'moller'
+set :branch, 'deploy'
 
-# set :ssh_options, {
-#  keys: [ "#{ENV['HOME']}/.ssh/echeckit_production.pem"  ],
-#  forward_agent: true,
-#  auth_methods: ["publickey"]
-# }
+set :ssh_options, {
+ # keys: [ "#{ENV['HOME']}/.ssh/echeckit_production.pem"  ],
+ # forward_agent: true,
+ auth_methods: ["publickey"]
+}
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -30,7 +30,7 @@ set :format, :pretty
 set :log_level, :info
 
 # Default value for :pty is false
-set :pty, false
+set :pty, true
 
 
 
@@ -55,7 +55,7 @@ set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/sys
 set :keep_releases, 5
 
 set :rbenv_type, :user
-set :rbenv_ruby, '2.4.1'
+set :rbenv_ruby, '2.4.2'
 set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} /home/plluch/.rbenv/bin/rbenv exec"
 # set :rbenv_map_bins, %w{rake gem bundle ruby rails}
 set :rbenv_roles, :all
