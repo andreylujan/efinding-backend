@@ -30,7 +30,7 @@ set :format, :pretty
 set :log_level, :info
 
 # Default value for :pty is false
-set :pty, false
+set :pty, true
 
 
 
