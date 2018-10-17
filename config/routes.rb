@@ -142,6 +142,7 @@ Rails.application.routes.draw do
         :destroy
       ] do
         collection do
+          patch :change_password
           post :reset_password_token
           get :all
           get :verify

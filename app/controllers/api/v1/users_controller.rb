@@ -5,9 +5,26 @@ class Api::V1::UsersController < Api::V1::JsonApiController
     :reset_password_token,
     :verify,
     :create,
+    :change_password,
   :password ]
 
   before_action :verify_invitation, only: :create
+
+  def change_password
+    if current_user.role_type == "superuser"
+      user_id = params.require(:user_id)
+      user = User.find(user_id)
+      if user.update_attributes(password: params.require(:password), password_confirmation: params.require(:password_confirmation))
+        render status: :ok, json: { data: { id: user_id.to_s, type: "change_user_password", attributes: { success: true } } }
+      else
+        render status: :bad_request, json: { errors: [ { title: "No se pudo actualizar", detail: "Verifique el password" } ] }
+      end
+    else
+      render json: { errors: [ { title: "Permisos insuficientes",
+                                 detail: "El usuario no cuenta con los permisos suficientes" }]
+                   }, status: :forbidden
+    end
+  end
 
   def reset_password_token
     email = params.require(:email)
