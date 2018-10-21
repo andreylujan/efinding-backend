@@ -41,6 +41,11 @@ class Construction < ApplicationRecord
     end
   end
 
+  def expert_id
+    return if experts.empty?
+    experts.first["id"]
+  end
+
   def construction_personnel_attributes=(val)
     self.construction_personnel.each { |p| p.destroy! }
     val.select! { |v| v.key?("personnel_id") and v.key?("personnel_type_id") }
@@ -213,8 +218,8 @@ class Construction < ApplicationRecord
        user.save
        Rails.logger.info "----------------------------------"
     end
-    
-    arr2 =  _constructions.experts 
+
+    arr2 =  _constructions.experts
     self.experts_was.map do |p|
       arr2.delete(p)
     end
@@ -223,34 +228,34 @@ class Construction < ApplicationRecord
     arr2.map do |p|
       Rails.logger.info "----------------------------------"
       Rails.logger.info "AÑADIR todo el estado anterior de : #{p["id"]} #{p["name"]}"
-     
+
       user = User.find(p["id"])
       construction = []
-      if user.constructions.kind_of?(Array) 
+      if user.constructions.kind_of?(Array)
         construction = user.constructions
       end
 
       cons = construction.find{|c|c['code']== self.code}
 
-      if not cons.present? 
+      if not cons.present?
         rol = user.role_id
 
         admin = false
-        experto = false 
-        jefe = false 
-  
-        if rol == 1 
+        experto = false
+        jefe = false
+
+        if rol == 1
           admin = true
         end
-      
-        if rol == 2 
+
+        if rol == 2
 
           jefe = true
         end
-        if rol == 3 
+        if rol == 3
           experto = true
         end
-        
+
         Rails.logger.info "construccion: asiganaion de cosas #{construction.kind_of?(Array)}"
 
 
@@ -258,35 +263,35 @@ class Construction < ApplicationRecord
           :roles => {:experto => {:active => experto, :base => experto}, :administrador => {:active => admin, :base => admin}, :jefe => {:active => jefe, :base => jefe}}}
         Rails.logger.info "construccion: #{construction}"
           user.constructions = construction
-        
+
         user.save
         Rails.logger.info "#{user.constructions}"
         Rails.logger.info "----------------------------------"
       else
-  
- 
+
+
         Rails.logger.info "#{cons}"
 
         cons["name"] = self.name
 
         cnn = []
-        construction.map do |c| 
-          if c["code"] == cons["code"] 
+        construction.map do |c|
+          if c["code"] == cons["code"]
             cnn << cons
-          else 
-            cnn << c  
+          else
+            cnn << c
           end
         end
 
-        user.constructions = cnn 
-        user.save 
+        user.constructions = cnn
+        user.save
       end
     end
   end
-  
-  def userroles 
+
+  def userroles
     users = []
-    self.experts.map do |c| 
+    self.experts.map do |c|
       user = User.find(c["id"])
       roles = []
       user.constructions.map do |x|

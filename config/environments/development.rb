@@ -39,6 +39,7 @@ Rails.application.configure do
   config.active_record.migration_error = :page_load
 
   # ActiveRecord::Base.logger = Logger.new(STDOUT)
+  config.log_level = :debug
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
@@ -56,5 +57,5 @@ Rails.application.configure do
     :enable_starttls_auto => true
   }
 
-  config.active_record.logger = nil
+  config.active_record.logger = Rails.logger
 end
